@@ -1,0 +1,102 @@
+[debug] [2023-01-27T05:57:21.788Z] ----------------------------------------------------------------------
+[debug] [2023-01-27T05:57:21.790Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Marco Gabriel\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-01-27T05:57:21.791Z] CLI Version:   11.21.0
+[debug] [2023-01-27T05:57:21.791Z] Platform:      win32
+[debug] [2023-01-27T05:57:21.791Z] Node Version:  v16.14.0
+[debug] [2023-01-27T05:57:21.792Z] Time:          Fri Jan 27 2023 13:57:21 GMT+0800 (Philippine Standard Time)
+[debug] [2023-01-27T05:57:21.792Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-01-27T05:57:21.868Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-01-27T05:57:21.868Z] > authorizing via signed-in user (kevin.esposado@gmail.com)
+[debug] [2023-01-27T05:57:21.869Z] [iam] checking project coop-2af5d for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-01-27T05:57:21.874Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/coop-2af5d:testIamPermissions [none]
+[debug] [2023-01-27T05:57:21.875Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/coop-2af5d:testIamPermissions x-goog-quota-user=projects/coop-2af5d
+[debug] [2023-01-27T05:57:21.875Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/coop-2af5d:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-01-27T05:57:23.284Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/coop-2af5d:testIamPermissions 200
+[debug] [2023-01-27T05:57:23.284Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/coop-2af5d:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-01-27T05:57:23.285Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/coop-2af5d [none]
+[debug] [2023-01-27T05:57:23.850Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/coop-2af5d 200
+[debug] [2023-01-27T05:57:23.850Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/coop-2af5d {"projectId":"coop-2af5d","projectNumber":"1062035171605","displayName":"coop","name":"projects/coop-2af5d","resources":{"hostingSite":"coop-2af5d"},"state":"ACTIVE","etag":"1_c9511b4c-e47a-4cf0-8827-5edd19e55465"}
+[info] 
+[info] === Deploying to 'coop-2af5d'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-01-27T05:57:23.856Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions [none]
+[debug] [2023-01-27T05:57:23.856Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-01-27T05:57:25.672Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions 200
+[debug] [2023-01-27T05:57:25.673Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions {"name":"projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[coop-2af5d]: beginning deploy... 
+[info] i  hosting[coop-2af5d]: found 18 files in build 
+[debug] [2023-01-27T05:57:25.684Z] [hosting] uploading with 200 concurrency
+[debug] [2023-01-27T05:57:26.125Z] [hosting] hash cache [YnVpbGQ] stored for 18 files
+[debug] [2023-01-27T05:57:26.125Z] [hosting][hash queue][FINAL] {"max":435,"min":3,"avg":32.55555555555556,"active":0,"complete":18,"success":18,"errored":0,"retried":0,"total":18,"elapsed":439}
+[debug] [2023-01-27T05:57:26.126Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d:populateFiles [none]
+[debug] [2023-01-27T05:57:26.126Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d:populateFiles {"files":{"/favicon.ico":"eae62e993eb980ec8a25058c39d5a51feab118bd2100c4deebb2a9c158ec11f9","/logo192.png":"3ee59515172ee198f3be375979df15ac5345183e656720a381b8872b2a39dc8b","/logo512.png":"ee7e2f3fdb8209c4b6fd7bef6ba50d1b9dba30a25bb5c3126df057e1cb6f5331","/manifest.json":"aff3449bdc238776f5d6d967f19ec491b36aed5fb7f23ccff6500736fd58494a","/robots.txt":"bfe106a3fb878dc83461c86818bf74fc1bdc7f28538ba613cd3e775516ce8b49","/asset-manifest.json":"f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757","/index.html":"7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6","/static/css/main.5deb8c51.css":"df7c9d2c14b8943fc57531b2e0cd3faa46150fd3d9c0ad5265ebb49b1061c1d6","/static/css/main.5deb8c51.css.map":"56135b12342e94b507cfcb01e7934fd08752b6fbdd415431659fccca002c47f9","/static/js/main.bd29b0e9.js.LICENSE.txt":"daa621f7fc560c23a0b2c99fbb4119d1adb02f1dfb43a6b65932827e52fd2163","/static/media/radial-green.742679529baef61bdb64.png":"19c4bac0fdbe1d9a879f362f9909bb9a5677371341ef46d1dec9e9008b171367","/static/media/radial-orange.1934bf9b645a33d93cef.png":"2bea75c9c546d75424e453d14bb4bdfac75a01193802b11c6f1b8448179753ee","/static/media/radial-purple.bdcfa67133a6aa69167f.png":"f2b59a5c80cbefbc37e7a49f1c4df6b456a8ff8e2175fc8885eaacf55ccd2194","/static/media/radial-violet.9a839f9662977d3ff9b6.png":"36cf2a79ce4dbfd7294d90248b15b7b6d092eac1af9c58475b9347b85f4e3017","/static/media/radial-yellow.450ca91987e832c98570.png":"b9032c97be585b060d9ff3d100a803157b621351ec608f837b0aff6748748a4c","/static/media/one_happy_logo.d3d48b8922b8becc69ca.jpg":"bf76e9891e916f3c5ce9c2945a3efa03aee2a09c82019c56e3573523a8494feb","/static/js/main.bd29b0e9.js":"918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a","/static/js/main.bd29b0e9.js.map":"b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571"}}
+[debug] [2023-01-27T05:57:27.222Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d:populateFiles 200
+[debug] [2023-01-27T05:57:27.222Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d:populateFiles {"uploadRequiredHashes":["918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a","f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757","7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6","b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files"}
+[debug] [2023-01-27T05:57:27.224Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a [none]
+[debug] [2023-01-27T05:57:27.224Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a [stream]
+[debug] [2023-01-27T05:57:27.225Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757 [none]
+[debug] [2023-01-27T05:57:27.225Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757 [stream]
+[debug] [2023-01-27T05:57:27.225Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6 [none]
+[debug] [2023-01-27T05:57:27.225Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6 [stream]
+[debug] [2023-01-27T05:57:27.226Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571 [none]
+[debug] [2023-01-27T05:57:27.226Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571 [stream]
+[debug] [2023-01-27T05:57:27.227Z] [hosting][populate queue][FINAL] {"max":1100,"min":1100,"avg":1100,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":1103}
+[debug] [2023-01-27T05:57:27.227Z] [hosting] uploads queued: 4
+[debug] [2023-01-27T05:57:29.428Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6 200
+[debug] [2023-01-27T05:57:29.428Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/7975040a8990af18b48479e74ea483cc54ca8733b2808601de41bb3d48feada6 [stream]
+[debug] [2023-01-27T05:57:29.941Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757 200
+[debug] [2023-01-27T05:57:29.941Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/f778346bd04e39b9e53d56c9f0e3cc9b5a4160521f5c7ebaef89845b83a67757 [stream]
+[debug] [2023-01-27T05:57:30.059Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a 200
+[debug] [2023-01-27T05:57:30.060Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/918a76a6fe0b007dd0f524bb34d8312b35a95d1bea8f8ac984f69f4a2bf84d6a [stream]
+[debug] [2023-01-27T05:57:30.455Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571 200
+[debug] [2023-01-27T05:57:30.455Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/coop-2af5d/versions/156ec5e4964b6a3d/files/b67a04cc27cfad099c3e4175f112238748efe5c8b0e59dec0212609790a7e571 [stream]
+[debug] [2023-01-27T05:57:30.455Z] [hosting][upload queue][FINAL] {"max":3232,"min":2205,"avg":2748,"active":0,"complete":4,"success":4,"errored":0,"retried":0,"total":4,"elapsed":3232}
+[info] +  hosting[coop-2af5d]: file upload complete 
+[debug] [2023-01-27T05:57:30.457Z] [hosting] deploy completed after 4783ms
+[debug] [2023-01-27T05:57:30.458Z] [
+  {
+    "config": {
+      "public": "build",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "site": "coop-2af5d"
+    },
+    "version": "projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d"
+  }
+]
+[info] i  hosting[coop-2af5d]: finalizing version... 
+[debug] [2023-01-27T05:57:30.460Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions/156ec5e4964b6a3d updateMask=status%2Cconfig
+[debug] [2023-01-27T05:57:30.460Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions/156ec5e4964b6a3d {"status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]}}
+[debug] [2023-01-27T05:57:31.551Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions/156ec5e4964b6a3d 200
+[debug] [2023-01-27T05:57:31.551Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/versions/156ec5e4964b6a3d {"name":"projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-01-27T05:57:21.739953Z","createUser":{"email":"kevin.esposado@gmail.com"},"finalizeTime":"2023-01-27T05:57:28.451163Z","finalizeUser":{"email":"kevin.esposado@gmail.com"}}
+[debug] [2023-01-27T05:57:31.552Z] [hosting] finalized version for coop-2af5d:[object Object]
+[info] +  hosting[coop-2af5d]: version finalized 
+[info] i  hosting[coop-2af5d]: releasing new version... 
+[debug] [2023-01-27T05:57:31.553Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/channels/live/releases versionName=projects%2F1062035171605%2Fsites%2Fcoop-2af5d%2Fversions%2F156ec5e4964b6a3d
+[debug] [2023-01-27T05:57:31.553Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/channels/live/releases {}
+[debug] [2023-01-27T05:57:32.581Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/channels/live/releases 200
+[debug] [2023-01-27T05:57:32.581Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/coop-2af5d/channels/live/releases {"name":"projects/1062035171605/sites/coop-2af5d/channels/live/releases/1674799048806083","version":{"name":"projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-01-27T05:57:21.739953Z","createUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"},"finalizeTime":"2023-01-27T05:57:28.451163Z","finalizeUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"}},"type":"DEPLOY","releaseTime":"2023-01-27T05:57:28.806083532Z","releaseUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"}}
+[debug] [2023-01-27T05:57:32.581Z] [hosting] release: {"name":"projects/1062035171605/sites/coop-2af5d/channels/live/releases/1674799048806083","version":{"name":"projects/1062035171605/sites/coop-2af5d/versions/156ec5e4964b6a3d","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-01-27T05:57:21.739953Z","createUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"},"finalizeTime":"2023-01-27T05:57:28.451163Z","finalizeUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"}},"type":"DEPLOY","releaseTime":"2023-01-27T05:57:28.806083532Z","releaseUser":{"email":"kevin.esposado@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AEdFTp54FD4OAhri6dG4CbFjZy85pnJAxoXsAsvDh37C"}}
+[info] +  hosting[coop-2af5d]: release complete 
+[info] 
+[info] +  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/coop-2af5d/overview
+[info] Hosting URL: https://coop-2af5d.web.app
+[debug] [2023-01-27T05:57:38.348Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\Marco Gabriel\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:253:49)
+    at listOnTimeout (node:internal/timers:559:17)
+    at processTimers (node:internal/timers:502:7)
+[error] 
+[error] Error: An unexpected error has occurred.
