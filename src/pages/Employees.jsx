@@ -109,7 +109,9 @@ const Employees = (props) => {
      const [contact_number, setContact_number] = useState('')
      const [incase_of_emergency, setIncase_of_emergency] = useState('')
      const [job_title, setJob_title] = useState('')
-     const [salary, setSalary] = useState('')
+     const [base_salary, setBase_salary] = useState(0)
+     const [allowance, setAllowance] = useState(0)
+     const [total_salary, setTotal_salary] = useState(0)
      const [start_date, setStart_date] = useState('')
      const [end_date, setEnd_date] = useState('')
      const [contract, setContract] = useState('')
@@ -138,7 +140,41 @@ const Employees = (props) => {
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
 
+     const handleClearInputs= () => {
+          setEmployee_id('')
+          setFirstname('')
+          setMiddleName('')
+          setLastname('')
+          setAge('')
+          setBirthday('')
+          setAddress('')
+          setEmail('')
+          setContact_number('')
+          setIncase_of_emergency('')
+          setJob_title('')
+          setBase_salary(0)
+          setAllowance(0)
+          setTotal_salary(0)
+          setStart_date('')
+          setEnd_date('')
+          setContract('')
+          setDepartment('')
+          setIs_active('')
+          setSss('')
+          setPagibig('')
+          setTin('')
+          setPhilhealth('')
+          setBank_name('')
+          setBank_account_number('')
+          setSick_leave('')
+          setVacation_leave('')
+          setEmergencty_leave('')
+          setPhoto('')
+          setUsername('')
+          setPassword('')
+     }
      const handleOpenAdd = () => {
+          handleClearInputs()
           setOpenAdd(true);
           // setDepartment_name('');
           // setDescription('')
@@ -183,6 +219,13 @@ const Employees = (props) => {
      const handleOffError = () => {
           setOpenError(false);
      };
+     const handleCalculateTotalSalary = () => {
+          let total = 0;
+          let base = Number(base_salary);
+          let allow = Number(allowance);
+          total = base + allow;
+          setTotal_salary(total)
+     }
      const handleEmployeeId = () => {
           let num = Math.floor(Math.random() * 90000) + 10000;
           const value = firstname.charAt(0) + lastname.charAt(0) + num
@@ -215,7 +258,9 @@ const Employees = (props) => {
           { field: 'contact_number', headerName: 'Contact Number', width: 300, sortable: false },
           { field: 'incase_of_emergency', headerName: 'Incase of Emergency', width: 300, sortable: false },
           { field: 'job_title', headerName: 'Job Title', width: 300, sortable: false },
-          { field: 'salary', headerName: 'Salary', width: 300, sortable: false },
+          { field: 'base_salary', headerName: 'Base Salary', width: 300, sortable: false },
+          { field: 'allowance', headerName: 'Allowance', width: 300, sortable: false },
+          { field: 'total_salary', headerName: 'Total Salary', width: 300, sortable: false },
           { field: 'start_date', headerName: 'Start Date', width: 300, sortable: false },
           { field: 'end_date', headerName: 'End Date', width: 300, sortable: false },
           { field: 'contract', headerName: 'Contract', width: 300, sortable: false },
@@ -249,7 +294,9 @@ const Employees = (props) => {
                contact_number: contact_number,
                incase_of_emergency: incase_of_emergency,
                job_title: job_title,
-               salary: salary,
+               base_salary: base_salary,
+               allowance: allowance,
+               total_salary: total_salary,
                start_date: start_date,
                end_date: end_date,
                contract: contract,
@@ -276,7 +323,9 @@ const Employees = (props) => {
                birthday === "" ||
                address === "" ||
                job_title === "" ||
-               salary === "" ||
+               base_salary === "" ||
+               allowance === "" ||
+               total_salary === "" ||
                start_date === "" ||
                contract === "" ||
                department === "" ||
@@ -311,7 +360,9 @@ const Employees = (props) => {
                     setContact_number('')
                     setIncase_of_emergency('')
                     setJob_title('')
-                    setSalary('')
+                    setBase_salary(0)
+                    setAllowance(0)
+                    setTotal_salary(0)
                     setStart_date('')
                     setEnd_date('')
                     setContract('')
@@ -352,7 +403,9 @@ const Employees = (props) => {
                contact_number: contact_number,
                incase_of_emergency: incase_of_emergency,
                job_title: job_title,
-               salary: salary,
+               base_salary: base_salary,
+               allowance: allowance,
+               total_salary: total_salary,
                start_date: start_date,
                end_date: end_date,
                contract: contract,
@@ -379,7 +432,9 @@ const Employees = (props) => {
                birthday === "" ||
                address === "" ||
                job_title === "" ||
-               salary === "" ||
+               base_salary === "" ||
+               allowance === "" ||
+               total_salary === "" ||
                start_date === "" ||
                contract === "" ||
                department === "" ||
@@ -414,7 +469,9 @@ const Employees = (props) => {
                     setContact_number('')
                     setIncase_of_emergency('')
                     setJob_title('')
-                    setSalary('')
+                    setBase_salary(0)
+                    setAllowance(0)
+                    setTotal_salary(0)
                     setStart_date('')
                     setEnd_date('')
                     setContract('')
@@ -477,7 +534,9 @@ const Employees = (props) => {
           setContact_number(params.row.contact_number)
           setIncase_of_emergency(params.row.incase_of_emergency)
           setJob_title(params.row.job_title)
-          setSalary(params.row.salary)
+          setBase_salary(params.row.base_salary)
+          setAllowance(params.row.allowance)
+          setTotal_salary(params.row.total_salary)
           setStart_date(params.row.start_date)
           setEnd_date(params.row.end_date)
           setContract(params.row.contract)
@@ -729,11 +788,40 @@ const Employees = (props) => {
                                                   type="number"
                                                   required
                                                   id="outlined-required"
-                                                  label="Salary"
+                                                  label="Base Salary"
                                                   fullWidth
                                                   style={{ paddingBottom: "20px" }}
-                                                  onChange={(e) => setSalary(e.target.value)}
-                                                  value={salary}
+                                                  onChange={(e) => {
+                                                       setBase_salary(e.target.value)
+                                                  }}
+                                                  value={base_salary}
+                                                  onMouseLeave={handleCalculateTotalSalary}
+                                             />
+                                             <TextField
+                                                  type="number"
+                                                  on
+                                                  required
+                                                  id="outlined-required"
+                                                  label="Allowance"
+                                                  fullWidth
+                                                  style={{ paddingBottom: "20px" }}
+                                                  value={allowance}
+                                                  onChange={(e) => {
+                                                       setAllowance(e.target.value)
+                                                  }}
+                                                  onMouseLeave={handleCalculateTotalSalary}
+                                             />
+                                             <TextField
+                                                  disabled
+                                                  id="outlined-disabled"
+                                                  type="number"
+                                                  required
+                                                  label="Total"
+                                                  InputLabelProps={{ shrink: true }}
+                                                  fullWidth
+                                                  style={{ paddingBottom: "20px" }}
+                                                  onChange={(e) => setTotal_salary(e.target.value)}
+                                                  value={total_salary}
                                              />
                                              <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                   <DatePicker
@@ -1034,11 +1122,40 @@ const Employees = (props) => {
                                                   type="number"
                                                   required
                                                   id="outlined-required"
-                                                  label="Salary"
+                                                  label="Base Salary"
                                                   fullWidth
                                                   style={{ paddingBottom: "20px" }}
-                                                  onChange={(e) => setSalary(e.target.value)}
-                                                  value={salary}
+                                                  onChange={(e) => {
+                                                       setBase_salary(e.target.value)
+                                                  }}
+                                                  value={base_salary}
+                                                  onMouseLeave={handleCalculateTotalSalary}
+                                             />
+                                             <TextField
+                                                  type="number"
+                                                  on
+                                                  required
+                                                  id="outlined-required"
+                                                  label="Allowance"
+                                                  fullWidth
+                                                  style={{ paddingBottom: "20px" }}
+                                                  value={allowance}
+                                                  onChange={(e) => {
+                                                       setAllowance(e.target.value)
+                                                  }}
+                                                  onMouseLeave={handleCalculateTotalSalary}
+                                             />
+                                             <TextField
+                                                  disabled
+                                                  id="outlined-disabled"
+                                                  type="number"
+                                                  required
+                                                  label="Total"
+                                                  InputLabelProps={{ shrink: true }}
+                                                  fullWidth
+                                                  style={{ paddingBottom: "20px" }}
+                                                  onChange={(e) => setTotal_salary(e.target.value)}
+                                                  value={total_salary}
                                              />
                                              <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                   <DatePicker
