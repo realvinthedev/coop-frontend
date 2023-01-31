@@ -1146,11 +1146,12 @@ const Employees = (props) => {
                                                   onMouseLeave={handleCalculateTotalSalary}
                                              />
                                              <TextField
-                                                  disabled
+                                                  
                                                   id="outlined-disabled"
                                                   type="number"
                                                   required
                                                   label="Total"
+                                                  disabled
                                                   InputLabelProps={{ shrink: true }}
                                                   fullWidth
                                                   style={{ paddingBottom: "20px" }}
