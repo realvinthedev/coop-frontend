@@ -93,12 +93,12 @@ const Leaves = (props) => {
 
      /**POST REQUESTS */
      const [employee_id, setEmployee_id] = useState('')
-     const [fullname, setFullname] = useState('')
+     const [employee_fullname, setEmployee_fullname] = useState('')
      const [leave_type, setLeave_type] = useState('')
      const [date, setDate] = useState('')
      const [duration, setDuration] = useState('')
      const [status, setStatus] = useState('')
-     const [approver, setApprover] = useState('')
+     const [approver, setApprover] = useState('Kevin')
      const [pendingLeaves, setPendingLeaves] = useState([]);
 
      const [error, setError] = useState('')
@@ -130,7 +130,7 @@ const Leaves = (props) => {
           }
 
      };
-    
+     
      const handleCloseDelete = () => {
           setOpenDelete(false);
      };
@@ -152,11 +152,19 @@ const Leaves = (props) => {
 
 
      /**EDIT DATA */
-     const handlePatch = async (e) => {
+     const handleApproveLeave = async (e, stat) => {
           e.preventDefault()
+
+          if(stat == "approved"){
+               setStatus("Approved")
+          }
+          else{
+               setStatus("Declined")
+          }
+        
           const leaves = {
                status: status,
-               approver: approver,
+               approver: approver
                //search for this employee and minus its leaves.
           }
 
@@ -175,17 +183,12 @@ const Leaves = (props) => {
                //SHOW ALERT HERE (OPEN ALERT)
                window.location.reload();
           }
-
      }
 
      const handleRowClick = (params) => {
           setId(params.row._id);
-          setFullname(params.row.fullname)
-          setLeave_type(params.row.firstname)
-          setDate(params.row.lastname)
-          setDuration(params.row.department)
-          setStatus(params.row.base_salary)
-          setApprover(params.row.allowance)
+          setEmployee_fullname(params.row.employee_fullname)
+          
      };
 
      const [leaves, setLeaves] = useState([])
@@ -226,7 +229,7 @@ const Leaves = (props) => {
                                    <DataGrid
                                         getRowId={(row) => row._id}
                                         rows={pendingLeaves.filter((leave) =>
-                                             leave.employee_id.toLowerCase().includes(query))}
+                                             leave.employee_fullname.toLowerCase().includes(query))}
                                         columns={columns}
                                         pageSize={7}
                                         rowsPerPageOptions={[5]}
@@ -237,10 +240,7 @@ const Leaves = (props) => {
                                         <EditDeleteContainer>
                                              <ThemeProvider theme={theme}>
                                                   <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenEdit}>
-                                                       APPROVE
-                                                  </Button>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="red" onClick={handleOpenEdit}>
-                                                       REJECT
+                                                       Take Action
                                                   </Button>
                                              </ThemeProvider>
                                         </EditDeleteContainer>
@@ -251,19 +251,28 @@ const Leaves = (props) => {
                                         onClose={handleCloseEdit}
                                         aria-labelledby="alert-dialog-title"
                                         aria-describedby="alert-dialog-description"
+                                        fullWidth
+                                        maxWidth="sm"
                                    >
                                         <DialogTitle id="alert-dialog-title">
 
-                                             <h2>{"Approval Confirmation"}</h2>
+                                             {<h2>Leave Approval Confirmation</h2>}
                                         </DialogTitle>
                                         <DialogContent>
                                              <DialogContentText id="alert-dialog-description">
-                                                  {`Please confirm to approve ${fullname}`}
+                                                  {`Please confirm to approve ${employee_fullname}`}
                                              </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
-                                             <Button onClick={handleCloseWarning} autoFocus>
-                                                  Okay
+                                             <Button onClick={(e)=> {
+                                                  handleApproveLeave(e,'approved')
+                                                  }} autoFocus>
+                                                  {<span style={{ color: "#0a9941" }}>Approve</span>}
+                                             </Button>
+                                             <Button onClick={(e)=> {
+                                                  handleApproveLeave(e,'declined')
+                                                  }} autoFocus>
+                                                  {<span style={{ color: "#d13f3f" }}>Decline</span>}
                                              </Button>
                                         </DialogActions>
                                    </Dialog>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -98,21 +99,11 @@ const Leaves = (props) => {
         setId(params.row._id);
         setEmployee_id(params.row.employee_id)
     };
-    const handleOpenAdd = () => {
-        setOpenAdd(true);
-    };
-    const handleApprove = () => {
-        setApprove(true);
-    };
     const handleCloseApprove = () => {
         setApprove(false);
     };
     const handleCloseWarning = () => {
         setOpenWarning(false);
-    };
-
-    const handleCloseDelete = () => {
-        setOpenDelete(false);
     };
 
     const [leaves, setLeaves] = useState([])
@@ -123,15 +114,15 @@ const Leaves = (props) => {
 
             if (response.ok) {
                 setLeaves(json)
-                setPendingLeaves(json.filter(leave=>{
+                setPendingLeaves(json.filter(leave => {
                     return leave.status === 'Pending'
-               }))
+                }))
             }
         }
         fetchLeaves();
 
     }, [])
-   
+
     return (
         <Container>
             {/* {handlePending()} */}
@@ -162,12 +153,11 @@ const Leaves = (props) => {
                     />
                     <ButtonContainer>
                         <ThemeProvider theme={theme}>
-                            <Button style={{ marginTop: "20px", marginRight: "20px" }} variant="outlined" color="green" onClick={handleApprove}>
-                                Approve
-                            </Button>
-                            <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="red" onClick={handleOpenAdd}>
-                                Reject
-                            </Button>
+                            <Link to="/leaves">
+                                <Button style={{ marginTop: "20px", marginRight: "20px" }} variant="outlined" color="green">
+                                    Go to Leaves Page
+                                </Button>
+                            </Link>
                         </ThemeProvider>
                     </ButtonContainer>
                     <Dialog

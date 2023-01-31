@@ -116,7 +116,7 @@ const Dashboard = (props) => {
                 <CardContainer>
                     <Cards title="Total Employees" data={employees.length} color={violet} />
                     <Cards title="Total Departments" data={departments.length} color={yellow} />
-                    <Cards title="New Password Reset" data="4" color={green} />
+                    <Cards title="New Password Reset" data="0" color={green} />
                 </CardContainer>
                 <CardContainer>
                     <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} />
