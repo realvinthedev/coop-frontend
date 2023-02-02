@@ -11,9 +11,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react"
 import MenuItem from '@mui/material/MenuItem';
+import Navbar from '../components/Navbar'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuthContext } from '../hooks/useAuthContext'
 const theme = createTheme({
      palette: {
           neutral: {
@@ -108,7 +110,7 @@ const Leaves = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
-
+     const { user } = useAuthContext()
      /**DIALOG */
      const handleOpenAdd = () => {
           setOpenAdd(true);
@@ -130,7 +132,7 @@ const Leaves = (props) => {
           }
 
      };
-     
+
      const handleCloseDelete = () => {
           setOpenDelete(false);
      };
@@ -155,24 +157,28 @@ const Leaves = (props) => {
      const handleApproveLeave = async (e, stat) => {
           e.preventDefault()
 
-          if(stat == "approved"){
+          if (stat == "approved") {
                setStatus("Approved")
           }
-          else{
+          else {
                setStatus("Declined")
           }
-        
+
           const leaves = {
                status: status,
                approver: approver
                //search for this employee and minus its leaves.
           }
-
+          if(!user){
+               console.log('You must be logged in first')
+              return
+          }
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves/' + id, {
                method: 'PATCH',
                body: JSON.stringify(leaves),
                headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                }
           })
           const json = await response.json()
@@ -188,13 +194,17 @@ const Leaves = (props) => {
      const handleRowClick = (params) => {
           setId(params.row._id);
           setEmployee_fullname(params.row.employee_fullname)
-          
+
      };
 
      const [leaves, setLeaves] = useState([])
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
@@ -204,108 +214,113 @@ const Leaves = (props) => {
                     }))
                }
           }
-          fetchLeaves();
+          if(user){
+               fetchLeaves();
+          }
+       
 
-     }, [])
+     }, [user])
 
 
      return (
-          <Container>
-               <Wrapper>
-                    <Main>
-                         <Header title={props.title} user={props.user} />
-                         <Card>
-                              <SearchContainer>
-                                   <TextField
-                                        required
-                                        id="search"
-                                        label="Search"
-                                        fullWidth
-                                        onChange={(e) => setQuery(e.target.value)}
-                                   />
+          <div style={{ display: "flex" }}>
+               <Navbar></Navbar>
+               <Container>
+                    <Wrapper>
+                         <Main>
+                              <Header title={props.title} user={props.user} />
+                              <Card>
+                                   <SearchContainer>
+                                        <TextField
+                                             required
+                                             id="search"
+                                             label="Search"
+                                             fullWidth
+                                             onChange={(e) => setQuery(e.target.value)}
+                                        />
 
-                              </SearchContainer>
-                              <div style={{ height: 475, width: '100%' }}>
-                                   <DataGrid
-                                        getRowId={(row) => row._id}
-                                        rows={pendingLeaves.filter((leave) =>
-                                             leave.employee_fullname.toLowerCase().includes(query))}
-                                        columns={columns}
-                                        pageSize={7}
-                                        rowsPerPageOptions={[5]}
-                                        onRowClick={handleRowClick}
-                                   />
-                                   <ButtonContainer>
+                                   </SearchContainer>
+                                   <div style={{ height: 475, width: '100%' }}>
+                                        <DataGrid
+                                             getRowId={(row) => row._id}
+                                             rows={pendingLeaves.filter((leave) =>
+                                                  leave.employee_fullname.toLowerCase().includes(query))}
+                                             columns={columns}
+                                             pageSize={7}
+                                             rowsPerPageOptions={[5]}
+                                             onRowClick={handleRowClick}
+                                        />
+                                        <ButtonContainer>
 
-                                        <EditDeleteContainer>
-                                             <ThemeProvider theme={theme}>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenEdit}>
-                                                       Take Action
+                                             <EditDeleteContainer>
+                                                  <ThemeProvider theme={theme}>
+                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenEdit}>
+                                                            Take Action
+                                                       </Button>
+                                                  </ThemeProvider>
+                                             </EditDeleteContainer>
+                                        </ButtonContainer>
+
+                                        <Dialog
+                                             open={openEdit}
+                                             onClose={handleCloseEdit}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                             fullWidth
+                                             maxWidth="sm"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
+
+                                                  {<h2>Leave Approval Confirmation</h2>}
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       {`Please confirm to approve ${employee_fullname}`}
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={(e) => {
+                                                       handleApproveLeave(e, 'approved')
+                                                  }} autoFocus>
+                                                       {<span style={{ color: "#0a9941" }}>Approve</span>}
                                                   </Button>
-                                             </ThemeProvider>
-                                        </EditDeleteContainer>
-                                   </ButtonContainer>
-
-                                   <Dialog
-                                        open={openEdit}
-                                        onClose={handleCloseEdit}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                        fullWidth
-                                        maxWidth="sm"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-
-                                             {<h2>Leave Approval Confirmation</h2>}
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  {`Please confirm to approve ${employee_fullname}`}
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={(e)=> {
-                                                  handleApproveLeave(e,'approved')
+                                                  <Button onClick={(e) => {
+                                                       handleApproveLeave(e, 'declined')
                                                   }} autoFocus>
-                                                  {<span style={{ color: "#0a9941" }}>Approve</span>}
-                                             </Button>
-                                             <Button onClick={(e)=> {
-                                                  handleApproveLeave(e,'declined')
-                                                  }} autoFocus>
-                                                  {<span style={{ color: "#d13f3f" }}>Decline</span>}
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
+                                                       {<span style={{ color: "#d13f3f" }}>Decline</span>}
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
 
 
 
-                                   <Dialog
-                                        open={openWarning}
-                                        onClose={handleCloseWarning}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                        <Dialog
+                                             open={openWarning}
+                                             onClose={handleCloseWarning}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
-                                             <h2>{"No data has been selected"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  You need to select a data first before deleting/editing
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleCloseWarning} autoFocus>
-                                                  Okay
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
-                              </div>
-                         </Card>
-                    </Main>
-               </Wrapper>
-          </Container>
-
+                                                  <h2>{"No data has been selected"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       You need to select a data first before deleting/editing
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleCloseWarning} autoFocus>
+                                                       Okay
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                   </div>
+                              </Card>
+                         </Main>
+                    </Wrapper>
+               </Container>
+          </div>
      )
 }
 

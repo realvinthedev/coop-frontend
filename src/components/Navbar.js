@@ -45,6 +45,7 @@ const NavList = styled.div`
 
 
 const Navbar = () => {
+    
      return (
           <Container>
                <LogoContainer>
@@ -104,7 +105,7 @@ const Navbar = () => {
                               <ListItemText primary="Leaves" />
                          </ListItemButton>
                     </Link>
-                    <Link to="/credentials">
+                    {/* <Link to="/credentials">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
                                    <ListItemIcon>
@@ -112,6 +113,16 @@ const Navbar = () => {
                                    </ListItemIcon>
                               </div>
                               <ListItemText primary="Credentials" />
+                         </ListItemButton>
+                    </Link> */}
+                    <Link to="/credentials/signup">
+                         <ListItemButton>
+                              <div style={{ paddingLeft: "40px" }}>
+                                   <ListItemIcon>
+                                        <PasswordIcon />
+                                   </ListItemIcon>
+                              </div>
+                              <ListItemText primary="Signup a user" />
                          </ListItemButton>
                     </Link>
                </List>

@@ -9,11 +9,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Navbar from '../components/Navbar'
 import { useEffect, useState } from "react"
 import MenuItem from '@mui/material/MenuItem';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuthContext } from '../hooks/useAuthContext'
 const theme = createTheme({
      palette: {
           neutral: {
@@ -108,6 +110,7 @@ const Salaries = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
+     const { user } = useAuthContext()
 
      /**DIALOG */
      const handleOpenAdd = () => {
@@ -169,11 +172,16 @@ const Salaries = (props) => {
                total_salary: total_salary
           }
 
+          if(!user){
+               console.log('You must be logged in first')
+              return
+          }
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/' + id, {
                method: 'PATCH',
                body: JSON.stringify(salary),
                headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                }
           })
           const json = await response.json()
@@ -202,84 +210,98 @@ const Salaries = (props) => {
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setEmployee(json)
                }
           }
-          fetchEmployees();
-     }, [])
+          if(user){
+               fetchEmployees();
+          }
+       
+     }, [user])
      const [dept, setDept] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setDept(json)
                }
           }
-          fetchDepartment();
-
-     }, [])
+          if(user){
+               fetchDepartment();
+          }
+     }, [user])
 
 
      return (
-          <Container>
-               <Wrapper>
-                    <Main>
-                         <Header title={props.title} user={props.user} />
-                         <Card>
-                              <SearchContainer>
-                                   <TextField
-                                        required
-                                        id="search"
-                                        label="Search"
-                                        fullWidth
-                                        onChange={(e) => setQuery(e.target.value)}
-                                   />
+          <div style={{ display: "flex" }}>
+               <Navbar></Navbar>
+               <Container>
+                    <Wrapper>
+                         <Main>
+                              <Header title={props.title} user={props.user} />
+                              <Card>
+                                   <SearchContainer>
+                                        <TextField
+                                             required
+                                             id="search"
+                                             label="Search"
+                                             fullWidth
+                                             onChange={(e) => setQuery(e.target.value)}
+                                        />
 
-                              </SearchContainer>
-                              <div style={{ height: 475, width: '100%' }}>
-                                   <DataGrid
-                                        getRowId={(row) => row._id}
-                                        rows={employees.filter((employee) =>
-                                             employee.firstname.toLowerCase().includes(query))}
-                                        columns={columns}
-                                        pageSize={7}
-                                        rowsPerPageOptions={[5]}
-                                        onRowClick={handleRowClick}
+                                   </SearchContainer>
+                                   <div style={{ height: 475, width: '100%' }}>
+                                        <DataGrid
+                                             getRowId={(row) => row._id}
+                                             rows={employees.filter((employee) =>
+                                                  employee.firstname.toLowerCase().includes(query))}
+                                             columns={columns}
+                                             pageSize={7}
+                                             rowsPerPageOptions={[5]}
+                                             onRowClick={handleRowClick}
 
-                                   />
-                                   <ButtonContainer>
+                                        />
+                                        <ButtonContainer>
 
-                                        <EditDeleteContainer>
-                                             <ThemeProvider theme={theme}>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
-                                                       Edit
-                                                  </Button>
-                                             </ThemeProvider>
-                                        </EditDeleteContainer>
-                                   </ButtonContainer>
+                                             <EditDeleteContainer>
+                                                  <ThemeProvider theme={theme}>
+                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
+                                                            Edit
+                                                       </Button>
+                                                  </ThemeProvider>
+                                             </EditDeleteContainer>
+                                        </ButtonContainer>
 
 
-                                   <Dialog
-                                        fullScreen={fullScreen}
-                                        open={openEdit}
-                                        onClose={handleCloseEdit}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                        fullWidth
-                                        maxWidth="sm"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                        <Dialog
+                                             fullScreen={fullScreen}
+                                             open={openEdit}
+                                             onClose={handleCloseEdit}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                             fullWidth
+                                             maxWidth="sm"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
-                                             Editing Salary
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '500', paddingTop: '20px' }}>
-                                            
+                                                  Editing Salary
+                                             </DialogTitle>
+                                             <DialogContent style={{ height: '500', paddingTop: '20px' }}>
+
                                                   <TextField
                                                        disabled
                                                        id="outlined-required"
@@ -293,7 +315,7 @@ const Salaries = (props) => {
                                                   />
                                                   <TextField
                                                        // error={firstname === ""}
-                                                       required 
+                                                       required
                                                        disabled
                                                        id="outlined-required"
                                                        label="Firstname"
@@ -303,7 +325,7 @@ const Salaries = (props) => {
                                                        value={firstname}
                                                   />
                                                   <TextField
-                                                   disabled 
+                                                       disabled
                                                        required
                                                        id="outlined-required"
                                                        label="Lastname"
@@ -363,42 +385,42 @@ const Salaries = (props) => {
                                                        value={total_salary}
                                                   />
 
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handlePatch}>Update</Button>
-                                             <Button onClick={handleCloseEdit} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handlePatch}>Update</Button>
+                                                  <Button onClick={handleCloseEdit} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
 
-                                   <Dialog
-                                        open={openWarning}
-                                        onClose={handleCloseWarning}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                        <Dialog
+                                             open={openWarning}
+                                             onClose={handleCloseWarning}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
-                                             <h2>{"No data has been selected"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  You need to select a data first before deleting/editing
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleCloseWarning} autoFocus>
-                                                  Okay
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
-                              </div>
-                         </Card>
-                    </Main>
-               </Wrapper>
-          </Container>
-
+                                                  <h2>{"No data has been selected"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       You need to select a data first before deleting/editing
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleCloseWarning} autoFocus>
+                                                       Okay
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                   </div>
+                              </Card>
+                         </Main>
+                    </Wrapper>
+               </Container>
+          </div>
      )
 }
 

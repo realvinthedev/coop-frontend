@@ -10,6 +10,7 @@ import yellow from '../images/radial-yellow.png'
 import Header from '../components/Header'
 import { useEffect, useState } from "react"
 import TextField from '@mui/material/TextField';
+import Navbar from '../components/Navbar'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,26 +20,27 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuthContext } from '../hooks/useAuthContext'
 
 const theme = createTheme({
-    palette: {
-         neutral: {
-              main: '#61c668',
-              contrastText: '#fff',
-         },
-         red: {
-              main: '#d13f3f',
-              contrastText: '#fff',
-         },
-         blue: {
-              main: '#9306f1',
-              contrastText: '#fff',
-         },
-         green: {
-              main: '#0a9941',
-              contrastText: '#fff',
-         },
-    },
+     palette: {
+          neutral: {
+               main: '#61c668',
+               contrastText: '#fff',
+          },
+          red: {
+               main: '#d13f3f',
+               contrastText: '#fff',
+          },
+          blue: {
+               main: '#9306f1',
+               contrastText: '#fff',
+          },
+          green: {
+               main: '#0a9941',
+               contrastText: '#fff',
+          },
+     },
 });
 const Container = styled.div`
     background-color: #f0f2f9;
@@ -63,69 +65,93 @@ const CardContainer = styled.div`
 
 const Dashboard = (props) => {
 
-    const [departments, setDepartment] = useState([])
+     const { user } = useAuthContext()
+     const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setDepartment(json)
                }
           }
-          fetchDepartment();
-     }, [])
+
+          if(user){
+               fetchDepartment();
+          }
+     }, [user])
 
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setEmployee(json)
                }
           }
-          fetchEmployees();
-     }, [])
+
+          if(user){
+               fetchEmployees();
+          }
+        
+
+
+     }, [user])
 
      const [leaves, setLeaves] = useState([])
      const [pendingLeaves, setPendingLeaves] = useState([]);
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setLeaves(json)
-                    setPendingLeaves(json.filter(leave=>{
+                    setPendingLeaves(json.filter(leave => {
                          return leave.status === 'Pending'
                     }))
-                    
-                }
+               }
           }
-          fetchLeaves();
-     }, [])
+          if(user){
+               fetchLeaves();
+          }
+     }, [user])
 
-    /**render or return different container per different navigation */
-    return (
+     /**render or return different container per different navigation */
+     return (
+          <div style={{ display: "flex" }}>
+               <Navbar></Navbar>
+               <Container>
+                    <Wrapper>
+                         <Header title={props.title} user={props.user} />
+                         <CardContainer>
+                              <Cards title="Total Employees" data={employees.length} color={violet} />
+                              <Cards title="Total Departments" data={departments.length} color={yellow} />
+                              <Cards title="New Password Reset" data="0" color={green} />
+                         </CardContainer>
+                         <CardContainer>
+                              <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} />
+                         </CardContainer>
 
-        <Container>
-            <Wrapper>
-                <Header title={props.title} user={props.user} />
-                <CardContainer>
-                    <Cards title="Total Employees" data={employees.length} color={violet} />
-                    <Cards title="Total Departments" data={departments.length} color={yellow} />
-                    <Cards title="New Password Reset" data="0" color={green} />
-                </CardContainer>
-                <CardContainer>
-                    <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} />
-                </CardContainer>
-               
-            </Wrapper>
-        </Container>
-
-    ) 
+                    </Wrapper>
+               </Container>
+          </div>
+     )
 }
 
 export default Dashboard

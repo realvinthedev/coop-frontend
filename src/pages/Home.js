@@ -2,13 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import Dashboard from './Dashboard'
 import Navbar from '../components/Navbar'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Department from './Departments'
 import Employees from './Employees'
 import Salaries from './Salaries'
 import Leaves from './Leaves'
 import Credentials from './Credentials'
-
+import Signup from './Signup'
+import { Login } from './Login'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 /**Styled Components */
 const Container = styled.div`
@@ -18,38 +20,50 @@ const Container = styled.div`
 `
 
 const Home = () => {
+    const { user } = useAuthContext();
     return (
-        <BrowserRouter>
+
+        <div>
             <Container>
-                <Navbar></Navbar>
+
                 <Routes>
                     <Route
                         path="/"
-                        element={<Dashboard title="Dashboard" user="User" />}
+                        element={user ? <Dashboard title="Dashboard" user="User" /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/departments"
-                        element={<Department title="Department" user="User" />}
+                        element={user ? <Department title="Department" user="User" /> : <Navigate to="/login"/>}
                     />
                     <Route
                         path="/employees"
-                        element={<Employees title="Employees" user="User" />}
+                        element={user ?<Employees title="Employees" user="User" /> : <Navigate to="/login"/>}
                     />
                     <Route
                         path="/salaries"
-                        element={<Salaries title="Salaries" user="User" />}
+                        element={user ?<Salaries title="Salaries" user="User" /> : <Navigate to="/login"/>}
                     />
                     <Route
                         path="/leaves"
-                        element={<Leaves title="Leaves" user="User" />}
+                        element={user ?<Leaves title="Leaves" user="User" /> : <Navigate to="/login"/>}
                     />
                     <Route
                         path="/credentials"
-                        element={<Credentials title="Credentials" user="User" />}
+                        element={user ?<Credentials title="Credentials" user="User" /> : <Navigate to="/login"/>}
                     />
+                    <Route
+                        path="/credentials/signup"
+                        element={user ?<Signup title="Signup a user" user="User" /> : <Navigate to="/login"/>}
+                    />
+                    <Route
+                        path="/login"
+                        element={!user ? <Login /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                  
                 </Routes>
+
             </Container>
-        </BrowserRouter>
+        </div>
     )
 }
 

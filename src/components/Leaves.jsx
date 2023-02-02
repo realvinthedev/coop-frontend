@@ -19,6 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuthContext } from '../hooks/useAuthContext';
 const theme = createTheme({
     palette: {
         neutral: {
@@ -94,7 +95,7 @@ const Leaves = (props) => {
     const [approve, setApprove] = useState(false);
     const [pendingLeaves, setPendingLeaves] = useState([]);
 
-
+    const { user } = useAuthContext()
     const handleRowClick = (params) => {
         setId(params.row._id);
         setEmployee_id(params.row.employee_id)
@@ -109,7 +110,11 @@ const Leaves = (props) => {
     const [leaves, setLeaves] = useState([])
     useEffect(() => {
         const fetchLeaves = async () => {
-            const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves')
+            const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves',{
+                headers: {
+                     'Authorization': `Bearer ${user.token}`
+                }
+           })
             const json = await response.json()
 
             if (response.ok) {
@@ -119,9 +124,10 @@ const Leaves = (props) => {
                 }))
             }
         }
-        fetchLeaves();
-
-    }, [])
+        if(user){
+            fetchLeaves();
+        }
+    }, [user])
 
     return (
         <Container>

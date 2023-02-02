@@ -8,12 +8,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Navbar from '../components/Navbar'
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import { useAuthContext } from '../hooks/useAuthContext'
 const theme = createTheme({
      palette: {
           neutral: {
@@ -95,7 +96,7 @@ const Departments = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
-   
+
      /**DIALOG */
      const handleOpenAdd = () => {
           setOpenAdd(true);
@@ -108,7 +109,7 @@ const Departments = (props) => {
      const handleCloseWarning = () => {
           setOpenWarning(false);
      };
-     
+
      const handleOpenDelete = () => {
           if (id == "") {
                setOpenWarning(true)
@@ -128,7 +129,7 @@ const Departments = (props) => {
           else {
                setOpenEdit(true);
           }
-         
+
      };
      const handleCloseEdit = () => {
           setOpenEdit(false);
@@ -137,10 +138,17 @@ const Departments = (props) => {
 
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+     const { user } = useAuthContext()
 
      /**POST NEW DEPARTMENT */
      const handleAdd = async (e) => {
           e.preventDefault()
+
+        
+          if(!user){
+               console.log('You must be logged in first')
+              return
+          }
           const departments = {
                department_name: department_name,
                description: description
@@ -150,7 +158,8 @@ const Departments = (props) => {
                method: 'POST',
                body: JSON.stringify(departments),
                headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                }
           })
           const json = await response.json()
@@ -172,12 +181,16 @@ const Departments = (props) => {
                department_name: department_name,
                description: description
           }
-
+          if(!user){
+               console.log('You must be logged in first')
+              return
+          }
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments/' + id, {
                method: 'PATCH',
                body: JSON.stringify(departments),
                headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                }
           })
           const json = await response.json()
@@ -196,26 +209,41 @@ const Departments = (props) => {
      const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments')
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
                const json = await response.json()
 
                if (response.ok) {
                     setDepartment(json)
                }
           }
-          fetchDepartment();
+          if(user){
+               fetchDepartment();
+          }
+       
 
-     }, [])
+     }, [user])
 
      const handleRowClick = (params) => {
           setId(params.row._id);
           setDepartment_name(params.row.department_name)
           setDescription(params.row.description)
      };
-
+     if(!user){
+          console.log('You must be logged in first')
+          window.location.replace('http://localhost:3000/login');
+         return
+        
+     }
      const handleDelete = async () => {
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments/' + id, {
-               method: 'DELETE'
+               method: 'DELETE',
+               headers: {
+                    'Authorization': `Bearer ${user.token}`
+               }
           })
           const json = await response.json()
           if (response.ok) {
@@ -227,181 +255,184 @@ const Departments = (props) => {
 
 
      return (
-          <Container>
-               <Wrapper>
-                    <Main>
-                         <Header title={props.title} user={props.user} />
-                         <Card>
-                              <SearchContainer>
-                                   <TextField
-                                        required
-                                        id="search"
-                                        label="Search"
-                                        fullWidth
-                                        onChange={(e) => setQuery(e.target.value)}
-                                   />
+          <div style={{ display: "flex" }}>
+               <Navbar></Navbar>
+               <Container>
+                    <Wrapper>
+                         <Main>
+                              <Header title={props.title} user={props.user} />
+                              <Card>
+                                   <SearchContainer>
+                                        <TextField
+                                             required
+                                             id="search"
+                                             label="Search"
+                                             fullWidth
+                                             onChange={(e) => setQuery(e.target.value)}
+                                        />
 
-                              </SearchContainer>
-                              <div style={{ height: 475, width: '100%' }}>
-                                   <DataGrid
-                                        getRowId={(row) => row._id}
-                                        rows={departments.filter((department) =>
-                                             department.department_name.toLowerCase().includes(query))}
-                                        columns={columns}
-                                        pageSize={7}
-                                        rowsPerPageOptions={[5]}
-                                        onRowClick={handleRowClick}
+                                   </SearchContainer>
+                                   <div style={{ height: 475, width: '100%' }}>
+                                        <DataGrid
+                                             getRowId={(row) => row._id}
+                                             rows={departments.filter((department) =>
+                                                  department.department_name.toLowerCase().includes(query))}
+                                             columns={columns}
+                                             pageSize={7}
+                                             rowsPerPageOptions={[5]}
+                                             onRowClick={handleRowClick}
 
-                                   />
-                                   <ButtonContainer>
-                                        <ThemeProvider theme={theme}>
-                                             <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
-                                                  Add New
-                                             </Button>
-                                        </ThemeProvider>
-                                        <EditDeleteContainer>
-
+                                        />
+                                        <ButtonContainer>
                                              <ThemeProvider theme={theme}>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
-                                                       Edit
-                                                  </Button>
-                                                  <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
-                                                       Delete
+                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
+                                                       Add New
                                                   </Button>
                                              </ThemeProvider>
-                                             {console.log(department_name + " " + description)}
-                                        </EditDeleteContainer>
-                                   </ButtonContainer>
-                                   <Dialog
-                                        open={openDelete}
-                                        onClose={handleCloseDelete}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             <h2>{"Are you sure to delete selected item?"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  Deleted item can't be undone. Confirm by clicking "Delete"
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleDelete}>Delete</Button>
-                                             <Button onClick={handleCloseDelete} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
+                                             <EditDeleteContainer>
 
-                                   <Dialog
-                                        fullScreen={fullScreen}
-                                        open={openEdit}
-                                        onClose={handleCloseEdit}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                                  <ThemeProvider theme={theme}>
+                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
+                                                            Edit
+                                                       </Button>
+                                                       <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
+                                                            Delete
+                                                       </Button>
+                                                  </ThemeProvider>
+                                                  {console.log(department_name + " " + description)}
+                                             </EditDeleteContainer>
+                                        </ButtonContainer>
+                                        <Dialog
+                                             open={openDelete}
+                                             onClose={handleCloseDelete}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
+                                                  <h2>{"Are you sure to delete selected item?"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       Deleted item can't be undone. Confirm by clicking "Delete"
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleDelete}>Delete</Button>
+                                                  <Button onClick={handleCloseDelete} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
 
-                                             Editing Department
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
-                                             <FormContainer>
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Department"
-                                                       style={{ paddingRight: "20px" }}
-                                                       fullWidth
-                                                       onChange={(e) => setDepartment_name(e.target.value)}
-                                                       value={department_name}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Department Description"
-                                                       fullWidth
-                                                       style={{ paddingRight: "20px" }}
-                                                       onChange={(e) => setDescription(e.target.value)}
-                                                       value={description}
-                                                  />
-                                             </FormContainer>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handlePatch}>Update</Button>
-                                             <Button onClick={handleCloseEdit} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
-                                   <Dialog
-                                        fullScreen={fullScreen}
-                                        open={openAdd}
-                                        onClose={handleCloseAdd}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                        <Dialog
+                                             fullScreen={fullScreen}
+                                             open={openEdit}
+                                             onClose={handleCloseEdit}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
-                                             Adding New Department
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
-                                             <FormContainer>
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Department"
-                                                       style={{ paddingRight: "20px" }}
-                                                       fullWidth
-                                                       onChange={(e) => setDepartment_name(e.target.value)}
-                                                       value={department_name}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Department Description"
-                                                       fullWidth
-                                                       style={{ paddingRight: "20px" }}
-                                                       onChange={(e) => setDescription(e.target.value)}
-                                                       value={description}
-                                                  />
-                                             </FormContainer>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleAdd}>Add</Button>
-                                             <Button onClick={handleCloseAdd} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
-                                   <Dialog
-                                        open={openWarning}
-                                        onClose={handleCloseWarning}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
+                                                  Editing Department
+                                             </DialogTitle>
+                                             <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
+                                                  <FormContainer>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Department"
+                                                            style={{ paddingRight: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setDepartment_name(e.target.value)}
+                                                            value={department_name}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Department Description"
+                                                            fullWidth
+                                                            style={{ paddingRight: "20px" }}
+                                                            onChange={(e) => setDescription(e.target.value)}
+                                                            value={description}
+                                                       />
+                                                  </FormContainer>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handlePatch}>Update</Button>
+                                                  <Button onClick={handleCloseEdit} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                        <Dialog
+                                             fullScreen={fullScreen}
+                                             open={openAdd}
+                                             onClose={handleCloseAdd}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
-                                             <h2>{"No data has been selected"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  You need to select a data first before deleting/editing
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleCloseWarning} autoFocus>
-                                                  Okay
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
-                              </div>
-                         </Card>
-                    </Main>
-               </Wrapper>
-          </Container>
+                                                  Adding New Department
+                                             </DialogTitle>
+                                             <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
+                                                  <FormContainer>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Department"
+                                                            style={{ paddingRight: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setDepartment_name(e.target.value)}
+                                                            value={department_name}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Department Description"
+                                                            fullWidth
+                                                            style={{ paddingRight: "20px" }}
+                                                            onChange={(e) => setDescription(e.target.value)}
+                                                            value={description}
+                                                       />
+                                                  </FormContainer>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleAdd}>Add</Button>
+                                                  <Button onClick={handleCloseAdd} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                        <Dialog
+                                             open={openWarning}
+                                             onClose={handleCloseWarning}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
 
+                                                  <h2>{"No data has been selected"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       You need to select a data first before deleting/editing
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleCloseWarning} autoFocus>
+                                                       Okay
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                   </div>
+                              </Card>
+                         </Main>
+                    </Wrapper>
+               </Container>
+          </div>
      )
+
 }
 
 export default Departments
