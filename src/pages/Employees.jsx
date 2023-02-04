@@ -364,7 +364,6 @@ const Employees = (props) => {
                     setError(json.error)
                }
                else {
-                    
                     setEmployee_id('')
                     setFirstname('')
                     setMiddleName('')
@@ -394,8 +393,6 @@ const Employees = (props) => {
                     setVacation_leave('')
                     setEmergencty_leave('')
                     setPhoto('')
-                  
-
                     console.log('New department added', json)
                     window.location.reload();
                }
@@ -786,9 +783,9 @@ const Employees = (props) => {
                                                        onChange={(e) => setContract(e.target.value)}
                                                        value={contract}
                                                   >
-                                                       <MenuItem value={true}>Contractual</MenuItem>
-                                                       <MenuItem value={false}>Permanent</MenuItem>
-                                                       <MenuItem value={false}>Provisionary</MenuItem>
+                                                       <MenuItem value={"Contractual"}>Contractual</MenuItem>
+                                                       <MenuItem value={"Permanent"}>Permanent</MenuItem>
+                                                       <MenuItem value={"Provisionary"}>Provisionary</MenuItem>
                                                   </TextField>
                                                   <TextField
                                                        required
@@ -1100,9 +1097,9 @@ const Employees = (props) => {
                                                        onChange={(e) => setContract(e.target.value)}
                                                        value={contract}
                                                   >
-                                                       <MenuItem value={true}>Contractual</MenuItem>
-                                                       <MenuItem value={false}>Permanent</MenuItem>
-                                                       <MenuItem value={false}>Provisionary</MenuItem>
+                                                       <MenuItem value={"Contractual"}>Contractual</MenuItem>
+                                                       <MenuItem value={"Permanent"}>Permanent</MenuItem>
+                                                       <MenuItem value={"Provisionary"}>Provisionary</MenuItem>
                                                   </TextField>
                                                   <TextField
                                                        required

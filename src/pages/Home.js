@@ -11,6 +11,8 @@ import Credentials from './Credentials'
 import Signup from './Signup'
 import { Login } from './Login'
 import { useAuthContext } from '../hooks/useAuthContext';
+import MyLeaves from './MyLeaves'
+import MySalary from './MySalary'
 
 /**Styled Components */
 const Container = styled.div`
@@ -20,7 +22,8 @@ const Container = styled.div`
 `
 
 const Home = () => {
-    const { user } = useAuthContext();
+    const { user } = useAuthContext()
+    
     return (
 
         <div>
@@ -58,6 +61,14 @@ const Home = () => {
                     <Route
                         path="/login"
                         element={!user ? <Login /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                     <Route
+                        path="/employee/applyleaves"
+                        element={user ? <MyLeaves title="My Leaves" user="User"/> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                     <Route
+                        path="/employee/salary"
+                        element={user ? <MySalary title="My Salary" user="User"/> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
                   
                 </Routes>
