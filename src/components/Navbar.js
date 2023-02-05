@@ -135,6 +135,8 @@ const Navbar = () => {
                               <ListItemText primary="Signup a user" />
                          </ListItemButton>
                     </Link>}
+
+                    {user && currentUser != "admin" &&
                     <Link to="/employee/applyleaves">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -144,8 +146,9 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="My Leaves" />
                          </ListItemButton>
-                    </Link>
-
+                    </Link>}
+                    
+                    {user && currentUser != "admin" &&
                     <Link to="/employee/salary">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -155,7 +158,7 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="My Salary" />
                          </ListItemButton>
-                    </Link>
+                    </Link>}
                </List>
           </Container>
 
