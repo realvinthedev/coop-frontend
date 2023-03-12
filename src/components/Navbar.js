@@ -15,6 +15,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { useAuthContext } from '../hooks/useAuthContext';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const Container = styled.div`
      background-color: white;
@@ -133,6 +134,17 @@ const Navbar = () => {
                                    </ListItemIcon>
                               </div>
                               <ListItemText primary="Signup a user" />
+                         </ListItemButton>
+                    </Link>}
+                    {user && currentUser == "admin" &&
+                    <Link to="/dtr">
+                         <ListItemButton>
+                              <div style={{ paddingLeft: "40px" }}>
+                                   <ListItemIcon>
+                                        <AccessTimeIcon />
+                                   </ListItemIcon>
+                              </div>
+                              <ListItemText primary="DTR" />
                          </ListItemButton>
                     </Link>}
 

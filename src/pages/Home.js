@@ -13,6 +13,7 @@ import { Login } from './Login'
 import { useAuthContext } from '../hooks/useAuthContext';
 import MyLeaves from './MyLeaves'
 import MySalary from './MySalary'
+import Dtr from './Dtr'
 
 /**Styled Components */
 const Container = styled.div`
@@ -57,6 +58,10 @@ const Home = () => {
                     <Route
                         path="/credentials/signup"
                         element={user ?<Signup title="Signup a user" user="User" /> : <Navigate to="/login"/>}
+                    />
+                    <Route
+                        path="/dtr"
+                        element={user ?<Dtr title="DTR" user="User" /> : <Navigate to="/login"/>}
                     />
                     <Route
                         path="/login"
