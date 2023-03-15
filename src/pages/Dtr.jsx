@@ -74,6 +74,7 @@ const CheckContainer = styled.div`
 `
 const TimeContainer = styled.div`
      display: flex;
+     justify-content: space-between;
 `
 const Card = styled.div`
     background-color: white;
@@ -87,6 +88,10 @@ const FormContainer = styled.div`
      display: flex;
      justify-content: space-between;
      margin-bottom: 20px;
+`
+const ButtonContainer2 = styled.div`
+     display: flex;
+     justify-content: center;
 `
 const ButtonContainer = styled.div`
      display: flex;
@@ -221,8 +226,7 @@ const Dtr = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    console.log("*******************", json)
-                    console.log("*******************", date)
+                 
                     setDtr(json)
 
                }
@@ -234,7 +238,7 @@ const Dtr = (props) => {
      const [official_am_timein, setOfficial_am_timein] = useState(0);
      const [official_pm_timein, setOfficial_pm_timein] = useState(0);
 
-     const [leaveType, setLeaveType] = useState('none');
+     const [leave_type, setLeaveType] = useState('none');
      const [hide, setHide] = useState(false);
      const handleSelectChange = (event) => {
           const type = event.target.value
@@ -242,14 +246,21 @@ const Dtr = (props) => {
           if (type == "none") {
                setHide(false)
                setLeaveHours(0)
+               setIs_absent(false)
           }
           else if (type == "vl_halfday" || type == "sl_halfday" || type == "el_halfday") {
                setLeaveHours(4)
                setHide(false)
+               setIs_absent(false)
           }
-          else {
+          else if (type == "vl_wholeday" || type == "sl_wholeday" || type == "el_wholeday") {
                setHide(true)
                setLeaveHours(8)
+               setIs_absent(false)
+          }
+          else {
+               setIs_absent(true)
+               setHide(false)
           }
      };
 
@@ -269,6 +280,7 @@ const Dtr = (props) => {
 
 
      const [leaveHours, setLeaveHours] = useState(0);
+     const [is_absent, setIs_absent] = useState(false);
      const handleLeaveHours = (event) => {
 
           const hour = event.target.value
@@ -350,6 +362,7 @@ const Dtr = (props) => {
 
 
      }
+
      const [selectedText, setSelectedText] = useState("")
      const handleRecalculate = () => {
           calculateTardiness();
@@ -361,8 +374,6 @@ const Dtr = (props) => {
           setName(name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
-
-
      }
      const [disabled, setDisabled] = useState(true);
 
@@ -444,6 +455,8 @@ const Dtr = (props) => {
                is_tardiness: is_tardiness,
                leave_hours: leaveHours,
                official_am_timein: official_am_timein,
+               is_absent: is_absent,
+               leave_type: leave_type
           }
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
                method: 'POST',
@@ -459,7 +472,7 @@ const Dtr = (props) => {
                console.log(json)
           }
           else {
-               console.log(json)
+               console.log(error)
           }
           //window.location.reload();
      }
@@ -568,10 +581,11 @@ const Dtr = (props) => {
                                                             select
                                                             style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                             onChange={handleSelectChange}
-                                                            value={leaveType}
+                                                            value={leave_type}
                                                        >
 
                                                             <MenuItem value={'none'}>None</MenuItem>
+                                                            <MenuItem value={'absent'}>Absent</MenuItem>
                                                             <MenuItem value={'vl_wholeday'}>VL - Wholeday</MenuItem>
                                                             <MenuItem value={'vl_halfday'}>VL - Halfday</MenuItem>
                                                             <MenuItem value={'sl_wholeday'}>SL - Wholeday</MenuItem>
@@ -609,6 +623,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="Time in (hour)"
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
@@ -619,6 +634,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="Time in (mins)"
                                                                  style={{ paddingBottom: "20px" }}
@@ -631,6 +647,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="AM-OUT Hour"
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
@@ -641,6 +658,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="AM-OUT Min"
                                                                  style={{ paddingBottom: "20px" }}
@@ -649,21 +667,12 @@ const Dtr = (props) => {
                                                                  onMouseLeave={CalculateTotalHours}
                                                             />
                                                        </TimeContainer >
+
                                                        <TimeContainer>
                                                             <TextField
                                                                  type="number"
                                                                  required
-                                                                 id="outlined-required"
-                                                                 label="Official PM Timein"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setOfficial_pm_timein(e.target.value)}
-                                                                 value={official_pm_timein}
-                                                            />
-                                                       </TimeContainer>
-                                                       <TimeContainer>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="PM-IN Hour"
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
@@ -674,6 +683,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="PM-IN Min"
                                                                  style={{ paddingBottom: "20px" }}
@@ -685,6 +695,7 @@ const Dtr = (props) => {
                                                        <TimeContainer style={{ paddingBottom: "40px" }}>
                                                             <TextField
                                                                  type="number"
+                                                                 fullWidth
                                                                  required
                                                                  id="outlined-required"
                                                                  label="PM-OUT Hour"
@@ -696,6 +707,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="PM-OUT Min"
                                                                  style={{ paddingBottom: "20px" }}
@@ -725,6 +737,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  disabled={disabled}
                                                                  id="outlined-required"
                                                                  label="OT-IN Hour"
@@ -736,6 +749,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  disabled={disabled}
                                                                  id="outlined-required"
                                                                  label="OT-IN Min"
@@ -749,6 +763,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  disabled={disabled}
                                                                  id="outlined-required"
                                                                  label="OT-OUT Hour"
@@ -760,6 +775,7 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  disabled={disabled}
                                                                  id="outlined-required"
                                                                  label="OT-OUT Min"
@@ -770,10 +786,11 @@ const Dtr = (props) => {
                                                             />
                                                        </TimeContainer>
                                                        <ThemeProvider theme={theme}>
-
-                                                            <Button style={{ marginBottom: "70px" }} variant="outlined" color="green" onClick={handleRecalculate}>
-                                                                 Recalculate
-                                                            </Button>
+                                                            <ButtonContainer2>
+                                                                 <Button style={{ marginBottom: "70px" }} variant="outlined" color="green" onClick={handleRecalculate}>
+                                                                      Recalculate Hours
+                                                                 </Button>
+                                                            </ButtonContainer2>
                                                        </ThemeProvider>
                                                        <TextField
                                                             type="number"
@@ -811,6 +828,18 @@ const Dtr = (props) => {
                                                             style={{ paddingBottom: "20px" }}
                                                             onChange={(e) => setTotal_tardiness_min(e.target.value)}
                                                             value={total_tardiness_min}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Is Absent"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setIs_absent(e.target.value)}
+                                                            value={is_absent}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}

@@ -147,6 +147,17 @@ const Navbar = () => {
                               <ListItemText primary="DTR" />
                          </ListItemButton>
                     </Link>}
+                    {user && currentUser == "admin" &&
+                    <Link to="/payroll">
+                         <ListItemButton>
+                              <div style={{ paddingLeft: "40px" }}>
+                                   <ListItemIcon>
+                                        <AttachMoneyIcon />
+                                   </ListItemIcon>
+                              </div>
+                              <ListItemText primary="Payroll" />
+                         </ListItemButton>
+                    </Link>}
 
                     {user && currentUser != "admin" &&
                     <Link to="/employee/applyleaves">
@@ -171,6 +182,8 @@ const Navbar = () => {
                               <ListItemText primary="My Salary" />
                          </ListItemButton>
                     </Link>}
+
+              
                </List>
           </Container>
 
