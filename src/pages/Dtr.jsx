@@ -68,6 +68,21 @@ const Main = styled.div`
 const Others = styled.div`
     
 `
+
+const OthersWithPayLeaves = styled.div`
+     
+`
+const OthersNoPayLeaves = styled.div`
+     
+`
+const OthersOT = styled.div`
+     
+`
+const TotalsContainer = styled.div`
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+`
 const CheckContainer = styled.div`
      display: flex;
      flex-direction: column;
@@ -101,6 +116,13 @@ const EditDeleteContainer = styled.div`
     display: flex;
     justify-content: right;
 `
+
+const Warnings = styled.h1`
+     color: red;
+     font-size: 12px;
+     justify-content: left;
+     margin-bottom: 20px;
+`
 const columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'employee_id', headerName: 'Employee ID', width: 100 },
@@ -117,12 +139,12 @@ const columns = [
      { field: 'ot_in_min', headerName: '', width: 80 },
      { field: 'ot_out_hour', headerName: 'OT OUT', width: 80 },
      { field: 'ot_out_min', headerName: '', width: 80 },
+     { field: 'ot_out_min', headerName: '', width: 80 },
      { field: 'total_working_hour', headerName: 'Total Working Hour', width: 140 },
      { field: 'total_ot_hour', headerName: 'Total OT Hour', width: 140 },
      { field: 'ot_type', headerName: 'OT Type', width: 140 },
      { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 140 },
      { field: 'is_tardiness', headerName: 'Is Tardiness?', width: 80 },
-
 ];
 
 
@@ -135,7 +157,6 @@ const Dtr = (props) => {
 
 
 
-     const [error, setError] = useState([])
      const [employeeId, setEmployeeId] = useState('')
      const [name, setName] = useState('')
      const [date, setDate] = useState(() => {
@@ -170,7 +191,7 @@ const Dtr = (props) => {
      const [total_working_hour, setTotal_working_hour] = useState('')
      const [total_tardiness_min, setTotal_tardiness_min] = useState(0)
      const [ot_type, setOt_type] = useState("none")
-     const [is_tardiness, setIs_tardiness] = useState(false)
+     const [is_tardiness, setIs_tardiness] = useState(0)
 
 
 
@@ -182,12 +203,20 @@ const Dtr = (props) => {
      const [openDelete, setOpenDelete] = useState(false);
      const [openEdit, setOpenEdit] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
+     const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
 
      const handleOpenAdd = () => {
           setOpenAdd(true);
      };
      const handleCloseAdd = () => {
           setOpenAdd(false);
+     };
+
+     const handleOpenAddAdditionals = () => {
+          setOpenAddAdditionals(true);
+     };
+     const handleCloseAddAdditionals = () => {
+          setOpenAddAdditionals(false);
      };
 
      // function DataList({ date }) {
@@ -226,7 +255,7 @@ const Dtr = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                 
+
                     setDtr(json)
 
                }
@@ -240,27 +269,116 @@ const Dtr = (props) => {
 
      const [leave_type, setLeaveType] = useState('none');
      const [hide, setHide] = useState(false);
+     const [hideWithPayLeaves, setHideWithPayLeaves] = useState(true)
+     const [hideNoPayLeaves, setHideNoPayLeaves] = useState(true)
+
+
+
+     const [vl_wpay_hours, setVl_wpay_hours] = useState(0);
+     const [sl_wpay_hours, setSl_wpay_hours] = useState(0);
+     const [el_wpay_hours, setEl_wpay_hours] = useState(0);
+
+     const [vl_nopay_hours, setVl_nopay_hours] = useState(0);
+     const [sl_nopay_hours, setSl_nopay_hours] = useState(0);
+     const [el_nopay_hours, setEl_nopay_hours] = useState(0);
      const handleSelectChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
           if (type == "none") {
                setHide(false)
-               setLeaveHours(0)
-               setIs_absent(false)
+               setAbsent_hours(0)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
           }
           else if (type == "vl_halfday" || type == "sl_halfday" || type == "el_halfday") {
-               setLeaveHours(4)
-               setHide(false)
-               setIs_absent(false)
+               if (type == "vl_halfday") {
+                    setVl_wpay_hours(4)
+                    setSl_wpay_hours(0)
+                    setEl_wpay_hours(0)
+               }
+               else if (type == "sl_halfday") {
+                    setVl_wpay_hours(0)
+                    setSl_wpay_hours(4)
+                    setEl_wpay_hours(0)
+               }
+               else {
+                    setVl_wpay_hours(0)
+                    setSl_wpay_hours(0)
+                    setEl_wpay_hours(4)
+               }
+               setHide(true)
+               setAbsent_hours(0)
+               setHideWithPayLeaves(false)
+               setHideNoPayLeaves(true)
           }
           else if (type == "vl_wholeday" || type == "sl_wholeday" || type == "el_wholeday") {
+               if (type == "vl_wholeday") {
+                    setVl_wpay_hours(8)
+                    setSl_wpay_hours(0)
+                    setEl_wpay_hours(0)
+               }
+               else if (type == "sl_wholeday") {
+                    setVl_wpay_hours(0)
+                    setSl_wpay_hours(8)
+                    setEl_wpay_hours(0)
+               }
+               else {
+                    setVl_wpay_hours(0)
+                    setSl_wpay_hours(0)
+                    setEl_wpay_hours(8)
+               }
                setHide(true)
-               setLeaveHours(8)
-               setIs_absent(false)
+               setAbsent_hours(0)
+               setHideWithPayLeaves(false)
+               setHideNoPayLeaves(true)
+          }
+          else if (type == "vl_nopay_halfday" || type == "sl_nopay_halfday" || type == "el_nopay_halfday") {
+               if (type == "vl_nopay_halfday") {
+                    setVl_nopay_hours(4)
+                    setSl_nopay_hours(0)
+                    setEl_nopay_hours(0)
+               }
+               else if (type == "sl_nopay_halfday") {
+                    setVl_nopay_hours(0)
+                    setSl_nopay_hours(4)
+                    setEl_nopay_hours(0)
+               }
+               else {
+                    setVl_nopay_hours(0)
+                    setSl_nopay_hours(0)
+                    setEl_nopay_hours(4)
+               }
+               setHide(true)
+               setAbsent_hours(0)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(false)
+          }
+          else if (type == "vl_nopay_wholeday" || type == "sl_nopay_wholeday" || type == "el_nopay_wholeday") {
+               if (type == "vl_nopay_wholeday") {
+                    setVl_nopay_hours(8)
+                    setSl_nopay_hours(0)
+                    setEl_nopay_hours(0)
+               }
+               else if (type == "sl_nopay_wholeday") {
+                    setVl_nopay_hours(0)
+                    setSl_nopay_hours(8)
+                    setEl_nopay_hours(0)
+               }
+               else {
+                    setVl_nopay_hours(0)
+                    setSl_nopay_hours(0)
+                    setEl_nopay_hours(8)
+               }
+               setHide(true)
+               setAbsent_hours(0)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(false)
           }
           else {
-               setIs_absent(true)
+               setAbsent_hours(8)
                setHide(false)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
           }
      };
 
@@ -280,7 +398,7 @@ const Dtr = (props) => {
 
 
      const [leaveHours, setLeaveHours] = useState(0);
-     const [is_absent, setIs_absent] = useState(false);
+     const [absent_hours, setAbsent_hours] = useState(0);
      const handleLeaveHours = (event) => {
 
           const hour = event.target.value
@@ -309,22 +427,29 @@ const Dtr = (props) => {
 
      }
      const CalculateTotalHours = () => {
+          let totalHoursRendered;
           let convertedAmMins = am_in_min / 60;
           let convertedPmMins = pm_in_min / 60;
-          let convertedOtMins = ot_in_min / 60;
-          let convertedOtOutMins = ot_out_min / 60;
+
 
           let amTotal = am_out_hour - am_in_hour
+          let amOfficialTotal = am_out_hour - official_am_timein
           let pmTotal = pm_out_hour - pm_in_hour
-          let otTotal = ot_out_hour - ot_in_hour
 
-          let totalHoursRendered = ((amTotal + pmTotal) - (convertedAmMins + convertedPmMins));
+          if (am_in_hour < official_am_timein) {
+               totalHoursRendered = ((amOfficialTotal + pmTotal) - (convertedAmMins + convertedPmMins));
+          }
+          else {
+               totalHoursRendered = ((amTotal + pmTotal) - (convertedAmMins + convertedPmMins));
+          }
+
+
           setTotal_working_hour(totalHoursRendered)
           calculateTardiness()
           if (total_tardiness_min > 0) {
-               setIs_tardiness(true)
+               setIs_tardiness(1)
           } else {
-               setIs_tardiness(false)
+               setIs_tardiness(0)
           }
      }
 
@@ -339,9 +464,34 @@ const Dtr = (props) => {
           setTotal_ot_hour(totalOtHoursRendered)
           calculateTardiness()
           if (total_tardiness_min > 0) {
-               setIs_tardiness(true)
+               setIs_tardiness(1)
           } else {
-               setIs_tardiness(false)
+               setIs_tardiness(0)
+          }
+
+          if (ot_type == "regular") {
+               setRegular_ot_hours(total_ot_hour)
+               setRestday_ot_hours(0)
+               setSpecial_ot_hours(0)
+               setLegal_ot_hours(0)
+          }
+          else if (ot_type == "restday") {
+               setRegular_ot_hours(0)
+               setRestday_ot_hours(total_ot_hour)
+               setSpecial_ot_hours(0)
+               setLegal_ot_hours(0)
+          }
+          else if (ot_type == "special") {
+               setRegular_ot_hours(0)
+               setRestday_ot_hours(0)
+               setSpecial_ot_hours(total_ot_hour)
+               setLegal_ot_hours(0)
+          }
+          else {
+               setRegular_ot_hours(0)
+               setRestday_ot_hours(0)
+               setSpecial_ot_hours(0)
+               setLegal_ot_hours(total_ot_hour)
           }
      }
      const calculateTardiness = () => {
@@ -377,16 +527,23 @@ const Dtr = (props) => {
      }
      const [disabled, setDisabled] = useState(true);
 
+     const [regular_ot_hours, setRegular_ot_hours] = useState(0);
+     const [restday_ot_hours, setRestday_ot_hours] = useState(0);
+     const [special_ot_hours, setSpecial_ot_hours] = useState(0);
+     const [legal_ot_hours, setLegal_ot_hours] = useState(0);
+     const [hide_ot_others, setHide_ot_others] = useState(true);
      const handleOvertime = (event) => {
           const type = event.target.value
-          if (type == "none") {
-               setDisabled(true);
+          if (type != "none") {
+               setDisabled(false)
+               setHide_ot_others(false)
           }
           else {
-               setDisabled(false)
+               setDisabled(true);
+               setHide_ot_others(true)
           }
           setOt_type(type)
-
+          CalculateTotalOtHours();
      }
 
      const [emp, setEmp] = useState([])
@@ -425,6 +582,7 @@ const Dtr = (props) => {
      };
 
      const handleAdd = async (e) => {
+          handleRecalculate();
           e.preventDefault()
 
 
@@ -450,12 +608,20 @@ const Dtr = (props) => {
                ot_out_min: ot_out_min,
                total_working_hour: total_working_hour,
                total_tardiness_min: total_tardiness_min,
-               total_ot_hour: total_ot_hour,
                ot_type: ot_type,
+               regular_ot_hours: regular_ot_hours,
+               restday_ot_hours: restday_ot_hours,
+               special_ot_hours: special_ot_hours,
+               legal_ot_hours: legal_ot_hours,
+               vl_nopay_hours: vl_nopay_hours,
+               sl_nopay_hours: sl_nopay_hours,
+               el_nopay_hours: el_nopay_hours,
+               vl_hours: vl_wpay_hours,
+               sl_hours: sl_wpay_hours,
+               el_hours: el_wpay_hours,
                is_tardiness: is_tardiness,
-               leave_hours: leaveHours,
                official_am_timein: official_am_timein,
-               is_absent: is_absent,
+               absent_hours: absent_hours,
                leave_type: leave_type
           }
           const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
@@ -477,6 +643,161 @@ const Dtr = (props) => {
           //window.location.reload();
      }
 
+
+
+
+
+
+
+
+
+
+
+
+     const [sss, setsss] = useState(0)
+     const [wtax, setwtax] = useState(0)
+     const [philhealth, setphilhealth] = useState(0)
+     const [pagibig, setpagibig] = useState(0)
+     const [lodging, setlodging] = useState(0)
+     const [water_electricity, setwater_electricity] = useState(0)
+     const [hmo, sethmo] = useState(0)
+     const [share_capital, setshare_capital] = useState(0)
+     const [hhhc_savings, sethhhc_savings] = useState(0)
+     const [hhhc_membership_fee, sethhhc_membership_fee] = useState(0)
+     const [cash_advances, setcash_advances] = useState(0)
+     const [pay_adjustment_deduction, setpay_adjustment_deduction] = useState(0)
+     const [other_deduction, setother_deduction] = useState(0)
+     const [total_deduction, settotal_deduction] = useState(0)
+     const [pay_adjustment_earnings, setpay_adjustment_earnings] = useState(0)
+     const [other_earnings, setother_earnings] = useState(0)
+     const [total_earnings, settotal_earnings] = useState(0)
+     const [allowance, setallowance] = useState(0)
+     const [error, setError] = useState("")
+
+     const handlesss = (event) => {
+          const value = parseInt(event.target.value);
+          setsss(value);
+     }
+     const handlepagibig = (event) => {
+          const value = parseInt(event.target.value);
+          setpagibig(value);
+     }
+     const handlephilhealth = (event) => {
+          const value = parseInt(event.target.value);
+          setphilhealth(value);
+     }
+     const handlewtax = (event) => {
+          const value = parseInt(event.target.value);
+          setwtax(value);
+     }
+     const handlelodging = (event) => {
+          const value = parseInt(event.target.value);
+          setlodging(value);
+     }
+     const handlewater_electricity = (event) => {
+          const value = parseInt(event.target.value);
+          setwater_electricity(value);
+     }
+     const handlehmo = (event) => {
+          const value = parseInt(event.target.value);
+          sethmo(value);
+     }
+     const handleshare_capital = (event) => {
+          const value = parseInt(event.target.value);
+          setshare_capital(value);
+     }
+     const handlehhhc_savings = (event) => {
+          const value = parseInt(event.target.value);
+          sethhhc_savings(value);
+     }
+     const handlehhhc_membership_fee = (event) => {
+          const value = parseInt(event.target.value);
+          sethhhc_membership_fee(value);
+     }
+     const handlecash_advances = (event) => {
+          const value = parseInt(event.target.value);
+          setcash_advances(value);
+     }
+     const handlepay_adjustment_deduction = (event) => {
+          const value = parseInt(event.target.value);
+          setpay_adjustment_deduction(value);
+     }
+     const handleother_deduction = (event) => {
+          const value = parseInt(event.target.value);
+          setother_deduction(value);
+     }
+     const handlepay_adjustment_earnings = (event) => {
+          const value = parseInt(event.target.value);
+          setpay_adjustment_earnings(value);
+     }
+     const handleother_earnings = (event) => {
+          const value = parseInt(event.target.value);
+          setother_earnings(value);
+     }
+     const handleallowance = (event) => {
+          const value = parseInt(event.target.value);
+          setallowance(value);
+     }
+    
+
+     const handleCalculateTotalCollections = () => {
+
+          let totalDeduction = Number(sss) + Number(wtax) + Number(philhealth) + Number(pagibig) + Number(lodging) + Number(water_electricity) + Number(hmo) + Number(share_capital) +
+               Number(hhhc_savings) + Number(hhhc_membership_fee) + Number(cash_advances) + Number(pay_adjustment_deduction) + Number(other_deduction);
+          settotal_deduction(totalDeduction)
+
+          let totalEarnings = Number(pay_adjustment_earnings) + Number(other_earnings) + Number(allowance)
+          settotal_earnings(totalEarnings)
+     }
+
+     const handleAddAdditional = async (e) => {
+          e.preventDefault()
+          if (!user) {
+               console.log('You must be logged in first')
+               return
+          }
+          const additional = {
+               date_covered: date,
+               employee_id: employeeId,
+               name: name,
+               sss: sss,
+               wtax: wtax,
+               philhealth: philhealth,
+               pagibig: pagibig,
+               lodging: lodging,
+               water_electricity: water_electricity,
+               hmo: hmo,
+               share_capital: share_capital,
+               hhhc_savings: hhhc_savings,
+               hhhc_membership_fee: hhhc_membership_fee,
+               cash_advances: cash_advances,
+               pay_adjustment_deduction: pay_adjustment_deduction,
+               other_deduction: other_deduction,
+               total_deduction: total_deduction,
+               allowance: allowance,
+               pay_adjustment_earnings: pay_adjustment_earnings,
+               other_earnings: other_earnings,
+               total_earnings: total_earnings
+          }
+          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
+               method: 'POST',
+               body: JSON.stringify(additional),
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+               }
+          })
+          const json = await response.json()
+          if (!response.ok) {
+               setError(json.error)
+               console.log(json.error)
+               console.log(error)
+          }
+          else {
+               console.log(error)
+          }
+          //window.location.reload();
+     }
 
 
      return (
@@ -508,11 +829,16 @@ const Dtr = (props) => {
                                              />
                                         </LocalizationProvider>
                                         <ButtonContainer>
-                                             <ThemeProvider theme={theme}>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
-                                                       Add New
-                                                  </Button>
-                                             </ThemeProvider>
+                                             <div>
+                                                  <ThemeProvider theme={theme}>
+                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
+                                                            Add New DTR
+                                                       </Button>
+                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAddAdditionals}>
+                                                            Add New Deduction / Earnings
+                                                       </Button>
+                                                  </ThemeProvider>
+                                             </div>
                                              <EditDeleteContainer>
 
                                                   <ThemeProvider theme={theme}>
@@ -579,34 +905,36 @@ const Dtr = (props) => {
                                                             label="Choose Leave Type"
                                                             fullWidth
                                                             select
-                                                            style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                            style={{ paddingBottom: "20px" }}
                                                             onChange={handleSelectChange}
                                                             value={leave_type}
                                                        >
 
                                                             <MenuItem value={'none'}>None</MenuItem>
                                                             <MenuItem value={'absent'}>Absent</MenuItem>
-                                                            <MenuItem value={'vl_wholeday'}>VL - Wholeday</MenuItem>
-                                                            <MenuItem value={'vl_halfday'}>VL - Halfday</MenuItem>
-                                                            <MenuItem value={'sl_wholeday'}>SL - Wholeday</MenuItem>
-                                                            <MenuItem value={'sl_halfday'}>SL - Halfday</MenuItem>
-                                                            <MenuItem value={'el_wholeday'}>EL - Wholeday</MenuItem>
-                                                            <MenuItem value={'el_halfday'}>EL - Halfday</MenuItem>
+                                                            <MenuItem value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'vl_halfday'}>VL With Pay Halfday</MenuItem>
+                                                            <MenuItem value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'sl_halfday'}>SL With Pay Halfday</MenuItem>
+                                                            <MenuItem value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'el_halfday'}>EL With Pay Halfday</MenuItem>
+
+                                                            <MenuItem value={'vl_nopay_wholeday'}>VL No Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'vl_nopay_halfday'}>VL No Pay Halfday</MenuItem>
+                                                            <MenuItem value={'sl_nopay_wholeday'}>SL No Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'sl_nopay_halfday'}>SL No Pay Halfday</MenuItem>
+                                                            <MenuItem value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
+                                                            <MenuItem value={'el_nopay_halfday'}>EL No Pay Halfday</MenuItem>
 
                                                        </TextField>
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Leave Hours"
-                                                            fullWidth
-                                                            onChange={handleLeaveHours}
-                                                            value={leaveHours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
+
                                                   </TimeContainer>
+                                                  <Warnings>
+                                                       <div>*Please use military time format</div>
+                                                       <div>**Leave "0" (zero) if the field not in use</div>
+                                                       <div>***Click "Recalculate" button after you made some changes</div>
+
+                                                  </Warnings>
                                                   {hide === true ? null : <Others id="others">
                                                        <TimeContainer>
                                                             <TextField
@@ -785,6 +1113,57 @@ const Dtr = (props) => {
                                                                  onMouseLeave={CalculateTotalOtHours}
                                                             />
                                                        </TimeContainer>
+                                                       {hide_ot_others === true ? null : <OthersOT id="othersOt">
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Regular Overtime in hour"
+                                                                 fullWidth
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setRegular_ot_hours(e.target.value)}
+                                                                 value={regular_ot_hours}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Restday Overtime in hour"
+                                                                 fullWidth
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setRestday_ot_hours(e.target.value)}
+                                                                 value={restday_ot_hours}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Special Overtime in hour"
+                                                                 fullWidth
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setSpecial_ot_hours(e.target.value)}
+                                                                 value={special_ot_hours}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Legal Overtime in hour"
+                                                                 fullWidth
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setLegal_ot_hours(e.target.value)}
+                                                                 value={legal_ot_hours}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+
+                                                       </OthersOT>}
                                                        <ThemeProvider theme={theme}>
                                                             <ButtonContainer2>
                                                                  <Button style={{ marginBottom: "70px" }} variant="outlined" color="green" onClick={handleRecalculate}>
@@ -801,19 +1180,6 @@ const Dtr = (props) => {
                                                             style={{ paddingBottom: "20px" }}
                                                             onChange={(e) => setTotal_working_hour(e.target.value)}
                                                             value={total_working_hour}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Total OT Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setTotal_ot_hour(e.target.value)}
-                                                            value={total_ot_hour}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}
@@ -835,11 +1201,11 @@ const Dtr = (props) => {
                                                        <TextField
                                                             required
                                                             id="outlined-required"
-                                                            label="Is Absent"
+                                                            label="Absent Hours"
                                                             fullWidth
                                                             style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setIs_absent(e.target.value)}
-                                                            value={is_absent}
+                                                            onChange={(e) => setAbsent_hours(e.target.value)}
+                                                            value={absent_hours}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}
@@ -856,7 +1222,89 @@ const Dtr = (props) => {
                                                                  readOnly: true,
                                                             }}
                                                        />
+
+
+
+
                                                   </Others>}
+                                                  {hideWithPayLeaves === true ? null : <OthersWithPayLeaves id="othersWithPayLeaves">
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="VL With Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setVl_wpay_hours(e.target.value)}
+                                                            value={vl_wpay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="SL With Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setSl_wpay_hours(e.target.value)}
+                                                            value={sl_wpay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="EL With Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setEl_wpay_hours(e.target.value)}
+                                                            value={el_wpay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                  </OthersWithPayLeaves>}
+
+
+                                                  {hideNoPayLeaves === true ? null : <OthersNoPayLeaves id="othersNoPayLeaves">
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="VL No Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setVl_nopay_hours(e.target.value)}
+                                                            value={vl_nopay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="SL No Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setSl_nopay_hours(e.target.value)}
+                                                            value={sl_nopay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="EL No Pay Hours"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setEl_nopay_hours(e.target.value)}
+                                                            value={el_nopay_hours}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                  </OthersNoPayLeaves>}
                                              </DialogContent>
                                              <DialogActions>
                                                   {/* <Button onClick={handleAdd}>Add</Button> */}
@@ -864,6 +1312,263 @@ const Dtr = (props) => {
                                                        Cancel
                                                   </Button>
                                                   <Button onClick={handleAdd}>Add</Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                        <Dialog
+                                             fullScreen={fullScreen}
+                                             open={openAddAdditionals}
+                                             onClose={handleCloseAddAdditionals}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
+                                                  Add Earnings / Deduction
+                                             </DialogTitle>
+                                             <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                       <DatePicker
+                                                            label="Date"
+                                                            value={date}
+                                                            inputFormat="MM-DD-YYYY"
+                                                            onChange={convertDateToString}
+                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                       />
+                                                  </LocalizationProvider>
+
+                                                  <TextField
+                                                       required
+                                                       id="outlined-required"
+                                                       label="Search Employee"
+                                                       fullWidth
+                                                       select
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handleName}
+                                                       value={name}
+                                                  >
+                                                       {emp.map((data) => {
+                                                            // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                            return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                       })}
+                                                  </TextField>
+
+                                                  <TextField
+                                                       required
+                                                       id="outlined-required"
+                                                       label="Employee_id"
+                                                       fullWidth
+                                                       style={{ paddingBottom: "80px" }}
+                                                       value={employeeId}
+                                                       InputProps={{
+                                                            readOnly: true,
+                                                       }}
+                                                  />
+                                               
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="SSS"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlesss}
+                                                       value={sss}
+                                                  />
+
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Philhealth"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlephilhealth}
+                                                       value={philhealth}
+                                                  />
+                                                  <TextField     
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="WTAX"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlewtax}
+                                                       value={wtax}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Pagibig"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlepagibig}
+                                                       value={pagibig}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Lodging"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlelodging}
+                                                       value={lodging}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Water and Electricity"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlewater_electricity}
+                                                       value={water_electricity}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="HMO"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlehmo}
+                                                       value={hmo}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Share Capital"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handleshare_capital}
+                                                       value={share_capital}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="HHHC Savings"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlehhhc_savings}
+                                                       value={hhhc_savings}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="HHHC Membership Fee"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlehhhc_membership_fee}
+                                                       value={hhhc_membership_fee}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Cash Advances"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlecash_advances}
+                                                       value={cash_advances}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Pay Adjustment - (Deduction)"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       o onChange={handlepay_adjustment_deduction}
+                                                       value={pay_adjustment_deduction}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Other Deduction"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handleother_deduction}
+                                                       value={other_deduction}
+                                                  />
+                                                  <TotalsContainer>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Total Deduction"
+                                                            fullWidth
+                                                            style={{ marginBottom: "20px", paddingRight: "10px" }}
+                                                            value={total_deduction}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
+                                                                 Calculate
+                                                            </Button>
+                                                       </ThemeProvider>
+                                                  </TotalsContainer>
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Allowance"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handleallowance}
+                                                       value={allowance}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Pay Adjustment - (Earnings)"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handlepay_adjustment_earnings}
+                                                       value={pay_adjustment_earnings}
+                                                  />
+                                                  <TextField
+                                                       type="number"
+                                                       required
+                                                       fullWidth
+                                                       id="outlined-required"
+                                                       label="Other Earnings"
+                                                       style={{ paddingBottom: "20px" }}
+                                                       onChange={handleother_earnings}
+                                                       value={other_earnings}
+                                                  />
+                                                  <TotalsContainer>
+                                                       <TextField
+                                                            type="number"
+                                                            required
+                                                            fullWidth
+                                                            id="outlined-required"
+                                                            label="Total Earnings"
+                                                            style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                                            value={total_earnings}
+                                                       />
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
+                                                                 Calculate
+                                                            </Button>
+                                                       </ThemeProvider>
+                                                  </TotalsContainer>
+
+
+
+
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  {/* <Button onClick={handleAdd}>Add</Button> */}
+                                                  <Button onClick={handleCloseAddAdditionals} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                                  <Button onClick={handleAddAdditional}>Add</Button>
                                              </DialogActions>
                                         </Dialog>
 

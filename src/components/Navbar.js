@@ -92,8 +92,7 @@ const Navbar = () => {
                               <ListItemText primary="Departments" />
                          </ListItemButton>
                     </Link>}
-                    {user && currentUser == "admin" &&
-                    
+                    {/* {user && currentUser == "admin" &&
                     <Link to="/salaries">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -114,7 +113,7 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="Leaves" />
                          </ListItemButton>
-                    </Link>}
+                    </Link>} */}
                     {/* <Link to="/credentials">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -125,7 +124,7 @@ const Navbar = () => {
                               <ListItemText primary="Credentials" />
                          </ListItemButton>
                     </Link> */}
-                     {user && currentUser == "admin" &&
+                     {/* {user && currentUser == "admin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -135,7 +134,7 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="Signup a user" />
                          </ListItemButton>
-                    </Link>}
+                    </Link>} */}
                     {user && currentUser == "admin" &&
                     <Link to="/dtr">
                          <ListItemButton>
@@ -171,7 +170,7 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>}
                     
-                    {user && currentUser != "admin" &&
+                    {/* {user && currentUser != "admin" &&
                     <Link to="/employee/salary">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -181,7 +180,7 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="My Salary" />
                          </ListItemButton>
-                    </Link>}
+                    </Link>} */}
 
               
                </List>

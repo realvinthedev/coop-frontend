@@ -33,6 +33,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { EarbudsOutlined, TableRows } from '@mui/icons-material';
 
 
 const theme = createTheme({
@@ -61,6 +62,11 @@ const Container = styled.div`
     width: 1500px;
     padding: 50px 100px 100px 100px;
 `
+const TotalsContainer = styled.div`
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+`
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -68,8 +74,8 @@ const Wrapper = styled.div`
     align-items: center;
 `
 const Main = styled.div`
-    width: 1020px;
-    height: 650px;
+    width: 1400px;
+    height: 800px;
     
 `
 const Others = styled.div`
@@ -84,7 +90,7 @@ const TimeContainer = styled.div`
 `
 const Card = styled.div`
     background-color: white;
-    height: 680px;
+    height: 750px;
     width: 100%;
     border-radius: 20px;
     padding: 30px;
@@ -113,6 +119,11 @@ const TablesContainer = styled.div`
      justify-content: space-between;
 
 `
+const NameIDContainer = styled.div`
+     display: flex;
+     justify-content: space-between;
+     margin-top: 20px;
+`
 const columns = [
      { field: 'name', headerName: 'Name', width: 100 },
 ];
@@ -131,8 +142,8 @@ const Payroll = (props) => {
      const [openDelete, setOpenDelete] = useState(false);
      const [openEdit, setOpenEdit] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
-     
-  
+
+
      const [current_date, setCurrent_date] = useState('January');
      const [payroll, setPayroll] = useState([]);
      const [name, setName] = useState("");
@@ -140,136 +151,132 @@ const Payroll = (props) => {
      const [start_date, setStartDate] = useState("");
      const [end_date, setEndDate] = useState("");
      const [month, setMonth] = useState('January');
-     const [year, setYear] = useState('2023');
+
      const [period, setPeriod] = useState('First Half');
 
      const handleMonthChange = (e) => {
           setMonth(e.target.value)
-         
+
      }
      useEffect(() => {
           handleDates();
      }, [month])
-     useEffect(() => {
-          handleDates();
-     }, [year])
+
      useEffect(() => {
           handleDates();
      }, [period])
      const handleDates = () => {
-          if(month == "january" && period=="first"){
-               setStartDate(`01-01-${year}`)
-               setEndDate(`01-15-${year}`)
+          if (month == "january" && period == "first") {
+               setStartDate(`01-01-2023`)
+               setEndDate(`01-15-2023`)
           }
-          if(month == "january" && period=="second"){
-               setStartDate(`01-16-${year}`)
-               setEndDate(`01-31-${year}`)
-          }
-
-          if(month == "february" && period=="first"){
-               setStartDate(`02-01-${year}`)
-               setEndDate(`02-15-${year}`)
-          }
-          if(month == "february" && period=="second"){
-               setStartDate(`02-16-${year}`)
-               setEndDate(`02-29-${year}`)
+          if (month == "january" && period == "second") {
+               setStartDate(`01-16-2023`)
+               setEndDate(`01-31-2023`)
           }
 
-          if(month == "march" && period=="first"){
-               setStartDate(`03-01-${year}`)
-               setEndDate(`03-15-${year}`)
+          if (month == "february" && period == "first") {
+               setStartDate(`02-01-2023`)
+               setEndDate(`02-15-2023`)
           }
-          if(month == "march" && period=="second"){
-               setStartDate(`03-16-${year}`)
-               setEndDate(`03-31-${year}`)
-          }
-
-          if(month == "april" && period=="first"){
-               setStartDate(`04-01-${year}`)
-               setEndDate(`04-15-${year}`)
-          }
-          if(month == "april" && period=="second"){
-               setStartDate(`04-16-${year}`)
-               setEndDate(`04-30-${year}`)
+          if (month == "february" && period == "second") {
+               setStartDate(`02-16-2023`)
+               setEndDate(`02-29-2023`)
           }
 
-          if(month == "may" && period=="first"){
-               setStartDate(`05-01-${year}`)
-               setEndDate(`05-15-${year}`)
+          if (month == "march" && period == "first") {
+               setStartDate(`03-01-2023`)
+               setEndDate(`03-15-2023`)
           }
-          if(month == "may" && period=="second"){
-               setStartDate(`05-16-${year}`)
-               setEndDate(`05-31-${year}`)
-          }
-          
-          if(month == "june" && period=="first"){
-               setStartDate(`06-01-${year}`)
-               setEndDate(`06-15-${year}`)
-          }
-          if(month == "june" && period=="second"){
-               setStartDate(`06-16-${year}`)
-               setEndDate(`06-30-${year}`)
+          if (month == "march" && period == "second") {
+               setStartDate(`03-16-2023`)
+               setEndDate(`03-31-2023`)
           }
 
-          if(month == "july" && period=="first"){
-               setStartDate(`07-01-${year}`)
-               setEndDate(`07-15-${year}`)
+          if (month == "april" && period == "first") {
+               setStartDate(`04-01-2023`)
+               setEndDate(`04-15-2023`)
           }
-          if(month == "july" && period=="second"){
-               setStartDate(`07-16-${year}`)
-               setEndDate(`07-31-${year}`)
-          }
-
-          if(month == "august" && period=="first"){
-               setStartDate(`08-01-${year}`)
-               setEndDate(`08-15-${year}`)
-          }
-          if(month == "august" && period=="second"){
-               setStartDate(`08-16-${year}`)
-               setEndDate(`08-31-${year}`)
+          if (month == "april" && period == "second") {
+               setStartDate(`04-16-2023`)
+               setEndDate(`04-30-2023`)
           }
 
-          if(month == "september" && period=="first"){
-               setStartDate(`09-01-${year}`)
-               setEndDate(`09-15-${year}`)
+          if (month == "may" && period == "first") {
+               setStartDate(`05-01-2023`)
+               setEndDate(`05-15-2023`)
           }
-          if(month == "september" && period=="second"){
-               setStartDate(`09-16-${year}`)
-               setEndDate(`09-30-${year}`)
-          }
-
-          if(month == "october" && period=="first"){
-               setStartDate(`10-01-${year}`)
-               setEndDate(`10-15-${year}`)
-          }
-          if(month == "october" && period=="second"){
-               setStartDate(`10-16-${year}`)
-               setEndDate(`10-31-${year}`)
+          if (month == "may" && period == "second") {
+               setStartDate(`05-16-2023`)
+               setEndDate(`05-31-2023`)
           }
 
-          if(month == "november" && period=="first"){
-               setStartDate(`11-01-${year}`)
-               setEndDate(`11-15-${year}`)
+          if (month == "june" && period == "first") {
+               setStartDate(`06-01-2023`)
+               setEndDate(`06-15-2023`)
           }
-          if(month == "november" && period=="second"){
-               setStartDate(`11-16-${year}`)
-               setEndDate(`11-30-${year}`)
+          if (month == "june" && period == "second") {
+               setStartDate(`06-16-2023`)
+               setEndDate(`06-30-2023`)
           }
 
-          if(month == "december" && period=="first"){
-               setStartDate(`12-01-${year}`)
-               setEndDate(`12-15-${year}`)
+          if (month == "july" && period == "first") {
+               setStartDate(`07-01-2023`)
+               setEndDate(`07-15-2023`)
           }
-          if(month == "december" && period=="second"){
-               setStartDate(`12-16-${year}`)
-               setEndDate(`12-31-${year}`)
+          if (month == "july" && period == "second") {
+               setStartDate(`07-16-2023`)
+               setEndDate(`07-31-2023`)
+          }
+
+          if (month == "august" && period == "first") {
+               setStartDate(`08-01-2023`)
+               setEndDate(`08-15-2023`)
+          }
+          if (month == "august" && period == "second") {
+               setStartDate(`08-16-2023`)
+               setEndDate(`08-31-2023`)
+          }
+
+          if (month == "september" && period == "first") {
+               setStartDate(`09-01-2023`)
+               setEndDate(`09-15-2023`)
+          }
+          if (month == "september" && period == "second") {
+               setStartDate(`09-16-2023`)
+               setEndDate(`09-30-2023`)
+          }
+
+          if (month == "october" && period == "first") {
+               setStartDate(`10-01-2023`)
+               setEndDate(`10-15-2023`)
+          }
+          if (month == "october" && period == "second") {
+               setStartDate(`10-16-2023`)
+               setEndDate(`10-31-2023`)
+          }
+
+          if (month == "november" && period == "first") {
+               setStartDate(`11-01-2023`)
+               setEndDate(`11-15-2023`)
+          }
+          if (month == "november" && period == "second") {
+               setStartDate(`11-16-2023`)
+               setEndDate(`11-30-2023`)
+          }
+
+          if (month == "december" && period == "first") {
+               setStartDate(`12-01-2023`)
+               setEndDate(`12-15-2023`)
+          }
+          if (month == "december" && period == "second") {
+               setStartDate(`12-16-2023`)
+               setEndDate(`12-31-2023`)
           }
      }
-   
 
-     const handleYearChange = (e) => {
-          setYear(e.target.value)
-     }
+
+
      const handlePeriodChange = (e) => {
           setPeriod(e.target.value)
      }
@@ -327,7 +334,7 @@ const Payroll = (props) => {
 
           //there's bug in these lines
           //handleGetEmployeeData()
-        
+
 
      }
 
@@ -343,17 +350,16 @@ const Payroll = (props) => {
                     }
                })
                const json = await response.json()
-
                if (response.ok) {
-                    
                     const filteredData = json.filter(item => {
                          const date = item.date
-                         
                          return date >= start_date && date <= end_date
+
                     });
                     setFiltered_employee_dtr(filteredData)
                     console.log(filtered_employee_dtr)
                     setEmployee_dtr(json)
+
                }
           }
           if (user) {
@@ -361,6 +367,41 @@ const Payroll = (props) => {
                fetchEmp();
           }
      }, [employeeId])
+
+
+
+
+
+
+     const [filtered_additional, setFiltered_Additional] = useState([]);
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional/' + employeeId, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+
+               if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const date = item.date_covered
+                         return date >= start_date && date <= end_date
+
+                    });
+                    setFiltered_Additional(filteredData)
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!", filteredData)
+               }
+          }
+          if (user) {
+               fetchEmp();
+          }
+     }, [employeeId])
+
+
+
+
+
 
      const [emp, setEmp] = useState([])
      useEffect(() => {
@@ -374,47 +415,218 @@ const Payroll = (props) => {
 
                if (response.ok) {
                     setEmp(json)
+
                }
           }
           if (user) {
-
                fetchEmp();
           }
-     }, [user])
+     }, [employeeId])
+
+
+     const [full_emp, setFullEmp] = useState([])
+     const [default_base, setdefault_base] = useState(0)
+     const [default_bimonthly, setdefault_bimonthly] = useState(0)
+     const [default_daily, setdefault_daily] = useState(0)
+     const [default_hourly, setdefault_hourly] = useState(0)
+     const [default_minute, setdefault_minute] = useState(0)
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/' + employeeId, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+
+               if (response.ok) {
+                    setdefault_base(json.base_salary ? json.base_salary.toLocaleString() : 0)
+                    setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary.toLocaleString() : 0)
+                    setdefault_daily(json.daily_salary ? json.daily_salary.toLocaleString() : 0)
+                    setdefault_hourly(json.hourly_salary ? json.hourly_salary.toLocaleString() : 0)
+                    setdefault_minute(json.minute_salary ? json.minute_salary.toLocaleString() : 0)
+
+                    setFullEmp(json)
+               }
+          }
+          if (user) {
+               fetchEmp();
+          }
+     }, [employeeId])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
      //code for accumulating total
 
 
      const [total, setTotal] = useState({
-         
           total_working_hour: 0,
-          total_ot_hour: 0,
+          regular_ot_hours: 0,
+          restday_ot_hours: 0,
+          special_ot_hours: 0,
+          legal_ot_hours: 0,
+
           total_tardiness_min: 0,
-          leave_hours: 0,
+          is_tardiness: 0,
+
+          vl_hours: 0,
+          sl_hours: 0,
+          el_hours: 0,
+          vl_nopay_hours: 0,
+          sl_nopay_hours: 0,
+          el_nopay_hours: 0,
+
+          absent_hours: 0,
+
+
      });
 
+
+
      useEffect(() => {
-          let total_working_hour = 0,
-               total_ot_hour = 0,
+          let
+               total_working_hour = 0,
+               regular_ot_hours = 0,
+               restday_ot_hours = 0,
+               special_ot_hours = 0,
+               legal_ot_hours = 0,
+
                total_tardiness_min = 0,
-               leave_hours = 0;
+               is_tardiness = 0,
+
+               vl_hours = 0,
+               sl_hours = 0,
+               el_hours = 0,
+               vl_nopay_hours = 0,
+               sl_nopay_hours = 0,
+               el_nopay_hours = 0,
+
+               absent_hours = 0
+
+
 
           filtered_employee_dtr.forEach((item) => {
                total_working_hour += item.total_working_hour
-               total_ot_hour += item.total_ot_hour
+               regular_ot_hours += item.regular_ot_hours
+               restday_ot_hours += item.restday_ot_hours
+               special_ot_hours += item.special_ot_hours
+               legal_ot_hours += item.legal_ot_hours
+
                total_tardiness_min += item.total_tardiness_min
-               leave_hours += item.leave_hours
+               is_tardiness += item.is_tardiness
+
+               vl_hours += item.vl_hours
+               sl_hours += item.sl_hours
+               el_hours += item.el_hours
+               vl_nopay_hours += item.vl_nopay_hours
+               sl_nopay_hours += item.sl_nopay_hours
+               el_nopay_hours += item.el_nopay_hours
+
+               absent_hours += item.absent_hours
           });
 
 
           setTotal({
                total_working_hour: total_working_hour,
-               total_ot_hour: total_ot_hour,
+               regular_ot_hours: regular_ot_hours,
+               restday_ot_hours: restday_ot_hours,
+               special_ot_hours: special_ot_hours,
+               legal_ot_hours: legal_ot_hours,
+
                total_tardiness_min: total_tardiness_min,
-               leave_hours: leave_hours
+               is_tardiness: is_tardiness,
+
+               vl_hours: vl_hours,
+               sl_hours: sl_hours,
+               el_hours: el_hours,
+               vl_nopay_hours: vl_nopay_hours,
+               sl_nopay_hours: sl_nopay_hours,
+               el_nopay_hours: el_nopay_hours,
+
+               absent_hours: absent_hours,
+
+
           });
      }, [filtered_employee_dtr]);
 
+
+
+
+     const [final_gross_pay, setfinal_gross_pay] = useState(0);
+     const [final_deduction, setfinal_deduction] = useState(0);
+     const [final_earnings, setfinal_earnings] = useState(0);
+     const [final_net_pay, setfinal_net_pay] = useState(0);
+
+
+     const calculateGrossPay = () => {
+          let total_working_hour = total.total_working_hour
+
+          let regular_ot_hours = total.regular_ot_hours
+          let restday_ot_hours = total.restday_ot_hours
+          let special_ot_hours = total.special_ot_hours
+          let legal_ot_hours = total.legal_ot_hours
+          let total_tardiness_min = total.total_tardiness_min
+          let vl_hours = total.vl_hours
+          let sl_hours = total.sl_hours
+          let el_hours = total.el_hours
+          let vl_nopay_hours = total.vl_nopay_hours
+          let sl_nopay_hours = total.sl_nopay_hours
+          let el_nopay_hours = total.el_nopay_hours
+          let absent_hours = total.absent_hours
+
+
+
+          let final_total_working_hour = total_working_hour * default_daily;
+          let final_regular_ot_hours = total_working_hour * .25 + total_working_hour;
+          let final_special_ot_hours = special_ot_hours * .30 + special_ot_hours;
+          let final_legal_ot_hours = restday_ot_hours * .30 + legal_ot_hours;
+          let final_total_tardiness_min = total_tardiness_min * default_minute;
+          let final_vl_hours = vl_hours * default_daily;
+          let final_sl_hours = sl_hours * default_daily;
+          let final_el_hours = el_hours * default_daily;
+          let final_vl_nopay_hours = vl_nopay_hours * default_daily
+          let final_sl_nopay_hours = sl_nopay_hours * default_daily
+          let final_el_nopay_hours = el_nopay_hours * default_daily
+          let final_absent_hours = absent_hours * default_daily
+
+
+          let grosspay =
+               (final_total_working_hour +
+                    final_regular_ot_hours +
+                    final_special_ot_hours +
+                    final_legal_ot_hours +
+                    final_vl_hours +
+                    final_sl_hours +
+                    final_el_hours +
+                    final_el_hours
+               ) - final_total_tardiness_min
+
+
+
+               let final_earnings =filtered_additional && filtered_additional[0]?.total_earnings
+               let final_deduction =filtered_additional && filtered_additional[0]?.total_deduction
+
+          setfinal_gross_pay(grosspay)
+          setfinal_earnings(final_earnings)
+          setfinal_deduction(final_deduction)
+          setfinal_net_pay((grosspay - final_deduction) + final_earnings)
+
+
+
+     }
      return (
 
           <div style={{ display: "flex" }}>
@@ -436,37 +648,21 @@ const Payroll = (props) => {
                                                   onChange={handleMonthChange}
                                                   value={month}
                                              >
-                                                  <MenuItem value={'january'}>January</MenuItem>
-                                                  <MenuItem value={'february'}>February</MenuItem>
-                                                  <MenuItem value={'march'}>March</MenuItem>
-                                                  <MenuItem value={'april'}>April</MenuItem>
-                                                  <MenuItem value={'may'}>May</MenuItem>
-                                                  <MenuItem value={'june'}>June</MenuItem>
-                                                  <MenuItem value={'july'}>July</MenuItem>
-                                                  <MenuItem value={'august'}>August</MenuItem>
-                                                  <MenuItem value={'september'}>September</MenuItem>
-                                                  <MenuItem value={'october'}>October</MenuItem>
-                                                  <MenuItem value={'november'}>November</MenuItem>
-                                                  <MenuItem value={'december'}>December</MenuItem>
+                                                  <MenuItem value={'january'}>January 2023</MenuItem>
+                                                  <MenuItem value={'february'}>February 2023</MenuItem>
+                                                  <MenuItem value={'march'}>March 2023</MenuItem>
+                                                  <MenuItem value={'april'}>April 2023</MenuItem>
+                                                  <MenuItem value={'may'}>May 2023</MenuItem>
+                                                  <MenuItem value={'june'}>June 2023</MenuItem>
+                                                  <MenuItem value={'july'}>July 2023</MenuItem>
+                                                  <MenuItem value={'august'}>August 2023</MenuItem>
+                                                  <MenuItem value={'september'}>September 2023</MenuItem>
+                                                  <MenuItem value={'october'}>October 2023</MenuItem>
+                                                  <MenuItem value={'november'}>November 2023</MenuItem>
+                                                  <MenuItem value={'december'}>December 2023</MenuItem>
 
                                              </TextField>
-                                             <TextField
-                                                  required
-                                                  id="outlined-required"
-                                                  label="Year"
-                                                  fullWidth
-                                                  select
-                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                  onChange={handleYearChange}
-                                                  value={year}
-                                             >
-                                                  <MenuItem value={'23'}>2023</MenuItem>
-                                                  <MenuItem value={'24'}>2024</MenuItem>
-                                                  <MenuItem value={'25'}>2025</MenuItem>
-                                                  <MenuItem value={'26'}>2026</MenuItem>
-                                                  <MenuItem value={'27'}>2027</MenuItem>
-                                                  <MenuItem value={'28'}>2028</MenuItem>
-                                             </TextField>
+
                                              <TextField
                                                   required
                                                   id="outlined-required"
@@ -492,119 +688,245 @@ const Payroll = (props) => {
                                              style={{ marginBottom: "20px" }}
                                         />
                                    </div>
-                                   <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="Search Employee"
-                                        fullWidth
-                                        select
-                                        style={{ paddingBottom: "20px" }}
-                                        onChange={handleName}
-                                        value={name}
-                                   >
-                                        {emp.map((data) => {
-                                             // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                             return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                        })}
-                                   </TextField>
-                                   <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="Employee_id"
-                                        fullWidth
-                                        style={{ paddingBottom: "80px", paddingRight: "10px" }}
-                                        value={employeeId}
-                                        
-                                        InputProps={{
-                                             readOnly: true,
-                                        }}
-                                   />
+                                   <NameIDContainer>
+                                        <TextField
+                                             required
+                                             id="outlined-required"
+                                             label="Search Employee"
+                                             fullWidth
+                                             style={{ marginRight: "10px" }}
+                                             select
+                                             onChange={handleName}
+                                             value={name}
+                                        >
+                                             {emp.map((data) => {
+                                                  // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                  return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                             })}
+                                        </TextField>
+                                        <TextField
+                                             required
+                                             id="outlined-required"
+                                             label="Employee_id"
+                                             fullWidth
+                                             style={{ paddingBottom: "40px" }}
+                                             value={employeeId}
+
+                                             InputProps={{
+                                                  readOnly: true,
+                                             }}
+                                        />
+                                   </NameIDContainer>
+                                   <TableContainer component={Paper}
+                                        style={{ width: "100%", marginBottom: "40px" }} >
+                                        <Table sx={{ width: 1300 }} aria-label="simple table">
+                                             <TableHead>
+                                                  <TableRow  >
+                                                       <TableCell >Employee ID</TableCell>
+                                                       <TableCell>Name</TableCell>
+                                                       <TableCell>Base Salary</TableCell>
+                                                       <TableCell>Bimonthly Salary</TableCell>
+                                                       <TableCell>Daily Rate</TableCell>
+                                                       <TableCell>Hourly Rate</TableCell>
+                                                       <TableCell>Minute Rate</TableCell>
+                                                  </TableRow>
+                                             </TableHead>
+                                             <TableBody>
+                                                  <TableRow >
+                                                       <TableCell>{employeeId}</TableCell>
+                                                       <TableCell>{name}</TableCell>
+                                                       <TableCell>{default_base}</TableCell>
+                                                       <TableCell>{default_bimonthly}</TableCell>
+                                                       <TableCell>{default_daily}</TableCell>
+                                                       <TableCell>{default_hourly}</TableCell>
+                                                       <TableCell>{default_minute}</TableCell>
+                                                  </TableRow>
+                                             </TableBody>
+                                        </Table>
+                                   </TableContainer>
                                    <TablesContainer>
                                         <TableContainer component={Paper}
-                                             style={{ width: "500px", margin: "10px" }} >
-
+                                             style={{ width: "400px" }} >
                                              <Table sx={{ width: 400 }} aria-label="simple table">
                                                   <TableHead>
-                                                       <TableRow>
-                                                            <TableCell>Name</TableCell>
-                                                            <TableCell>Data</TableCell>
-                                                       </TableRow>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Summary</TableCell>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
                                                   </TableHead>
                                                   <TableBody>
-                                                       {/* {filtered_employee_dtr.map((item, index) => (
-                                                       <React.Fragment key={`employee-${index}`}> */}
-
-
-                                                       <TableRow >
-                                                            <TableCell>Employee ID</TableCell>
-                                                            <TableCell>{employeeId}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Name</TableCell>
-                                                            <TableCell>{name}</TableCell>
-                                                       </TableRow>
                                                        <TableRow >
                                                             <TableCell>Total Working in Hour</TableCell>
                                                             <TableCell>{total.total_working_hour}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>Total Overtime in Hour</TableCell>
-                                                            <TableCell>{total.total_ot_hour}</TableCell>
+                                                            <TableCell>regular_ot_hours</TableCell>
+                                                            <TableCell>{total.regular_ot_hours}</TableCell>
                                                        </TableRow>
-
                                                        <TableRow >
-                                                            <TableCell>Total Tardiness in min</TableCell>
+                                                            <TableCell>restday_ot_hours</TableCell>
+                                                            <TableCell>{total.restday_ot_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>special_ot_hours</TableCell>
+                                                            <TableCell>{total.special_ot_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>legal_ot_hours</TableCell>
+                                                            <TableCell>{total.legal_ot_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>total_tardiness_min</TableCell>
                                                             <TableCell>{total.total_tardiness_min}</TableCell>
                                                        </TableRow>
-
-                                                       <TableRow>
-                                                            <TableCell>Total Leave in hour</TableCell>
-                                                            <TableCell>{total.leave_hours}</TableCell>
+                                                       <TableRow >
+                                                            <TableCell>is_tardiness</TableCell>
+                                                            <TableCell>{total.is_tardiness}</TableCell>
                                                        </TableRow>
-
-
-                                                       {/* //in overtime, make a overtime type complete and add them here */}
-                                                       {/* 
-
-
-                                                       </React.Fragment>
-                                                  ))} */}
+                                                       <TableRow >
+                                                            <TableCell>vl_hours</TableCell>
+                                                            <TableCell>{total.vl_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>sl_hours</TableCell>
+                                                            <TableCell>{total.sl_hours}</TableCell>
+                                                       </TableRow> <TableRow >
+                                                            <TableCell>el_hours</TableCell>
+                                                            <TableCell>{total.el_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>vl_nopay_hours</TableCell>
+                                                            <TableCell>{total.vl_nopay_hours}</TableCell>
+                                                       </TableRow> <TableRow >
+                                                            <TableCell>sl_nopay_hours</TableCell>
+                                                            <TableCell>{total.sl_nopay_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>el_nopay_hours</TableCell>
+                                                            <TableCell>{total.el_nopay_hours}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>absent_hours</TableCell>
+                                                            <TableCell>{total.absent_hours}</TableCell>
+                                                       </TableRow>
                                                   </TableBody>
                                              </Table>
-
-
                                         </TableContainer>
-                                        <TableContainer component={Paper}
-                                             style={{ width: "500px", margin: "10px" }} >
 
+                                        <TableContainer component={Paper}
+                                             style={{ width: "400px" }} >
                                              <Table sx={{ width: 400 }} aria-label="simple table">
                                                   <TableHead>
-                                                       <TableRow>
-                                                            <TableCell>Name</TableCell>
-                                                            <TableCell>Data</TableCell>
-                                                       </TableRow>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Earnings and Deductions</TableCell>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
                                                   </TableHead>
                                                   <TableBody>
-                                                       {filtered_employee_dtr.map((item, index) => (
-                                                            <React.Fragment key={`employee-${index}`}>
-                                                                 <TableRow key={`${item.employee_id}-title`}>
-                                                                      <TableCell>Name</TableCell>
-                                                                      <TableCell>{item.employee_id}</TableCell>
-                                                                 </TableRow>
-                                                                 <TableRow key={`${item.name}-title`}>
-                                                                      <TableCell>Age</TableCell>
-                                                                      <TableCell>{item.name}</TableCell>
-                                                                 </TableRow>
-                                                                 <TableRow key={`${item.am_in_hour}-title`}>
-                                                                      <TableCell>Age</TableCell>
-                                                                      <TableCell>{item.am_in_hour}</TableCell>
-                                                                 </TableRow>
-                                                            </React.Fragment>
-                                                       ))}
+                                                       <TableRow >
+                                                            <TableCell>SSS</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.sss}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>PhilHealth</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.philhealth}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>wtax</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.wtax}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>pagibig</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pagibig}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>lodging</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.lodging}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>water_electricity</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.water_electricity}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>hmo</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>hhhc_savings</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>hhhc_membership_fee</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_membership_fee}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>cash_advances</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.cash_advances}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>hmo</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>pay_adjustment_deduction</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_deduction}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>other_deduction</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_deduction}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>total_deduction</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.total_deduction}</TableCell>
+                                                       </TableRow>    <TableRow >
+                                                            <TableCell>allowance</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>pay_adjustment_earnings</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>other_earnings</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_earnings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>total_earnings</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.total_earnings}</TableCell>
+                                                       </TableRow>
+
+
                                                   </TableBody>
                                              </Table>
+                                        </TableContainer>
+                                        <TableContainer component={Paper}
+                                             style={{ width: "400px" }} >
+                                             <Table sx={{ width: 400 }} aria-label="simple table">
+                                                  <TableHead>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Final Computation</TableCell>
+                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
+                                                  </TableHead>
+                                                  <TableBody>
+                                                       <TableRow >
+                                                            <TableCell>Additional Earnings</TableCell>
+                                                            <TableCell>{final_earnings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Gross Pay</TableCell>
+                                                            <TableCell>{final_gross_pay}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Deductions</TableCell>
+                                                            <TableCell>{final_deduction}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Net Pay</TableCell>
+                                                            <TableCell>{final_net_pay}</TableCell>
+                                                       </TableRow>
 
-
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
+                                                                 Calculate
+                                                            </Button>
+                                                       </ThemeProvider>
+                                                  </TableBody>
+                                             </Table>
                                         </TableContainer>
                                    </TablesContainer>
 
@@ -616,48 +938,10 @@ const Payroll = (props) => {
                                              </Button>
                                         </ThemeProvider>
                                         <EditDeleteContainer>
-
                                              <ThemeProvider theme={theme}>
-                                                  <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
-                                                       Edit
-                                                  </Button>
-                                                  <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
-                                                       Delete
-                                                  </Button>
                                              </ThemeProvider>
                                         </EditDeleteContainer>
                                    </ButtonContainer>
-                                   <Dialog
-                                        fullScreen={fullScreen}
-                                        open={openAdd}
-                                        onClose={handleCloseAdd}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             Add Daily Time Record
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
-                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                  <DatePicker
-                                                       label="Date"
-                                                       value={date}
-                                                       inputFormat="MM-DD-YYYY"
-                                                       onChange={convertDateToString}
-                                                       renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
-                                                  />
-                                             </LocalizationProvider>
-
-
-                                        </DialogContent>
-                                        <DialogActions>
-                                             {/* <Button onClick={handleAdd}>Add</Button> */}
-                                             <Button onClick={handleCloseAdd} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                             <Button onClick={handleAdd}>Add</Button>
-                                        </DialogActions>
-                                   </Dialog>
 
                               </Card>
                          </Main>
