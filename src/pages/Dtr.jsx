@@ -26,6 +26,8 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 import { isElement } from 'react-dom/test-utils';
+import { ElevatorSharp } from '@mui/icons-material';
+import { useRef } from 'react';
 
 
 const theme = createTheme({
@@ -154,7 +156,7 @@ const Dtr = (props) => {
      const [query, setQuery] = useState('')
      const { user } = useAuthContext()
      const [dtr, setDtr] = useState([])
-
+     const dialogRef = useRef(null);
 
 
      const [employeeId, setEmployeeId] = useState('')
@@ -204,6 +206,7 @@ const Dtr = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
+     const [day_type, setDay_type] = useState("regday")
 
      const handleOpenAdd = () => {
           setOpenAdd(true);
@@ -218,6 +221,7 @@ const Dtr = (props) => {
      const handleCloseAddAdditionals = () => {
           setOpenAddAdditionals(false);
      };
+
 
      // function DataList({ date }) {
      //      const [data, setData] = useState([]);
@@ -272,6 +276,34 @@ const Dtr = (props) => {
      const [hideWithPayLeaves, setHideWithPayLeaves] = useState(true)
      const [hideNoPayLeaves, setHideNoPayLeaves] = useState(true)
 
+
+     //Run every time fields changes
+     useEffect(() => {
+          if (am_in_hour.length === 1 || am_in_hour.length === 2) {
+               CalculateTotalHours();
+
+          }
+          if (ot_in_hour.length === 1 || ot_in_hour.length === 2) {
+               CalculateTotalOtHours();
+          }
+     }, [
+          day_type,
+          leave_type,
+          official_am_timein,
+          am_in_hour,
+          am_in_min,
+          am_out_hour,
+          am_out_min,
+          pm_in_hour,
+          pm_in_min,
+          pm_out_hour,
+          pm_out_min,
+          ot_type,
+          ot_in_hour,
+          ot_in_min,
+          ot_out_hour,
+          ot_out_min
+     ])
 
 
      const [vl_wpay_hours, setVl_wpay_hours] = useState(0);
@@ -426,42 +458,178 @@ const Dtr = (props) => {
      const GetCurrentDate = () => {
 
      }
+
+     const handleDayType = (e) => {
+          const type = e.target.value;
+          setDay_type(type)
+     }
      const CalculateTotalHours = () => {
           let totalHoursRendered;
-          let convertedAmMins = am_in_min / 60;
-          let convertedPmMins = pm_in_min / 60;
+          //30 / 60 = 0.5
+          let convertedAmMinsIn = am_in_min / 60;
+          let convertedAmMinsOut = am_out_min / 60;
+          let convertedPmMinsIn = pm_in_min / 60;
+          let convertedPmMinsOut = pm_out_min / 60;
 
 
-          let amTotal = am_out_hour - am_in_hour
-          let amOfficialTotal = am_out_hour - official_am_timein
-          let pmTotal = pm_out_hour - pm_in_hour
 
-          if (am_in_hour < official_am_timein) {
-               totalHoursRendered = ((amOfficialTotal + pmTotal) - (convertedAmMins + convertedPmMins));
+
+
+          // this is the official time in
+          let finalAmInHour;
+          let convertedAmIn_early = parseFloat(official_am_timein)
+          let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
+
+
+          if (convertedAmIn_regular < official_am_timein || convertedAmIn_regular == official_am_timein) {
+               // 8:00
+               finalAmInHour = convertedAmIn_early
+
+               console.log("IF")
+          } else {
+               // 8.5
+               finalAmInHour = convertedAmIn_regular
+               console.log("else")
           }
-          else {
-               totalHoursRendered = ((amTotal + pmTotal) - (convertedAmMins + convertedPmMins));
+
+
+          let convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
+
+          let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
+          let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
+          let calculateAmTotalHours = convertedAmOut_regular - finalAmInHour
+          let calcualatePmTotalHours = pmTimOut - pmTimeIn
+          let total = calculateAmTotalHours + calcualatePmTotalHours
+          let extra = total - parseFloat(8)
+
+
+          if (day_type === "regday") {
+               if (total > 8) {
+                    //dont use uquation insde useState "set". it will return an error
+                    setTotal_working_hour(8)
+                    setTotal_ot_hour(extra)
+                    if (ot_type == "regular") {
+                         setRegular_ot_hours(total_ot_hour)
+                         setRestday_ot_hours(0)
+                         setSpecial_ot_hours(0)
+                         setLegal_ot_hours(0)
+                    }
+                    else if (ot_type == "restday") {
+                         setRegular_ot_hours(0)
+                         setRestday_ot_hours(total_ot_hour)
+                         setSpecial_ot_hours(0)
+                         setLegal_ot_hours(0)
+                    }
+                    else if (ot_type == "special") {
+                         setRegular_ot_hours(0)
+                         setRestday_ot_hours(0)
+                         setSpecial_ot_hours(total_ot_hour)
+                         setLegal_ot_hours(0)
+                    }
+                    else if (ot_type == "legal") {
+                         setRegular_ot_hours(0)
+                         setRestday_ot_hours(0)
+                         setSpecial_ot_hours(0)
+                         setLegal_ot_hours(total_ot_hour)
+                    }
+                    else {
+                         setRegular_ot_hours(0)
+                         setRestday_ot_hours(0)
+                         setSpecial_ot_hours(0)
+                         setLegal_ot_hours(0)
+                    }
+               } else {
+                    setTotal_working_hour(total)
+                    setTotal_ot_hour(0)
+               }
+          } else {
+               setTotal_working_hour(0)
+               setTotal_ot_hour(total)
+               if (ot_type == "regular") {
+                    setRegular_ot_hours(total_ot_hour)
+                    setRestday_ot_hours(0)
+                    setSpecial_ot_hours(0)
+                    setLegal_ot_hours(0)
+               }
+               else if (ot_type == "restday") {
+                    setRegular_ot_hours(0)
+                    setRestday_ot_hours(total_ot_hour)
+                    setSpecial_ot_hours(0)
+                    setLegal_ot_hours(0)
+               }
+               else if (ot_type == "special") {
+                    setRegular_ot_hours(0)
+                    setRestday_ot_hours(0)
+                    setSpecial_ot_hours(total_ot_hour)
+                    setLegal_ot_hours(0)
+               }
+               else if (ot_type == "legal") {
+                    setRegular_ot_hours(0)
+                    setRestday_ot_hours(0)
+                    setSpecial_ot_hours(0)
+                    setLegal_ot_hours(total_ot_hour)
+               }
+               else {
+                    setRegular_ot_hours(0)
+                    setRestday_ot_hours(0)
+                    setSpecial_ot_hours(0)
+                    setLegal_ot_hours(0)
+               }
           }
 
 
-          setTotal_working_hour(totalHoursRendered)
           calculateTardiness()
           if (total_tardiness_min > 0) {
                setIs_tardiness(1)
           } else {
                setIs_tardiness(0)
           }
+
+
+          //   this is the official time in
+          //   let finalAmInHour;
+          //   let convertedAmIn_early = parseFloat(official_am_timein)
+          //   let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
+
+
+          //   if (convertedAmIn_regular < official_am_timein || convertedAmIn_regular == official_am_timein) {
+          //        8:00
+          //        finalAmInHour = convertedAmIn_early
+
+          //        console.log("IF")
+          //   } else {
+          //        8.5
+          //        finalAmInHour = convertedAmIn_regular
+          //        console.log("else")
+          //   }
+
+
+          //   let official_am_timeout = parseFloat(official_am_timein) + parseFloat(4)
+          //   let convertedAmOut_regular
+          //   let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
+          //   let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
+
+
+          //   if(am_out_hour >= official_am_timeout){
+          //        convertedAmOut_regular = official_am_timeout
+          //   }else{
+          //        convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
+          //   }
+          //   let calculateAmTotalHours = convertedAmOut_regular  - finalAmInHour 
+          //   let calcualatePmTotalHours = pmTimOut - pmTimeIn
+
+
+          //   setTotal_working_hour(calculateAmTotalHours + calcualatePmTotalHours)
+          //   calculateTardiness()
+          //   if (total_tardiness_min > 0) {
+          //        setIs_tardiness(1)
+          //   } else {
+          //        setIs_tardiness(0)
+          //   }
      }
 
      const CalculateTotalOtHours = () => {
-          let convertedOtMins = ot_in_min / 60;
-          let convertedOtMins2 = ot_out_min / 60
 
-          let otTotal = ot_out_hour - ot_in_hour
-
-
-          let totalOtHoursRendered = (convertedOtMins2 - convertedOtMins) + otTotal;
-          setTotal_ot_hour(totalOtHoursRendered)
           calculateTardiness()
           if (total_tardiness_min > 0) {
                setIs_tardiness(1)
@@ -469,30 +637,7 @@ const Dtr = (props) => {
                setIs_tardiness(0)
           }
 
-          if (ot_type == "regular") {
-               setRegular_ot_hours(total_ot_hour)
-               setRestday_ot_hours(0)
-               setSpecial_ot_hours(0)
-               setLegal_ot_hours(0)
-          }
-          else if (ot_type == "restday") {
-               setRegular_ot_hours(0)
-               setRestday_ot_hours(total_ot_hour)
-               setSpecial_ot_hours(0)
-               setLegal_ot_hours(0)
-          }
-          else if (ot_type == "special") {
-               setRegular_ot_hours(0)
-               setRestday_ot_hours(0)
-               setSpecial_ot_hours(total_ot_hour)
-               setLegal_ot_hours(0)
-          }
-          else {
-               setRegular_ot_hours(0)
-               setRestday_ot_hours(0)
-               setSpecial_ot_hours(0)
-               setLegal_ot_hours(total_ot_hour)
-          }
+
      }
      const calculateTardiness = () => {
           const amStartHour = official_am_timein
@@ -514,11 +659,7 @@ const Dtr = (props) => {
      }
 
      const [selectedText, setSelectedText] = useState("")
-     const handleRecalculate = () => {
-          calculateTardiness();
-          CalculateTotalHours();
-          CalculateTotalOtHours();
-     }
+
      const handleName = (event) => {
           const name = event.target.value;
           setName(name)
@@ -526,25 +667,23 @@ const Dtr = (props) => {
           setEmployeeId(firstWord)
      }
      const [disabled, setDisabled] = useState(true);
-
      const [regular_ot_hours, setRegular_ot_hours] = useState(0);
      const [restday_ot_hours, setRestday_ot_hours] = useState(0);
      const [special_ot_hours, setSpecial_ot_hours] = useState(0);
      const [legal_ot_hours, setLegal_ot_hours] = useState(0);
      const [hide_ot_others, setHide_ot_others] = useState(true);
-     const handleOvertime = (event) => {
-          const type = event.target.value
-          if (type != "none") {
-               setDisabled(false)
-               setHide_ot_others(false)
-          }
-          else {
-               setDisabled(true);
-               setHide_ot_others(true)
-          }
-          setOt_type(type)
-          CalculateTotalOtHours();
-     }
+     // const handleOvertime = (event) => {
+     //      const type = event.target.value
+     //      if (type != "none") {
+     //           setDisabled(false)
+     //           setHide_ot_others(false)
+     //      }
+     //      else {
+     //           setDisabled(true);
+     //           setHide_ot_others(true)
+     //      }
+     //      setOt_type(type)
+     // }
 
      const [emp, setEmp] = useState([])
      useEffect(() => {
@@ -581,65 +720,97 @@ const Dtr = (props) => {
           setCurrentDate(dateString)
      };
 
+     //handleError
+     const handleOnError = () => {
+          setOpenError(true);
+     };
+
+     const handleOffError = () => {
+          setOpenError(false);
+     };
+
+     //handleSuccess
+     const handleOnSuccess = () => {
+          setOpenSuccess(true);
+     };
+
+     const handleOffSuccess = () => {
+          setOpenSuccess(false);
+     };
+     const [openError, setOpenError] = useState(false)
+     const [openSuccess, setOpenSuccess] = useState(false)
+
      const handleAdd = async (e) => {
-          handleRecalculate();
           e.preventDefault()
-
-
           if (!user) {
                console.log('You must be logged in first')
                return
           }
-          const dtr = {
-               employee_id: employeeId,
-               name: name,
-               date: date,
-               am_in_hour: am_in_hour,
-               am_in_min: am_in_min,
-               am_out_hour: am_out_hour,
-               am_out_min: am_out_min,
-               pm_in_hour: pm_in_hour,
-               pm_in_min: pm_in_min,
-               pm_out_hour: pm_out_hour,
-               pm_out_min: pm_out_min,
-               ot_in_hour: ot_in_hour,
-               ot_in_min: ot_in_min,
-               ot_out_hour: ot_out_hour,
-               ot_out_min: ot_out_min,
-               total_working_hour: total_working_hour,
-               total_tardiness_min: total_tardiness_min,
-               ot_type: ot_type,
-               regular_ot_hours: regular_ot_hours,
-               restday_ot_hours: restday_ot_hours,
-               special_ot_hours: special_ot_hours,
-               legal_ot_hours: legal_ot_hours,
-               vl_nopay_hours: vl_nopay_hours,
-               sl_nopay_hours: sl_nopay_hours,
-               el_nopay_hours: el_nopay_hours,
-               vl_hours: vl_wpay_hours,
-               sl_hours: sl_wpay_hours,
-               el_hours: el_wpay_hours,
-               is_tardiness: is_tardiness,
-               official_am_timein: official_am_timein,
-               absent_hours: absent_hours,
-               leave_type: leave_type
-          }
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
-               method: 'POST',
-               body: JSON.stringify(dtr),
-               headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-               }
-          })
-          const json = await response.json()
-          if (!response.ok) {
-               setError(json.error)
-               console.log(json)
+          if (
+               official_am_timein == "" ||
+               am_in_hour == "" ||
+               am_out_hour == "" ||
+               pm_in_hour == "" ||
+               pm_out_hour == ""
+               ) {
+               handleOnError()
+               console.log("IF")
           }
           else {
-               console.log(error)
+               console.log('else')
+               const dtr = {
+                    employee_id: employeeId,
+                    name: name,
+                    date: date,
+                    am_in_hour: am_in_hour,
+                    am_in_min: am_in_min,
+                    am_out_hour: am_out_hour,
+                    am_out_min: am_out_min,
+                    pm_in_hour: pm_in_hour,
+                    pm_in_min: pm_in_min,
+                    pm_out_hour: pm_out_hour,
+                    pm_out_min: pm_out_min,
+                    total_working_hour: total_working_hour,
+                    total_tardiness_min: total_tardiness_min,
+                    ot_type: ot_type,
+                    regular_ot_hours: regular_ot_hours,
+                    restday_ot_hours: restday_ot_hours,
+                    special_ot_hours: special_ot_hours,
+                    legal_ot_hours: legal_ot_hours,
+                    vl_nopay_hours: vl_nopay_hours,
+                    sl_nopay_hours: sl_nopay_hours,
+                    el_nopay_hours: el_nopay_hours,
+                    vl_hours: vl_wpay_hours,
+                    sl_hours: sl_wpay_hours,
+                    el_hours: el_wpay_hours,
+                    is_tardiness: is_tardiness,
+                    official_am_timein: official_am_timein,
+                    absent_hours: absent_hours,
+                    leave_type: leave_type
+               }
+               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
+                    method: 'POST',
+                    body: JSON.stringify(dtr),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+                    console.log(json)
+               }
+               else {
+                    console.log(error)
+               }
+               handleOnSuccess();
+               setTimeout(() => {
+                    window.location.reload();
+                  }, 3000);
+               
           }
+
           //window.location.reload();
      }
 
@@ -673,6 +844,7 @@ const Dtr = (props) => {
      const [total_earnings, settotal_earnings] = useState(0)
      const [allowance, setallowance] = useState(0)
      const [error, setError] = useState("")
+     const [tferror, setTferror] = useState(false)
 
      const handlesss = (event) => {
           const value = parseInt(event.target.value);
@@ -738,7 +910,7 @@ const Dtr = (props) => {
           const value = parseInt(event.target.value);
           setallowance(value);
      }
-    
+
 
      const handleCalculateTotalCollections = () => {
 
@@ -800,6 +972,8 @@ const Dtr = (props) => {
      }
 
 
+
+
      return (
 
           <div style={{ display: "flex" }}>
@@ -819,6 +993,7 @@ const Dtr = (props) => {
                                              rowsPerPageOptions={[10]}
                                              style={{ marginBottom: "20px" }}
                                         />
+                                         
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                              <DatePicker
                                                   label="Current Date"
@@ -852,6 +1027,7 @@ const Dtr = (props) => {
                                              </EditDeleteContainer>
                                         </ButtonContainer>
                                         <Dialog
+                                             ref={dialogRef}
                                              fullScreen={fullScreen}
                                              open={openAdd}
                                              onClose={handleCloseAdd}
@@ -862,13 +1038,16 @@ const Dtr = (props) => {
                                                   Add Daily Time Record
                                              </DialogTitle>
                                              <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                        <DatePicker
                                                             label="Date"
                                                             value={date}
+                                                        
                                                             inputFormat="MM-DD-YYYY"
                                                             onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px"}}{...params} error={false} />}
                                                        />
                                                   </LocalizationProvider>
 
@@ -899,6 +1078,7 @@ const Dtr = (props) => {
                                                                  readOnly: true,
                                                             }}
                                                        />
+                                                       
                                                        <TextField
                                                             required
                                                             id="outlined-required"
@@ -929,10 +1109,10 @@ const Dtr = (props) => {
                                                        </TextField>
 
                                                   </TimeContainer>
+
                                                   <Warnings>
                                                        <div>*Please use military time format</div>
                                                        <div>**Leave "0" (zero) if the field not in use</div>
-                                                       <div>***Click "Recalculate" button after you made some changes</div>
 
                                                   </Warnings>
                                                   {hide === true ? null : <Others id="others">
@@ -940,12 +1120,28 @@ const Dtr = (props) => {
                                                             <TextField
                                                                  type="number"
                                                                  required
+                                                                 fullWidth
                                                                  id="outlined-required"
                                                                  label="Official AM Timein"
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                  onChange={(e) => setOfficial_am_timein(e.target.value)}
                                                                  value={official_am_timein}
                                                             />
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Day Type (e.g: restday but overtime)"
+                                                                 fullWidth
+                                                                 select
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={handleDayType}
+                                                                 value={day_type}
+                                                            >
+                                                                 <MenuItem value={'regday'}>Regular Day</MenuItem>
+                                                                 <MenuItem value={'otday'}>Overtime Day</MenuItem>
+
+
+                                                            </TextField>
                                                        </TimeContainer>
                                                        <TimeContainer>
                                                             <TextField
@@ -957,7 +1153,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                  onChange={(e) => setAm_in_hour(e.target.value)}
                                                                  value={am_in_hour}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                             <TextField
                                                                  type="number"
@@ -968,7 +1164,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px" }}
                                                                  onChange={(e) => setAm_in_min(e.target.value)}
                                                                  value={am_in_min}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                        </TimeContainer>
                                                        <TimeContainer style={{ paddingBottom: "40px" }}>
@@ -981,7 +1177,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                  onChange={(e) => setAm_out_hour(e.target.value)}
                                                                  value={am_out_hour}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                             <TextField
                                                                  type="number"
@@ -992,7 +1188,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px" }}
                                                                  onChange={(e) => setAm_out_min(e.target.value)}
                                                                  value={am_out_min}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                        </TimeContainer >
 
@@ -1006,7 +1202,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                  onChange={(e) => setPm_in_hour(e.target.value)}
                                                                  value={pm_in_hour}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                             <TextField
                                                                  type="number"
@@ -1017,7 +1213,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px" }}
                                                                  onChange={(e) => setPm_in_min(e.target.value)}
                                                                  value={pm_in_min}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                        </TimeContainer>
                                                        <TimeContainer style={{ paddingBottom: "40px" }}>
@@ -1030,7 +1226,7 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                  onChange={(e) => setPm_out_hour(e.target.value)}
                                                                  value={pm_out_hour}
-                                                                 onMouseLeave={CalculateTotalHours}
+
                                                             />
                                                             <TextField
                                                                  type="number"
@@ -1041,79 +1237,12 @@ const Dtr = (props) => {
                                                                  style={{ paddingBottom: "20px" }}
                                                                  onChange={(e) => setPm_out_min(e.target.value)}
                                                                  value={pm_out_min}
-                                                                 onMouseLeave={CalculateTotalHours}
-                                                            />
-                                                       </TimeContainer>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Overtime Type"
-                                                            fullWidth
-                                                            select
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={handleOvertime}
-                                                            value={ot_type}
-                                                       >
-                                                            <MenuItem value={'none'}>None</MenuItem>
-                                                            <MenuItem value={'regular'}>Regular</MenuItem>
-                                                            <MenuItem value={'restday'}>Rest Day</MenuItem>
-                                                            <MenuItem value={'special'}>Special Holiday</MenuItem>
-                                                            <MenuItem value={'legal'}>Legal Holiday</MenuItem>
 
-                                                       </TextField>
-                                                       <TimeContainer>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 disabled={disabled}
-                                                                 id="outlined-required"
-                                                                 label="OT-IN Hour"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setOt_in_hour(e.target.value)}
-                                                                 value={ot_in_hour}
-                                                                 onMouseLeave={CalculateTotalOtHours}
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 disabled={disabled}
-                                                                 id="outlined-required"
-                                                                 label="OT-IN Min"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setOt_in_min(e.target.value)}
-                                                                 value={ot_in_min}
-                                                                 onMouseLeave={CalculateTotalOtHours}
                                                             />
                                                        </TimeContainer>
-                                                       <TimeContainer style={{ paddingBottom: "40px" }}>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 disabled={disabled}
-                                                                 id="outlined-required"
-                                                                 label="OT-OUT Hour"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setOt_out_hour(e.target.value)}
-                                                                 value={ot_out_hour}
-                                                                 onMouseLeave={CalculateTotalOtHours}
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 disabled={disabled}
-                                                                 id="outlined-required"
-                                                                 label="OT-OUT Min"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setOt_out_min(e.target.value)}
-                                                                 value={ot_out_min}
-                                                                 onMouseLeave={CalculateTotalOtHours}
-                                                            />
-                                                       </TimeContainer>
-                                                       {hide_ot_others === true ? null : <OthersOT id="othersOt">
+
+
+                                                       {/* {hide_ot_others === true ? null : <OthersOT id="othersOt">
                                                             <TextField
                                                                  required
                                                                  id="outlined-required"
@@ -1163,13 +1292,9 @@ const Dtr = (props) => {
                                                                  }}
                                                             />
 
-                                                       </OthersOT>}
+                                                       </OthersOT>} */}
                                                        <ThemeProvider theme={theme}>
-                                                            <ButtonContainer2>
-                                                                 <Button style={{ marginBottom: "70px" }} variant="outlined" color="green" onClick={handleRecalculate}>
-                                                                      Recalculate Hours
-                                                                 </Button>
-                                                            </ButtonContainer2>
+
                                                        </ThemeProvider>
                                                        <TextField
                                                             type="number"
@@ -1184,6 +1309,36 @@ const Dtr = (props) => {
                                                                  readOnly: true,
                                                             }}
                                                        />
+                                                       <TextField
+                                                            type="number"
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Total Overtime Hour"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setTotal_ot_hour(e.target.value)}
+                                                            value={total_ot_hour}
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Overtime Type"
+                                                            fullWidth
+                                                            select
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setOt_type(e.target.value)}
+                                                            value={ot_type}
+                                                       >
+                                                            <MenuItem value={'none'}>None</MenuItem>
+                                                            <MenuItem value={'regular'}>Regular</MenuItem>
+                                                            <MenuItem value={'restday'}>Rest Day</MenuItem>
+                                                            <MenuItem value={'special'}>Special Holiday</MenuItem>
+                                                            <MenuItem value={'legal'}>Legal Holiday</MenuItem>
+
+                                                       </TextField>
 
                                                        <TextField
                                                             type="number"
@@ -1362,7 +1517,7 @@ const Dtr = (props) => {
                                                             readOnly: true,
                                                        }}
                                                   />
-                                               
+
                                                   <TextField
                                                        type="number"
                                                        required
@@ -1384,7 +1539,7 @@ const Dtr = (props) => {
                                                        onChange={handlephilhealth}
                                                        value={philhealth}
                                                   />
-                                                  <TextField     
+                                                  <TextField
                                                        type="number"
                                                        required
                                                        fullWidth

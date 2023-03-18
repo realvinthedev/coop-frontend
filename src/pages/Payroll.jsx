@@ -589,18 +589,18 @@ const Payroll = (props) => {
 
 
 
-          let final_total_working_hour = total_working_hour * default_daily;
+          let final_total_working_hour = total_working_hour * default_hourly;
           let final_regular_ot_hours = total_working_hour * .25 + total_working_hour;
           let final_special_ot_hours = special_ot_hours * .30 + special_ot_hours;
           let final_legal_ot_hours = restday_ot_hours * .30 + legal_ot_hours;
           let final_total_tardiness_min = total_tardiness_min * default_minute;
-          let final_vl_hours = vl_hours * default_daily;
-          let final_sl_hours = sl_hours * default_daily;
-          let final_el_hours = el_hours * default_daily;
-          let final_vl_nopay_hours = vl_nopay_hours * default_daily
-          let final_sl_nopay_hours = sl_nopay_hours * default_daily
-          let final_el_nopay_hours = el_nopay_hours * default_daily
-          let final_absent_hours = absent_hours * default_daily
+          let final_vl_hours = vl_hours * default_hourly;
+          let final_sl_hours = sl_hours * default_hourly;
+          let final_el_hours = el_hours * default_hourly;
+          let final_vl_nopay_hours = vl_nopay_hours * default_hourly
+          let final_sl_nopay_hours = sl_nopay_hours * default_hourly
+          let final_el_nopay_hours = el_nopay_hours * default_hourly
+          let final_absent_hours = absent_hours * default_hourly
 
 
           let grosspay =
@@ -613,6 +613,8 @@ const Payroll = (props) => {
                     final_el_hours +
                     final_el_hours
                ) - final_total_tardiness_min
+
+        
 
 
 
@@ -904,20 +906,21 @@ const Payroll = (props) => {
                                                   </TableHead>
                                                   <TableBody>
                                                        <TableRow >
+                                                       
                                                             <TableCell>Additional Earnings</TableCell>
-                                                            <TableCell>{final_earnings}</TableCell>
+                                                            <TableCell>{final_earnings ? final_earnings.toLocaleString() : 0}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Gross Pay</TableCell>
-                                                            <TableCell>{final_gross_pay}</TableCell>
+                                                            <TableCell>{final_gross_pay ? final_gross_pay.toLocaleString() : 0}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Deductions</TableCell>
-                                                            <TableCell>{final_deduction}</TableCell>
+                                                            <TableCell>{final_deduction? final_deduction.toLocaleString(): 0}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Net Pay</TableCell>
-                                                            <TableCell>{final_net_pay}</TableCell>
+                                                            <TableCell>{final_net_pay? final_net_pay.toLocaleString(): 0}</TableCell>
                                                        </TableRow>
 
                                                        <ThemeProvider theme={theme}>
@@ -932,11 +935,7 @@ const Payroll = (props) => {
 
 
                                    <ButtonContainer>
-                                        <ThemeProvider theme={theme}>
-                                             <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
-                                                  Add New
-                                             </Button>
-                                        </ThemeProvider>
+                                        
                                         <EditDeleteContainer>
                                              <ThemeProvider theme={theme}>
                                              </ThemeProvider>
