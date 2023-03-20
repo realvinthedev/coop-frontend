@@ -16,6 +16,9 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { useAuthContext } from '../hooks/useAuthContext';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 const Container = styled.div`
      background-color: white;
@@ -59,6 +62,9 @@ const Navbar = () => {
                <List
                     sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}
                     component="nav">
+                    <div style={{ paddingLeft: "30px" }}>
+                         <p style={{ color: "orange" }}>HR SYSTEM</p>
+                    </div>
                     {user && currentUser == "admin" &&
                          <Link to="/">
                               <ListItemButton>
@@ -81,17 +87,17 @@ const Navbar = () => {
                                    <ListItemText primary="Employees" />
                               </ListItemButton>
                          </Link>}
-                         {user && currentUser == "admin" &&
-                    <Link to="/departments">
-                         <ListItemButton>
-                              <div style={{ paddingLeft: "40px" }}>
-                                   <ListItemIcon>
-                                        <WorkIcon />
-                                   </ListItemIcon>
-                              </div>
-                              <ListItemText primary="Departments" />
-                         </ListItemButton>
-                    </Link>}
+                    {user && currentUser == "admin" &&
+                         <Link to="/departments">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <WorkIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Departments" />
+                              </ListItemButton>
+                         </Link>}
                     {/* {user && currentUser == "admin" &&
                     <Link to="/salaries">
                          <ListItemButton>
@@ -124,7 +130,7 @@ const Navbar = () => {
                               <ListItemText primary="Credentials" />
                          </ListItemButton>
                     </Link> */}
-                     {/* {user && currentUser == "admin" &&
+                    {/* {user && currentUser == "admin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -136,40 +142,40 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>} */}
                     {user && currentUser == "admin" &&
-                    <Link to="/dtr">
-                         <ListItemButton>
-                              <div style={{ paddingLeft: "40px" }}>
-                                   <ListItemIcon>
-                                        <AccessTimeIcon />
-                                   </ListItemIcon>
-                              </div>
-                              <ListItemText primary="DTR" />
-                         </ListItemButton>
-                    </Link>}
+                         <Link to="/dtr">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <AccessTimeIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="DTR" />
+                              </ListItemButton>
+                         </Link>}
                     {user && currentUser == "admin" &&
-                    <Link to="/payroll">
-                         <ListItemButton>
-                              <div style={{ paddingLeft: "40px" }}>
-                                   <ListItemIcon>
-                                        <AttachMoneyIcon />
-                                   </ListItemIcon>
-                              </div>
-                              <ListItemText primary="Payroll" />
-                         </ListItemButton>
-                    </Link>}
+                         <Link to="/payroll">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <AttachMoneyIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Payroll" />
+                              </ListItemButton>
+                         </Link>}
 
                     {user && currentUser != "admin" &&
-                    <Link to="/employee/applyleaves">
-                         <ListItemButton>
-                              <div style={{ paddingLeft: "40px" }}>
-                                   <ListItemIcon>
-                                        <PersonOffIcon />
-                                   </ListItemIcon>
-                              </div>
-                              <ListItemText primary="My Leaves" />
-                         </ListItemButton>
-                    </Link>}
-                    
+                         <Link to="/employee/applyleaves">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <PersonOffIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="My Leaves" />
+                              </ListItemButton>
+                         </Link>}
+
                     {/* {user && currentUser != "admin" &&
                     <Link to="/employee/salary">
                          <ListItemButton>
@@ -182,7 +188,48 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>} */}
 
-              
+                    <div style={{ paddingLeft: "30px", marginTop: "70px" }}>
+                         <p style={{ color: "orange" }}>COOPERATIVE SYSTEM</p>
+                    </div>
+
+                    {user && currentUser == "admin" &&
+                         <Link to="/product">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <InventoryIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Product & Services" />
+                              </ListItemButton>
+                         </Link>}
+
+
+                    {user && currentUser == "admin" &&
+                         <Link to="/payroll">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <ReceiptIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Sales & Transaction" />
+                              </ListItemButton>
+                         </Link>}
+                    {user && currentUser == "admin" &&
+                         <Link to="/pos">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <PointOfSaleIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="POS" />
+                              </ListItemButton>
+                         </Link>}
+
+
+
                </List>
           </Container>
 

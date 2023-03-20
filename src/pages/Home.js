@@ -13,8 +13,10 @@ import { Login } from './Login'
 import { useAuthContext } from '../hooks/useAuthContext';
 import MyLeaves from './MyLeaves'
 import MySalary from './MySalary'
+import Product from './Product'
 import Dtr from './Dtr'
 import Payroll from './Payroll'
+import Pos from './Pos'
 
 /**Styled Components */
 const Container = styled.div`
@@ -79,6 +81,14 @@ const Home = () => {
                     <Route
                         path="/employee/salary"
                         element={user ? <MySalary title="My Salary" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                       <Route
+                        path="/product"
+                        element={user ? <Product title="Product & Services" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                    <Route
+                        path="/pos"
+                        element={user ? <Pos title="POS" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
 
                 </Routes>

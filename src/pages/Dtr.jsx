@@ -815,16 +815,6 @@ const Dtr = (props) => {
      }
 
 
-
-
-
-
-
-
-
-
-
-
      const [sss, setsss] = useState(0)
      const [wtax, setwtax] = useState(0)
      const [philhealth, setphilhealth] = useState(0)
