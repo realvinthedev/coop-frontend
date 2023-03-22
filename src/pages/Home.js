@@ -17,6 +17,7 @@ import Product from './Product'
 import Dtr from './Dtr'
 import Payroll from './Payroll'
 import Pos from './Pos'
+import Sales from './Sales'
 
 /**Styled Components */
 const Container = styled.div`
@@ -85,6 +86,10 @@ const Home = () => {
                        <Route
                         path="/product"
                         element={user ? <Product title="Product & Services" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                    <Route
+                        path="/sales"
+                        element={user ? <Sales title="Sales and Transactions" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
                     <Route
                         path="/pos"

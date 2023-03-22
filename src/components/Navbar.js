@@ -206,7 +206,7 @@ const Navbar = () => {
 
 
                     {user && currentUser == "admin" &&
-                         <Link to="/payroll">
+                         <Link to="/sales">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
                                         <ListItemIcon>
