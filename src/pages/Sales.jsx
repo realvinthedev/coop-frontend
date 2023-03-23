@@ -133,6 +133,16 @@ const Sales = (props) => {
 
      }, [date_to, date_from])
 
+     const [gross, setGross] = useState([]);
+     useEffect(() => {
+          let pos_total = 0;
+
+          sales.forEach((item) => {
+               pos_total += item.pos_total
+          });
+          setGross(pos_total);
+
+     }, [sales])
 
      const convertDateToStringFrom = (date) => {
           const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -150,10 +160,12 @@ const Sales = (props) => {
           const itemsHeight = params.value?.length * lineHeight || 0;
           const padding = 120; // Set the desired padding
           return itemsHeight + padding;
-        }
+     }
+
+    
 
      const columns = [
-          { field: 'pos_date', headerName: 'Date', width: 150 },
+          { field: 'pos_date', headerName: 'Date', width: 100 },
           { field: 'pos_transaction_id', headerName: 'Transaction ID', width: 200 },
           { field: 'pos_total', headerName: 'Total', width: 150 },
           {
@@ -175,7 +187,7 @@ const Sales = (props) => {
                                    {params.value.map((item, index) => (
                                         <tr key={index}>
                                              <td>{item.product_name}</td>
-                                        
+
                                              <td>{item.product_quantity}</td>
                                              <td>{item.product_selling_price}</td>
                                              <td>PHP {item.product_total}</td>
@@ -187,6 +199,7 @@ const Sales = (props) => {
                },
           },
      ];
+
 
 
      return (
@@ -228,6 +241,10 @@ const Sales = (props) => {
                                         //onRowClick={handleRowClick}
                                         />
                                    </div>
+
+                                   {<div style={{ display: "flex", justifyContent: "right", paddingTop: "20px"}}>
+                                        <label>Total Gross: {gross? gross.toLocaleString() : 0}</label>
+                                   </div>}
                               </Card>
                          </Main>
                     </Wrapper>

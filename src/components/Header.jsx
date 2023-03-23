@@ -8,7 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext'
 const Container = styled.div`
     background-color: #f0f2f9;
     height: 100px;
-    width: 1020px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

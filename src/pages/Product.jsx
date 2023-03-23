@@ -238,7 +238,6 @@ const Product = (props) => {
                product_cost_price: product_cost_price,
                product_selling_price: product_selling_price,
                product_stock: product_stock
-
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -361,10 +360,10 @@ const Product = (props) => {
 
                                    }}>
                                         <ThemeProvider theme={theme}>
-                                             <div>
+                                             <div  style={{ marginTop: "20px" }} >
+                                             <i>*Scroll down to add new product</i>
                                              </div>
                                              <div>
-                                                  
                                                   <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
                                                        Delete
                                                   </Button>

@@ -366,7 +366,7 @@ const Payroll = (props) => {
 
                fetchEmp();
           }
-     }, [employeeId])
+     }, [employeeId, start_date, end_date])
 
 
 
@@ -445,7 +445,6 @@ const Payroll = (props) => {
                     setdefault_daily(json.daily_salary ? json.daily_salary.toLocaleString() : 0)
                     setdefault_hourly(json.hourly_salary ? json.hourly_salary.toLocaleString() : 0)
                     setdefault_minute(json.minute_salary ? json.minute_salary.toLocaleString() : 0)
-
                     setFullEmp(json)
                }
           }

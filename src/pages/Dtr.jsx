@@ -141,7 +141,6 @@ const columns = [
      { field: 'ot_in_min', headerName: '', width: 80 },
      { field: 'ot_out_hour', headerName: 'OT OUT', width: 80 },
      { field: 'ot_out_min', headerName: '', width: 80 },
-     { field: 'ot_out_min', headerName: '', width: 80 },
      { field: 'total_working_hour', headerName: 'Total Working Hour', width: 140 },
      { field: 'total_ot_hour', headerName: 'Total OT Hour', width: 140 },
      { field: 'ot_type', headerName: 'OT Type', width: 140 },
@@ -195,9 +194,25 @@ const Dtr = (props) => {
      const [ot_type, setOt_type] = useState("none")
      const [is_tardiness, setIs_tardiness] = useState(0)
 
+  
+     const [isAdd, setIsAdd] = useState(false)
+     const [refresher, setRefresher] = useState(0)
+     const handleRefresher = () => {
+          setRefresher(Math.random())
+     };
 
-
-
+     // const isEdit_True = () => {
+     //      setIsEdit(true)
+     // };
+     // const isEdit_False = () => {
+     //      setIsEdit(false)
+     // };
+     const isAdd_True = () => {
+          setIsAdd(true)
+     };
+     const isAdd_False = () => {
+          setIsAdd(false)
+     };
 
      const [openAdd, setOpenAdd] = useState(false);
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -211,6 +226,16 @@ const Dtr = (props) => {
      const handleOpenAdd = () => {
           setOpenAdd(true);
      };
+     const handleOpenEdit = () => {
+          isAdd_False();
+          if (id == "") {
+               setOpenWarning(true)
+          }
+          else {
+               setOpenAdd(true);
+          }
+     };
+  
      const handleCloseAdd = () => {
           setOpenAdd(false);
      };
@@ -267,7 +292,7 @@ const Dtr = (props) => {
           if (user && date) {
                fetchDtr();
           }
-     }, [date])
+     }, [date, refresher])
      const [official_am_timein, setOfficial_am_timein] = useState(0);
      const [official_pm_timein, setOfficial_pm_timein] = useState(0);
 
@@ -313,6 +338,11 @@ const Dtr = (props) => {
      const [vl_nopay_hours, setVl_nopay_hours] = useState(0);
      const [sl_nopay_hours, setSl_nopay_hours] = useState(0);
      const [el_nopay_hours, setEl_nopay_hours] = useState(0);
+
+     const handleCloseWarning = () => {
+          setOpenWarning(false);
+     };
+
      const handleSelectChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
@@ -437,15 +467,7 @@ const Dtr = (props) => {
           setLeaveHours(hour)
      }
 
-     const handleOpenEdit = () => {
-          if (id == "") {
-               setOpenWarning(true)
-          }
-          else {
-               setOpenEdit(true);
-          }
-
-     };
+    
      const handleOpenDelete = () => {
           if (id == "") {
                setOpenWarning(true)
@@ -454,6 +476,9 @@ const Dtr = (props) => {
                setOpenDelete(true);
           }
 
+     };
+     const handleCloseDelete = () => {
+          setOpenDelete(false);
      };
      const GetCurrentDate = () => {
 
@@ -586,46 +611,6 @@ const Dtr = (props) => {
           }
 
 
-          //   this is the official time in
-          //   let finalAmInHour;
-          //   let convertedAmIn_early = parseFloat(official_am_timein)
-          //   let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
-
-
-          //   if (convertedAmIn_regular < official_am_timein || convertedAmIn_regular == official_am_timein) {
-          //        8:00
-          //        finalAmInHour = convertedAmIn_early
-
-          //        console.log("IF")
-          //   } else {
-          //        8.5
-          //        finalAmInHour = convertedAmIn_regular
-          //        console.log("else")
-          //   }
-
-
-          //   let official_am_timeout = parseFloat(official_am_timein) + parseFloat(4)
-          //   let convertedAmOut_regular
-          //   let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
-          //   let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
-
-
-          //   if(am_out_hour >= official_am_timeout){
-          //        convertedAmOut_regular = official_am_timeout
-          //   }else{
-          //        convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
-          //   }
-          //   let calculateAmTotalHours = convertedAmOut_regular  - finalAmInHour 
-          //   let calcualatePmTotalHours = pmTimOut - pmTimeIn
-
-
-          //   setTotal_working_hour(calculateAmTotalHours + calcualatePmTotalHours)
-          //   calculateTardiness()
-          //   if (total_tardiness_min > 0) {
-          //        setIs_tardiness(1)
-          //   } else {
-          //        setIs_tardiness(0)
-          //   }
      }
 
      const CalculateTotalOtHours = () => {
@@ -686,6 +671,7 @@ const Dtr = (props) => {
      // }
 
      const [emp, setEmp] = useState([])
+
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
@@ -723,15 +709,22 @@ const Dtr = (props) => {
      //handleError
      const handleOnError = () => {
           setOpenError(true);
+          setTimeout(() => {
+               setOpenError(false);
+          }, 2000);
      };
 
      const handleOffError = () => {
-          setOpenError(false);
+          setOpenError(false)
      };
 
      //handleSuccess
      const handleOnSuccess = () => {
           setOpenSuccess(true);
+          setTimeout(() => {
+               setOpenSuccess(false);
+          }, 2000);
+
      };
 
      const handleOffSuccess = () => {
@@ -739,6 +732,37 @@ const Dtr = (props) => {
      };
      const [openError, setOpenError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
+
+     const handleClearFields = () => {
+          setOfficial_am_timein(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
+          setTotal_working_hour(0)
+          setOt_type('none')
+          setTotal_tardiness_min(0)
+          setAbsent_hours(0)
+          setIs_tardiness(0)
+     }
+
+     const handleDelete = async () => {
+          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr/' + id, {
+               method: 'DELETE',
+               headers: {
+                    'Authorization': `Bearer ${user.token}`
+               }
+          })
+          const json = await response.json()
+          if (response.ok) {
+               console.log('deleted', json)
+          }
+          window.location.reload();
+     }
 
      const handleAdd = async (e) => {
           e.preventDefault()
@@ -752,7 +776,7 @@ const Dtr = (props) => {
                am_out_hour == "" ||
                pm_in_hour == "" ||
                pm_out_hour == ""
-               ) {
+          ) {
                handleOnError()
                console.log("IF")
           }
@@ -806,9 +830,11 @@ const Dtr = (props) => {
                }
                handleOnSuccess();
                setTimeout(() => {
-                    window.location.reload();
-                  }, 3000);
-               
+                    handleClearFields()
+                    handleRefresher()
+                    handleCloseAdd()
+               }, 1000);
+
           }
 
           //window.location.reload();
@@ -835,6 +861,10 @@ const Dtr = (props) => {
      const [allowance, setallowance] = useState(0)
      const [error, setError] = useState("")
      const [tferror, setTferror] = useState(false)
+
+     const handleRowClick = (params) => {
+          setId(params.row._id);
+     };
 
      const handlesss = (event) => {
           const value = parseInt(event.target.value);
@@ -982,8 +1012,9 @@ const Dtr = (props) => {
                                              pageSize={7}
                                              rowsPerPageOptions={[10]}
                                              style={{ marginBottom: "20px" }}
+                                             onRowClick={handleRowClick}
                                         />
-                                         
+
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                              <DatePicker
                                                   label="Current Date"
@@ -1007,9 +1038,9 @@ const Dtr = (props) => {
                                              <EditDeleteContainer>
 
                                                   <ThemeProvider theme={theme}>
-                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
+                                                       {/* <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
                                                             Edit
-                                                       </Button>
+                                                       </Button> */}
                                                        <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
                                                             Delete
                                                        </Button>
@@ -1028,16 +1059,16 @@ const Dtr = (props) => {
                                                   Add Daily Time Record
                                              </DialogTitle>
                                              <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
+                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                        <DatePicker
                                                             label="Date"
                                                             value={date}
-                                                        
+
                                                             inputFormat="MM-DD-YYYY"
                                                             onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px"}}{...params} error={false} />}
+                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px" }}{...params} error={false} />}
                                                        />
                                                   </LocalizationProvider>
 
@@ -1068,7 +1099,7 @@ const Dtr = (props) => {
                                                                  readOnly: true,
                                                             }}
                                                        />
-                                                       
+
                                                        <TextField
                                                             required
                                                             id="outlined-required"
@@ -1450,13 +1481,15 @@ const Dtr = (props) => {
                                                             }}
                                                        />
                                                   </OthersNoPayLeaves>}
+                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                              </DialogContent>
                                              <DialogActions>
                                                   {/* <Button onClick={handleAdd}>Add</Button> */}
                                                   <Button onClick={handleCloseAdd} autoFocus>
                                                        Cancel
                                                   </Button>
-                                                  <Button onClick={handleAdd}>Add</Button>
+                                                  <Button onClick={handleAdd}>Save</Button>
                                              </DialogActions>
                                         </Dialog>
                                         <Dialog
@@ -1714,6 +1747,48 @@ const Dtr = (props) => {
                                                        Cancel
                                                   </Button>
                                                   <Button onClick={handleAddAdditional}>Add</Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                        <Dialog
+                                             open={openDelete}
+                                             onClose={handleCloseDelete}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
+                                                  <h2>{"Are you sure to delete selected item?"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       Deleted item can't be undone. Confirm by clicking "Delete"
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleDelete}>Delete</Button>
+                                                  <Button onClick={handleCloseDelete} autoFocus>
+                                                       Cancel
+                                                  </Button>
+                                             </DialogActions>
+                                        </Dialog>
+                                        <Dialog
+                                             open={openWarning}
+                                             onClose={handleCloseWarning}
+                                             aria-labelledby="alert-dialog-title"
+                                             aria-describedby="alert-dialog-description"
+                                        >
+                                             <DialogTitle id="alert-dialog-title">
+
+                                                  <h2>{"No data has been selected"}</h2>
+                                             </DialogTitle>
+                                             <DialogContent>
+                                                  <DialogContentText id="alert-dialog-description">
+                                                       You need to select a data first before deleting/editing
+                                                  </DialogContentText>
+                                             </DialogContent>
+                                             <DialogActions>
+                                                  <Button onClick={handleCloseWarning} autoFocus>
+                                                       Okay
+                                                  </Button>
                                              </DialogActions>
                                         </Dialog>
 
