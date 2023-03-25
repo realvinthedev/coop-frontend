@@ -18,6 +18,7 @@ import Dtr from './Dtr'
 import Payroll from './Payroll'
 import Pos from './Pos'
 import Sales from './Sales'
+import Additionals from './Additionals'
 
 /**Styled Components */
 const Container = styled.div`
@@ -66,6 +67,10 @@ const Home = () => {
                     <Route
                         path="/dtr"
                         element={user ? <Dtr title="DTR" user="User" /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/additionals"
+                        element={user ? <Additionals title="Earnings & Deductions" user="User" /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/payroll"

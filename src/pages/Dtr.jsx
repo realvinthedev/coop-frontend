@@ -937,7 +937,6 @@ const Dtr = (props) => {
           let totalDeduction = Number(sss) + Number(wtax) + Number(philhealth) + Number(pagibig) + Number(lodging) + Number(water_electricity) + Number(hmo) + Number(share_capital) +
                Number(hhhc_savings) + Number(hhhc_membership_fee) + Number(cash_advances) + Number(pay_adjustment_deduction) + Number(other_deduction);
           settotal_deduction(totalDeduction)
-
           let totalEarnings = Number(pay_adjustment_earnings) + Number(other_earnings) + Number(allowance)
           settotal_earnings(totalEarnings)
      }
@@ -1134,7 +1133,7 @@ const Dtr = (props) => {
                                                   <Warnings>
                                                        <div>*Please use military time format</div>
                                                        <div>**Leave "0" (zero) if the field not in use</div>
-
+                                                       <div>***For Official AM Timein, if time in is 8:30, please input 8.5. (30mins / 60mins = 0.5)</div>
                                                   </Warnings>
                                                   {hide === true ? null : <Others id="others">
                                                        <TimeContainer>

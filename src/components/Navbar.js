@@ -19,6 +19,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import MoneyIcon from '@mui/icons-material/Money';
 
 const Container = styled.div`
      background-color: white;
@@ -150,6 +151,17 @@ const Navbar = () => {
                                         </ListItemIcon>
                                    </div>
                                    <ListItemText primary="DTR" />
+                              </ListItemButton>
+                         </Link>}
+                    {user && currentUser == "admin" &&
+                         <Link to="/additionals">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <MoneyIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Earnings & Deductions" />
                               </ListItemButton>
                          </Link>}
                     {user && currentUser == "admin" &&
