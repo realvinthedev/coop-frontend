@@ -131,7 +131,7 @@ const Warnings = styled.h1`
 const columns_additionals = [
      { field: 'date_covered', headerName: 'Date', width: 100 },
      { field: 'employee_id', headerName: 'Emp ID', width: 100 },
-     { field: 'name', headerName: 'Name', width: 100 },
+     { field: 'name', headerName: 'Name', width: 300 },
      { field: 'sss', headerName: 'SSS', width: 100 },
      { field: 'wtax', headerName: 'WTAX', width: 100 },
      { field: 'philhealth', headerName: 'Philhealth', width: 100 },
@@ -163,7 +163,7 @@ const Additionals = (props) => {
 
 
      const [employeeId, setEmployeeId] = useState('')
-     const [name, setName] = useState('none')
+     const [name, setName] = useState('all')
      const [date, setDate] = useState(() => {
           const date = new Date();
 
@@ -175,30 +175,30 @@ const Additionals = (props) => {
           return currentDate
      })
 
-     
 
 
-    
+
+
      const [refresher, setRefresher] = useState(0)
      const handleRefresher = () => {
           setRefresher(Math.random())
      };
 
-    
-   
+
+
      const [openAdd, setOpenAdd] = useState(false);
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
      const [id, setId] = useState('')
      const [openDelete, setOpenDelete] = useState(false);
-    
+
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
-    
 
-    
-    
 
-    
+
+
+
+
 
      const handleOpenAddAdditionals = () => {
           setOpenAddAdditionals(true);
@@ -208,16 +208,15 @@ const Additionals = (props) => {
      };
 
 
-    
 
-    
+
+
 
 
      const handleCloseWarning = () => {
           setOpenWarning(false);
      };
 
-    
 
 
 
@@ -231,7 +230,8 @@ const Additionals = (props) => {
 
 
 
-    
+
+
 
      const handleOpenDelete = () => {
           if (id == "") {
@@ -245,20 +245,25 @@ const Additionals = (props) => {
      const handleCloseDelete = () => {
           setOpenDelete(false);
      };
- 
 
-  
-    
 
-  
+
+
+
+
 
      const handleName = (event) => {
           const name = event.target.value;
           setName(name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
+          console.log(name)
+          console.log(sss)
+          console.log(total_deduction)
+          console.log(total_earnings)
+
      }
-  
+
      const [emp, setEmp] = useState([])
 
      useEffect(() => {
@@ -325,7 +330,7 @@ const Additionals = (props) => {
                     const filteredData = json.filter(item => {
                          const date = item.date_covered
                          const employee_id = item.employee_id
-                         if (employeeId == "none") {
+                         if (name == "all") {
                               return date >= date_from && date <= date_to
                          }
                          else {
@@ -334,8 +339,7 @@ const Additionals = (props) => {
 
 
                     });
-                    //setfiltered_data(filteredData)
-                    //setsales(json)
+
                     setAdditionals(filteredData)
                }
           }
@@ -406,6 +410,7 @@ const Additionals = (props) => {
      const [allowance, setallowance] = useState(0)
      const [error, setError] = useState("")
      const [tferror, setTferror] = useState(false)
+
 
      const handleRowClick = (params) => {
           setId(params.row._id);
@@ -488,56 +493,65 @@ const Additionals = (props) => {
 
      const handleAddAdditional = async (e) => {
           e.preventDefault()
-          if (!user) {
-               console.log('You must be logged in first')
-               return
+          if (name === "") {
+               handleOnError();
           }
-        
-        
-               const additional = {
-                    date_covered: date,
-                    employee_id: employeeId,
-                    name: name,
-                    sss: sss,
-                    wtax: wtax,
-                    philhealth: philhealth,
-                    pagibig: pagibig,
-                    lodging: lodging,
-                    water_electricity: water_electricity,
-                    hmo: hmo,
-                    share_capital: share_capital,
-                    hhhc_savings: hhhc_savings,
-                    hhhc_membership_fee: hhhc_membership_fee,
-                    cash_advances: cash_advances,
-                    pay_adjustment_deduction: pay_adjustment_deduction,
-                    other_deduction: other_deduction,
-                    total_deduction: total_deduction,
-                    allowance: allowance,
-                    pay_adjustment_earnings: pay_adjustment_earnings,
-                    other_earnings: other_earnings,
-                    total_earnings: total_earnings
-               }
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
-                    method: 'POST',
-                    body: JSON.stringify(additional),
-                    headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${user.token}`
-                    }
-               })
-               const json = await response.json()
-               if (!response.ok) {
-                    setError(json.error)
-                    console.log(json.error)
-                    console.log(error)
+          else {
+               if (!user) {
+                    console.log('You must be logged in first')
+                    return
                }
                else {
+                    const additional = {
+                         date_covered: date,
+                         employee_id: employeeId,
+                         name: name,
+                         sss: sss,
+                         wtax: wtax,
+                         philhealth: philhealth,
+                         pagibig: pagibig,
+                         lodging: lodging,
+                         water_electricity: water_electricity,
+                         hmo: hmo,
+                         share_capital: share_capital,
+                         hhhc_savings: hhhc_savings,
+                         hhhc_membership_fee: hhhc_membership_fee,
+                         cash_advances: cash_advances,
+                         pay_adjustment_deduction: pay_adjustment_deduction,
+                         other_deduction: other_deduction,
+                         total_deduction: total_deduction,
+                         allowance: allowance,
+                         pay_adjustment_earnings: pay_adjustment_earnings,
+                         other_earnings: other_earnings,
+                         total_earnings: total_earnings
+                    }
+                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
+                         method: 'POST',
+                         body: JSON.stringify(additional),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+                    if (!response.ok) {
+                         setError(json.error)
+                         console.log(json.error)
+                         console.log(error)
+                    }
+                    else {
+                         console.log(error)
+                    }
                     handleOnSuccess();
                     setTimeout(() => {
                          handleRefresher()
                     }, 1000);
                }
-          
+
+
+
+          }
+
      }
 
 
@@ -610,7 +624,7 @@ const Additionals = (props) => {
                                              onChange={handleName}
                                              value={name}
                                         >
-                                             <MenuItem value={'none'}>All</MenuItem>
+                                             <MenuItem value={'all'}>All</MenuItem>
                                              {emp.map((data) => {
                                                   // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                                   return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
@@ -638,7 +652,7 @@ const Additionals = (props) => {
                                                   </ThemeProvider>
                                              </EditDeleteContainer>
                                         </ButtonContainer>
-                                        
+
                                         <Dialog
                                              fullScreen={fullScreen}
                                              open={openAddAdditionals}

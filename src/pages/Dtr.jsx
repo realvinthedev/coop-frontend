@@ -137,15 +137,22 @@ const columns = [
      { field: 'pm_in_min', headerName: '', width: 80 },
      { field: 'pm_out_hour', headerName: 'PM OUT', width: 80 },
      { field: 'pm_out_min', headerName: '', width: 80 },
-     { field: 'ot_in_hour', headerName: 'OT IN', width: 80 },
-     { field: 'ot_in_min', headerName: '', width: 80 },
-     { field: 'ot_out_hour', headerName: 'OT OUT', width: 80 },
-     { field: 'ot_out_min', headerName: '', width: 80 },
      { field: 'total_working_hour', headerName: 'Total Working Hour', width: 140 },
-     { field: 'total_ot_hour', headerName: 'Total OT Hour', width: 140 },
      { field: 'ot_type', headerName: 'OT Type', width: 140 },
      { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 140 },
      { field: 'is_tardiness', headerName: 'Is Tardiness?', width: 80 },
+     { field: 'vl_hours', headerName: 'VL Hours', width: 80 },
+     { field: 'sl_hours', headerName: 'SL Hours', width: 80 },
+     { field: 'el_hours', headerName: 'EL Hours', width: 80 },
+     { field: 'leave_type', headerName: 'Leave Type', width: 80 },
+     { field: 'absent_hours', headerName: 'Absent Hours', width: 80 },
+     { field: 'vl_nopay_hours', headerName: 'VL No Pay Hours', width: 80 },
+     { field: 'sl_nopay_hours', headerName: 'SL No Pay Hours', width: 80 },
+     { field: 'el_nopay_hours', headerName: 'EL No Pay Hours', width: 80 },
+     { field: 'regular_ot_hours', headerName: 'Regular OT Hours', width: 80 },
+     { field: 'restday_ot_hours', headerName: 'Restday OT Hours', width: 80 },
+     { field: 'special_ot_hours', headerName: 'Special OT Hours', width: 80 },
+     { field: 'legal_ot_hours', headerName: 'Legal OT Hours', width: 80 },
 ];
 
 
@@ -189,12 +196,12 @@ const Dtr = (props) => {
      const [ot_in_min, setOt_in_min] = useState(0)
      const [ot_out_hour, setOt_out_hour] = useState(0)
      const [ot_out_min, setOt_out_min] = useState(0)
-     const [total_working_hour, setTotal_working_hour] = useState('')
+     const [total_working_hour, setTotal_working_hour] = useState(0)
      const [total_tardiness_min, setTotal_tardiness_min] = useState(0)
      const [ot_type, setOt_type] = useState("none")
      const [is_tardiness, setIs_tardiness] = useState(0)
 
-  
+
      const [isAdd, setIsAdd] = useState(false)
      const [refresher, setRefresher] = useState(0)
      const handleRefresher = () => {
@@ -235,7 +242,7 @@ const Dtr = (props) => {
                setOpenAdd(true);
           }
      };
-  
+
      const handleCloseAdd = () => {
           setOpenAdd(false);
      };
@@ -467,7 +474,7 @@ const Dtr = (props) => {
           setLeaveHours(hour)
      }
 
-    
+
      const handleOpenDelete = () => {
           if (id == "") {
                setOpenWarning(true)
@@ -763,81 +770,77 @@ const Dtr = (props) => {
           }
           window.location.reload();
      }
-
      const handleAdd = async (e) => {
           e.preventDefault()
-          if (!user) {
-               console.log('You must be logged in first')
-               return
-          }
-          if (
-               official_am_timein == "" ||
-               am_in_hour == "" ||
-               am_out_hour == "" ||
-               pm_in_hour == "" ||
-               pm_out_hour == ""
-          ) {
+
+          if (name === "" || official_am_timein === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
                handleOnError()
-               console.log("IF")
           }
           else {
-               console.log('else')
-               const dtr = {
-                    employee_id: employeeId,
-                    name: name,
-                    date: date,
-                    am_in_hour: am_in_hour,
-                    am_in_min: am_in_min,
-                    am_out_hour: am_out_hour,
-                    am_out_min: am_out_min,
-                    pm_in_hour: pm_in_hour,
-                    pm_in_min: pm_in_min,
-                    pm_out_hour: pm_out_hour,
-                    pm_out_min: pm_out_min,
-                    total_working_hour: total_working_hour,
-                    total_tardiness_min: total_tardiness_min,
-                    ot_type: ot_type,
-                    regular_ot_hours: regular_ot_hours,
-                    restday_ot_hours: restday_ot_hours,
-                    special_ot_hours: special_ot_hours,
-                    legal_ot_hours: legal_ot_hours,
-                    vl_nopay_hours: vl_nopay_hours,
-                    sl_nopay_hours: sl_nopay_hours,
-                    el_nopay_hours: el_nopay_hours,
-                    vl_hours: vl_wpay_hours,
-                    sl_hours: sl_wpay_hours,
-                    el_hours: el_wpay_hours,
-                    is_tardiness: is_tardiness,
-                    official_am_timein: official_am_timein,
-                    absent_hours: absent_hours,
-                    leave_type: leave_type
-               }
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
-                    method: 'POST',
-                    body: JSON.stringify(dtr),
-                    headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${user.token}`
-                    }
-               })
-               const json = await response.json()
-               if (!response.ok) {
-                    setError(json.error)
-                    console.log(json)
+               if (!user) {
+                    console.log('You must be logged in first')
+                    return
                }
                else {
-                    console.log(error)
-               }
-               handleOnSuccess();
-               setTimeout(() => {
-                    handleClearFields()
-                    handleRefresher()
-                    handleCloseAdd()
-               }, 1000);
+                    const dtr = {
+                         employee_id: employeeId,
+                         name: name,
+                         date: date,
+                         am_in_hour: am_in_hour,
+                         am_in_min: am_in_min,
+                         am_out_hour: am_out_hour,
+                         am_out_min: am_out_min,
+                         pm_in_hour: pm_in_hour,
+                         pm_in_min: pm_in_min,
+                         pm_out_hour: pm_out_hour,
+                         pm_out_min: pm_out_min,
+                         total_working_hour: total_working_hour,
+                         total_tardiness_min: total_tardiness_min,
+                         ot_type: ot_type,
+                         regular_ot_hours: regular_ot_hours,
+                         restday_ot_hours: restday_ot_hours,
+                         special_ot_hours: special_ot_hours,
+                         legal_ot_hours: legal_ot_hours,
+                         vl_nopay_hours: vl_nopay_hours,
+                         sl_nopay_hours: sl_nopay_hours,
+                         el_nopay_hours: el_nopay_hours,
+                         vl_hours: vl_wpay_hours,
+                         sl_hours: sl_wpay_hours,
+                         el_hours: el_wpay_hours,
+                         is_tardiness: is_tardiness,
+                         official_am_timein: official_am_timein,
+                         absent_hours: absent_hours,
+                         leave_type: leave_type
+                    }
+                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
+                         method: 'POST',
+                         body: JSON.stringify(dtr),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+                    if (!response.ok) {
+                         setError(json.error)
+                         console.log(json)
+                    }
+                    else {
+                         console.log(error)
+                    }
+                    handleOnSuccess();
+                    setTimeout(() => {
+                         handleClearFields()
+                         handleRefresher()
+                         handleCloseAdd()
+                    }, 1000);
 
+               }
           }
 
-          //window.location.reload();
+
+
+         
      }
 
 
@@ -1028,9 +1031,6 @@ const Dtr = (props) => {
                                                   <ThemeProvider theme={theme}>
                                                        <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
                                                             Add New DTR
-                                                       </Button>
-                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAddAdditionals}>
-                                                            Add New Deduction / Earnings
                                                        </Button>
                                                   </ThemeProvider>
                                              </div>
