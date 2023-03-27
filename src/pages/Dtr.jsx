@@ -403,7 +403,7 @@ const Dtr = (props) => {
                setHideNoPayLeaves(true)
           }
           else if (type == "vl_nopay_halfday" || type == "sl_nopay_halfday" || type == "el_nopay_halfday") {
-               if (type == "vl_nopay_halfday") {
+               if (type == "vl_nopay_halfday") { 
                     setVl_nopay_hours(4)
                     setSl_nopay_hours(0)
                     setEl_nopay_hours(0)
