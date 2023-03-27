@@ -248,6 +248,9 @@ const Dashboard = (props) => {
                               </DialogTitle>
                               <DialogContent>
                                    <DialogContentText id="alert-dialog-description">
+                                   <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 3/27/2023</h1>
+                                        <p>Fixed Grosspay and Netpay calculation bug</p>
+                                        <p style={{paddingBottom: "30px" }}></p>
                                         <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 3/27/2023</h1>
                                         <p> In Earnings/Deductions Page: </p>
                                         <p> *Deleted the "Calculate" buttons</p>

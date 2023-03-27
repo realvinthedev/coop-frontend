@@ -440,11 +440,16 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    setdefault_base(json.base_salary ? json.base_salary.toLocaleString() : 0)
-                    setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary.toLocaleString() : 0)
-                    setdefault_daily(json.daily_salary ? json.daily_salary.toLocaleString() : 0)
-                    setdefault_hourly(json.hourly_salary ? json.hourly_salary.toLocaleString() : 0)
-                    setdefault_minute(json.minute_salary ? json.minute_salary.toLocaleString() : 0)
+                    setdefault_base(json.base_salary ? json.base_salary : 0)
+                    setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary : 0)
+                    setdefault_daily(json.daily_salary ? json.daily_salary : 0)
+                    setdefault_hourly(json.hourly_salary ? json.hourly_salary : 0)
+                    setdefault_minute(json.minute_salary ? json.minute_salary : 0)
+                    // setdefault_base(json.base_salary ? json.base_salary.toLocaleString() : 0)
+                    // setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary.toLocaleString() : 0)
+                    // setdefault_daily(json.daily_salary ? json.daily_salary.toLocaleString() : 0)
+                    // setdefault_hourly(json.hourly_salary ? json.hourly_salary.toLocaleString() : 0)
+                    // setdefault_minute(json.minute_salary ? json.minute_salary.toLocaleString() : 0)
                     setFullEmp(json)
                }
           }
@@ -589,10 +594,13 @@ const Payroll = (props) => {
 
 
 
+          let final_bimonthly_pay = default_bimonthly;
+
+
           let final_total_working_hour = total_working_hour * default_hourly;
-          let final_regular_ot_hours = (regular_ot_hours * default_hourly) + (regular_ot_hours*.25)
-          let final_special_ot_hours = (special_ot_hours * default_hourly) + (special_ot_hours*.30)
-          let final_legal_ot_hours =  (restday_ot_hours * default_hourly) + (restday_ot_hours*.30)
+          let final_regular_ot_hours = (regular_ot_hours * default_hourly) + (regular_ot_hours * .25)
+          let final_special_ot_hours = (special_ot_hours * default_hourly) + (special_ot_hours * .30)
+          let final_legal_ot_hours = (restday_ot_hours * default_hourly) + (restday_ot_hours * .30)
           let final_total_tardiness_min = total_tardiness_min * default_minute;
           let final_vl_hours = vl_hours * default_hourly;
           let final_sl_hours = sl_hours * default_hourly;
@@ -602,40 +610,14 @@ const Payroll = (props) => {
           let final_el_nopay_hours = el_nopay_hours * default_hourly
           let final_absent_hours = absent_hours * default_hourly
 
-
-          let grosspay =
-               (final_total_working_hour +
-                    final_regular_ot_hours +
-                    final_special_ot_hours +
-                    final_legal_ot_hours +
-                    final_vl_hours +
-                    final_sl_hours +
-                    final_el_hours
-               ) - final_total_tardiness_min
-
-        
-
-
-
-               let final_earnings =filtered_additional && filtered_additional[0]?.total_earnings
-               let final_deduction =filtered_additional && filtered_additional[0]?.total_deduction
-
+          let final_absent_deduction = final_vl_nopay_hours + final_sl_nopay_hours + final_el_nopay_hours + final_absent_hours + final_total_tardiness_min
+          let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours) - final_absent_deduction
+          let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
+          let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
           setfinal_gross_pay(grosspay)
           setfinal_earnings(final_earnings)
           setfinal_deduction(final_deduction)
           setfinal_net_pay((grosspay - final_deduction) + final_earnings)
-          console.log(total_working_hour)
-          console.log(default_hourly)
-          console.log(grosspay)
-          console.log(final_regular_ot_hours)
-          console.log(regular_ot_hours)
-          console.log(final_special_ot_hours)
-          console.log(final_legal_ot_hours)
-          console.log(final_vl_hours)
-          console.log(final_sl_hours)
-          console.log(final_el_hours)
-
-
      }
      return (
 
@@ -745,11 +727,11 @@ const Payroll = (props) => {
                                                   <TableRow >
                                                        <TableCell>{employeeId}</TableCell>
                                                        <TableCell>{name}</TableCell>
-                                                       <TableCell>{default_base}</TableCell>
-                                                       <TableCell>{default_bimonthly}</TableCell>
-                                                       <TableCell>{default_daily}</TableCell>
-                                                       <TableCell>{default_hourly}</TableCell>
-                                                       <TableCell>{default_minute}</TableCell>
+                                                       <TableCell>{default_base.toLocaleString()}</TableCell>
+                                                       <TableCell>{default_bimonthly.toLocaleString()}</TableCell>
+                                                       <TableCell>{default_daily.toLocaleString()}</TableCell>
+                                                       <TableCell>{default_hourly.toLocaleString()}</TableCell>
+                                                       <TableCell>{default_minute.toLocaleString()}</TableCell>
                                                   </TableRow>
                                              </TableBody>
                                         </Table>
@@ -914,7 +896,7 @@ const Payroll = (props) => {
                                                   </TableHead>
                                                   <TableBody>
                                                        <TableRow >
-                                                       
+
                                                             <TableCell>Additional Earnings</TableCell>
                                                             <TableCell>{final_earnings ? final_earnings.toLocaleString() : 0}</TableCell>
                                                        </TableRow>
@@ -924,11 +906,11 @@ const Payroll = (props) => {
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Deductions</TableCell>
-                                                            <TableCell>{final_deduction? final_deduction.toLocaleString(): 0}</TableCell>
+                                                            <TableCell>{final_deduction ? final_deduction.toLocaleString() : 0}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Net Pay</TableCell>
-                                                            <TableCell>{final_net_pay? final_net_pay.toLocaleString(): 0}</TableCell>
+                                                            <TableCell>{final_net_pay ? final_net_pay.toLocaleString() : 0}</TableCell>
                                                        </TableRow>
 
                                                        <ThemeProvider theme={theme}>
@@ -936,6 +918,16 @@ const Payroll = (props) => {
                                                                  Calculate
                                                             </Button>
                                                        </ThemeProvider>
+
+                                                       <TableRow >
+                                                            <p style={{ fontStyle: "italic", fontSize: "12px", marginTop: "30px"}}>Important: Please finish updating all absences, leaves without pay, and other deductions before finalizing(Calculate) payroll
+                                                             to prevent incorrect Gross Pay Calculations. The reason for this is because the current gross pay calculation is:
+                                                            </p>
+                                                            <p>
+                                                            <span style={{ color: "red", fontSize: "12px"}}>Gross Pay = Bimonthly salary - absences(etc)</span>
+                                                            </p>
+                                                           
+                                                       </TableRow>
                                                   </TableBody>
                                              </Table>
                                         </TableContainer>
@@ -943,7 +935,7 @@ const Payroll = (props) => {
 
 
                                    <ButtonContainer>
-                                        
+
                                         <EditDeleteContainer>
                                              <ThemeProvider theme={theme}>
                                              </ThemeProvider>

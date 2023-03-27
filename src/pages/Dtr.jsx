@@ -129,6 +129,7 @@ const columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'employee_id', headerName: 'Employee ID', width: 100 },
      { field: 'name', headerName: 'Fullname', width: 200 },
+     { field: 'department', headerName: 'Department', width: 200 },
      { field: 'am_in_hour', headerName: 'AM IN', width: 80 },
      { field: 'am_in_min', headerName: '', width: 80 },
      { field: 'am_out_hour', headerName: 'AM OUT', width: 80 },
