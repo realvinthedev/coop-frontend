@@ -11,7 +11,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Navbar from '../components/Navbar';
 import { useSignup } from '../hooks/useSignup';
@@ -588,10 +588,11 @@ const Payroll = (props) => {
 
 
 
+
           let final_total_working_hour = total_working_hour * default_hourly;
-          let final_regular_ot_hours = total_working_hour * .25 + total_working_hour;
-          let final_special_ot_hours = special_ot_hours * .30 + special_ot_hours;
-          let final_legal_ot_hours = restday_ot_hours * .30 + legal_ot_hours;
+          let final_regular_ot_hours = (regular_ot_hours * default_hourly) + (regular_ot_hours*.25)
+          let final_special_ot_hours = (special_ot_hours * default_hourly) + (special_ot_hours*.30)
+          let final_legal_ot_hours =  (restday_ot_hours * default_hourly) + (restday_ot_hours*.30)
           let final_total_tardiness_min = total_tardiness_min * default_minute;
           let final_vl_hours = vl_hours * default_hourly;
           let final_sl_hours = sl_hours * default_hourly;
@@ -609,7 +610,6 @@ const Payroll = (props) => {
                     final_legal_ot_hours +
                     final_vl_hours +
                     final_sl_hours +
-                    final_el_hours +
                     final_el_hours
                ) - final_total_tardiness_min
 
@@ -624,7 +624,16 @@ const Payroll = (props) => {
           setfinal_earnings(final_earnings)
           setfinal_deduction(final_deduction)
           setfinal_net_pay((grosspay - final_deduction) + final_earnings)
-
+          console.log(total_working_hour)
+          console.log(default_hourly)
+          console.log(grosspay)
+          console.log(final_regular_ot_hours)
+          console.log(regular_ot_hours)
+          console.log(final_special_ot_hours)
+          console.log(final_legal_ot_hours)
+          console.log(final_vl_hours)
+          console.log(final_sl_hours)
+          console.log(final_el_hours)
 
 
      }

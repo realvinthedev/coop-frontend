@@ -59,7 +59,21 @@ const CardContainer = styled.div`
     justify-content: center;
     align-items: center;
 `
-
+const UpdateContainer = styled.div`
+    display: flex;
+    justify-content: right;
+    align-items: right;
+`
+const Update = styled.button`
+     background-color: purple;
+    height: 150px;
+    width: 320px;
+    border-radius: 20px;
+    display: flex;
+    padding: 30px;
+    margin: 15px;
+    color: white;
+`
 
 
 
@@ -189,6 +203,14 @@ const Dashboard = (props) => {
           setGross(pos_total);
      }, [user]);
 
+
+     const [openUpdate, setOpenUpdate] = useState(false);
+     const handleCloseUpdate = () => {
+          setOpenUpdate(false);
+     }
+     const handleOpenUpdate = () => {
+          setOpenUpdate(true);
+     }
      /**render or return different container per different navigation */
      return (
           <div style={{ display: "flex" }}>
@@ -207,6 +229,38 @@ const Dashboard = (props) => {
                               <Cards title="Total Net Income" data="0" color={green} />
                               {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
                          </CardContainer>
+                         <UpdateContainer>
+                              <Update 
+                                   onClick={handleOpenUpdate}
+                              >What's New?</Update>
+                         </UpdateContainer>
+
+                         <Dialog
+                              open={openUpdate}
+                              onClose={handleCloseUpdate}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                              fullWidth
+                              maxWidth="sm"
+                         >
+                              <DialogTitle id="alert-dialog-title">
+                                   <h2>{"System Update"}</h2>
+                              </DialogTitle>
+                              <DialogContent>
+                                   <DialogContentText id="alert-dialog-description">
+                                        <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 3/27/2023</h1>
+                                        <p> In Earnings/Deductions Page: </p>
+                                        <p> *Deleted the "Calculate" buttons</p>
+                                        <p> *Calculations are now automatic</p>
+                                       
+                                   </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                   <Button onClick={handleCloseUpdate} autoFocus>
+                                        Close
+                                   </Button>
+                              </DialogActions>
+                         </Dialog>
                     </Wrapper>
                </Container>
           </div>

@@ -285,6 +285,7 @@ const Additionals = (props) => {
           }
      }, [user])
 
+    
      const time = [
           { id: '1', time: '' },
      ];
@@ -571,6 +572,9 @@ const Additionals = (props) => {
      }
 
 
+     useEffect(() => {
+          handleCalculateTotalCollections();
+     }, [sss, philhealth, pagibig, wtax, lodging, water_electricity, hmo, share_capital, hhhc_membership_fee, hhhc_savings, cash_advances, pay_adjustment_deduction, other_deduction, allowance, pay_adjustment_earnings, other_earnings])
 
 
      return (
@@ -840,17 +844,13 @@ const Additionals = (props) => {
                                                             id="outlined-required"
                                                             label="Total Deduction"
                                                             fullWidth
-                                                            style={{ marginBottom: "20px", paddingRight: "10px" }}
+                                                            style={{ marginBottom: "20px"}}
                                                             value={total_deduction}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}
                                                        />
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
-                                                                 Calculate
-                                                            </Button>
-                                                       </ThemeProvider>
+                                                      
                                                   </TotalsContainer>
                                                   <TextField
                                                        type="number"
@@ -889,14 +889,10 @@ const Additionals = (props) => {
                                                             fullWidth
                                                             id="outlined-required"
                                                             label="Total Earnings"
-                                                            style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                                            style={{ paddingBottom: "20px"}}
                                                             value={total_earnings}
                                                        />
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
-                                                                 Calculate
-                                                            </Button>
-                                                       </ThemeProvider>
+                                                    
                                                        {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                        {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                   </TotalsContainer>
