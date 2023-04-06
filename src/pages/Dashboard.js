@@ -83,7 +83,7 @@ const Dashboard = (props) => {
      const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -103,7 +103,7 @@ const Dashboard = (props) => {
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -125,7 +125,7 @@ const Dashboard = (props) => {
      const [product, setProduct] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/product', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -149,7 +149,7 @@ const Dashboard = (props) => {
      const [pendingLeaves, setPendingLeaves] = useState([]);
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/leaves', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -172,7 +172,7 @@ const Dashboard = (props) => {
      const [gross, setGross] = useState([]);
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/pos', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

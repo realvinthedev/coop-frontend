@@ -110,7 +110,7 @@ const Leaves = (props) => {
     const [leaves, setLeaves] = useState([])
     useEffect(() => {
         const fetchLeaves = async () => {
-            const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves',{
+            const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/leaves',{
                 headers: {
                      'Authorization': `Bearer ${user.token}`
                 }

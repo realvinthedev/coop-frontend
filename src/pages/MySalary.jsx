@@ -119,7 +119,7 @@ const MySalary = (props) => {
           if (currentUser) {
 
                const fetchEmployee = async () => {
-                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                          //const response = await fetch('/api/employee/'+user.username, {
                          headers: {
 

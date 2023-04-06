@@ -268,7 +268,7 @@ const Additionals = (props) => {
 
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -320,7 +320,7 @@ const Additionals = (props) => {
      const [additionals, setAdditionals] = useState([])
      useEffect(() => {
           const fetchAdditionals = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -526,7 +526,7 @@ const Additionals = (props) => {
                          other_earnings: other_earnings,
                          total_earnings: total_earnings
                     }
-                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
                          method: 'POST',
                          body: JSON.stringify(additional),
                          headers: {
@@ -558,7 +558,7 @@ const Additionals = (props) => {
 
 
      const handleDelete = async () => {
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional/' + id, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`

@@ -179,7 +179,7 @@ const MyLeaves = (props) => {
                status: "Pending",
           }
 
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves', {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/leaves', {
                method: 'POST',
                body: JSON.stringify(leaves),
                headers: {
@@ -219,7 +219,7 @@ const MyLeaves = (props) => {
           }
 
 
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/leave/' + currentUser, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/leave/' + currentUser, {
                method: 'PATCH',
                body: JSON.stringify(heresthebody),
                headers: {
@@ -242,7 +242,7 @@ const MyLeaves = (props) => {
           if (currentUser) {
 
                const fetchEmployee = async () => {
-                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                          headers: {
 
                               'Authorization': `Bearer ${user.token}`
@@ -269,7 +269,7 @@ const MyLeaves = (props) => {
 
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/leaves', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/leaves', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

@@ -344,7 +344,7 @@ const Payroll = (props) => {
      const [employee_dtr, setEmployee_dtr] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-backend-v1.herokuapp.com/api/dtr/employee/${employeeId}`, {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/employee/${employeeId}`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -376,7 +376,7 @@ const Payroll = (props) => {
      const [filtered_additional, setFiltered_Additional] = useState([]);
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional/' + employeeId, {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional/' + employeeId, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -406,7 +406,7 @@ const Payroll = (props) => {
      const [emp, setEmp] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -432,7 +432,7 @@ const Payroll = (props) => {
      const [default_minute, setdefault_minute] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/' + employeeId, {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + employeeId, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

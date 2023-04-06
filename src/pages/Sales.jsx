@@ -109,7 +109,7 @@ const Sales = (props) => {
      const [sales, setsales] = useState([])
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/pos', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

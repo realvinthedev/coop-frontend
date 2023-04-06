@@ -95,7 +95,7 @@ const Product = (props) => {
      const [refresher, setRefresher] = useState(0)
      useEffect(() => {
           const fetchProduct = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/product', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -201,7 +201,7 @@ const Product = (props) => {
                }, 1500);
           }
           else {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/product/', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/', {
                     method: 'POST',
                     body: JSON.stringify(product),
                     headers: {
@@ -257,7 +257,7 @@ const Product = (props) => {
                }, 1500);
           }
           else {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/product/' + id, {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(product),
                     headers: {
@@ -291,7 +291,7 @@ const Product = (props) => {
                console.log('You must be logged in first')
                return
           } else {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/product/' + id, {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
                     method: 'DELETE',
                     body: JSON.stringify(product),
                     headers: {
