@@ -162,7 +162,8 @@ const Credentials = (props) => {
                console.log('You must be logged in first')
               return
           }
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/' + id, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + id, {
+          //const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee/' + id, {
                method: 'PATCH',
                body: JSON.stringify(credentials),
                headers: {
@@ -193,7 +194,7 @@ const Credentials = (props) => {
      const [employee, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployee = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

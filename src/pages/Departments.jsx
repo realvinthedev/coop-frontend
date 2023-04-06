@@ -154,7 +154,7 @@ const Departments = (props) => {
                description: description
           }
 
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
                method: 'POST',
                body: JSON.stringify(departments),
                headers: {
@@ -185,7 +185,7 @@ const Departments = (props) => {
                console.log('You must be logged in first')
               return
           }
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments/' + id, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
                method: 'PATCH',
                body: JSON.stringify(departments),
                headers: {
@@ -209,7 +209,7 @@ const Departments = (props) => {
      const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -239,7 +239,7 @@ const Departments = (props) => {
         
      }
      const handleDelete = async () => {
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/departments/' + id, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`

@@ -12,7 +12,7 @@ export const useLogin = () => {
           setIsLoading(true)
           setError(null)
 
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/credentials/login', {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/credentials/login', {
                method: 'POST',
                headers: {
                     'Content-Type': 'application/json'

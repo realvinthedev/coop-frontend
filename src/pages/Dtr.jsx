@@ -261,7 +261,7 @@ const Dtr = (props) => {
 
      //      useEffect(() => {
      //        async function fetchData() {
-     //          const response = await fetch(`https://coop-backend-v1.herokuapp.com/api/dtr/${date}`);
+     //          const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/${date}`);
      //          const data = await response.json();
      //          setData(data);
      //        }
@@ -284,7 +284,7 @@ const Dtr = (props) => {
      useEffect(() => {
 
           const fetchDtr = async () => {
-               const response = await fetch(`https://coop-backend-v1.herokuapp.com/api/dtr/${date}`, {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/${date}`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -682,7 +682,7 @@ const Dtr = (props) => {
 
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-backend-v1.herokuapp.com/api/employee', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -759,7 +759,7 @@ const Dtr = (props) => {
      }
 
      const handleDelete = async () => {
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr/' + id, {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/dtr/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -813,7 +813,7 @@ const Dtr = (props) => {
                          absent_hours: absent_hours,
                          leave_type: leave_type
                     }
-                    const response = await fetch('https://coop-backend-v1.herokuapp.com/api/dtr', {
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/dtr', {
                          method: 'POST',
                          body: JSON.stringify(dtr),
                          headers: {
@@ -974,7 +974,7 @@ const Dtr = (props) => {
                other_earnings: other_earnings,
                total_earnings: total_earnings
           }
-          const response = await fetch('https://coop-backend-v1.herokuapp.com/api/additional', {
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
                method: 'POST',
                body: JSON.stringify(additional),
                headers: {
