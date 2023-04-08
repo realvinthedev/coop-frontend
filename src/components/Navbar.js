@@ -20,7 +20,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoneyIcon from '@mui/icons-material/Money';
-
+import SavingsIcon from '@mui/icons-material/Savings';
 const Container = styled.div`
      background-color: white;
      height: 100vh;
@@ -239,9 +239,17 @@ const Navbar = () => {
                                    <ListItemText primary="POS" />
                               </ListItemButton>
                          </Link>}
-
-
-
+                    {user && currentUser == "admin" &&
+                         <Link to="/member">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <SavingsIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Savings" />
+                              </ListItemButton>
+                         </Link>}
                </List>
           </Container>
 

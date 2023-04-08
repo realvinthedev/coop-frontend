@@ -19,6 +19,7 @@ import Payroll from './Payroll'
 import Pos from './Pos'
 import Sales from './Sales'
 import Additionals from './Additionals'
+import Member from './Member'
 
 /**Styled Components */
 const Container = styled.div`
@@ -99,6 +100,10 @@ const Home = () => {
                     <Route
                         path="/pos"
                         element={user ? <Pos title="POS" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                     <Route
+                        path="/member"
+                        element={user ? <Member title="Member" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
 
                 </Routes>
