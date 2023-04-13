@@ -71,6 +71,7 @@ export const Login = () => {
           e.preventDefault();
           await login(username, password)
      }
+    
      const { user } = useAuthContext();
      return (
           <Container>

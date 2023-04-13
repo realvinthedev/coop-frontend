@@ -32,6 +32,7 @@ const Container = styled.div`
 
 const Home = () => {
     const { user } = useAuthContext()
+    
 
     return (
 
@@ -39,6 +40,7 @@ const Home = () => {
             <Container>
 
                 <Routes>
+
                     <Route
                         path="/"
                         element={user ? <Dashboard title="Dashboard" user="User" /> : <Navigate to="/login" />}
@@ -91,7 +93,7 @@ const Home = () => {
                         path="/employee/salary"
                         element={user ? <MySalary title="My Salary" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
-                       <Route
+                    <Route
                         path="/product"
                         element={user ? <Product title="Product & Services" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
@@ -103,7 +105,7 @@ const Home = () => {
                         path="/pos"
                         element={user ? <Pos title="POS" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
-                     <Route
+                    <Route
                         path="/member"
                         element={user ? <Member title="Savings Masterlist" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
@@ -111,7 +113,6 @@ const Home = () => {
                         path="/mysavings"
                         element={user ? <MemberIndividual title="My Savings" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
-
                 </Routes>
 
             </Container>

@@ -74,12 +74,22 @@ const Update = styled.button`
     margin: 15px;
     color: white;
 `
-
+const MemberCardContainer = styled.div`
+    background-color: white;
+    height: 150px;
+    width: 320px;
+    border-radius: 20px;
+    display: flex;
+    padding: 30px;
+    justify-content: left;
+    
+`
 
 
 const Dashboard = (props) => {
 
      const { user } = useAuthContext()
+     const currentUser = user.username;
      const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
@@ -218,53 +228,59 @@ const Dashboard = (props) => {
                <Container>
                     <Wrapper>
                          <Header title={props.title} user={props.user} />
-                         <CardContainer>
-                              <Cards title="Total Employees" data={employees.length} color={violet} />
-                              <Cards title="Total Departments" data={departments.length} color={yellow} />
-                              <Cards title="New Password Reset" data="0" color={green} />
-                         </CardContainer>
-                         <CardContainer>
-                              <Cards title="Total Products" data={product.length} color={violet} />
-                              <Cards title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} color={yellow} />
-                              <Cards title="Total Net Income" data="0" color={green} />
-                              {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
-                         </CardContainer>
-                         <UpdateContainer>
-                              <Update 
-                                   onClick={handleOpenUpdate}
-                              >What's New?</Update>
-                         </UpdateContainer>
+                         {user && currentUser == "admin" &&
+                              <div>
+                                   <CardContainer>
+                                        <Cards title="Total Employees" data={employees.length} color={violet} />
+                                        <Cards title="Total Departments" data={departments.length} color={yellow} />
+                                        <Cards title="New Password Reset" data="0" color={green} />
+                                   </CardContainer>
+                                   <CardContainer>
+                                        <Cards title="Total Products" data={product.length} color={violet} />
+                                        <Cards title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} color={yellow} />
+                                        <Cards title="Total Net Income" data="0" color={green} />
+                                        {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
+                                   </CardContainer>
+                                   <UpdateContainer>
+                                        <Update
+                                             onClick={handleOpenUpdate}
+                                        >What's New?</Update>
+                                   </UpdateContainer>
 
-                         <Dialog
-                              open={openUpdate}
-                              onClose={handleCloseUpdate}
-                              aria-labelledby="alert-dialog-title"
-                              aria-describedby="alert-dialog-description"
-                              fullWidth
-                              maxWidth="sm"
-                         >
-                              <DialogTitle id="alert-dialog-title">
-                                   <h2>{"System Update"}</h2>
-                              </DialogTitle>
-                              <DialogContent>
-                                   <DialogContentText id="alert-dialog-description">
-                                   <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 3/27/2023</h1>
-                                        <p>Fixed Grosspay and Netpay calculation bug</p>
-                                        <p style={{paddingBottom: "30px" }}></p>
-                                        <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 3/27/2023</h1>
-                                        <p> In Earnings/Deductions Page: </p>
-                                        <p> *Deleted the "Calculate" buttons</p>
-                                        <p> *Calculations are now automatic</p>
-                                       
-                                   </DialogContentText>
-                              </DialogContent>
-                              <DialogActions>
-                                   <Button onClick={handleCloseUpdate} autoFocus>
-                                        Close
-                                   </Button>
-                              </DialogActions>
-                         </Dialog>
+                                   <Dialog
+                                        open={openUpdate}
+                                        onClose={handleCloseUpdate}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                        fullWidth
+                                        maxWidth="sm"
+                                   >
+                                        <DialogTitle id="alert-dialog-title">
+                                             <h2>{"System Update"}</h2>
+                                        </DialogTitle>
+                                        <DialogContent>
+                                             <DialogContentText id="alert-dialog-description">
+                                                  <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/13/2023</h1>
+                                                  <p>Added "My Savings" feature. When creating one in masterlist, username and password is the same as Member ID</p>
+                                                  
+
+                                             </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                             <Button onClick={handleCloseUpdate} autoFocus>
+                                                  Close
+                                             </Button>
+                                        </DialogActions>
+                                   </Dialog>
+                              </div>}
+
+
+
                     </Wrapper>
+                    {user && currentUser != "admin" &&
+                         <MemberCardContainer>
+                              <p>Hi there, see "My Savings" for your savings</p>
+                         </MemberCardContainer>}
                </Container>
           </div>
      )

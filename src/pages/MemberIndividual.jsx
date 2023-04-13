@@ -366,7 +366,7 @@ const MemberIndividual = (props) => {
                                                        </Cards>
                                                   </CardContainer>
                                                   <CardContainer>
-                                                       <div style={{ height: 600, width: '100%' }} >
+                                                       <div style={{ height: 500, width: '100%' }} >
                                                             <DataGrid
                                                                  getRowId={(row) => row._id}
                                                                  rows={savings}

@@ -63,9 +63,12 @@ const Navbar = () => {
                <List
                     sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}
                     component="nav">
-                    <div style={{ paddingLeft: "30px" }}>
-                         <p style={{ color: "orange" }}>HR SYSTEM</p>
-                    </div>
+
+                    {user && currentUser == "admin" &&
+                         <div style={{ paddingLeft: "30px" }}>
+                              <p style={{ color: "orange" }}>HR SYSTEM</p>
+                         </div>}
+
                     {user && currentUser == "admin" &&
                          <Link to="/">
                               <ListItemButton>
@@ -176,7 +179,10 @@ const Navbar = () => {
                               </ListItemButton>
                          </Link>}
 
-                    
+                    {user && currentUser == "admin" &&
+                         <div style={{ marginBottom: "70px" }}>
+                           
+                         </div>}
 
                     {/* {user && currentUser != "admin" &&
                     <Link to="/employee/salary">
@@ -190,7 +196,8 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>} */}
 
-                    <div style={{ paddingLeft: "30px", marginTop: "70px" }}>
+
+                    <div style={{ paddingLeft: "30px" }}>
                          <p style={{ color: "orange" }}>COOPERATIVE SYSTEM</p>
                     </div>
 
@@ -228,7 +235,7 @@ const Navbar = () => {
                                    </div>
                                    <ListItemText primary="POS" />
                               </ListItemButton>
-                         </Link>}  
+                         </Link>}
                     {user && currentUser == "admin" &&
                          <Link to="/member">
                               <ListItemButton>

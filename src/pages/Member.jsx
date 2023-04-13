@@ -170,8 +170,9 @@ const savings_columns = [
 const Member = (props) => {
 
      /**POST REQUESTS */
-    
+
      const { user } = useAuthContext()
+     const currentUser = user.username;
      const [id, setId] = useState('')
      const [openError, setopen_error] = useState(false)
      const [error, setError] = useState(false)
@@ -310,57 +311,57 @@ const Member = (props) => {
           let debitTotal_others = 0;
 
           savings.forEach(saving => {
-               if(saving.particulars === "MEMBERSHIP FEE"){
-                    if(saving.type === "CREDIT"){
+               if (saving.particulars === "MEMBERSHIP FEE") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_membershipfee += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_membershipfee += parseFloat(saving.amount)
                     }
                }
-               else if(saving.particulars === "CAPITAL"){
-                    if(saving.type === "CREDIT"){
+               else if (saving.particulars === "CAPITAL") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_capital += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_capital += parseFloat(saving.amount)
                     }
                }
-               else if(saving.particulars === "SAVINGS"){
-                    if(saving.type === "CREDIT"){
+               else if (saving.particulars === "SAVINGS") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_savings += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_savings += parseFloat(saving.amount)
                     }
                }
-               else if(saving.particulars === "LOANS"){
-                    if(saving.type === "CREDIT"){
+               else if (saving.particulars === "LOANS") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_loans += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_loans += parseFloat(saving.amount)
                     }
                }
-               else if(saving.particulars === "KAYA SAVINGS"){
-                    if(saving.type === "CREDIT"){
+               else if (saving.particulars === "KAYA SAVINGS") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_kaya += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_kaya += parseFloat(saving.amount)
                     }
                }
-               else if(saving.particulars === "OTHERS"){
-                    if(saving.type === "CREDIT"){
+               else if (saving.particulars === "OTHERS") {
+                    if (saving.type === "CREDIT") {
                          creditTotal_others += parseFloat(saving.amount)
                     }
-                    else{
+                    else {
                          debitTotal_others += parseFloat(saving.amount)
                     }
                }
           })
 
-          let  totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
+          let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
 
           setcredit_part_membershipfee(totalmembership)
           //setdebit_part_membershipfee(totalmembership)
@@ -368,12 +369,12 @@ const Member = (props) => {
           let totalcaptial = creditTotal_capital - debitTotal_capital
           setcredit_part_captial(totalcaptial)
           //setdebit_part_captial(debitTotal_capital)
-          
+
           let totalsavings = creditTotal_savings - debitTotal_savings
           setcredit_part_savings(totalsavings)
           //setdebit_part_savings(debitTotal_savings)
 
-          let totalkaya = creditTotal_kaya -debitTotal_kaya
+          let totalkaya = creditTotal_kaya - debitTotal_kaya
           setcredit_part_kayasavings(totalkaya)
           //setdebit_part_kayasavings(debitTotal_kaya)
 
@@ -381,10 +382,10 @@ const Member = (props) => {
           setcredit_part_loans(totalloans)
           //setdebit_part_loans(debitTotal_loans)
 
-          let totalothers = creditTotal_others- debitTotal_others
+          let totalothers = creditTotal_others - debitTotal_others
           setcredit_part_others(totalothers)
           //setdebit_part_others(debitTotal_others)
-          
+
      }, [member_id, savings])
 
 
@@ -459,8 +460,20 @@ const Member = (props) => {
      }
 
      const handleGoToSavings = () => {
-          handleRefresher();
-          settabvalue('2')
+          if (id === "") {
+               setopen_error(true)
+               setTimeout(() => {
+                    setopen_error(false)
+               }, 2000);
+          }
+          else {
+               handleRefresher();
+               settabvalue('2')
+          }
+
+     }
+     const handleGoToMasterlist = () => {
+          settabvalue('1')
      }
 
      const handleChange = (event, newValue) => {
@@ -566,7 +579,6 @@ const Member = (props) => {
           }
           if (
                firstname === "" ||
-               middlename === "" ||
                lastname === ""
 
           ) {
@@ -656,7 +668,6 @@ const Member = (props) => {
           }
           if (
                firstname === "" ||
-               middlename === "" ||
                lastname === ""
 
           ) {
@@ -926,8 +937,8 @@ const Member = (props) => {
                                         <TabContext value={tabvalue}>
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                                       <Tab label="Masterlist" value="1" />
-                                                       <Tab label="Savings" value="2" />
+                                                       <Tab label="Masterlist" value="1" disabled/>
+                                                       <Tab label="Savings" value="2" onClick={handleGoToSavings} disabled />
 
                                                   </TabList>
                                              </Box>
@@ -966,7 +977,7 @@ const Member = (props) => {
                                                        </TextField>
 
                                                   </SearchContainer>
-                                                  <div style={{ height: 600, width: '100%' }} >
+                                                  <div style={{ height: 500, width: '100%' }} >
                                                        <DataGrid
                                                             getRowId={(row) => row._id}
                                                             rows={members}
@@ -986,13 +997,16 @@ const Member = (props) => {
                                                        />
                                                   </div>
 
-
+                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please select a member first</Alert> : ""}
                                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                       <div style={{ display: "flex", marginTop: "20px" }}><ThemeProvider theme={theme}>
-                                                            <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
-                                                                 View Savings
-                                                            </Button>
-                                                       </ThemeProvider></div>
+                                                       <div style={{ display: "flex", marginTop: "20px" }}>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
+                                                                      View Savings
+                                                                 </Button>
+
+                                                            </ThemeProvider>
+                                                       </div>
                                                        <div style={{ display: "flex", marginTop: "20px" }}>
                                                             <ThemeProvider theme={theme}>
 
@@ -1567,7 +1581,14 @@ const Member = (props) => {
 
                                                   </CardContainer>
                                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                       <div></div>
+                                                       <div>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
+                                                                      Go back to Masterlist
+                                                                 </Button>
+
+                                                            </ThemeProvider>
+                                                       </div>
                                                        <div style={{ display: "flex" }}><ThemeProvider theme={theme}>
 
                                                             <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddSavingsButton}>
@@ -1633,7 +1654,7 @@ const Member = (props) => {
                                                                  >
                                                                       <MenuItem value={'CREDIT'}>Credit</MenuItem>
                                                                       <MenuItem value={'DEBIT'}>Debit</MenuItem>
-                                                                      
+
                                                                  </TextField>
                                                                  <TextField
                                                                       type='number'
@@ -1726,7 +1747,7 @@ const Member = (props) => {
                                                                  >
                                                                       <MenuItem value={'CREDIT'}>Credit</MenuItem>
                                                                       <MenuItem value={'DEBIT'}>Debit</MenuItem>
-                                                                      
+
                                                                  </TextField>
                                                                  <TextField
                                                                       type='number'
