@@ -20,6 +20,8 @@ import Pos from './Pos'
 import Sales from './Sales'
 import Additionals from './Additionals'
 import Member from './Member'
+import MemberIndividual from './MemberIndividual'
+
 
 /**Styled Components */
 const Container = styled.div`
@@ -103,7 +105,11 @@ const Home = () => {
                     />
                      <Route
                         path="/member"
-                        element={user ? <Member title="Member" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                        element={user ? <Member title="Savings Masterlist" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                    <Route
+                        path="/mysavings"
+                        element={user ? <MemberIndividual title="My Savings" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
 
                 </Routes>

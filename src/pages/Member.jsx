@@ -22,6 +22,14 @@ import { width } from '@mui/system';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Link } from 'react-router-dom'
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import { useSignup } from '../hooks/useSignup';
+
 
 
 const theme = createTheme({
@@ -87,6 +95,31 @@ const SearchContainer = styled.div`
      padding-bottom: 30px; 
 `
 
+const Cards = styled.div`
+    height: 340px;
+    border-radius: 20px;
+    display: flex;
+    padding: 30px;
+    justify-content: left;
+    margin: 15px;
+`
+const Cardslist = styled.div`
+    height: 80px;
+    width: 100%;
+    border-radius: 20px;
+    display: flex;
+    padding: 30px;
+    justify-content: space-between;
+    margin: 15px;
+`
+
+const CardContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+`
+
 /**GET REQUESTS */
 const columns = [
      { field: 'member_id', headerName: 'Member ID', width: 100, filter: 'text' },
@@ -116,35 +149,18 @@ const columns = [
      { field: 'passbook_printed', headerName: 'Passbook Printed', width: 80 },
      { field: 'remarks', headerName: 'Remarks', width: 80 },
      { field: 'notes', headerName: 'Notes', width: 80 },
-
-     // member_id,
-     // firstname,
-     // middlename,
-     // lastname,
-     // membership_date,
-     // status,
-     // hhhc_membership_number,
-     // bod_res,
-     // coop_savings_account_number,
-     // kaya_atm_card_number,
-     // kaya_atm_savings_account_number,
-     // membership_fee,
-     // share_capital,
-     // coop_savings,
-     // loan_balance,
-     // mbh,
-     // housing_equity,
-     // kaya_savings,
-     // atm_passbook_fee,
-     // atm_status,
-     // pb_account_number,
-     // pb_account_number_series,
-     // passbook_series_number,
-     // affiliation_org,
-     // passbook_printed,
-     // remarks,
-     // notes
 ];
+
+const savings_columns = [
+     { field: 'date', headerName: 'Date', width: 100 },
+     { field: 'particulars', headerName: 'Particulars', width: 300 },
+     { field: 'type', headerName: 'Type', width: 200 },
+     { field: 'amount', headerName: 'Amount', width: 200 },
+     { field: 'reference_document', headerName: 'Reference Document', width: 200 },
+     { field: 'remarks', headerName: 'Remarks', width: 300 },
+];
+
+
 
 
 
@@ -154,6 +170,7 @@ const columns = [
 const Member = (props) => {
 
      /**POST REQUESTS */
+    
      const { user } = useAuthContext()
      const [id, setId] = useState('')
      const [openError, setopen_error] = useState(false)
@@ -163,6 +180,9 @@ const Member = (props) => {
      const [query, setQuery] = useState('')
      const [members, setMembers] = useState([])
      const [gridTrigger, setGridTrigger] = useState(false);
+
+     const { signup, isLoading } = useSignup()
+     const [password, setPassword] = useState('')
      const [member_id, setmember_id] = useState('')
      const [firstname, setfirstname] = useState('')
      const [middlename, setmiddlename] = useState('')
@@ -190,43 +210,24 @@ const Member = (props) => {
      const [remarks, setremarks] = useState('')
      const [atm_status, setatm_status] = useState('')
      const [notes, setnotes] = useState('')
-
-
+     const [tabvalue, settabvalue] = React.useState('1');
 
      const [openAdd, setOpenAdd] = useState(false);
      const [openDelete, setOpenDelete] = useState(false);
      const [openUpdate, setOpenUpdate] = useState(false);
      const [searchcolumn, setsearchcolumn] = useState('member_id')
-     // member_id,
-     // firstname,
-     // middlename,
-     // lastname,
-     // membership_date,
-     // status,
-     // hhhc_membership_number,
-     // bod_res,
-     // coop_savings_account_number,
-     // kaya_atm_card_number,
-     // kaya_atm_savings_account_number,
-     // membership_fee,
-     // share_capital,
-     // coop_savings,
-     // loan_balance,
-     // mbh,
-     // housing_equity,
-     // kaya_savings,
-     // atm_passbook_fee,
-     // atm_status,
-     // pb_account_number,
-     // pb_account_number_series,
-     // passbook_series_number,
-     // affiliation_org,
-     // passbook_printed,
-     // remarks,
-     // notes
 
-
-
+     const [savingsid, setsavingsid] = useState('')
+     const [date, setdate] = useState('')
+     const [type, settype] = useState('')
+     const [particulars, setparticulars] = useState('')
+     const [amount, setamount] = useState(0)
+     const [reference_document, setreference_document] = useState('')
+     const [remarks2, setremarks2] = useState('')
+     const [openAddSavings, setopenAddSavings] = useState(false);
+     const [openUpdateSavings, setopenUpdateSavings] = useState(false);
+     const [openDeleteSavings, setopenDeleteSavings] = useState(false);
+     const [savings, setsavings] = useState([]);
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
 
@@ -238,11 +239,25 @@ const Member = (props) => {
           return currentDate
      })
 
+     const [credit_part_membershipfee, setcredit_part_membershipfee] = useState(0);
+     const [credit_part_captial, setcredit_part_captial] = useState(0);
+     const [credit_part_savings, setcredit_part_savings] = useState(0);
+     const [credit_part_loans, setcredit_part_loans] = useState(0);
+     const [credit_part_kayasavings, setcredit_part_kayasavings] = useState(0);
+     const [credit_part_others, setcredit_part_others] = useState(0);
 
+     const [debit_part_membershipfee, setdebit_part_membershipfee] = useState(0);
+     const [debit_part_captial, setdebit_part_captial] = useState(0);
+     const [debit_part_savings, setdebit_part_savings] = useState(0);
+     const [debit_part_loans, setdebit_part_loans] = useState(0);
+     const [debit_part_kayasavings, setdebit_part_kayasavings] = useState(0);
+     const [debit_part_others, setdebit_part_others] = useState(0);
 
+     /**useEffects */
+     /**Masterlist */
      useEffect(() => {
           const fetchMembers = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member', {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -257,40 +272,131 @@ const Member = (props) => {
           }
      }, [user, refresher])
 
+     /**individual */
+     useEffect(() => {
+          const fetchSavings = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + member_id, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    setsavings(json)
+               }
+          }
+          if (user) {
+               fetchSavings();
+          }
+     }, [user, refresher])
+
+     useEffect(() => {
+          let creditTotal_membershipfee = 0;
+          let debitTotal_membershipfee = 0;
+
+          let creditTotal_capital = 0;
+          let debitTotal_capital = 0;
+
+          let creditTotal_savings = 0;
+          let debitTotal_savings = 0;
+
+          let creditTotal_loans = 0;
+          let debitTotal_loans = 0;
+
+          let creditTotal_kaya = 0;
+          let debitTotal_kaya = 0;
+
+          let creditTotal_others = 0;
+          let debitTotal_others = 0;
+
+          savings.forEach(saving => {
+               if(saving.particulars === "MEMBERSHIP FEE"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_membershipfee += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_membershipfee += parseFloat(saving.amount)
+                    }
+               }
+               else if(saving.particulars === "CAPITAL"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_capital += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_capital += parseFloat(saving.amount)
+                    }
+               }
+               else if(saving.particulars === "SAVINGS"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_savings += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_savings += parseFloat(saving.amount)
+                    }
+               }
+               else if(saving.particulars === "LOANS"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_loans += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_loans += parseFloat(saving.amount)
+                    }
+               }
+               else if(saving.particulars === "KAYA SAVINGS"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_kaya += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_kaya += parseFloat(saving.amount)
+                    }
+               }
+               else if(saving.particulars === "OTHERS"){
+                    if(saving.type === "CREDIT"){
+                         creditTotal_others += parseFloat(saving.amount)
+                    }
+                    else{
+                         debitTotal_others += parseFloat(saving.amount)
+                    }
+               }
+          })
+
+          let  totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
+
+          setcredit_part_membershipfee(totalmembership)
+          //setdebit_part_membershipfee(totalmembership)
+
+          let totalcaptial = creditTotal_capital - debitTotal_capital
+          setcredit_part_captial(totalcaptial)
+          //setdebit_part_captial(debitTotal_capital)
+          
+          let totalsavings = creditTotal_savings - debitTotal_savings
+          setcredit_part_savings(totalsavings)
+          //setdebit_part_savings(debitTotal_savings)
+
+          let totalkaya = creditTotal_kaya -debitTotal_kaya
+          setcredit_part_kayasavings(totalkaya)
+          //setdebit_part_kayasavings(debitTotal_kaya)
+
+          let totalloans = debitTotal_loans - creditTotal_loans
+          setcredit_part_loans(totalloans)
+          //setdebit_part_loans(debitTotal_loans)
+
+          let totalothers = creditTotal_others- debitTotal_others
+          setcredit_part_others(totalothers)
+          //setdebit_part_others(debitTotal_others)
+          
+     }, [member_id, savings])
 
 
 
-     const convertDateToString = (date) => {
-          const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-          const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
-          setmembership_date(dateString)
-     };
-
-     const handleUpdateQuantity = () => {
-          setGridTrigger(!gridTrigger)
+     const handleClearSavings = () => {
+          setdate('')
+          setparticulars('')
+          settype('')
+          setamount('')
+          setreference_document('')
+          setremarks2('')
      }
-     const handleRefresher = () => {
-          setRefresher(Math.random())
-     };
-
-     /**Handle Error */
-     const handleOnError = () => {
-          setopen_error(true);
-     };
-
-     const handleOffError = () => {
-          setopen_error(false);
-     };
-
-     /**Handle Success */
-     const handleOnSuccess = () => {
-          setOpenSuccess(true);
-     };
-
-     const handleOffSuccess = () => {
-          setOpenSuccess(false);
-     };
-
      const handleClearTextFields = () => {
           setfirstname("")
           setmiddlename("")
@@ -314,11 +420,82 @@ const Member = (props) => {
           setremarks("")
           setnotes("")
      }
+
+     const convertDateToString = (date) => {
+          const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+          const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
+          setmembership_date(dateString)
+          setdate(dateString)
+     };
      const handleRandomId = () => {
           let num = Math.floor(Math.random() * 9000) + 10000;
           const value = "MBR" + num
           setmember_id(value)
      }
+     const handleUpdateQuantity = () => {
+          setGridTrigger(!gridTrigger)
+     }
+     const handleRefresher = () => {
+          setRefresher(Math.random())
+     };
+     const handleAddButton = () => {
+          handleClearTextFields()
+          handleRandomId()
+          setOpenAdd(true)
+     }
+     const handleUpdateButton = () => {
+          setOpenUpdate(true)
+     }
+     const handleDeleteButton = () => {
+          setOpenDelete(true)
+     }
+     const handleCancel = () => {
+          setOpenAdd(false)
+          setOpenUpdate(false)
+          setOpenDelete(false)
+          setopenAddSavings(false)
+          setopenUpdateSavings(false)
+          setopenDeleteSavings(false)
+     }
+
+     const handleGoToSavings = () => {
+          handleRefresher();
+          settabvalue('2')
+     }
+
+     const handleChange = (event, newValue) => {
+          handleRefresher()
+          settabvalue(newValue);
+     };
+
+     const handleAddSavingsButton = () => {
+          handleClearSavings()
+          setopenAddSavings(true)
+     }
+     const handleUpdateSavingsButton = () => {
+          setopenUpdateSavings(true)
+     }
+     const handleDeleteSavingsButton = () => {
+          setopenDeleteSavings(true)
+     }
+
+     const handleOnError = () => {
+          setopen_error(true);
+     };
+
+     const handleOffError = () => {
+          setopen_error(false);
+     };
+
+     const handleOnSuccess = () => {
+          setOpenSuccess(true);
+     };
+
+     const handleOffSuccess = () => {
+          setOpenSuccess(false);
+     };
+
+
      /**Handle datagrid row click */
      const handleRowClick = (params) => {
           setId(params.row._id);
@@ -346,8 +523,16 @@ const Member = (props) => {
           setnotes(params.row.notes);
      };
 
-     //savings nako
-
+     const handleSavingsRowClick = (params) => {
+          setmember_id(params.row.member_id)
+          setsavingsid(params.row._id);
+          setdate(params.row.date);
+          setparticulars(params.row.particulars);
+          settype(params.row.type);
+          setamount(params.row.amount);
+          setreference_document(params.row.reference_document);
+          setremarks2(params.row.remarks);
+     }
 
      const handleAddMember = async (e) => {
           e.preventDefault()
@@ -404,6 +589,7 @@ const Member = (props) => {
                     setError(json.error)
                }
                else {
+                    await signup(member_id, member_id)
                     setfirstname("")
                     setmiddlename("")
                     setlastname("")
@@ -425,6 +611,7 @@ const Member = (props) => {
                     setpassbook_printed("")
                     setremarks("")
                     setnotes("")
+                    setPassword("")
 
                     handleOnSuccess();
                     setTimeout(() => {
@@ -541,7 +728,7 @@ const Member = (props) => {
                }
                else {
                     handleOnSuccess();
-                  
+
                     setTimeout(() => {
                          handleRefresher()
                          handleOffSuccess();
@@ -552,22 +739,178 @@ const Member = (props) => {
      }
 
 
-     const handleAddButton = () => {
-          handleClearTextFields()
-          handleRandomId()
-          setOpenAdd(true)
+     const handleAddSavings = async (e) => {
+          e.preventDefault()
+          const savings = {
+               member_id: member_id,
+               date: date,
+               particulars: particulars,
+               type: type,
+               amount: amount,
+               reference_document: reference_document,
+               remarks: remarks2,
+
+          }
+          if (!user) {
+               console.log('You must be logged in first')
+               return
+          }
+          if (
+               date === "" ||
+               particulars === "" ||
+               amount === 0
+
+          ) {
+               handleOnError()
+               setTimeout(() => {
+                    handleOffError();
+               }, 1500);
+          }
+          else {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
+                    method: 'POST',
+                    body: JSON.stringify(savings),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+               else {
+                    setdate('')
+                    setparticulars('')
+                    settype('')
+                    setamount('')
+                    setreference_document('')
+                    setremarks2('')
+
+                    handleOnSuccess();
+                    setTimeout(() => {
+                         setopenAddSavings(false)
+                         handleRefresher()
+                         handleOffSuccess();
+                    }, 1500);
+               }
+          }
      }
-     const handleUpdateButton = () => {
-          setOpenUpdate(true)
+
+     const handleDeleteSavings = async (e) => {
+
+          if (!user) {
+               console.log('You must be logged in first')
+               return
+          } else {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
+                    method: 'DELETE',
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+               else {
+                    handleOnSuccess();
+
+                    setTimeout(() => {
+                         handleRefresher()
+                         handleOffSuccess();
+                         handleCancel();
+                    }, 1500);
+               }
+          }
      }
-     const handleDeleteButton = () => {
-          setOpenDelete(true)
+     const handleUpdateSavings = async (e) => {
+          e.preventDefault()
+          const savings = {
+               member_id: member_id,
+               date: date,
+               particulars: particulars,
+               type: type,
+               amount: amount,
+               reference_document: reference_document,
+               remarks: remarks2,
+          }
+          if (!user) {
+               console.log('You must be logged in first')
+               return
+          }
+          if (
+               date === "" ||
+               particulars === "" ||
+               amount === 0
+
+          ) {
+               handleOnError()
+               setTimeout(() => {
+                    handleOffError();
+               }, 1500);
+          }
+          else {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
+                    method: 'PATCH',
+                    body: JSON.stringify(savings),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+               else {
+                    setdate('')
+                    setparticulars('')
+                    settype('')
+                    setamount('')
+                    setreference_document('')
+                    setremarks2('')
+
+                    handleOnSuccess();
+                    setTimeout(() => {
+                         setopenUpdateSavings(false)
+                         handleRefresher()
+                         handleOffSuccess();
+                    }, 1500);
+               }
+          }
      }
-     const handleCancel = () => {
-          setOpenAdd(false)
-          setOpenUpdate(false)
-          setOpenDelete(false)
-     }
+
+
+
+
+     const [membershiptotal, setmembershiptotal] = useState(0);
+     // useEffect(() => {
+     //      const fetchEmp = async () => {
+     //           const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/savings/${savingsid}`, {
+     //                headers: {
+     //                     'Authorization': `Bearer ${user.token}`
+     //                }
+     //           })
+     //           const json = await response.json()
+     //           if (response.ok) {
+     //                const filteredData = json.filter(item => {
+     //                     const membership_fee = item.membership_fee
+     //                     return membership_fee == "membership_fee"
+     //                });
+     //                filteredData.forEach((item) => {
+     //                     amount += item.amount
+     //                });
+     //                setmembershiptotal(amount);
+
+     //           }
+     //      }
+     //      if (user) {
+     //           fetchEmp();
+     //      }
+     // }, [])
+
+
 
 
      const fullscreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -579,572 +922,878 @@ const Member = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
-                                 
+                                   <Box>
+                                        <TabContext value={tabvalue}>
+                                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                                       <Tab label="Masterlist" value="1" />
+                                                       <Tab label="Savings" value="2" />
 
-                                   <SearchContainer>
-                                        <TextField
-                                             required
-                                             id="search"
-                                             label="Search a member"
-                                             fullWidth
-                                             style={{ marginRight: "10px" }}
-                                             onChange={(e) => {
-                                                  setQuery(e.target.value);
-                                                  console.log('query:', e.target.value); // add this line
-                                             }}
-
-                                             value={query}
-                                        />
-                                        <TextField
-                                             id="outlined-required"
-                                             label="Search category"
-                                             fullWidth
-                                             select
-                                           
-                                             onChange={(e) => setsearchcolumn(e.target.value)}
-                                             value={searchcolumn}
-                                        >
-                                             <MenuItem value={'member_id'}>Member ID</MenuItem>
-                                             <MenuItem value={'firstname'}>Firstname</MenuItem>
-                                             <MenuItem value={'middlename'}>Middlename</MenuItem>
-                                             <MenuItem value={'lastname'}>Lastname</MenuItem>
-                                        
-                                        </TextField>
-
-                                   </SearchContainer>
-                                   <div style={{ height: 600, width: '100%' }} >
-                                        <DataGrid
-                                             getRowId={(row) => row._id}
-                                             rows={members}
-                                             columns={columns}
-                                             pageSize={7}
-                                             rowsPerPageOptions={[5]}
-                                             onRowClick={handleRowClick}
-                                             filterModel={{
-                                                  items: [
-                                                       {
-                                                            columnField: searchcolumn,
-                                                            operatorValue: 'contains',
-                                                            value: query,
-                                                       },
-                                                  ],
-                                             }}
-                                        />
-                                   </div>
+                                                  </TabList>
+                                             </Box>
+                                             <TabPanel value="1">
+                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
 
 
-                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <div></div>
-                                        <div style={{ display: "flex", marginTop: "20px" }}>
-                                             <ThemeProvider theme={theme}>
+                                                  <SearchContainer>
+                                                       <TextField
+                                                            required
+                                                            id="search"
+                                                            label="Search a member"
+                                                            fullWidth
+                                                            style={{ marginRight: "10px" }}
+                                                            onChange={(e) => {
+                                                                 setQuery(e.target.value);
+                                                                 console.log('query:', e.target.value); // add this line
+                                                            }}
 
-                                                  <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddButton}>
-                                                       New
-                                                  </Button>
-                                                  <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateButton}>
-                                                       Update
-                                                  </Button>
-                                                  <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteButton}>
-                                                       Delete
-                                                  </Button>
-                                             </ThemeProvider>
-                                        </div>
-                                   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                   {/**DIALOGS */}
-                                   <Dialog
-                                        fullScreen={fullscreen}
-                                        open={openAdd}
-                                        onClose={handleCancel}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             Adding New Member
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
-                                             <div style={{ marginBottom: '50px' }}>
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Auto Generated Member ID"
-                                                       style={{ marginBottom: "10px" }}
-                                                       fullWidth
-                                                       value={member_id}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Firstname"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setfirstname(e.target.value)}
-                                                       value={firstname}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Middlename"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setmiddlename(e.target.value)}
-                                                       value={middlename}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Lastname"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setlastname(e.target.value)}
-                                                       value={lastname}
-                                                  />
-                                             </div>
-                                             <div>
-                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                       <DatePicker
-                                                            label="Membership Date"
-                                                            value={membership_date}
-                                                            inputFormat="MM-DD-YYYY"
-                                                            onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                            value={query}
                                                        />
-                                                  </LocalizationProvider>
-                                                  <TextField
-                                                       id="outlined-required"
-                                                       label="Status"
-                                                       fullWidth
-                                                       select
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setstatus(e.target.value)}
-                                                       value={status}
-                                                  >
-                                                       <MenuItem value={'active'}>Active</MenuItem>
-                                                       <MenuItem value={'inactive'}>Inactive</MenuItem>
-                                                  </TextField>
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="HHHC Membership Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => sethhhc_membership_number(e.target.value)}
-                                                       value={hhhc_membership_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="BOD Res"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setbod_res(e.target.value)}
-                                                       value={bod_res}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="COOP Savings Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setcoop_savings_account_number(e.target.value)}
-                                                       value={coop_savings_account_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="KAYA ATM Card Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
-                                                       value={kaya_atm_card_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="KAYA ATM Savings Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
-                                                       value={kaya_atm_savings_account_number}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="MBH"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setmbh(e.target.value)}
-                                                       value={mbh}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Housing Equity"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => sethousing_equity(e.target.value)}
-                                                       value={housing_equity}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="ATM Passbook Fee"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setatm_passbook_fee(e.target.value)}
-                                                       value={atm_passbook_fee}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="ATM Status"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setatm_status(e.target.value)}
-                                                       value={atm_status}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="PB Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpb_account_number(e.target.value)}
-                                                       value={pb_account_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="PB Account Number Series"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpb_account_number_series(e.target.value)}
-                                                       value={pb_account_number_series}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Passbook Series Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpassbook_series_number(e.target.value)}
-                                                       value={passbook_series_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Affiliation Org"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setaffiliation_org(e.target.value)}
-                                                       value={affiliation_org}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Passbook Printed"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpassbook_printed(e.target.value)}
-                                                       value={passbook_printed}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Remarks"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setremarks(e.target.value)}
-                                                       value={remarks}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Notes"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setnotes(e.target.value)}
-                                                       value={notes}
-                                                  />
-                                             </div>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <ThemeProvider theme={theme}>
-                                                  <Button variant="outlined" color="blue" onClick={handleAddMember}>Add</Button>
-                                                  <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
-                                                  <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
-                                             </ThemeProvider>
-                                        </DialogActions>
-                                   </Dialog>
+                                                       <TextField
+                                                            id="outlined-required"
+                                                            label="Search category"
+                                                            fullWidth
+                                                            select
 
-                                   <Dialog
-                                        fullScreen={fullscreen}
-                                        open={openUpdate}
-                                        onClose={handleCancel}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             Update Member Data
-                                        </DialogTitle>
-                                        <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
-                                             <div style={{ marginBottom: '50px' }}>
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Auto Generated Member ID"
-                                                       style={{ marginBottom: "10px" }}
-                                                       fullWidth
-                                                       value={member_id}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Firstname"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setfirstname(e.target.value)}
-                                                       value={firstname}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Middlename"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setmiddlename(e.target.value)}
-                                                       value={middlename}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Lastname"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setlastname(e.target.value)}
-                                                       value={lastname}
-                                                  />
-                                             </div>
-                                             <div>
-                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                       <DatePicker
-                                                            label="Membership Date"
-                                                            value={membership_date}
-                                                            inputFormat="MM-DD-YYYY"
-                                                            onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                            onChange={(e) => setsearchcolumn(e.target.value)}
+                                                            value={searchcolumn}
+                                                       >
+                                                            <MenuItem value={'member_id'}>Member ID</MenuItem>
+                                                            <MenuItem value={'firstname'}>Firstname</MenuItem>
+                                                            <MenuItem value={'middlename'}>Middlename</MenuItem>
+                                                            <MenuItem value={'lastname'}>Lastname</MenuItem>
+
+                                                       </TextField>
+
+                                                  </SearchContainer>
+                                                  <div style={{ height: 600, width: '100%' }} >
+                                                       <DataGrid
+                                                            getRowId={(row) => row._id}
+                                                            rows={members}
+                                                            columns={columns}
+                                                            pageSize={7}
+                                                            rowsPerPageOptions={[5]}
+                                                            onRowClick={handleRowClick}
+                                                            filterModel={{
+                                                                 items: [
+                                                                      {
+                                                                           columnField: searchcolumn,
+                                                                           operatorValue: 'contains',
+                                                                           value: query,
+                                                                      },
+                                                                 ],
+                                                            }}
                                                        />
-                                                  </LocalizationProvider>
-                                                  <TextField
-                                                       id="outlined-required"
-                                                       label="Status"
-                                                       fullWidth
-                                                       select
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setstatus(e.target.value)}
-                                                       value={status}
-                                                  >
-                                                       <MenuItem value={'active'}>Active</MenuItem>
-                                                       <MenuItem value={'inactive'}>Inactive</MenuItem>
-                                                  </TextField>
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="HHHC Membership Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => sethhhc_membership_number(e.target.value)}
-                                                       value={hhhc_membership_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="BOD Res"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setbod_res(e.target.value)}
-                                                       value={bod_res}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="COOP Savings Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setcoop_savings_account_number(e.target.value)}
-                                                       value={coop_savings_account_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="KAYA ATM Card Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
-                                                       value={kaya_atm_card_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="KAYA ATM Savings Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
-                                                       value={kaya_atm_savings_account_number}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="MBH"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setmbh(e.target.value)}
-                                                       value={mbh}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Housing Equity"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => sethousing_equity(e.target.value)}
-                                                       value={housing_equity}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="ATM Passbook Fee"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setatm_passbook_fee(e.target.value)}
-                                                       value={atm_passbook_fee}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="ATM Status"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setatm_status(e.target.value)}
-                                                       value={atm_status}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="PB Account Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpb_account_number(e.target.value)}
-                                                       value={pb_account_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="PB Account Number Series"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpb_account_number_series(e.target.value)}
-                                                       value={pb_account_number_series}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Passbook Series Number"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpassbook_series_number(e.target.value)}
-                                                       value={passbook_series_number}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Affiliation Org"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setaffiliation_org(e.target.value)}
-                                                       value={affiliation_org}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Passbook Printed"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setpassbook_printed(e.target.value)}
-                                                       value={passbook_printed}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Remarks"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setremarks(e.target.value)}
-                                                       value={remarks}
-                                                  />
-                                                  <TextField
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Notes"
-                                                       style={{ paddingBottom: "10px" }}
-                                                       onChange={(e) => setnotes(e.target.value)}
-                                                       value={notes}
-                                                  />
-                                             </div>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <ThemeProvider theme={theme}>
-                                                  <Button variant="outlined" color="blue" onClick={handlePatch}>Update</Button>
-                                                  <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
-                                                  <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
-                                             </ThemeProvider>
-                                        </DialogActions>
-                                   </Dialog>
+                                                  </div>
 
-                                   <Dialog
-                                        open={openDelete}
-                                        onClose={handleCancel}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             <h2>{"Are you sure to delete selected item?"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  Deleted item can't be undone. Confirm by clicking "Delete"
-                                             </DialogContentText>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleDelete}>Delete</Button>
-                                             <Button onClick={handleCancel} autoFocus>
-                                                  Cancel
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
+
+                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                       <div style={{ display: "flex", marginTop: "20px" }}><ThemeProvider theme={theme}>
+                                                            <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
+                                                                 View Savings
+                                                            </Button>
+                                                       </ThemeProvider></div>
+                                                       <div style={{ display: "flex", marginTop: "20px" }}>
+                                                            <ThemeProvider theme={theme}>
+
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddButton}>
+                                                                      New
+                                                                 </Button>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateButton}>
+                                                                      Update
+                                                                 </Button>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteButton}>
+                                                                      Delete
+                                                                 </Button>
+                                                            </ThemeProvider>
+                                                       </div>
+                                                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                  {/**DIALOGS */}
+                                                  <Dialog
+                                                       fullScreen={fullscreen}
+                                                       open={openAdd}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            Adding New Member
+                                                       </DialogTitle>
+                                                       <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                            <div style={{ marginBottom: '50px' }}>
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Auto Generated Member ID"
+                                                                      style={{ marginBottom: "10px" }}
+                                                                      fullWidth
+                                                                      value={member_id}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Firstname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setfirstname(e.target.value)}
+                                                                      value={firstname}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Middlename"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmiddlename(e.target.value)}
+                                                                      value={middlename}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Lastname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setlastname(e.target.value)}
+                                                                      value={lastname}
+                                                                 />
+                                                            </div>
+                                                            <div>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Membership Date"
+                                                                           value={membership_date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Status"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setstatus(e.target.value)}
+                                                                      value={status}
+                                                                 >
+                                                                      <MenuItem value={'active'}>Active</MenuItem>
+                                                                      <MenuItem value={'inactive'}>Inactive</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
+                                                                      value={hhhc_membership_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="BOD Res"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setbod_res(e.target.value)}
+                                                                      value={bod_res}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="COOP Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
+                                                                      value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="KAYA ATM Card Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_card_number(e.target.value)}
+                                                                      value={kaya_atm_card_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="KAYA ATM Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
+                                                                      value={kaya_atm_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="MBH"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmbh(e.target.value)}
+                                                                      value={mbh}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Housing Equity"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethousing_equity(e.target.value)}
+                                                                      value={housing_equity}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="ATM Passbook Fee"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setatm_passbook_fee(e.target.value)}
+                                                                      value={atm_passbook_fee}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="ATM Status"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setatm_status(e.target.value)}
+                                                                      value={atm_status}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PB Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpb_account_number(e.target.value)}
+                                                                      value={pb_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PB Account Number Series"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpb_account_number_series(e.target.value)}
+                                                                      value={pb_account_number_series}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Series Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
+                                                                      value={passbook_series_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Affiliation Org"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaffiliation_org(e.target.value)}
+                                                                      value={affiliation_org}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Printed"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_printed(e.target.value)}
+                                                                      value={passbook_printed}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks(e.target.value)}
+                                                                      value={remarks}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Notes"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnotes(e.target.value)}
+                                                                      value={notes}
+                                                                 />
+                                                            </div>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button variant="outlined" color="blue" onClick={handleAddMember}>Add</Button>
+                                                                 <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
+                                                                 <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
+                                                            </ThemeProvider>
+                                                       </DialogActions>
+                                                  </Dialog>
+
+                                                  <Dialog
+                                                       fullScreen={fullscreen}
+                                                       open={openUpdate}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            Update Member Data
+                                                       </DialogTitle>
+                                                       <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                            <div style={{ marginBottom: '50px' }}>
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Auto Generated Member ID"
+                                                                      style={{ marginBottom: "10px" }}
+                                                                      fullWidth
+                                                                      value={member_id}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Firstname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setfirstname(e.target.value)}
+                                                                      value={firstname}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Middlename"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmiddlename(e.target.value)}
+                                                                      value={middlename}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Lastname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setlastname(e.target.value)}
+                                                                      value={lastname}
+                                                                 />
+                                                            </div>
+                                                            <div>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Membership Date"
+                                                                           value={membership_date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Status"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setstatus(e.target.value)}
+                                                                      value={status}
+                                                                 >
+                                                                      <MenuItem value={'active'}>Active</MenuItem>
+                                                                      <MenuItem value={'inactive'}>Inactive</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
+                                                                      value={hhhc_membership_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="BOD Res"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setbod_res(e.target.value)}
+                                                                      value={bod_res}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="COOP Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
+                                                                      value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="KAYA ATM Card Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_card_number(e.target.value)}
+                                                                      value={kaya_atm_card_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="KAYA ATM Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
+                                                                      value={kaya_atm_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="MBH"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmbh(e.target.value)}
+                                                                      value={mbh}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Housing Equity"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethousing_equity(e.target.value)}
+                                                                      value={housing_equity}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="ATM Passbook Fee"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setatm_passbook_fee(e.target.value)}
+                                                                      value={atm_passbook_fee}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="ATM Status"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setatm_status(e.target.value)}
+                                                                      value={atm_status}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PB Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpb_account_number(e.target.value)}
+                                                                      value={pb_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PB Account Number Series"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpb_account_number_series(e.target.value)}
+                                                                      value={pb_account_number_series}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Series Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
+                                                                      value={passbook_series_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Affiliation Org"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaffiliation_org(e.target.value)}
+                                                                      value={affiliation_org}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Printed"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_printed(e.target.value)}
+                                                                      value={passbook_printed}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks(e.target.value)}
+                                                                      value={remarks}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Notes"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnotes(e.target.value)}
+                                                                      value={notes}
+                                                                 />
+                                                            </div>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button variant="outlined" color="blue" onClick={handlePatch}>Update</Button>
+                                                                 <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
+                                                                 <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
+                                                            </ThemeProvider>
+                                                       </DialogActions>
+                                                  </Dialog>
+
+                                                  <Dialog
+                                                       open={openDelete}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            <h2>{"Are you sure to delete selected item?"}</h2>
+                                                       </DialogTitle>
+                                                       <DialogContent>
+                                                            <DialogContentText id="alert-dialog-description">
+                                                                 Deleted item can't be undone. Confirm by clicking "Delete"
+                                                            </DialogContentText>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <Button onClick={handleDelete}>Delete</Button>
+                                                            <Button onClick={handleCancel} autoFocus>
+                                                                 Cancel
+                                                            </Button>
+                                                       </DialogActions>
+                                                  </Dialog>
+                                             </TabPanel>
+                                             <TabPanel value="2">
+                                                  <CardContainer>
+                                                       <Cards style={{ backgroundColor: "#5D35B2", color: "white", width: "500px" }}>
+                                                            <div style={{ marginBottom: "20px" }}>
+                                                                 <p style={{ fontSize: "40px", margin: 0 }}>{firstname}</p>
+                                                                 <p style={{ color: "#a7a7a7" }}>Firstname</p>
+                                                                 <p style={{ fontSize: "40px", margin: 0 }}>{lastname}</p>
+                                                                 <p style={{ color: "#a7a7a7" }}>Lastname</p>
+                                                            </div>
+                                                       </Cards>
+                                                       <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%" }}>
+                                                            <div style={{ paddingRight: "200px" }}>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_membershipfee}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_captial}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
+                                                                 </div>
+                                                                 <div>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_savings}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
+                                                                 </div>
+                                                            </div>
+                                                            <div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_loans}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL KAYA SAVINGS</p>
+                                                                 </div>
+                                                                 <div>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>OTHERS</p>
+                                                                 </div>
+                                                            </div>
+                                                       </Cards>
+                                                  </CardContainer>
+                                                  <CardContainer>
+                                                       <div style={{ height: 600, width: '100%' }} >
+                                                            <DataGrid
+                                                                 getRowId={(row) => row._id}
+                                                                 rows={savings}
+                                                                 columns={savings_columns}
+                                                                 pageSize={7}
+                                                                 rowsPerPageOptions={[5]}
+                                                                 onRowClick={handleSavingsRowClick}
+                                                                 filterModel={{
+                                                                      items: [
+                                                                           {
+                                                                                columnField: searchcolumn,
+                                                                                operatorValue: 'contains',
+                                                                                value: query,
+                                                                           },
+                                                                      ],
+                                                                 }}
+                                                            />
+                                                       </div>
+
+                                                  </CardContainer>
+                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                       <div></div>
+                                                       <div style={{ display: "flex" }}><ThemeProvider theme={theme}>
+
+                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddSavingsButton}>
+                                                                 New
+                                                            </Button>
+                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateSavingsButton}>
+                                                                 Update
+                                                            </Button>
+                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteSavingsButton}>
+                                                                 Delete
+                                                            </Button>
+                                                       </ThemeProvider></div>
+
+                                                  </div>
+                                                  <Dialog
+                                                       fullScreen={fullscreen}
+                                                       open={openAddSavings}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            Adding New Particulars
+                                                       </DialogTitle>
+                                                       <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                            <div style={{ marginBottom: '50px' }}>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Date"
+                                                                           value={date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Search category"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      select
+                                                                      onChange={(e) => setparticulars(e.target.value)}
+                                                                      value={particulars}
+                                                                 >
+                                                                      <MenuItem value={'MEMBERSHIP FEE'}>Membership Fee</MenuItem>
+                                                                      <MenuItem value={'CAPITAL'}>Capital</MenuItem>
+                                                                      <MenuItem value={'SAVINGS'}>Savings</MenuItem>
+                                                                      <MenuItem value={'LOANS'}>Loans</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'OTHERS'}>Others</MenuItem>
+                                                                 </TextField>
+
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Search category"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      select
+                                                                      onChange={(e) => settype(e.target.value)}
+                                                                      value={type}
+                                                                 >
+                                                                      <MenuItem value={'CREDIT'}>Credit</MenuItem>
+                                                                      <MenuItem value={'DEBIT'}>Debit</MenuItem>
+                                                                      
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      type='number'
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Amount"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setamount(e.target.value)}
+                                                                      value={amount}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Reference Document"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setreference_document(e.target.value)}
+                                                                      value={reference_document}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks2(e.target.value)}
+                                                                      value={remarks2}
+                                                                 />
+                                                            </div>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button variant="outlined" color="blue" onClick={handleAddSavings}>Save</Button>
+                                                                 <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
+                                                                 <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
+                                                            </ThemeProvider>
+                                                       </DialogActions>
+                                                  </Dialog>
+                                                  <Dialog
+                                                       fullScreen={fullscreen}
+                                                       open={openUpdateSavings}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            Update a Particular
+                                                       </DialogTitle>
+                                                       <DialogContent style={{ height: '800px', paddingTop: '20px' }}>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                            <div style={{ marginBottom: '50px' }}>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Date"
+                                                                           value={date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Search category"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      select
+                                                                      onChange={(e) => setparticulars(e.target.value)}
+                                                                      value={particulars}
+                                                                 >
+                                                                      <MenuItem value={'MEMBERSHIP FEE'}>Membership Fee</MenuItem>
+                                                                      <MenuItem value={'CAPITAL'}>Capital</MenuItem>
+                                                                      <MenuItem value={'SAVINGS'}>Savings</MenuItem>
+                                                                      <MenuItem value={'LOANS'}>Loans</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'OTHERS'}>Others</MenuItem>
+                                                                 </TextField>
+
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Search category"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      select
+                                                                      onChange={(e) => settype(e.target.value)}
+                                                                      value={type}
+                                                                 >
+                                                                      <MenuItem value={'CREDIT'}>Credit</MenuItem>
+                                                                      <MenuItem value={'DEBIT'}>Debit</MenuItem>
+                                                                      
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      type='number'
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Amount"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setamount(e.target.value)}
+                                                                      value={amount}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Reference Document"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setreference_document(e.target.value)}
+                                                                      value={reference_document}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks2(e.target.value)}
+                                                                      value={remarks2}
+                                                                 />
+                                                            </div>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
+                                                            {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up required fields</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button variant="outlined" color="blue" onClick={handleUpdateSavings}>Update</Button>
+                                                                 <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
+                                                                 <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
+                                                            </ThemeProvider>
+                                                       </DialogActions>
+                                                  </Dialog>
+
+                                                  <Dialog
+                                                       open={openDeleteSavings}
+                                                       onClose={handleCancel}
+                                                       aria-labelledby="alert-dialog-title"
+                                                       aria-describedby="alert-dialog-description"
+                                                  >
+                                                       <DialogTitle id="alert-dialog-title">
+                                                            <h2>{"Are you sure to delete selected item?"}</h2>
+                                                       </DialogTitle>
+                                                       <DialogContent>
+                                                            <DialogContentText id="alert-dialog-description">
+                                                                 Deleted item can't be undone. Confirm by clicking "Delete"
+                                                            </DialogContentText>
+                                                            {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
+                                                       </DialogContent>
+                                                       <DialogActions>
+                                                            <Button onClick={handleDeleteSavings}>Delete</Button>
+                                                            <Button onClick={handleCancel} autoFocus>
+                                                                 Cancel
+                                                            </Button>
+                                                       </DialogActions>
+                                                  </Dialog>
+                                             </TabPanel>
+                                        </TabContext>
+                                   </Box>
                               </Card>
                          </Main>
                     </Wrapper>

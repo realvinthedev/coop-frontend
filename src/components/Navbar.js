@@ -176,17 +176,7 @@ const Navbar = () => {
                               </ListItemButton>
                          </Link>}
 
-                    {user && currentUser != "admin" &&
-                         <Link to="/employee/applyleaves">
-                              <ListItemButton>
-                                   <div style={{ paddingLeft: "40px" }}>
-                                        <ListItemIcon>
-                                             <PersonOffIcon />
-                                        </ListItemIcon>
-                                   </div>
-                                   <ListItemText primary="My Leaves" />
-                              </ListItemButton>
-                         </Link>}
+                    
 
                     {/* {user && currentUser != "admin" &&
                     <Link to="/employee/salary">
@@ -238,7 +228,7 @@ const Navbar = () => {
                                    </div>
                                    <ListItemText primary="POS" />
                               </ListItemButton>
-                         </Link>}
+                         </Link>}  
                     {user && currentUser == "admin" &&
                          <Link to="/member">
                               <ListItemButton>
@@ -250,8 +240,21 @@ const Navbar = () => {
                                    <ListItemText primary="Savings" />
                               </ListItemButton>
                          </Link>}
+                    {user && currentUser != "admin" && //change
+                         <Link to="/mysavings">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <SavingsIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="My Savings" />
+                              </ListItemButton>
+                         </Link>}
                </List>
           </Container>
+
+
 
 
 
