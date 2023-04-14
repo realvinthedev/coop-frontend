@@ -20,6 +20,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import bg from '../images/websitebg.jpg';
 import { useAuthContext } from '../hooks/useAuthContext'
 
 const theme = createTheme({
@@ -43,9 +44,12 @@ const theme = createTheme({
      },
 });
 const Container = styled.div`
-    background-color: #f0f2f9;
+    background-image: url(${bg});
+    background-size: cover;
+    background-repeat: repeat;
+    background-position: right;
     height: 100vh;
-    width: 1500px;
+    width: 1600px;
     padding: 50px 100px 100px 100px;
 `
 const Wrapper = styled.div`
@@ -233,18 +237,18 @@ const Dashboard = (props) => {
                                    <CardContainer>
                                         <Cards title="Total Employees" data={employees.length} color={violet} />
                                         <Cards title="Total Departments" data={departments.length} color={yellow} />
-                                        <Cards title="New Password Reset" data="0" color={green} />
+                                        <Cards title="Total Products" data={product.length} color={violet} />
                                    </CardContainer>
                                    <CardContainer>
-                                        <Cards title="Total Products" data={product.length} color={violet} />
+                                      
                                         <Cards title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} color={yellow} />
-                                        <Cards title="Total Net Income" data="0" color={green} />
-                                        {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
-                                   </CardContainer>
-                                   <UpdateContainer>
                                         <Update
                                              onClick={handleOpenUpdate}
                                         >What's New?</Update>
+                                        {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
+                                   </CardContainer>
+                                   <UpdateContainer>
+                                        
                                    </UpdateContainer>
 
                                    <Dialog
@@ -262,7 +266,7 @@ const Dashboard = (props) => {
                                              <DialogContentText id="alert-dialog-description">
                                                   <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/13/2023</h1>
                                                   <p>Added "My Savings" feature. When creating one in masterlist, username and password is the same as Member ID</p>
-                                                  
+
 
                                              </DialogContentText>
                                         </DialogContent>

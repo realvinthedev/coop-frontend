@@ -28,6 +28,7 @@ import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 import { isElement } from 'react-dom/test-utils';
 import { ElevatorSharp } from '@mui/icons-material';
 import { useRef } from 'react';
+import Employees from './Employees';
 
 
 const theme = createTheme({
@@ -63,8 +64,8 @@ const Wrapper = styled.div`
     align-items: center;
 `
 const Main = styled.div`
-    width: 1020px;
-    height: 650px;
+    width: 1400px;
+    height: 750px;
     
 `
 const Others = styled.div`
@@ -95,7 +96,7 @@ const TimeContainer = styled.div`
 `
 const Card = styled.div`
     background-color: white;
-    height: 680px;
+    height: 750px;
     width: 100%;
     border-radius: 20px;
     padding: 30px;
@@ -181,7 +182,9 @@ const Dtr = (props) => {
 
      const [total_ot_hour, setTotal_ot_hour] = useState(0)
 
-
+     const [month, setMonth] = useState('january');
+     const [startDate, setStartDate] = useState('');
+     const [endDate, setEndDate] = useState('');
 
 
      const [initialDate, setInitialDate] = useState('')
@@ -284,7 +287,7 @@ const Dtr = (props) => {
      useEffect(() => {
 
           const fetchDtr = async () => {
-               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/${date}`, {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/employee/${employeeId}`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -292,15 +295,20 @@ const Dtr = (props) => {
                const json = await response.json()
 
                if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const date = item.date
+                         return date >= startDate && date <= endDate
 
-                    setDtr(json)
+                    });
+
+                    setDtr(filteredData)
 
                }
           }
-          if (user && date) {
+          if (user) {
                fetchDtr();
           }
-     }, [date, refresher])
+     }, [employeeId, refresher, startDate])
      const [official_am_timein, setOfficial_am_timein] = useState(0);
      const [official_pm_timein, setOfficial_pm_timein] = useState(0);
 
@@ -403,7 +411,7 @@ const Dtr = (props) => {
                setHideNoPayLeaves(true)
           }
           else if (type == "vl_nopay_halfday" || type == "sl_nopay_halfday" || type == "el_nopay_halfday") {
-               if (type == "vl_nopay_halfday") { 
+               if (type == "vl_nopay_halfday") {
                     setVl_nopay_hours(4)
                     setSl_nopay_hours(0)
                     setEl_nopay_hours(0)
@@ -841,7 +849,7 @@ const Dtr = (props) => {
 
 
 
-         
+
      }
 
 
@@ -994,6 +1002,76 @@ const Dtr = (props) => {
           //window.location.reload();
      }
 
+   
+     const handleMonthChange = (e) => {
+          setMonth(e.target.value)
+
+     }
+     useEffect(() => {
+          handleDates();
+     }, [month])
+
+     const handleDates = () => {
+          if (month == "january") {
+               setStartDate(`01-01-2023`)
+               setEndDate(`01-31-2023`)
+          }
+
+          if (month == "february") {
+               setStartDate(`02-01-2023`)
+               setEndDate(`02-28-2023`)
+          }
+
+          if (month == "march") {
+               setStartDate(`03-01-2023`)
+               setEndDate(`03-31-2023`)
+          }
+
+          if (month == "april") {
+               setStartDate(`04-01-2023`)
+               setEndDate(`04-30-2023`)
+          }
+
+          if (month == "may") {
+               setStartDate(`05-01-2023`)
+               setEndDate(`05-31-2023`)
+          }
+
+          if (month == "june") {
+               setStartDate(`06-01-2023`)
+               setEndDate(`06-30-2023`)
+          }
+
+          if (month == "july") {
+               setStartDate(`07-01-2023`)
+               setEndDate(`07-31-2023`)
+          }
+
+          if (month == "august") {
+               setStartDate(`08-01-2023`)
+               setEndDate(`08-31-2023`)
+          }
+
+          if (month == "september") {
+               setStartDate(`09-01-2023`)
+               setEndDate(`09-30-2023`)
+          }
+
+          if (month == "october") {
+               setStartDate(`10-01-2023`)
+               setEndDate(`10-31-2023`)
+          }
+
+          if (month == "november") {
+               setStartDate(`11-01-2023`)
+               setEndDate(`11-30-2023`)
+          }
+
+          if (month == "december") {
+               setStartDate(`12-01-2023`)
+               setEndDate(`12-31-2023`)
+          }
+     }
 
 
 
@@ -1006,7 +1084,58 @@ const Dtr = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
+                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <TextField
+                                             required
+                                             id="outlined-required"
+                                             label="Search Employee"
+                                             fullWidth
+                                             select
+                                             style={{ paddingBottom: "20px" }}
+                                             onChange={handleName}
+                                             value={name}
+                                        >
+                                             {emp.map((data) => {
+                                                  // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                  return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                             })}
+                                        </TextField>
+                                        <TextField
+                                             required
+                                             id="outlined-required"
+                                             label="Month"
+                                             fullWidth
+                                             select
+                                             style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                             onChange={(e) => setMonth(e.target.value)}
+                                             value={month}
+                                        >
+                                             <MenuItem value={'january'}>January 2023</MenuItem>
+                                             <MenuItem value={'february'}>February 2023</MenuItem>
+                                             <MenuItem value={'march'}>March 2023</MenuItem>
+                                             <MenuItem value={'april'}>April 2023</MenuItem>
+                                             <MenuItem value={'may'}>May 2023</MenuItem>
+                                             <MenuItem value={'june'}>June 2023</MenuItem>
+                                             <MenuItem value={'july'}>July 2023</MenuItem>
+                                             <MenuItem value={'august'}>August 2023</MenuItem>
+                                             <MenuItem value={'september'}>September 2023</MenuItem>
+                                             <MenuItem value={'october'}>October 2023</MenuItem>
+                                             <MenuItem value={'november'}>November 2023</MenuItem>
+                                             <MenuItem value={'december'}>December 2023</MenuItem>
 
+                                        </TextField>
+                                        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                             <DatePicker
+                                                  label="Current Date"
+                                                  value={currentDate}
+                                                  inputFormat="MM-DD-YYYY"
+                                                  onChange={convertDateToString}
+                                                  renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                             />
+                                        </LocalizationProvider> */}
+
+
+                                   </div>
                                    <div style={{ height: 475, width: '100%' }}>
                                         <DataGrid
                                              getRowId={(row) => row._id}
@@ -1018,15 +1147,7 @@ const Dtr = (props) => {
                                              onRowClick={handleRowClick}
                                         />
 
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                             <DatePicker
-                                                  label="Current Date"
-                                                  value={currentDate}
-                                                  inputFormat="MM-DD-YYYY"
-                                                  onChange={convertDateToString}
-                                                  renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
-                                             />
-                                        </LocalizationProvider>
+                                        <div></div>
                                         <ButtonContainer>
                                              <div>
                                                   <ThemeProvider theme={theme}>
@@ -1797,7 +1918,7 @@ const Dtr = (props) => {
                          </Main>
                     </Wrapper>
                </Container>
-          </div>
+          </div >
      )
 }
 
