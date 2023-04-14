@@ -240,7 +240,7 @@ const Dashboard = (props) => {
                                         <Cards title="Total Products" data={product.length} color={violet} />
                                    </CardContainer>
                                    <CardContainer>
-                                      
+
                                         <Cards title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} color={yellow} />
                                         <Update
                                              onClick={handleOpenUpdate}
@@ -248,7 +248,7 @@ const Dashboard = (props) => {
                                         {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
                                    </CardContainer>
                                    <UpdateContainer>
-                                        
+
                                    </UpdateContainer>
 
                                    <Dialog
@@ -264,8 +264,12 @@ const Dashboard = (props) => {
                                         </DialogTitle>
                                         <DialogContent>
                                              <DialogContentText id="alert-dialog-description">
+                                                  <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/15/2023</h1>
+                                                  <p>DTR - Bulk searching by Employee and Month for easy management.</p>
                                                   <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/13/2023</h1>
                                                   <p>Added "My Savings" feature. When creating one in masterlist, username and password is the same as Member ID</p>
+
+
 
 
                                              </DialogContentText>
