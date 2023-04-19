@@ -366,7 +366,7 @@ const Payroll = (props) => {
 
                fetchEmp();
           }
-     }, [employeeId, start_date, end_date])
+     }, [employeeId, start_date, end_date, period])
 
 
 
@@ -390,13 +390,12 @@ const Payroll = (props) => {
 
                     });
                     setFiltered_Additional(filteredData)
-                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!", filteredData)
                }
           }
           if (user) {
                fetchEmp();
           }
-     }, [employeeId])
+     }, [employeeId, start_date, end_date, period])
 
 
 
@@ -614,6 +613,7 @@ const Payroll = (props) => {
           let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours) - final_absent_deduction
           let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
+          console.log(final_absent_deduction + " " + grosspay)
           setfinal_gross_pay(grosspay)
           setfinal_earnings(final_earnings)
           setfinal_deduction(final_deduction)
