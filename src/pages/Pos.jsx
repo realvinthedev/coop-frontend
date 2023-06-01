@@ -2,6 +2,7 @@
 import styled from 'styled-components'
 import Header from '../components/Header'
 import * as React from 'react';
+import { useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -21,6 +22,8 @@ import { width } from '@mui/system';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import PosPrinter from '../components/PosPrinter';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -99,15 +102,11 @@ const columns_receipt = [
      { field: 'product_total', headerName: 'total', width: 100 },
 ];
 
-
-
-
-
-
-
 const Pos = (props) => {
-
      /**POST REQUESTS */
+     const [isButtonDisabled, setButtonDisabled] = useState(true);
+     const [isButtonAddtoCartDisabled, setButtonAddtoCartDisabled] = useState(false);
+     const [isButtonNewTransactionDisabled, setButtonNewTransactionDisabled] = useState(true);
      const [id, setId] = useState('')
      const [product_code, setproduct_code] = useState('')
      const [product_name, setproduct_name] = useState('')
@@ -119,6 +118,8 @@ const Pos = (props) => {
      const [query, setQuery] = useState("")
      const [product, setproduct] = useState([])
      const [openError, setopen_error] = useState(false)
+     const [openErrorDuplicate, setopen_errorduplicate] = useState(false)
+     const [openStockError, setopen_stockerror] = useState(false)
      const [error, setError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
      const [openDelete, setOpenDelete] = useState(false)
@@ -126,6 +127,8 @@ const Pos = (props) => {
      const [quantity_right, setquantity_right] = useState(0)
      const [row_total, setrow_total] = useState(0)
      const [total, settotal] = useState(0)
+     const [costtotal, setcosttotal] = useState(0)
+     const [costtotal2, setcosttotal2] = useState(0)
      const [arr, setArr] = useState([]);
      const { user } = useAuthContext()
      const [refresher, setRefresher] = useState(0)
@@ -156,6 +159,30 @@ const Pos = (props) => {
           settotal(product_total);
           console.log(total)
      }, [gridTrigger]);
+
+
+
+     
+
+     useEffect(() => {
+          let product_cost_total = 0;
+
+          arr.forEach((item) => {
+               product_cost_total += item.product_cost_price
+          });
+          setcosttotal(product_cost_total);
+          console.log(costtotal)
+     }, [gridTrigger]);
+
+
+
+
+
+
+
+
+
+
      useEffect(() => {
           const fetchProduct = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product', {
@@ -179,14 +206,33 @@ const Pos = (props) => {
      }, [quantity_left, product_selling_price])
 
 
+     useEffect(() => {
+          let total = quantity_left * product_cost_price;
+          setcosttotal2(total);
+     }, [quantity_left, product_cost_price])
+
+
      const handleRowClickReceipt = (params) => {
           setprms(params)
+          // setId(params.row.id)
+          // console.log(id)
      };
 
      const handleRemoveItem = () => {
           const params = prms
           const newData = arr.filter((item) => item.product_code !== params.row.product_code);
           setArr(newData);
+     }
+
+     const handleNewTransaction = () => {
+          handleRefresher()
+          setArr([])
+          setButtonNewTransactionDisabled(true)
+          setButtonAddtoCartDisabled(false)
+          setButtonDisabled(true)
+          handleTransactionId();
+          settotal(0)
+
      }
 
      const convertDateToString = (date) => {
@@ -206,6 +252,19 @@ const Pos = (props) => {
      const handleOnError = () => {
           setopen_error(true);
      };
+     const handleOnErrorDuplicate = () => {
+          setopen_errorduplicate(true);
+     };
+     const handleOffErrorDuplicate = () => {
+          setopen_errorduplicate(false);
+     };
+
+     const handleStockError = () => {
+          setopen_stockerror(true);
+     };
+     const handleStockErrorOff = () => {
+          setopen_stockerror(false);
+     };
 
      const handleOffError = () => {
           setopen_error(false);
@@ -221,7 +280,7 @@ const Pos = (props) => {
      };
 
      const handleTransactionId = () => {
-          let num = Math.floor(Math.random() * 900000000000000) + 10000;
+          let num = Math.floor(Math.random() * 90000) + 10000;
           const value = "TRANS" + num
           setTransactionnumber(value)
      }
@@ -234,19 +293,37 @@ const Pos = (props) => {
      };
 
      const handleAddItem = () => {
+          const isDuplicate = arr.find(item => item.product_code === product_code);
+          if (product_stock < quantity_left) {
+               handleStockError()
+               setTimeout(() => {
+                    handleStockErrorOff();
+               }, 4000);
+          }
+          else if (isDuplicate) {
+               handleOnErrorDuplicate()
+               setTimeout(() => {
+                    handleOffErrorDuplicate();
+               }, 4000);
+          }
+          else {
+               const newObject = {
+                    id: id,
+                    stock: product_stock,
+                    product_code: product_code,
+                    product_name: product_name,
+                    product_description: product_description,
+                    product_cost_price: product_cost_price,
+                    product_selling_price: product_selling_price,
+                    product_quantity: quantity_left,
+                    product_total: row_total,
+                    product_cost_total: costtotal2
 
-          const newObject = {
-               product_code: product_code,
-               product_name: product_name,
-               product_description: product_description,
-               product_selling_price: product_selling_price,
-               product_quantity: quantity_left,
-               product_total: row_total
-
-          };
-
-          setArr([...arr, newObject]);
-          setGridTrigger(!gridTrigger)
+               };
+               setArr([...arr, newObject]);
+               setGridTrigger(!gridTrigger)
+          }
+          console.log('**********************', arr)
      };
 
 
@@ -265,16 +342,43 @@ const Pos = (props) => {
           setproduct_cost_price(params.row.product_cost_price)
           setproduct_selling_price(params.row.product_selling_price)
           setproduct_stock(params.row.product_stock)
+     };
+     const handleRowClick2 = (params) => {
+          setId(params.row._id);
+          console.log(id)
 
      };
+     const handleUpdateStocks = async (e) => {
 
+          for (let i = 0; i < arr.length; i++) {
+               const product = {
+                    product_stock: arr[i].stock - arr[i].product_quantity
+               }
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + arr[i].id, {
+                    method: 'PATCH',
+                    body: JSON.stringify(product),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+          }
+
+
+     }
 
      const handleSaveTransaction = async (e) => {
           e.preventDefault()
+          handleUpdateStocks()
           const pos = {
                pos_date: currentDate,
                pos_transaction_id: transactionnumber,
                pos_items: arr,
+               pos_cost_total: costtotal2,
                pos_total: total,
           }
           if (!user) {
@@ -287,7 +391,7 @@ const Pos = (props) => {
                handleOnError()
                setTimeout(() => {
                     handleOffError();
-               }, 1500);
+               }, 4000);
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/', {
@@ -303,13 +407,20 @@ const Pos = (props) => {
                     setError(json.error)
                }
                else {
-                    setArr([])
+
+                    //setArr([])
+                    handleOnSuccess();
+                    setButtonDisabled(false);
+                    setButtonAddtoCartDisabled(true)
+                    setButtonNewTransactionDisabled(false)
+                    handleRefresher()
+                    setTimeout(() => {
+                         //handleRefresher()
+                         handleOffSuccess();
+                    }, 4000);
                }
-               handleOnSuccess();
-               setTimeout(() => {
-                    //handleRefresher()
-                    handleOffSuccess();
-               }, 1500);
+
+
           }
 
      }
@@ -340,7 +451,7 @@ const Pos = (props) => {
                handleOnError()
                setTimeout(() => {
                     handleOffError();
-               }, 1500);
+               }, 4000);
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/', {
@@ -367,7 +478,7 @@ const Pos = (props) => {
                setTimeout(() => {
                     handleRefresher()
                     handleOffSuccess();
-               }, 1500);
+               }, 4000);
           }
 
      }
@@ -396,7 +507,7 @@ const Pos = (props) => {
                handleOnError()
                setTimeout(() => {
                     handleOffError();
-               }, 1500);
+               }, 4000);
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
@@ -423,7 +534,7 @@ const Pos = (props) => {
                setTimeout(() => {
                     handleRefresher()
                     handleOffSuccess();
-               }, 1500);
+               }, 4000);
           }
 
      }
@@ -458,7 +569,7 @@ const Pos = (props) => {
                     handleRefresher()
                     handleOffSuccess();
 
-               }, 1500);
+               }, 4000);
           }
 
      }
@@ -473,8 +584,7 @@ const Pos = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
-                                   {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely</Alert> : ""}
+
                                    <div
                                         style={{
                                              display: "flex",
@@ -577,6 +687,8 @@ const Pos = (props) => {
                                                             readOnly: true,
                                                        }}
                                                   />
+                                                  {openStockError ? <Alert onClose={handleStockErrorOff} variant="filled" severity="error">Not enough stocks</Alert> : ""}
+                                                  {openErrorDuplicate ? <Alert onClose={handleOffErrorDuplicate} variant="filled" severity="error">Item already added. If you want to update the quantity, remove and update it.</Alert> : ""}
                                                   <ThemeProvider theme={theme}>
                                                        <div style={{
                                                             display: "flex",
@@ -591,7 +703,7 @@ const Pos = (props) => {
                                                                  onChange={(e) => setquantity_left(e.target.value)}
                                                                  value={quantity_left}
                                                             />
-                                                            <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleAddItem}>
+                                                            <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleAddItem}>
                                                                  Add to cart
                                                             </Button>
                                                        </div>
@@ -629,10 +741,11 @@ const Pos = (props) => {
                                              <div style={{ height: 475, width: '100%' }}
                                              >
 
-                                                  <div style={{ display: 'flex', justifyContent: "space-between"}}>
-                                                  <label style={{ marginBottom: "20px"}}>Date: {currentDate}</label>
-                                                  <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
+                                                  <div style={{ display: 'flex', justifyContent: "space-between" }}>
+                                                       <label style={{ marginBottom: "20px" }}>Date: {currentDate}</label>
+                                                       <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
                                                   </div>
+
                                                   <DataGrid
                                                        getRowId={getRowId}
                                                        rows={arr}
@@ -643,6 +756,8 @@ const Pos = (props) => {
                                                   />
 
                                              </div>
+                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Successfully Saved. Please download receipt if necessary</Alert> : ""}
+                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely</Alert> : ""}
 
                                              <div style={{
                                                   display: "flex",
@@ -662,20 +777,28 @@ const Pos = (props) => {
                                                        justifyContent: "space-between",
                                                        marginRight: "10px",
                                                        width: "50%",
-                                                     
+
                                                   }}>
+
                                                        <ThemeProvider theme={theme}>
                                                             <div style={{
                                                                  display: "flex",
-                                                                 justifyContent: "space-between"
+                                                                 flexDirection: "column",
+
                                                             }}>
 
-                                                                 <Button style={{ marginRight: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleRemoveItem}>
+                                                                 <Button disabled={isButtonAddtoCartDisabled} style={{ marginBottom: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleRemoveItem}>
                                                                       Remove from cart
                                                                  </Button>
+                                                                 <Button disabled={isButtonNewTransactionDisabled} style={{ marginRight: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleNewTransaction}>
+                                                                      New Transaction
+                                                                 </Button>
+
                                                             </div>
+
                                                        </ThemeProvider>
                                                   </div>
+
 
                                                   <div style={{
                                                        width: "30%"
@@ -697,11 +820,21 @@ const Pos = (props) => {
                                                                  display: "flex",
                                                                  justifyContent: "space-between"
                                                             }}>
-                                                                 <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleSaveTransaction}>
+                                                                 <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue" onClick={
+                                                                      handleSaveTransaction}>
                                                                       Save Transaction
+
                                                                  </Button>
 
                                                             </div>
+                                                            <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue">
+                                                                 <PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} >
+                                                                      {({ loading }) => (loading ? 'Loading document...' : 'Download Receipt')}
+                                                                 </PDFDownloadLink>
+                                                            </Button>
+                                                            {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
+                                                                
+                                                            </Button> */}
                                                        </ThemeProvider>
                                                        <Dialog
                                                             open={openDelete}
@@ -731,7 +864,7 @@ const Pos = (props) => {
                               </Card>
                          </Main>
                     </Wrapper>
-               </Container>
+               </Container >
           </div >
      )
 

@@ -21,6 +21,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useAuthContext } from '../hooks/useAuthContext'
 import MenuItem from '@mui/material/MenuItem';
+import { toast } from 'react-toastify';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -285,7 +286,7 @@ const Additionals = (props) => {
           }
      }, [user])
 
-    
+
      const time = [
           { id: '1', time: '' },
      ];
@@ -348,7 +349,7 @@ const Additionals = (props) => {
                fetchAdditionals();
           }
 
-     }, [date_to, date_from, employeeId])
+     }, [date_to, date_from, employeeId, refresher])
 
 
 
@@ -382,6 +383,12 @@ const Additionals = (props) => {
                setOpenSuccess(false);
           }, 2000);
 
+     };
+     const successToast = (success) => {
+          toast.success(success);
+     };
+     const errorToast = (error) => {
+          toast.error(error);
      };
 
      const handleOffSuccess = () => {
@@ -494,12 +501,12 @@ const Additionals = (props) => {
 
      const handleAddAdditional = async (e) => {
           e.preventDefault()
-          if (name === "") {
-               handleOnError();
+          if (name === "" || employeeId === "") {
+               errorToast('Fill up the required fields completely')
           }
           else {
                if (!user) {
-                    console.log('You must be logged in first')
+                    errorToast('You must log in again first.')
                     return
                }
                else {
@@ -543,10 +550,8 @@ const Additionals = (props) => {
                     else {
                          console.log(error)
                     }
-                    handleOnSuccess();
-                    setTimeout(() => {
-                         handleRefresher()
-                    }, 1000);
+                    successToast('Added Successfully')
+                    handleRefresher()
                }
 
 
@@ -568,7 +573,8 @@ const Additionals = (props) => {
           if (response.ok) {
                console.log('deleted', json)
           }
-          window.location.reload();
+          successToast('Deleted Successfully')
+          handleRefresher()
      }
 
 
@@ -844,13 +850,13 @@ const Additionals = (props) => {
                                                             id="outlined-required"
                                                             label="Total Deduction"
                                                             fullWidth
-                                                            style={{ marginBottom: "20px"}}
+                                                            style={{ marginBottom: "20px" }}
                                                             value={total_deduction}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}
                                                        />
-                                                      
+
                                                   </TotalsContainer>
                                                   <TextField
                                                        type="number"
@@ -889,10 +895,10 @@ const Additionals = (props) => {
                                                             fullWidth
                                                             id="outlined-required"
                                                             label="Total Earnings"
-                                                            style={{ paddingBottom: "20px"}}
+                                                            style={{ paddingBottom: "20px" }}
                                                             value={total_earnings}
                                                        />
-                                                    
+
                                                        {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                        {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                   </TotalsContainer>

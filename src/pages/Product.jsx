@@ -17,6 +17,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAuthContext } from '../hooks/useAuthContext'
 import { Alert } from '@mui/material';
 import { PaddingRounded } from '@mui/icons-material';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import 'react-toastify/dist/ReactToastify.css';
+import ProductPrinter from '../components/ProductPrinter';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -91,6 +96,14 @@ const columns = [
 ];
 
 const Product = (props) => {
+
+     const handleSuccessToast = (success) => {
+          toast.success(success);
+     };
+     const handleErrorToast = (error) => {
+          toast.error(error);
+     };
+
      const { user } = useAuthContext()
      const [refresher, setRefresher] = useState(0)
      useEffect(() => {
@@ -121,12 +134,15 @@ const Product = (props) => {
      const [product_cost_price, setproduct_cost_price] = useState(0)
      const [product_selling_price, setproduct_selling_price] = useState(0)
      const [product_stock, setproduct_stock] = useState(0)
-     const [query, setQuery] = useState(0)
+     const [query, setQuery] = useState("")
      const [product, setproduct] = useState([])
      const [openError, setopen_error] = useState(false)
      const [error, setError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
      const [openDelete, setOpenDelete] = useState(false)
+     const [zero, setZero] = ([])
+     const [low, setLow] = ([])
+
 
 
      const handleRefresher = () => {
@@ -188,17 +204,14 @@ const Product = (props) => {
                return
           }
           if (
-               product_code == "" ||
-               product_name == "" ||
-               product_description == "" ||
-               product_cost_price == "" ||
-               product_selling_price == "" ||
-               product_stock == ""
+               product_code === "" ||
+               product_name === "" ||
+               product_description === "" ||
+               product_cost_price === "" ||
+               product_selling_price === "" ||
+               product_stock === ""
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely')
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/', {
@@ -221,11 +234,9 @@ const Product = (props) => {
                     setproduct_selling_price('')
                     setproduct_stock('')
                }
-               handleOnSuccess();
-               setTimeout(() => {
-                    handleRefresher()
-                    handleOffSuccess();
-               }, 1500);
+               handleSuccessToast('Item Added Successfully');
+               handleRefresher()
+
           }
 
      }
@@ -244,17 +255,14 @@ const Product = (props) => {
                return
           }
           if (
-               product_code == "" ||
-               product_name == "" ||
-               product_description == "" ||
-               product_cost_price == "" ||
-               product_selling_price == "" ||
-               product_stock == ""
+               product_code === "" ||
+               product_name === "" ||
+               product_description === "" ||
+               product_cost_price === "" ||
+               product_selling_price === "" ||
+               product_stock === ""
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely')
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
@@ -277,11 +285,8 @@ const Product = (props) => {
                     setproduct_selling_price('')
                     setproduct_stock('')
                }
-               handleOnSuccess();
-               setTimeout(() => {
-                    handleRefresher()
-                    handleOffSuccess();
-               }, 1500);
+               handleSuccessToast('Item Updated Successfully')
+               handleRefresher()
           }
 
      }
@@ -310,18 +315,16 @@ const Product = (props) => {
                     setproduct_selling_price('')
                     setproduct_stock('')
                }
-               handleOnSuccess();
+               handleSuccessToast('Item Deleted Successfully')
                handleCloseDelete();
-               setTimeout(() => {
-                    handleRefresher()
-                    handleOffSuccess();
-                    
-               }, 1500);
+               handleRefresher()
+
           }
 
      }
 
-   
+     const filteredZero = product.filter(obj => obj.product_stock == 0).sort();
+     const filteredLow = product.filter(obj => obj.product_stock <= 3 && obj.product_stock != 0).sort();
 
      return (
           <div style={{ display: "flex" }}>
@@ -340,6 +343,7 @@ const Product = (props) => {
                                              label="Search"
                                              fullWidth
                                              onChange={(e) => setQuery(e.target.value)}
+                                             value={query}
                                         />
 
                                    </SearchContainer>
@@ -348,27 +352,49 @@ const Product = (props) => {
                                              getRowId={(row) => row._id}
                                              rows={product}
                                              columns={columns}
-                                             pageSize={7}
                                              rowsPerPageOptions={[5]}
                                              onRowClick={handleRowClick}
+                                             filterModel={{
+                                                  items: [
+                                                       {
+                                                            columnField: 'product_name',
+                                                            operatorValue: 'contains',
+                                                            value: query,
+                                                       },
+                                                  ],
+                                             }}
                                         />
                                    </div>
 
-                                   <div style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
+                                   <div >
 
-                                   }}>
                                         <ThemeProvider theme={theme}>
-                                             <div  style={{ marginTop: "20px" }} >
-                                             <i>*Scroll down to add new product</i>
-                                             </div>
-                                             <div>
-                                                  <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
-                                                       Delete
-                                                  </Button>
+                                             <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }} >
+                                                  <div style={{ display: "flex" }} >
+                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
+                                                            <PDFDownloadLink fileName="all_products" document={< ProductPrinter data={product} />} >
+                                                                 {({ loading }) => (loading ? 'Loading document...' : 'All Products')}
+                                                            </PDFDownloadLink>
+                                                       </Button>
+                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
+                                                            <PDFDownloadLink fileName="low_stocks" document={< ProductPrinter data={filteredLow} />} >
+                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Low Stocks')}
+                                                            </PDFDownloadLink>
+                                                       </Button>
+                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue">
+                                                            <PDFDownloadLink fileName="zero_stocks" document={< ProductPrinter data={filteredZero} />} >
+                                                                 {({ loading }) => (loading ? 'Loading document...' : ' 0 Stocks')}
+                                                            </PDFDownloadLink>
+                                                       </Button>
+                                                  </div>
+                                                  <div>
+                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
+                                                            Delete
+                                                       </Button>
+                                                  </div>
                                              </div>
                                         </ThemeProvider>
+
                                    </div>
                                    <div style={{
                                         display: "flex",
@@ -435,16 +461,16 @@ const Product = (props) => {
                                                   value={product_stock}
                                              />
                                              <ThemeProvider theme={theme}>
-                                                  <div style={{ 
+                                                  <div style={{
                                                        display: "flex",
                                                        justifyContent: "space-between"
-                                                   }}>
-                                                  <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleNew}>
-                                                       Add
-                                                  </Button>
-                                                  <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handlePatch}>
-                                                       Update
-                                                  </Button>
+                                                  }}>
+                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleNew}>
+                                                            Add
+                                                       </Button>
+                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handlePatch}>
+                                                            Update
+                                                       </Button>
                                                   </div>
                                              </ThemeProvider>
                                              <Dialog

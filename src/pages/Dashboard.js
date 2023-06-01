@@ -22,7 +22,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import bg from '../images/websitebg.jpg';
 import { useAuthContext } from '../hooks/useAuthContext'
-
+import Calendar from 'react-calendar';
+import LongCard from '../components/LongCard'
 const theme = createTheme({
      palette: {
           neutral: {
@@ -43,24 +44,30 @@ const theme = createTheme({
           },
      },
 });
+
 const Container = styled.div`
-    background-image: url(${bg});
+    //background-image: url(${bg});
     background-size: cover;
     background-repeat: repeat;
     background-position: right;
     height: 100vh;
-    width: 1600px;
+    width: 1366px;
     padding: 50px 100px 100px 100px;
+   
 `
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    @media (max-width: 1366px) {
+    justify-content: left;
+    align-items: left;
+  }
 `
 const CardContainer = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 `
 const UpdateContainer = styled.div`
@@ -91,10 +98,12 @@ const MemberCardContainer = styled.div`
 
 
 const Dashboard = (props) => {
-
+     const [value, onChange] = useState(new Date());
      const { user } = useAuthContext()
      const currentUser = user.username;
      const [departments, setDepartment] = useState([])
+     const [net, setNet] = useState([])
+     const [profit, setProft] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
@@ -195,17 +204,38 @@ const Dashboard = (props) => {
 
                if (response.ok) {
                     let pos_total = 0;
+                    let pos_cost_total = 0;
                     // setpos(json)
                     json.forEach((item) => {
                          pos_total += item.pos_total
+                         pos_cost_total += item.pos_cost_total
                     });
                     setGross(pos_total);
+                    setNet(pos_cost_total);
+                    setProft(pos_total && pos_total-pos_cost_total);
                }
           }
           if (user) {
                fetchSales();
           }
 
+     }, [user])
+     const [members, setMembers] = useState([]);
+     useEffect(() => {
+          const fetchMembers = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    setMembers(json)
+               }
+          }
+          if (user) {
+               fetchMembers();
+          }
      }, [user])
 
      useEffect(() => {
@@ -215,6 +245,14 @@ const Dashboard = (props) => {
                pos_total += item.pos_total
           });
           setGross(pos_total);
+     }, [user]);
+
+     useEffect(() => {
+          let pos_net_total = 0;
+          pos.forEach((item) => {
+               pos_net_total += item.pos_cost_total
+          });
+          setNet(pos_net_total);
      }, [user]);
 
 
@@ -233,53 +271,22 @@ const Dashboard = (props) => {
                     <Wrapper>
                          <Header title={props.title} user={props.user} />
                          {user && currentUser == "admin" &&
-                              <div>
+                              <div style={{ width: "100%" }}>
                                    <CardContainer>
                                         <Cards title="Total Employees" data={employees.length} color={violet} />
                                         <Cards title="Total Departments" data={departments.length} color={yellow} />
                                         <Cards title="Total Products" data={product.length} color={violet} />
                                    </CardContainer>
                                    <CardContainer>
-
-                                        <Cards title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} color={yellow} />
-                                        <Update
-                                             onClick={handleOpenUpdate}
-                                        >What's New?</Update>
-                                        {/* <Leaves title="Pending Leave Application" data={pendingLeaves.length} color={orange} /> */}
+                                        <LongCard title="Total Gross Income" data={gross ? gross.toLocaleString() : 0} title2="Total Actual Cost" data2={net? net.toLocaleString() : 0} title3="Total Net Profit" data3={profit? profit.toLocaleString() : 0} color={yellow} />
+                                        <Cards title="Total Savings Member" data={members.length} color={violet} />
+                                   </CardContainer>
+                                   <CardContainer>
+                                       
                                    </CardContainer>
                                    <UpdateContainer>
-
                                    </UpdateContainer>
 
-                                   <Dialog
-                                        open={openUpdate}
-                                        onClose={handleCloseUpdate}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                        fullWidth
-                                        maxWidth="sm"
-                                   >
-                                        <DialogTitle id="alert-dialog-title">
-                                             <h2>{"System Update"}</h2>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                             <DialogContentText id="alert-dialog-description">
-                                                  <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/15/2023</h1>
-                                                  <p>DTR - Bulk searching by Employee and Month for easy management.</p>
-                                                  <h1 style={{ color: "purple", paddingBottom: "10px" }}>New Update: 4/13/2023</h1>
-                                                  <p>Added "My Savings" feature. When creating one in masterlist, username and password is the same as Member ID</p>
-
-
-
-
-                                             </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                             <Button onClick={handleCloseUpdate} autoFocus>
-                                                  Close
-                                             </Button>
-                                        </DialogActions>
-                                   </Dialog>
                               </div>}
 
 

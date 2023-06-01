@@ -29,7 +29,11 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import { useSignup } from '../hooks/useSignup';
-
+import SavingsPrinter from '../components/SavingsPrinter';
+import { toast } from 'react-toastify';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import SavingsReceiptPrinter from '../components/SavingsReceiptPrinter';
+import ImageUploader from '../components/ImageUploader';
 
 
 const theme = createTheme({
@@ -50,6 +54,15 @@ const theme = createTheme({
                main: '#0a9941',
                contrastText: '#fff',
           },
+          orange: {
+               main: '#c97618',
+               contrastText: '#fff',
+          },
+          blue: {
+               main: '#2b55af',
+               contrastText: '#fff',
+          },
+
      },
 });
 const Container = styled.div`
@@ -101,7 +114,8 @@ const Cards = styled.div`
     display: flex;
     padding: 30px;
     justify-content: left;
-    margin: 15px;
+    margin-right: 10px;
+   
 `
 const Cardslist = styled.div`
     height: 80px;
@@ -149,6 +163,7 @@ const columns = [
      { field: 'passbook_printed', headerName: 'Passbook Printed', width: 150 },
      { field: 'remarks', headerName: 'Remarks', width: 150 },
      { field: 'notes', headerName: 'Notes', width: 150 },
+
 ];
 
 const savings_columns = [
@@ -177,10 +192,13 @@ const Member = (props) => {
      const [openError, setopen_error] = useState(false)
      const [error, setError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
-     const [refresher, setRefresher] = useState(0)
+
      const [query, setQuery] = useState('')
      const [members, setMembers] = useState([])
      const [gridTrigger, setGridTrigger] = useState(false);
+
+
+     const [selectedImage, setSelectedImage] = useState(null);
 
      const { signup, isLoading } = useSignup()
      const [password, setPassword] = useState('')
@@ -188,6 +206,8 @@ const Member = (props) => {
      const [firstname, setfirstname] = useState('')
      const [middlename, setmiddlename] = useState('')
      const [lastname, setlastname] = useState('')
+     const [contact_number, setcontact_number] = useState('')
+     const [email, setemail] = useState('')
      const [membership_date, setmembership_date] = useState('')
      const [status, setstatus] = useState('active')
      const [hhhc_membership_number, sethhhc_membership_number] = useState('')
@@ -212,6 +232,7 @@ const Member = (props) => {
      const [atm_status, setatm_status] = useState('')
      const [notes, setnotes] = useState('')
      const [tabvalue, settabvalue] = React.useState('1');
+     const [buttonReceiptDisabled, setbuttonReceiptDisabled] = useState(true)
 
      const [openAdd, setOpenAdd] = useState(false);
      const [openDelete, setOpenDelete] = useState(false);
@@ -228,6 +249,10 @@ const Member = (props) => {
      const [openAddSavings, setopenAddSavings] = useState(false);
      const [openUpdateSavings, setopenUpdateSavings] = useState(false);
      const [openDeleteSavings, setopenDeleteSavings] = useState(false);
+     const [refresher, setRefresher] = useState(0)
+     const [refresher2, setRefresher2] = useState(0)
+
+
      const [savings, setsavings] = useState([]);
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
@@ -247,12 +272,20 @@ const Member = (props) => {
      const [credit_part_kayasavings, setcredit_part_kayasavings] = useState(0);
      const [credit_part_others, setcredit_part_others] = useState(0);
 
-     const [debit_part_membershipfee, setdebit_part_membershipfee] = useState(0);
-     const [debit_part_captial, setdebit_part_captial] = useState(0);
-     const [debit_part_savings, setdebit_part_savings] = useState(0);
-     const [debit_part_loans, setdebit_part_loans] = useState(0);
-     const [debit_part_kayasavings, setdebit_part_kayasavings] = useState(0);
-     const [debit_part_others, setdebit_part_others] = useState(0);
+     const [total_membershipfee, settotal_membershipfee] = useState(0);
+     const [total_captial, settotal_captial] = useState(0);
+     const [total_savings, settotal_savings] = useState(0);
+     const [total_loans, settotal_loans] = useState(0);
+     const [total_kayasavings, settotal_kayasavings] = useState(0);
+     const [total_others, settotal_others] = useState(0);
+
+     const handleSuccessToast = (success) => {
+          toast.success(success);
+     };
+     const handleErrorToast = (error) => {
+          toast.error(error);
+     };
+
 
      /**useEffects */
      /**Masterlist */
@@ -292,6 +325,26 @@ const Member = (props) => {
      }, [user, refresher])
 
      useEffect(() => {
+          const fetchSavings = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    setsavings(json)
+               }
+          }
+          if (user) {
+               fetchSavings();
+          }
+     }, [user, refresher2])
+
+    
+
+     useEffect(() => {
+          console.log('**********', savings)
           let creditTotal_membershipfee = 0;
           let debitTotal_membershipfee = 0;
 
@@ -388,6 +441,104 @@ const Member = (props) => {
 
      }, [member_id, savings])
 
+     useEffect(() => {
+
+          let creditTotal_membershipfee = 0;
+          let debitTotal_membershipfee = 0;
+
+          let creditTotal_capital = 0;
+          let debitTotal_capital = 0;
+
+          let creditTotal_savings = 0;
+          let debitTotal_savings = 0;
+
+          let creditTotal_loans = 0;
+          let debitTotal_loans = 0;
+
+          let creditTotal_kaya = 0;
+          let debitTotal_kaya = 0;
+
+          let creditTotal_others = 0;
+          let debitTotal_others = 0;
+
+          savings.forEach(saving => {
+               if (saving.particulars === "MEMBERSHIP FEE") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_membershipfee += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_membershipfee += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "CAPITAL") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_capital += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_capital += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "SAVINGS") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_savings += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_savings += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "LOANS") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_loans += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_loans += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "KAYA SAVINGS") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_kaya += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_kaya += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "OTHERS") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_others += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_others += parseFloat(saving.amount)
+                    }
+               }
+          })
+
+          let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
+
+          settotal_membershipfee(totalmembership)
+          //setdebit_part_membershipfee(totalmembership)
+
+          let totalcaptial = creditTotal_capital - debitTotal_capital
+          settotal_captial(totalcaptial)
+          //setdebit_part_captial(debitTotal_capital)
+
+          let totalsavings = creditTotal_savings - debitTotal_savings
+          settotal_savings(totalsavings)
+          //setdebit_part_savings(debitTotal_savings)
+
+          let totalkaya = creditTotal_kaya - debitTotal_kaya
+          settotal_kayasavings(totalkaya)
+          //setdebit_part_kayasavings(debitTotal_kaya)
+
+          let totalloans = debitTotal_loans - creditTotal_loans
+          settotal_loans(totalloans)
+          //setdebit_part_loans(debitTotal_loans)
+
+          let totalothers = creditTotal_others - debitTotal_others
+          settotal_others(totalothers)
+          //setdebit_part_others(debitTotal_others)
+
+     }, [savings, refresher])
+
 
 
      const handleClearSavings = () => {
@@ -439,6 +590,9 @@ const Member = (props) => {
      const handleRefresher = () => {
           setRefresher(Math.random())
      };
+     const handleRefresher2 = () => {
+          setRefresher2(Math.random())
+     };
      const handleAddButton = () => {
           handleClearTextFields()
           handleRandomId()
@@ -460,6 +614,7 @@ const Member = (props) => {
      }
 
      const handleGoToSavings = () => {
+          setbuttonReceiptDisabled(true)
           if (id === "") {
                setopen_error(true)
                setTimeout(() => {
@@ -473,7 +628,9 @@ const Member = (props) => {
 
      }
      const handleGoToMasterlist = () => {
+          handleRefresher2();
           settabvalue('1')
+
      }
 
      const handleChange = (event, newValue) => {
@@ -536,7 +693,9 @@ const Member = (props) => {
           setnotes(params.row.notes);
      };
 
+
      const handleSavingsRowClick = (params) => {
+          setbuttonReceiptDisabled(false)
           setmember_id(params.row.member_id)
           setsavingsid(params.row._id);
           setdate(params.row.date);
@@ -545,15 +704,20 @@ const Member = (props) => {
           setamount(params.row.amount);
           setreference_document(params.row.reference_document);
           setremarks2(params.row.remarks);
+
+
      }
 
      const handleAddMember = async (e) => {
           e.preventDefault()
+
           const member = {
                member_id: member_id,
                firstname: firstname,
                middlename: middlename,
                lastname: lastname,
+               email: email,
+               contact_number: contact_number,
                membership_date: membership_date,
                status: status,
                hhhc_membership_number: hhhc_membership_number,
@@ -573,6 +737,7 @@ const Member = (props) => {
                remarks: remarks,
                notes: notes
           }
+
           if (!user) {
                console.log('You must be logged in first')
                return
@@ -582,11 +747,9 @@ const Member = (props) => {
                lastname === ""
 
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely ')
           }
+         
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
                     method: 'POST',
@@ -595,10 +758,13 @@ const Member = (props) => {
                          'Content-Type': 'application/json',
                          'Authorization': `Bearer ${user.token}`
                     }
+
                })
-               const json = await response.json()
+               
                if (!response.ok) {
-                    setError(json.error)
+                    const errorResponse = await response.json();
+                    console.error('Error response:', errorResponse);
+                 
                }
                else {
                     await signup(member_id, member_id)
@@ -625,11 +791,10 @@ const Member = (props) => {
                     setnotes("")
                     setPassword("")
 
-                    handleOnSuccess();
+                    handleSuccessToast('Member Added Successfully')
                     setTimeout(() => {
                          setOpenAdd(false)
                          handleRefresher()
-                         handleOffSuccess();
                     }, 1500);
                }
           }
@@ -671,10 +836,7 @@ const Member = (props) => {
                lastname === ""
 
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely ')
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/' + id, {
@@ -712,11 +874,10 @@ const Member = (props) => {
                     setremarks("")
                     setnotes("")
 
-                    handleOnSuccess();
+                    handleSuccessToast('Updated Successfully')
                     setTimeout(() => {
                          setOpenUpdate(false)
                          handleRefresher()
-                         handleOffSuccess();
                     }, 1500);
                }
           }
@@ -738,11 +899,9 @@ const Member = (props) => {
                     setError(json.error)
                }
                else {
-                    handleOnSuccess();
-
+                    handleSuccessToast('Deleted Successfully')
                     setTimeout(() => {
                          handleRefresher()
-                         handleOffSuccess();
                          handleCancel();
                     }, 1500);
                }
@@ -772,10 +931,7 @@ const Member = (props) => {
                amount === 0
 
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely ')
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
@@ -798,11 +954,10 @@ const Member = (props) => {
                     setreference_document('')
                     setremarks2('')
 
-                    handleOnSuccess();
+                    handleSuccessToast('Added Successfully')
                     setTimeout(() => {
                          setopenAddSavings(false)
                          handleRefresher()
-                         handleOffSuccess();
                     }, 1500);
                }
           }
@@ -825,11 +980,10 @@ const Member = (props) => {
                     setError(json.error)
                }
                else {
-                    handleOnSuccess();
+                    handleSuccessToast('Deleted Successfully')
 
                     setTimeout(() => {
                          handleRefresher()
-                         handleOffSuccess();
                          handleCancel();
                     }, 1500);
                }
@@ -856,10 +1010,7 @@ const Member = (props) => {
                amount === 0
 
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 1500);
+               handleErrorToast('Fill up the required fields completely')
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
@@ -882,11 +1033,10 @@ const Member = (props) => {
                     setreference_document('')
                     setremarks2('')
 
-                    handleOnSuccess();
+                    handleSuccessToast('Updated Successfully')
                     setTimeout(() => {
                          setopenUpdateSavings(false)
                          handleRefresher()
-                         handleOffSuccess();
                     }, 1500);
                }
           }
@@ -937,14 +1087,66 @@ const Member = (props) => {
                                         <TabContext value={tabvalue}>
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                                       <Tab label="Masterlist" value="1" disabled/>
+                                                       <Tab label="Masterlist" value="1" disabled />
                                                        <Tab label="Savings" value="2" onClick={handleGoToSavings} disabled />
 
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
                                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
+                                                  <div>
+                                                       <Cards style={{ backgroundColor: "#e6881d", color: "white", width: "100%", marginBottom: "50px" }}>
+                                                            <div style={{ paddingRight: "200px", display: "flex", flexDirection: "column" }}>
+                                                                 <div style={{ marginBottom: "20px", fontSize: "30px" }}>
+                                                                      SAVINGS SUMMARY REPORT
+                                                                 </div>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
+                                                                           <PDFDownloadLink fileName="savings_summary" document={
+                                                                                < SavingsPrinter
+                                                                                     total_membershipfee={total_membershipfee}
+                                                                                     total_kayasavings={total_kayasavings}
+                                                                                     total_loans={total_loans}
+                                                                                     total_captial={total_captial}
+                                                                                     total_others={total_others}
+                                                                                     total_savings={total_savings}
+                                                                                />} >
+                                                                                {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
+                                                                           </PDFDownloadLink>
+                                                                      </Button>
 
+                                                                 </ThemeProvider>
+                                                            </div>
+                                                            <div style={{ paddingRight: "200px" }}>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_membershipfee}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_captial}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
+                                                                 </div>
+                                                                 <div>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_savings}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
+                                                                 </div>
+                                                            </div>
+                                                            <div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_loans}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_kayasavings}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL KAYA SAVINGS</p>
+                                                                 </div>
+                                                                 <div>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_others}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>OTHERS</p>
+                                                                 </div>
+                                                            </div>
+                                                       </Cards>
+                                                  </div>
 
                                                   <SearchContainer>
                                                        <TextField
@@ -978,6 +1180,7 @@ const Member = (props) => {
 
                                                   </SearchContainer>
                                                   <div style={{ height: 500, width: '100%' }} >
+
                                                        <DataGrid
                                                             getRowId={(row) => row._id}
                                                             rows={members}
@@ -997,11 +1200,12 @@ const Member = (props) => {
                                                        />
                                                   </div>
 
+
                                                   {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please select a member first</Alert> : ""}
                                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                        <div style={{ display: "flex", marginTop: "20px" }}>
                                                             <ThemeProvider theme={theme}>
-                                                                 <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
                                                                       View Savings
                                                                  </Button>
 
@@ -1111,6 +1315,22 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setlastname(e.target.value)}
                                                                       value={lastname}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Contact Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcontact_number(e.target.value)}
+                                                                      value={contact_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Email"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setemail(e.target.value)}
+                                                                      value={email}
                                                                  />
                                                             </div>
                                                             <div>
@@ -1542,7 +1762,7 @@ const Member = (props) => {
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
                                                                  </div>
                                                             </div>
-                                                            <div>
+                                                            <div style={{ marginRight: "50px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_loans}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
@@ -1555,6 +1775,23 @@ const Member = (props) => {
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
                                                                  </div>
+                                                            </div>
+                                                            <div style={{ display: "flex", alignItems: "end", justifyContent: "right" }}>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="blue">
+                                                                           <PDFDownloadLink fileName="savings_summary" document={
+                                                                                < SavingsPrinter
+                                                                                     total_membershipfee={total_membershipfee}
+                                                                                     total_kayasavings={total_kayasavings}
+                                                                                     total_loans={total_loans}
+                                                                                     total_captial={total_captial}
+                                                                                     total_others={total_others}
+                                                                                     total_savings={total_savings}
+                                                                                />} >
+                                                                                {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
+                                                                           </PDFDownloadLink>
+                                                                      </Button>
+                                                                 </ThemeProvider>
                                                             </div>
                                                        </Cards>
                                                   </CardContainer>
@@ -1581,12 +1818,32 @@ const Member = (props) => {
 
                                                   </CardContainer>
                                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                       <div>
+                                                       <div style={{ display: "flex" }}>
                                                             <ThemeProvider theme={theme}>
-                                                                 <Button style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
                                                                       Go back to Masterlist
                                                                  </Button>
+                                                                 <Button disabled={buttonReceiptDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
+                                                                      <PDFDownloadLink fileName="savings_summary" document={
+                                                                           < SavingsReceiptPrinter
+                                                                                date={date}
+                                                                                particulars={particulars}
+                                                                                type={type}
+                                                                                amount={amount}
+                                                                                reference_document={reference_document}
+                                                                                remarks2={remarks2}
+                                                                                name={firstname + " " + lastname}
 
+                                                                           // total_membershipfee={total_membershipfee}
+                                                                           // total_kayasavings={total_kayasavings}
+                                                                           // total_loans={total_loans}
+                                                                           // total_captial={total_captial}
+                                                                           // total_others={total_others}
+                                                                           // total_savings={total_savings}
+                                                                           />} >
+                                                                           {({ loading }) => (loading ? 'Loading document...' : 'Download Selected')}
+                                                                      </PDFDownloadLink>
+                                                                 </Button>
                                                             </ThemeProvider>
                                                        </div>
                                                        <div style={{ display: "flex" }}><ThemeProvider theme={theme}>

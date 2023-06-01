@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAuthContext } from '../hooks/useAuthContext'
+import { toast } from 'react-toastify';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -60,9 +61,8 @@ const Card = styled.div`
     justify-content: space-between;
 `
 const FormContainer = styled.div`
-     display: flex;
-     justify-content: space-between;
      margin-bottom: 20px;
+     
 `
 const EditDeleteContainer = styled.div`
     display: flex;
@@ -79,8 +79,10 @@ const SearchContainer = styled.div`
 
 /**GET REQUESTS */
 const columns = [
-     { field: 'department_name', headerName: 'Department', width: 500 },
+     { field: 'department_id', headerName: 'Department ID', width: 150, sortable: false },
+     { field: 'department_name', headerName: 'Department', width: 300 },
      { field: 'description', headerName: 'Description', width: 300, sortable: false },
+     { field: 'other_info', headerName: 'Other Info', width: 300, sortable: false }
 ];
 
 const Departments = (props) => {
@@ -92,16 +94,21 @@ const Departments = (props) => {
      const [error, setError] = useState('')
      const [query, setQuery] = useState('')
      const [id, setId] = useState('')
+     const [departmentid, setdepartmentid] = useState('')
+     const [otherinfo, setotherinfo] = useState('')
      const [openDelete, setOpenDelete] = useState(false);
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
+     const [refresher, setRefresher] = useState(0)
 
      /**DIALOG */
      const handleOpenAdd = () => {
           setOpenAdd(true);
           setDepartment_name('');
           setDescription('')
+          setdepartmentid('')
+          setotherinfo('')
      };
      const handleCloseAdd = () => {
           setOpenAdd(false);
@@ -124,7 +131,7 @@ const Departments = (props) => {
      };
      const handleOpenEdit = () => {
           if (id == "") {
-               setOpenWarning(true)
+               errorToast('Please select an item to edit first')
           }
           else {
                setOpenEdit(true);
@@ -133,6 +140,15 @@ const Departments = (props) => {
      };
      const handleCloseEdit = () => {
           setOpenEdit(false);
+     };
+     const successToast = (success) => {
+          toast.success(success);
+     };
+     const errorToast = (error) => {
+          toast.error(error);
+     };
+     const handleRefresher = () => {
+          setRefresher(Math.random())
      };
 
 
@@ -144,65 +160,96 @@ const Departments = (props) => {
      const handleAdd = async (e) => {
           e.preventDefault()
 
-        
-          if(!user){
-               console.log('You must be logged in first')
-              return
-          }
           const departments = {
+               department_id: departmentid,
                department_name: department_name,
-               description: description
+               description: description,
+               other_info: otherinfo
           }
 
-          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
-               method: 'POST',
-               body: JSON.stringify(departments),
-               headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-               }
-          })
-          const json = await response.json()
-          if (!response.ok) {
-               setError(json.error)
+          if (!user) {
+               console.log('You must be logged in first')
+               return
+          }
+          if (
+               departmentid === "" ||
+               department_name === ""
+
+          ) {
+               errorToast('Fill up the required fields completely')
           }
           else {
-               setDepartment_name('')
-               setDescription('')
-               console.log('New department added', json)
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
+                    method: 'POST',
+                    body: JSON.stringify(departments),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+               else {
+                    setDepartment_name('')
+                    setDescription('')
+                    setdepartmentid('')
+                    setotherinfo('')
+                    setOpenAdd(false)
+                    successToast('Added Successfully')
+                    handleRefresher();
+               }
           }
-          window.location.reload();
+
+
+
      }
 
      /**EDIT DATA */
      const handlePatch = async (e) => {
           e.preventDefault()
           const departments = {
+               department_id: departmentid,
                department_name: department_name,
-               description: description
+               description: description,
+               other_info: otherinfo
           }
-          if(!user){
+          if (!user) {
                console.log('You must be logged in first')
-              return
+               return
           }
-          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
-               method: 'PATCH',
-               body: JSON.stringify(departments),
-               headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-               }
-          })
-          const json = await response.json()
-          if (!response.ok) {
-               setError(json.error)
+          if (
+               departmentid === "" ||
+               department_name === ""
+
+          ) {
+               errorToast('Fill up the required fields completely')
           }
           else {
-               setDepartment_name('')
-               setDescription('')
-               console.log('Edited Department', json)
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
+                    method: 'PATCH',
+                    body: JSON.stringify(departments),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (!response.ok) {
+                    setError(json.error)
+               }
+               else {
+                    setDepartment_name('')
+                    setDescription('')
+                    setdepartmentid('')
+                    setotherinfo('')
+                    setOpenEdit(false)
+                    handleRefresher();
+                    successToast('Updated Successfully')
+               }
           }
-          window.location.reload();
+
      }
 
 
@@ -220,23 +267,27 @@ const Departments = (props) => {
                     setDepartment(json)
                }
           }
-          if(user){
+          if (user) {
                fetchDepartment();
           }
-       
 
-     }, [user])
+
+     }, [user, refresher])
 
      const handleRowClick = (params) => {
           setId(params.row._id);
+          setdepartmentid(params.row.department_id);
+          setotherinfo(params.row.other_info);
           setDepartment_name(params.row.department_name)
           setDescription(params.row.description)
+
+          console.log(otherinfo)
      };
-     if(!user){
+     if (!user) {
           console.log('You must be logged in first')
           window.location.replace('http://localhost:3000/login');
-         return
-        
+          return
+
      }
      const handleDelete = async () => {
           const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
@@ -248,8 +299,11 @@ const Departments = (props) => {
           const json = await response.json()
           if (response.ok) {
                console.log('deleted', json)
+               successToast('Deleted Successfully')
+               setOpenDelete(false)
+               handleRefresher();
           }
-          window.location.reload();
+
      }
 
 
@@ -335,13 +389,22 @@ const Departments = (props) => {
 
                                                   Editing Department
                                              </DialogTitle>
-                                             <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
+                                             <DialogContent style={{ height: '600px', paddingTop: '20px' }}>
                                                   <FormContainer>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
+                                                            label="Department Number"
+                                                            style={{ marginBottom: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setdepartmentid(e.target.value)}
+                                                            value={departmentid}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
                                                             label="Department"
-                                                            style={{ paddingRight: "20px" }}
+                                                            style={{ marginBottom: "20px" }}
                                                             fullWidth
                                                             onChange={(e) => setDepartment_name(e.target.value)}
                                                             value={department_name}
@@ -351,9 +414,18 @@ const Departments = (props) => {
                                                             id="outlined-required"
                                                             label="Department Description"
                                                             fullWidth
-                                                            style={{ paddingRight: "20px" }}
+                                                            style={{ marginBottom: "20px" }}
                                                             onChange={(e) => setDescription(e.target.value)}
                                                             value={description}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Other Info"
+                                                            style={{ marginBottom: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setotherinfo(e.target.value)}
+                                                            value={otherinfo}
                                                        />
                                                   </FormContainer>
                                              </DialogContent>
@@ -375,13 +447,22 @@ const Departments = (props) => {
 
                                                   Adding New Department
                                              </DialogTitle>
-                                             <DialogContent style={{ height: '150px', paddingTop: '20px' }}>
+                                             <DialogContent style={{ height: '600px', paddingTop: '20px' }}>
                                                   <FormContainer>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
+                                                            label="Department Number"
+                                                            style={{ marginBottom: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setdepartmentid(e.target.value)}
+                                                            value={departmentid}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
                                                             label="Department"
-                                                            style={{ paddingRight: "20px" }}
+                                                            style={{ marginBottom: "20px" }}
                                                             fullWidth
                                                             onChange={(e) => setDepartment_name(e.target.value)}
                                                             value={department_name}
@@ -391,9 +472,18 @@ const Departments = (props) => {
                                                             id="outlined-required"
                                                             label="Department Description"
                                                             fullWidth
-                                                            style={{ paddingRight: "20px" }}
+                                                            style={{ marginBottom: "20px" }}
                                                             onChange={(e) => setDescription(e.target.value)}
                                                             value={description}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Other Info"
+                                                            style={{ marginBottom: "20px" }}
+                                                            fullWidth
+                                                            onChange={(e) => setotherinfo(e.target.value)}
+                                                            value={otherinfo}
                                                        />
                                                   </FormContainer>
                                              </DialogContent>

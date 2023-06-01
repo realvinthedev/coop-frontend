@@ -24,9 +24,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { toast } from 'react-toastify';
 import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 import { isElement } from 'react-dom/test-utils';
 import { ElevatorSharp } from '@mui/icons-material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useRef } from 'react';
 import Employees from './Employees';
 
@@ -205,6 +207,7 @@ const Dtr = (props) => {
      const [ot_type, setOt_type] = useState("none")
      const [is_tardiness, setIs_tardiness] = useState(0)
 
+     const [departmentfilter, setdepartmentfilter] = useState('all')
 
      const [isAdd, setIsAdd] = useState(false)
      const [refresher, setRefresher] = useState(0)
@@ -224,7 +227,12 @@ const Dtr = (props) => {
      const isAdd_False = () => {
           setIsAdd(false)
      };
-
+     const successToast = (success) => {
+          toast.success(success);
+     };
+     const errorToast = (error) => {
+          toast.error(error);
+     };
      const [openAdd, setOpenAdd] = useState(false);
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
      const [id, setId] = useState('')
@@ -283,6 +291,26 @@ const Dtr = (props) => {
 
      //    }
 
+     const [dept, setDept] = useState([])
+     useEffect(() => {
+          const fetchDepartment = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+
+               if (response.ok) {
+                    setDept(json)
+               }
+          }
+          if (user) {
+               fetchDepartment();
+          }
+
+
+     }, [user])
 
      useEffect(() => {
 
@@ -358,7 +386,6 @@ const Dtr = (props) => {
      const handleCloseWarning = () => {
           setOpenWarning(false);
      };
-
      const handleSelectChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
@@ -698,14 +725,24 @@ const Dtr = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    setEmp(json)
+                    if (departmentfilter === "all") {
+                         setEmp(json)
+                    }
+                    else {
+                         const filteredData = json.filter(item => {
+                              const department = item.department
+                              return department === departmentfilter
+                         });
+                         setEmp(filteredData)
+                    }
+
                }
           }
           if (user) {
 
                fetchEmp();
           }
-     }, [user])
+     }, [user, departmentfilter])
 
      const time = [
           { id: '1', time: '' },
@@ -777,13 +814,16 @@ const Dtr = (props) => {
           if (response.ok) {
                console.log('deleted', json)
           }
-          window.location.reload();
+          handleCloseDelete();
+          successToast('Deleted Successfully')
+          handleRefresher();
+         
      }
      const handleAdd = async (e) => {
           e.preventDefault()
 
           if (name === "" || official_am_timein === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
-               handleOnError()
+               errorToast('Fill up the required fields completely')
           }
           else {
                if (!user) {
@@ -837,12 +877,12 @@ const Dtr = (props) => {
                     else {
                          console.log(error)
                     }
-                    handleOnSuccess();
-                    setTimeout(() => {
-                         handleClearFields()
-                         handleRefresher()
-                         handleCloseAdd()
-                    }, 1000);
+                    successToast('Added Successfully')
+
+                    handleClearFields()
+                    handleRefresher()
+                    handleCloseAdd()
+
 
                }
           }
@@ -1002,7 +1042,7 @@ const Dtr = (props) => {
           //window.location.reload();
      }
 
-   
+
      const handleMonthChange = (e) => {
           setMonth(e.target.value)
 
@@ -1088,10 +1128,25 @@ const Dtr = (props) => {
                                         <TextField
                                              required
                                              id="outlined-required"
+                                             label="Filter by department"
+                                             fullWidth
+                                             select
+                                             style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                             onChange={(e) => setdepartmentfilter(e.target.value)}
+                                             value={departmentfilter}
+                                        >
+                                             <MenuItem value="all">All Department</MenuItem>
+                                             {dept.map((data) => {
+                                                  return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
+                                             })}
+                                        </TextField>
+                                        {/* <TextField
+                                             required
+                                             id="outlined-required"
                                              label="Search Employee"
                                              fullWidth
                                              select
-                                             style={{ paddingBottom: "20px" }}
+                                             style={{ paddingBottom: "20px", marginRight: "10px" }}
                                              onChange={handleName}
                                              value={name}
                                         >
@@ -1099,14 +1154,29 @@ const Dtr = (props) => {
                                                   // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                                   return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                              })}
-                                        </TextField>
+                                        </TextField> */}
+                                        <Autocomplete
+                                             value={name}
+                                             style={{ marginRight: "10px" }}
+                                             onSelect={handleName}
+                                             options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                             renderInput={(params) => (
+                                                  <TextField
+                                                       {...params}
+                                                       required
+                                                       label="Search Employee"
+                                                       fullWidth
+                                                       style={{ paddingBottom: "20px", width: "500px" }}
+                                                  />
+                                             )}
+                                        />
                                         <TextField
                                              required
                                              id="outlined-required"
                                              label="Month"
                                              fullWidth
                                              select
-                                             style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                             style={{ paddingBottom: "20px" }}
                                              onChange={(e) => setMonth(e.target.value)}
                                              value={month}
                                         >
@@ -1141,7 +1211,6 @@ const Dtr = (props) => {
                                              getRowId={(row) => row._id}
                                              rows={dtr}
                                              columns={columns}
-                                             pageSize={7}
                                              rowsPerPageOptions={[10]}
                                              style={{ marginBottom: "20px" }}
                                              onRowClick={handleRowClick}
@@ -1155,6 +1224,9 @@ const Dtr = (props) => {
                                                             Add New DTR
                                                        </Button>
                                                   </ThemeProvider>
+                                             </div>
+                                             <div style={{ marginTop: "20px"}}>
+                                                  For updating DTR, please delete the old one and create an updated one. 
                                              </div>
                                              <EditDeleteContainer>
 
@@ -1193,7 +1265,7 @@ const Dtr = (props) => {
                                                        />
                                                   </LocalizationProvider>
 
-                                                  <TextField
+                                                  {/* <TextField
                                                        required
                                                        id="outlined-required"
                                                        label="Search Employee"
@@ -1207,7 +1279,40 @@ const Dtr = (props) => {
                                                             // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                                             return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                                        })}
-                                                  </TextField>
+                                                  </TextField> */}
+                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Filter by department"
+                                                            fullWidth
+                                                            select
+                                                            style={{ paddingBottom: "20px", marginRight: "10px", width: "150px" }}
+                                                            onChange={(e) => setdepartmentfilter(e.target.value)}
+                                                            value={departmentfilter}
+                                                       >
+                                                            <MenuItem value="all">All Department</MenuItem>
+                                                            {dept.map((data) => {
+                                                                 return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
+                                                            })}
+                                                       </TextField>
+                                                       <Autocomplete
+                                                            style={{ width: "100%" }}
+                                                            value={name}
+                                                            onSelect={handleName}
+                                                            options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                            renderInput={(params) => (
+                                                                 <TextField
+                                                                      {...params}
+                                                                      required
+                                                                      label="Search Employee"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px", width: "100%" }}
+                                                                 />
+                                                            )}
+                                                       />
+                                                  </div>
+
                                                   <TimeContainer>
                                                        <TextField
                                                             required

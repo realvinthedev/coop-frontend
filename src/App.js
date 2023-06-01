@@ -1,6 +1,7 @@
 import Home from './pages/Home'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Login } from './pages/Login'
+import { ToastContainer } from 'react-toastify';
 
 function App() {
      
@@ -17,6 +18,7 @@ function App() {
                                         element={<Login />}
                                    />
                               </Routes> */}
+                              <ToastContainer />
                          </BrowserRouter>
                     </div>
                </div>

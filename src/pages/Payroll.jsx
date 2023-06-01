@@ -31,9 +31,11 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { EarbudsOutlined, TableRows } from '@mui/icons-material';
+import PayslipPrinter from '../components/PayslipPrinter';
 
 
 const theme = createTheme({
@@ -165,6 +167,9 @@ const Payroll = (props) => {
      useEffect(() => {
           handleDates();
      }, [period])
+     // useEffect(() => {
+     //      calculateGrossPay()
+     // }, [user, month, period, name, employeeId])
      const handleDates = () => {
           if (month == "january" && period == "first") {
                setStartDate(`01-01-2023`)
@@ -332,10 +337,6 @@ const Payroll = (props) => {
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
 
-          //there's bug in these lines
-          //handleGetEmployeeData()
-
-
      }
 
      const [filtered_employee_dtr, setFiltered_employee_dtr] = useState([])
@@ -394,8 +395,9 @@ const Payroll = (props) => {
           }
           if (user) {
                fetchEmp();
+               console.log(filtered_additional)
           }
-     }, [employeeId, start_date, end_date, period])
+     }, [employeeId, start_date, end_date, period, name])
 
 
 
@@ -499,6 +501,8 @@ const Payroll = (props) => {
 
 
 
+
+
      useEffect(() => {
           let
                total_working_hour = 0,
@@ -572,9 +576,12 @@ const Payroll = (props) => {
      const [final_deduction, setfinal_deduction] = useState(0);
      const [final_earnings, setfinal_earnings] = useState(0);
      const [final_net_pay, setfinal_net_pay] = useState(0);
+     const [grosspay_without_earnings, setgrosspay_without_earnings] = useState(0);
+
 
 
      const calculateGrossPay = () => {
+
           let total_working_hour = total.total_working_hour
 
           let regular_ot_hours = total.regular_ot_hours
@@ -589,13 +596,7 @@ const Payroll = (props) => {
           let sl_nopay_hours = total.sl_nopay_hours
           let el_nopay_hours = total.el_nopay_hours
           let absent_hours = total.absent_hours
-
-
-
-
           let final_bimonthly_pay = default_bimonthly;
-
-
           let final_total_working_hour = total_working_hour * default_hourly;
           let final_regular_ot_hours = (regular_ot_hours * default_hourly) + (regular_ot_hours * .25)
           let final_special_ot_hours = (special_ot_hours * default_hourly) + (special_ot_hours * .30)
@@ -611,13 +612,21 @@ const Payroll = (props) => {
 
           let final_absent_deduction = final_vl_nopay_hours + final_sl_nopay_hours + final_el_nopay_hours + final_absent_hours + final_total_tardiness_min
           let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours) - final_absent_deduction
+          // let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
+          // let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
           let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
-          console.log(final_absent_deduction + " " + grosspay)
-          setfinal_gross_pay(grosspay)
+
+
+
+         
           setfinal_earnings(final_earnings)
+          //setfinal_gross_pay(grosspay )
+          setfinal_gross_pay(grosspay + final_earnings)
+          setgrosspay_without_earnings(grosspay)
           setfinal_deduction(final_deduction)
           setfinal_net_pay((grosspay - final_deduction) + final_earnings)
+      
      }
      return (
 
@@ -670,7 +679,7 @@ const Payroll = (props) => {
                                              </TextField>
                                         </DateContainer>
                                    </LocalizationProvider>
-                                   <div style={{ height: 400, width: '100%' }}>
+                                   {/* <div style={{ height: 400, width: '100%' }}>
                                         <DataGrid
                                              getRowId={(row) => row._id}
                                              rows={payroll}
@@ -679,7 +688,7 @@ const Payroll = (props) => {
                                              rowsPerPageOptions={[10]}
                                              style={{ marginBottom: "20px" }}
                                         />
-                                   </div>
+                                   </div> */}
                                    <NameIDContainer>
                                         <TextField
                                              required
@@ -741,8 +750,8 @@ const Payroll = (props) => {
                                              style={{ width: "400px" }} >
                                              <Table sx={{ width: 400 }} aria-label="simple table">
                                                   <TableHead>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Summary</TableCell>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}>Summary</TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                   </TableHead>
                                                   <TableBody>
                                                        <TableRow >
@@ -750,53 +759,53 @@ const Payroll = (props) => {
                                                             <TableCell>{total.total_working_hour}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>regular_ot_hours</TableCell>
+                                                            <TableCell>Regular Overtime - in Hours</TableCell>
                                                             <TableCell>{total.regular_ot_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>restday_ot_hours</TableCell>
+                                                            <TableCell>Restday Overtime - in Hours</TableCell>
                                                             <TableCell>{total.restday_ot_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>special_ot_hours</TableCell>
+                                                            <TableCell>Special Holiday Overtime - in Hours</TableCell>
                                                             <TableCell>{total.special_ot_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>legal_ot_hours</TableCell>
+                                                            <TableCell>Legal Holiday Overtime - in Hours</TableCell>
                                                             <TableCell>{total.legal_ot_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>total_tardiness_min</TableCell>
+                                                            <TableCell>Total Tardiness - in Mins</TableCell>
                                                             <TableCell>{total.total_tardiness_min}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>is_tardiness</TableCell>
+                                                            <TableCell>Tardiness Count</TableCell>
                                                             <TableCell>{total.is_tardiness}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>vl_hours</TableCell>
+                                                            <TableCell>Paid VL Availed - in Hours</TableCell>
                                                             <TableCell>{total.vl_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>sl_hours</TableCell>
+                                                            <TableCell>Paid SL Availed - in Hours</TableCell>
                                                             <TableCell>{total.sl_hours}</TableCell>
                                                        </TableRow> <TableRow >
-                                                            <TableCell>el_hours</TableCell>
+                                                            <TableCell>Paid EL Availed - in Hours</TableCell>
                                                             <TableCell>{total.el_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>vl_nopay_hours</TableCell>
+                                                            <TableCell>NoPay VL Availed - in Hours</TableCell>
                                                             <TableCell>{total.vl_nopay_hours}</TableCell>
                                                        </TableRow> <TableRow >
-                                                            <TableCell>sl_nopay_hours</TableCell>
+                                                            <TableCell>NoPay SL Availed - in Hours</TableCell>
                                                             <TableCell>{total.sl_nopay_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>el_nopay_hours</TableCell>
+                                                            <TableCell>NoPay EL Availed - in Hours</TableCell>
                                                             <TableCell>{total.el_nopay_hours}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>absent_hours</TableCell>
+                                                            <TableCell>Total Absent - in Hours</TableCell>
                                                             <TableCell>{total.absent_hours}</TableCell>
                                                        </TableRow>
                                                   </TableBody>
@@ -805,14 +814,40 @@ const Payroll = (props) => {
 
                                         <TableContainer component={Paper}
                                              style={{ width: "400px" }} >
-                                             <Table sx={{ width: 400 }} aria-label="simple table">
+                                             <Table sx={{ width: 400, marginBottom: "20px" }} aria-label="simple table">
                                                   <TableHead>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Earnings and Deductions</TableCell>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}>Earnings</TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                   </TableHead>
                                                   <TableBody>
                                                        <TableRow >
-                                                            <TableCell>SSS</TableCell>
+                                                            <TableCell>Allowances</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Pay Adjustment - (Earnings)</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Other Earnings</TableCell>
+                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_earnings}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>Total Earnings</TableCell>
+                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_earnings}</TableCell>
+                                                       </TableRow>
+
+
+                                                  </TableBody>
+                                             </Table>
+                                             <Table sx={{ width: 400 }} aria-label="simple table">
+                                                  <TableHead>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}>Deduction</TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                  </TableHead>
+                                                  <TableBody>
+                                                       <TableRow >
+                                                            <TableCell>SSS Contribution</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.sss}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
@@ -820,117 +855,130 @@ const Payroll = (props) => {
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.philhealth}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>wtax</TableCell>
+                                                            <TableCell>WTAX</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.wtax}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>pagibig</TableCell>
+                                                            <TableCell>PAGIBIG</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.pagibig}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>lodging</TableCell>
+                                                            <TableCell>Lodging</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.lodging}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>water_electricity</TableCell>
+                                                            <TableCell>Water/Electricity</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.water_electricity}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>hmo</TableCell>
+                                                            <TableCell>HMO</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>hhhc_savings</TableCell>
+                                                            <TableCell>HHHC Savings</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>hhhc_membership_fee</TableCell>
+                                                            <TableCell>HHHC Membership Fee</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_membership_fee}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>cash_advances</TableCell>
+                                                            <TableCell>Cash Advances</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.cash_advances}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>hmo</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>pay_adjustment_deduction</TableCell>
+                                                            <TableCell>Pay Adjustment - (Deduction)</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_deduction}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>other_deduction</TableCell>
+                                                            <TableCell>Other Deductions</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.other_deduction}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
-                                                            <TableCell>total_deduction</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.total_deduction}</TableCell>
-                                                       </TableRow>    <TableRow >
-                                                            <TableCell>allowance</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
+                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>Total Deduction</TableCell>
+                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_deduction}</TableCell>
                                                        </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>pay_adjustment_earnings</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>other_earnings</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_earnings}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>total_earnings</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.total_earnings}</TableCell>
-                                                       </TableRow>
-
-
                                                   </TableBody>
                                              </Table>
+
                                         </TableContainer>
-                                        <TableContainer component={Paper}
-                                             style={{ width: "400px" }} >
-                                             <Table sx={{ width: 400 }} aria-label="simple table">
-                                                  <TableHead>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}>Final Computation</TableCell>
-                                                       <TableCell style={{ backgroundColor: '#F0F2F9' }}></TableCell>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                       <TableRow >
+                                        <div style={{ display: "flex", flexDirection: "column" }}>
+                                             <TableContainer component={Paper}
+                                                  style={{ width: "400px", height: "400px" }} >
+                                                  <Table sx={{ width: 400 }} aria-label="simple table">
+                                                       <TableHead>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Final Computation</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                       </TableHead>
+                                                       <TableBody>
+                                                            {/* <TableRow >
 
                                                             <TableCell>Additional Earnings</TableCell>
                                                             <TableCell>{final_earnings ? final_earnings.toLocaleString() : 0}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Gross Pay</TableCell>
-                                                            <TableCell>{final_gross_pay ? final_gross_pay.toLocaleString() : 0}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Deductions</TableCell>
-                                                            <TableCell>{final_deduction ? final_deduction.toLocaleString() : 0}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Net Pay</TableCell>
-                                                            <TableCell>{final_net_pay ? final_net_pay.toLocaleString() : 0}</TableCell>
-                                                       </TableRow>
+                                                       </TableRow> */}
+                                                            <TableRow >
+                                                                 <TableCell>Gross Pay</TableCell>
+                                                                 <TableCell>{final_gross_pay ? final_gross_pay.toLocaleString() : 0}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Deductions</TableCell>
+                                                                 <TableCell>{final_deduction ? final_deduction.toLocaleString() : 0}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Net Pay</TableCell>
+                                                                 <TableCell>{final_net_pay ? final_net_pay.toLocaleString() : 0}</TableCell>
+                                                            </TableRow>
 
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
-                                                                 Calculate
-                                                            </Button>
-                                                       </ThemeProvider>
 
-                                                       <TableRow >
-                                                            <p style={{ fontStyle: "italic", fontSize: "12px", marginTop: "30px"}}>Important: Please finish updating all absences, leaves without pay, and other deductions before finalizing(Calculate) payroll
-                                                             to prevent incorrect Gross Pay Calculations. The reason for this is because the current gross pay calculation is:
-                                                            </p>
-                                                            <p>
-                                                            <span style={{ color: "red", fontSize: "12px"}}>Gross Pay = Bimonthly salary - absences(etc)</span>
-                                                            </p>
-                                                           
-                                                       </TableRow>
-                                                  </TableBody>
-                                             </Table>
-                                        </TableContainer>
+                                                            <TableRow >
+                                                                 <p style={{ fontStyle: "italic", fontSize: "12px", marginTop: "30px" }}>
+                                                                      Important: Please input all absences, leaves without pay, and other deductions before clicking Calculate
+                                                                      to prevent incorrect Gross Pay Calculations. The reason for this is because the current gross pay calculation is:
+                                                                 </p>
+                                                                 <p>
+                                                                      <span style={{ color: "red", fontSize: "12px" }}>Gross Pay = (Bimonthly salary - absences(etc)) +  Allowances</span>
+                                                                 </p>
+
+                                                            </TableRow>
+                                                       </TableBody>
+
+                                                  </Table>
+                                             </TableContainer>
+                                             <ThemeProvider theme={theme}>
+                                                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", width: "100%" }}>
+                                                       <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
+                                                            Calculate
+                                                       </Button>
+                                                       <Button style={{ width: "100%" }} variant="contained" color="green">
+                                                            {filtered_additional.length > 0 ? (
+                                                                 <PDFDownloadLink fileName="savings_summary" document={
+                                                                      < PayslipPrinter
+                                                                           month={month}
+                                                                           period={period}
+                                                                           employeeId={employeeId}
+                                                                           name={name}
+                                                                           grosspay_without_earnings={grosspay_without_earnings}
+                                                                           filtered_additional={filtered_additional}
+                                                                           filtered_employee_dtr={filtered_employee_dtr}
+                                                                           default_base={default_base}
+                                                                           default_bimonthly={default_bimonthly}
+                                                                           default_daily={default_daily}
+                                                                           default_hourly={default_hourly}
+                                                                           default_minute={default_minute}
+                                                                           final_gross_pay={final_gross_pay}
+                                                                           final_deduction={final_deduction}
+                                                                           final_earnings={final_earnings}
+                                                                           final_net_pay={final_net_pay}
+                                                                      />} >
+                                                                      {({ loading }) => (loading ? 'Loading document...' : 'Download Payslip')}
+                                                                 </PDFDownloadLink>
+                                                            ) : (
+                                                                 <p>Waiting for data...</p>
+                                                            )}
+                                                       </Button>
+                                                  </div>
+                                             </ThemeProvider>
+                                        </div>
                                    </TablesContainer>
 
 
