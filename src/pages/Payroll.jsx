@@ -34,7 +34,7 @@ import TableHead from '@mui/material/TableHead';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { EarbudsOutlined, TableRows } from '@mui/icons-material';
+import { EarbudsOutlined, TableRows, TempleHinduTwoTone } from '@mui/icons-material';
 import PayslipPrinter from '../components/PayslipPrinter';
 
 
@@ -493,7 +493,6 @@ const Payroll = (props) => {
           vl_nopay_hours: 0,
           sl_nopay_hours: 0,
           el_nopay_hours: 0,
-
           absent_hours: 0,
 
 
@@ -503,6 +502,8 @@ const Payroll = (props) => {
 
 
 
+     const [temp_tardiness, setTemp_tardiness] = useState(0);
+     const [temp_absent, setTemp_absent] = useState(0);
      useEffect(() => {
           let
                total_working_hour = 0,
@@ -567,8 +568,13 @@ const Payroll = (props) => {
 
 
           });
+
      }, [filtered_employee_dtr]);
 
+     useEffect(() => {
+          setTemp_absent(total.absent_hours * default_hourly)
+          setTemp_tardiness(total.total_tardiness_min * default_minute)
+     }, [total]);
 
 
 
@@ -610,24 +616,30 @@ const Payroll = (props) => {
           let final_el_nopay_hours = el_nopay_hours * default_hourly
           let final_absent_hours = absent_hours * default_hourly
 
+
           let final_absent_deduction = final_vl_nopay_hours + final_sl_nopay_hours + final_el_nopay_hours + final_absent_hours + final_total_tardiness_min
-          let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours) - final_absent_deduction
+          let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours)
           // let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           // let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
           let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
-          let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
+          let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction + final_absent_deduction
 
 
-
-         
           setfinal_earnings(final_earnings)
           //setfinal_gross_pay(grosspay )
           setfinal_gross_pay(grosspay + final_earnings)
           setgrosspay_without_earnings(grosspay)
           setfinal_deduction(final_deduction)
           setfinal_net_pay((grosspay - final_deduction) + final_earnings)
-      
+
+
+
      }
+    
+     const calculateFinalDeduction = () => {
+        return filtered_additional && filtered_additional[0]?.total_deduction + temp_absent + temp_tardiness
+     }
+     const firstFinalDeduction = calculateFinalDeduction();
      return (
 
           <div style={{ display: "flex" }}>
@@ -891,12 +903,21 @@ const Payroll = (props) => {
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_deduction}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
+                                                            <TableCell>Tardiness</TableCell>
+                                                            <TableCell>{temp_tardiness.toLocaleString()}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
+                                                            <TableCell>Absences</TableCell>
+                                                            <TableCell>{temp_absent.toLocaleString()}</TableCell>
+                                                       </TableRow>
+                                                       <TableRow >
                                                             <TableCell>Other Deductions</TableCell>
                                                             <TableCell>{filtered_additional && filtered_additional[0]?.other_deduction}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell style={{ backgroundColor: '#e7e7e7' }}>Total Deduction</TableCell>
-                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_deduction}</TableCell>
+                                                            {/* <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_deduction.toLocaleString()}</TableCell> */}
+                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{firstFinalDeduction.toLocaleString()}</TableCell>
                                                        </TableRow>
                                                   </TableBody>
                                              </Table>

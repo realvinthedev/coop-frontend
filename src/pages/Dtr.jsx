@@ -479,11 +479,26 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
           }
-          else {
+          else if (type == "absent_halfday"){     
+               setAbsent_hours(4)
+               setHide(false)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
+          }
+          else if (type == "restday"){     
+               setAbsent_hours(0)
+               setHide(true)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
+          }
+          else if (type == "absent"){     
                setAbsent_hours(8)
                setHide(false)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
+          }
+          else{
+
           }
      };
 
@@ -798,6 +813,7 @@ const Dtr = (props) => {
           setPm_out_min(0)
           setTotal_working_hour(0)
           setOt_type('none')
+          setLeaveType('none')
           setTotal_tardiness_min(0)
           setAbsent_hours(0)
           setIs_tardiness(0)
@@ -824,6 +840,10 @@ const Dtr = (props) => {
 
           if (name === "" || official_am_timein === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
                errorToast('Fill up the required fields completely')
+          }
+          else if (total_ot_hour > 0 && ot_type == "none") {
+               errorToast('Overtime detected. Overtime type should not be "None". Please select proper overtime type')
+
           }
           else {
                if (!user) {
@@ -1338,7 +1358,9 @@ const Dtr = (props) => {
                                                        >
 
                                                             <MenuItem value={'none'}>None</MenuItem>
-                                                            <MenuItem value={'absent'}>Absent</MenuItem>
+                                                            <MenuItem value={'restday'}>Rest Day</MenuItem>
+                                                            <MenuItem value={'absent'}>Absent - Whole Day</MenuItem>
+                                                            <MenuItem value={'absent_halfday'}>Absent - Half Day</MenuItem>
                                                             <MenuItem value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
                                                             <MenuItem value={'vl_halfday'}>VL With Pay Halfday</MenuItem>
                                                             <MenuItem value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
