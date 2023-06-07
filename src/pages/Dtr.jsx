@@ -27,7 +27,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { toast } from 'react-toastify';
 import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 import { isElement } from 'react-dom/test-utils';
-import { ElevatorSharp } from '@mui/icons-material';
+import { ElevatorSharp, Flare } from '@mui/icons-material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useRef } from 'react';
 import Employees from './Employees';
@@ -132,7 +132,6 @@ const columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'employee_id', headerName: 'Employee ID', width: 100 },
      { field: 'name', headerName: 'Fullname', width: 200 },
-     { field: 'department', headerName: 'Department', width: 200 },
      { field: 'am_in_hour', headerName: 'AM IN', width: 80 },
      { field: 'am_in_min', headerName: '', width: 80 },
      { field: 'am_out_hour', headerName: 'AM OUT', width: 80 },
@@ -181,6 +180,55 @@ const Dtr = (props) => {
           let currentDate = `${month}-${day}-${year}`;
           return currentDate
      })
+
+     const [currentmonth, setcurrentmonth] = useState('')
+     useEffect(() => {
+          const month = date;
+          const currentmonth = month.split('-')[0]
+          if (currentmonth === "01") {
+               setMonth('january')
+          }
+          else if (currentmonth === "02") {
+               setMonth('february')
+          }
+          else if (currentmonth === "03") {
+               setMonth('march')
+          }
+          else if (currentmonth === "04") {
+               setMonth('april')
+          }
+          else if (currentmonth === "05") {
+               setMonth('may')
+          }
+          else if (currentmonth === "06") {
+               setMonth('june')
+          }
+          else if (currentmonth === "07") {
+               setMonth('july')
+          }
+          else if (currentmonth === "08") {
+               setMonth('august')
+          }
+          else if (currentmonth === "09") {
+               setMonth('september')
+          }
+          else if (currentmonth === "10") {
+               setMonth('october')
+          }
+          else if (currentmonth === "11") {
+               setMonth('november')
+          }
+          else {
+               setMonth('december')
+          }
+
+
+     }, [user])
+
+
+
+
+
 
      const [total_ot_hour, setTotal_ot_hour] = useState(0)
 
@@ -314,6 +362,7 @@ const Dtr = (props) => {
 
      useEffect(() => {
 
+
           const fetchDtr = async () => {
                const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/employee/${employeeId}`, {
                     headers: {
@@ -330,6 +379,7 @@ const Dtr = (props) => {
                     });
 
                     setDtr(filteredData)
+                    console.log('^^^^^^^^^^^^^^^^^^', filteredData)
 
                }
           }
@@ -337,8 +387,11 @@ const Dtr = (props) => {
                fetchDtr();
           }
      }, [employeeId, refresher, startDate])
-     const [official_am_timein, setOfficial_am_timein] = useState(0);
-     const [official_pm_timein, setOfficial_pm_timein] = useState(0);
+     const [official_am_hour, setofficial_am_hour] = useState(0);
+     const [official_am_min, setofficial_am_min] = useState(0);
+
+     const [official_pm_hour, setofficial_pm_hour] = useState(0);
+     const [official_pm_min, setofficial_pm_min] = useState(0);
 
      const [leave_type, setLeaveType] = useState('none');
      const [hide, setHide] = useState(false);
@@ -348,17 +401,19 @@ const Dtr = (props) => {
 
      //Run every time fields changes
      useEffect(() => {
-          if (am_in_hour.length === 1 || am_in_hour.length === 2) {
-               CalculateTotalHours();
+          // if (am_in_hour.length === 1 || am_in_hour.length === 2) {
+          //      CalculateTotalHours();
 
-          }
-          if (ot_in_hour.length === 1 || ot_in_hour.length === 2) {
-               CalculateTotalOtHours();
-          }
+          // }
+
+          //      CalculateTotalOtHours();
+          //CalculateTotalHours();
+          handleCalculateTotalHours();
+          CalculateTotalOtHours();
      }, [
           day_type,
           leave_type,
-          official_am_timein,
+          official_am_hour,
           am_in_hour,
           am_in_min,
           am_out_hour,
@@ -368,10 +423,6 @@ const Dtr = (props) => {
           pm_out_hour,
           pm_out_min,
           ot_type,
-          ot_in_hour,
-          ot_in_min,
-          ot_out_hour,
-          ot_out_min
      ])
 
 
@@ -386,9 +437,33 @@ const Dtr = (props) => {
      const handleCloseWarning = () => {
           setOpenWarning(false);
      };
+
+     const handleDisabledAbsence = (status) => {
+          if (status == "absent_halfday_morning") {
+               setdisabled_pm_official(true)
+               setdisabled_pm_time(true)
+               setdisabled_am_official(false)
+               setdisabled_am_time(false)
+          }
+          else if (status == "absent_halfday_afternoon") {
+               setdisabled_pm_official(false)
+               setdisabled_pm_time(false)
+               setdisabled_am_official(true)
+               setdisabled_am_time(true)
+          }
+          else {
+               setdisabled_am_official(false)
+               setdisabled_am_time(false)
+               setdisabled_pm_official(true)
+               setdisabled_pm_time(false)
+          }
+
+     }
+
      const handleSelectChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
+          handleDisabledAbsence(type)
           if (type == "none") {
                setHide(false)
                setAbsent_hours(0)
@@ -415,6 +490,7 @@ const Dtr = (props) => {
                setAbsent_hours(0)
                setHideWithPayLeaves(false)
                setHideNoPayLeaves(true)
+               handleClearForLeave()
           }
           else if (type == "vl_wholeday" || type == "sl_wholeday" || type == "el_wholeday") {
                if (type == "vl_wholeday") {
@@ -436,6 +512,7 @@ const Dtr = (props) => {
                setAbsent_hours(0)
                setHideWithPayLeaves(false)
                setHideNoPayLeaves(true)
+               handleClearForLeave()
           }
           else if (type == "vl_nopay_halfday" || type == "sl_nopay_halfday" || type == "el_nopay_halfday") {
                if (type == "vl_nopay_halfday") {
@@ -457,6 +534,7 @@ const Dtr = (props) => {
                setAbsent_hours(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
+               handleClearForLeave()
           }
           else if (type == "vl_nopay_wholeday" || type == "sl_nopay_wholeday" || type == "el_nopay_wholeday") {
                if (type == "vl_nopay_wholeday") {
@@ -478,31 +556,120 @@ const Dtr = (props) => {
                setAbsent_hours(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
+               handleClearForLeave()
           }
-          else if (type == "absent_halfday"){     
-               setAbsent_hours(4)
-               setHide(false)
-               setHideWithPayLeaves(true)
-               setHideNoPayLeaves(true)
-          }
-          else if (type == "restday"){     
-               setAbsent_hours(0)
-               setHide(true)
-               setHideWithPayLeaves(true)
-               setHideNoPayLeaves(true)
-          }
-          else if (type == "absent"){     
+          else if (type == "absent") {
                setAbsent_hours(8)
                setHide(false)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
+               handleClearForAbsent()
           }
-          else{
+          else if (type == "absent_halfday_morning" || type == "absent_halfday_afternoon") {
+               setAbsent_hours(4)
+               setHide(false)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
+               handleClearForAbsent()
+          }
+          else if (type == "restday") {
+               setAbsent_hours(0)
+               setHide(true)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
+               handleClearForRestDay()
+          }
+
+          else {
 
           }
      };
-
-
+     const handleClearForLeave = () => {
+          setofficial_am_hour(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
+          setTotal_working_hour(0)
+          setOt_type('none')
+          setTotal_tardiness_min(0)
+          setIs_tardiness(0)
+          setDay_type('regday')
+          setAbsent_hours(0)
+     }
+     const handleClearFields = () => {
+          setofficial_am_hour(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
+          setTotal_working_hour(0)
+          setOt_type('none')
+          setLeaveType('none')
+          setTotal_tardiness_min(0)
+          setAbsent_hours(0)
+          setIs_tardiness(0)
+          setVl_wpay_hours(0)
+          setSl_wpay_hours(0)
+          setEl_wpay_hours(0)
+          setVl_nopay_hours(0)
+          setSl_nopay_hours(0)
+          setEl_nopay_hours(0)
+          setDay_type('regday')
+     }
+     const handleClearForAbsent = () => {
+          setofficial_am_hour(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
+          setTotal_working_hour(0)
+          setOt_type('none')
+          setTotal_tardiness_min(0)
+          setIs_tardiness(0)
+          setVl_wpay_hours(0)
+          setSl_wpay_hours(0)
+          setEl_wpay_hours(0)
+          setVl_nopay_hours(0)
+          setSl_nopay_hours(0)
+          setEl_nopay_hours(0)
+          setDay_type('regday')
+     }
+     const handleClearForRestDay = () => {
+          setofficial_am_hour(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
+          setTotal_working_hour(0)
+          setOt_type('none')
+          setTotal_tardiness_min(0)
+          setIs_tardiness(0)
+          setVl_wpay_hours(0)
+          setSl_wpay_hours(0)
+          setEl_wpay_hours(0)
+          setVl_nopay_hours(0)
+          setSl_nopay_hours(0)
+          setEl_nopay_hours(0)
+          setDay_type('regday')
+          setAbsent_hours(0)
+     }
 
      //Textfields Events
 
@@ -528,7 +695,7 @@ const Dtr = (props) => {
 
      const handleOpenDelete = () => {
           if (id == "") {
-               setOpenWarning(true)
+               errorToast('Please select an item to delete first')
           }
           else {
                setOpenDelete(true);
@@ -546,51 +713,274 @@ const Dtr = (props) => {
           const type = e.target.value;
           setDay_type(type)
      }
+     const handleCalculateTotalHours = () => {
+          let am_in_mins = am_in_min / 60;
+          let am_out_mins = am_out_min / 60;
+          let pm_in_mins = pm_in_min / 60;
+          let pm_out_mins = pm_out_min / 60;
+          let official_am_mins = official_am_min / 60;
+          let official_pm_mins = official_pm_min / 60;
+
+          let official_am_hours = parseFloat(official_am_hour) + parseFloat(official_am_mins)
+          let official_pm_hours = parseFloat(official_pm_hour) + parseFloat(official_pm_mins)
+          let actual_am_in_hours = parseFloat(am_in_hour) + parseFloat(am_in_mins);
+          let actual_am_out_hours = parseFloat(am_out_hour) + parseFloat(am_out_mins);
+          let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
+          let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
+
+
+
+          /////////////////////
+          /////////////////////
+          /** TOTAL AM HOURS */
+          /////////////////////
+          /////////////////////
+          /** Holding the AM total number of hours  */
+          let total_am_hours
+          /** If he is EARLY, use the offical time in */
+          if (actual_am_in_hours <= official_am_hour) {
+               total_am_hours = actual_am_out_hours - official_am_hours;
+          }
+          /** else if he is LATE, use the actual time in */
+          else {
+               total_am_hours = actual_am_out_hours - actual_am_in_hours
+          }
+
+
+
+
+          /////////////////////
+          /////////////////////
+          /** TOTAL PM HOURS */
+          /////////////////////
+          /////////////////////
+          /** Holding the PM total number of hours  */
+          let total_pm_hours
+          /** If he is EARLY, use the offical time in */
+          if (actual_pm_in_hours <= official_pm_hour) {
+               total_pm_hours = actual_pm_out_hours - official_pm_hours;
+          }
+          /** else if he is LATE, use the actual time in */
+          else {
+               total_pm_hours = actual_pm_out_hours - actual_pm_in_hours
+          }
+
+
+
+
+          /////////////////////
+          /////////////////////
+          /** TOTAL TARDINESS */
+          /////////////////////
+          /////////////////////
+          let total_tardiness;
+          /**meaning, if he is overlunch, add the overlunch time to tardiness */
+          if(actual_pm_in_hours - actual_am_out_hours > 1){
+               let total_overlunch
+               total_overlunch = actual_pm_in_hours - actual_am_out_hours;
+               total_tardiness += total_overlunch
+          }
+
+
+
+          /////////////////////
+          /////////////////////
+          /** TOTAL UNDERTIME */
+          /////////////////////
+          /////////////////////
+          let total_undertime =  (official_am_hours + parseFloat(9)) - actual_pm_out_hours
+          
+       
+
+
+
+
+          /////////////////////
+          /////////////////////
+          /** TOTAL OVERTIME */
+          /////////////////////
+          /////////////////////
+          let total_ot_am_hours
+          if (leave_type == "absent_halfday_morning" && total_am_hours > 4) {
+               total_ot_am_hours = total_am_hours - 4
+               setTotal_working_hour(4)
+               setTotal_ot_hour(total_ot_am_hours)
+          }
+          else{
+               setTotal_working_hour(total_am_hours+total_pm_hours)
+          }
+
+
+
+
+
+
+
+          // if (leave_type == "none") {
+          //      let proper_am_in_hours;
+          //      let extra_hours = actual_pm_out_hours - (official_am_hours + parseFloat(9))
+          //      if (extra_hours > 0) {
+          //           total_ot = extra_hours
+          //      }
+          //      else {
+          //           total_ot = 0;
+          //      }
+
+          //      if (actual_am_in_hours <= official_am_hours) {
+          //           proper_am_in_hours = official_am_hours;
+          //      }
+          //      else {
+          //           proper_am_in_hours = actual_am_in_hours
+          //      }
+          //      overall_total_hours = actual_pm_out_hours - proper_am_in_hours
+          // }
+          // if (day_type === "regday") {
+          //      if (overall_total_hours > 8) {
+          //           //dont use uquation insde useState "set". it will return an error
+          //           setTotal_working_hour(8)
+          //           setTotal_ot_hour(total_ot)
+          //           if (ot_type == "regular") {
+          //                setRegular_ot_hours(total_ot_hour)
+          //                setRestday_ot_hours(0)
+          //                setSpecial_ot_hours(0)
+          //                setLegal_ot_hours(0)
+          //           }
+          //           else if (ot_type == "restday") {
+          //                setRegular_ot_hours(0)
+          //                setRestday_ot_hours(total_ot_hour)
+          //                setSpecial_ot_hours(0)
+          //                setLegal_ot_hours(0)
+          //           }
+          //           else if (ot_type == "special") {
+          //                setRegular_ot_hours(0)
+          //                setRestday_ot_hours(0)
+          //                setSpecial_ot_hours(total_ot_hour)
+          //                setLegal_ot_hours(0)
+          //           }
+          //           else if (ot_type == "legal") {
+          //                setRegular_ot_hours(0)
+          //                setRestday_ot_hours(0)
+          //                setSpecial_ot_hours(0)
+          //                setLegal_ot_hours(total_ot_hour)
+          //           }
+          //           else {
+          //                setRegular_ot_hours(0)
+          //                setRestday_ot_hours(0)
+          //                setSpecial_ot_hours(0)
+          //                setLegal_ot_hours(0)
+          //           }
+          //      } else {
+          //           setTotal_working_hour(overall_total_hours)
+          //           setTotal_ot_hour(0)
+          //      }
+          // } else {
+          //      setTotal_working_hour(0)
+          //      setTotal_ot_hour(overall_total_hours)
+          //      if (ot_type == "regular") {
+          //           setRegular_ot_hours(total_ot_hour)
+          //           setRestday_ot_hours(0)
+          //           setSpecial_ot_hours(0)
+          //           setLegal_ot_hours(0)
+          //      }
+          //      else if (ot_type == "restday") {
+          //           setRegular_ot_hours(0)
+          //           setRestday_ot_hours(total_ot_hour)
+          //           setSpecial_ot_hours(0)
+          //           setLegal_ot_hours(0)
+          //      }
+          //      else if (ot_type == "special") {
+          //           setRegular_ot_hours(0)
+          //           setRestday_ot_hours(0)
+          //           setSpecial_ot_hours(total_ot_hour)
+          //           setLegal_ot_hours(0)
+          //      }
+          //      else if (ot_type == "legal") {
+          //           setRegular_ot_hours(0)
+          //           setRestday_ot_hours(0)
+          //           setSpecial_ot_hours(0)
+          //           setLegal_ot_hours(total_ot_hour)
+          //      }
+          //      else {
+          //           setRegular_ot_hours(0)
+          //           setRestday_ot_hours(0)
+          //           setSpecial_ot_hours(0)
+          //           setLegal_ot_hours(0)
+          //      }
+          // }
+
+          // else if (leave_type == "absent_halfday_morning") {
+
+          // }
+          // else{
+
+          // }
+     }
+
+
      const CalculateTotalHours = () => {
-          let totalHoursRendered;
           //30 / 60 = 0.5
           let convertedAmMinsIn = am_in_min / 60;
           let convertedAmMinsOut = am_out_min / 60;
           let convertedPmMinsIn = pm_in_min / 60;
           let convertedPmMinsOut = pm_out_min / 60;
-
-
-
+          let convertedOfficialAmMins = official_am_min / 60;
+          let convertedOfficialPmMins = official_pm_min / 60;
 
 
           // this is the official time in
-          let finalAmInHour;
-          let convertedAmIn_early = parseFloat(official_am_timein)
+          let officialTimeinAm = parseFloat(official_am_hour) + parseFloat(convertedOfficialAmMins)
+          let officialTimeinPm = parseFloat(official_pm_hour) + parseFloat(convertedOfficialPmMins)
+          // this is actual time in
           let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
 
-
-          if (convertedAmIn_regular < official_am_timein || convertedAmIn_regular == official_am_timein) {
-               // 8:00
-               finalAmInHour = convertedAmIn_early
-
-               console.log("IF")
+          // this variable whether it is official time in, or actual timein
+          let finalAmInHour;
+          // meaning, if he is earlier than the official time, use the official time
+          if (convertedAmIn_regular <= official_am_hour) {
+               finalAmInHour = officialTimeinAm
+               // meaning, if he is not earlier than the official time, use the actual time he arrived
           } else {
-               // 8.5
+               // this is the ACTUAL TIME IN
                finalAmInHour = convertedAmIn_regular
-               console.log("else")
           }
-
-
+          // this is the ACTUAL TIME OUT
           let convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
 
+
+          //ACTUAL PM TIME IN
           let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
+
+          //ACTUAL PM TIME OUT
           let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
+
+
+          //ACTUAL AM TOTAL HOURS
           let calculateAmTotalHours = convertedAmOut_regular - finalAmInHour
+
+          //ACTUAL PM TOTAL HOURS
           let calcualatePmTotalHours = pmTimOut - pmTimeIn
-          let total = calculateAmTotalHours + calcualatePmTotalHours
-          let extra = total - parseFloat(8)
+
+          let total = 0;
+          total = calculateAmTotalHours + calcualatePmTotalHours
+
+
+          let extra2
+                              //1     -      8 + 9 =  0 
+          let checkForExtra = pmTimOut - (officialTimeinAm + parseFloat(9))
+          if (checkForExtra > 0) {
+               extra2 = checkForExtra;
+          }
+          else {
+               extra2 = 0
+          }
+
 
 
           if (day_type === "regday") {
                if (total > 8) {
                     //dont use uquation insde useState "set". it will return an error
                     setTotal_working_hour(8)
-                    setTotal_ot_hour(extra)
+                    setTotal_ot_hour(extra2)
                     if (ot_type == "regular") {
                          setRegular_ot_hours(total_ot_hour)
                          setRestday_ot_hours(0)
@@ -683,7 +1073,7 @@ const Dtr = (props) => {
 
      }
      const calculateTardiness = () => {
-          const amStartHour = official_am_timein
+          const amStartHour = official_am_hour
           const amStartMin = 0;
           let hourDiff = am_in_hour - amStartHour;
           let minDiff = am_in_min - amStartMin;
@@ -715,6 +1105,12 @@ const Dtr = (props) => {
      const [special_ot_hours, setSpecial_ot_hours] = useState(0);
      const [legal_ot_hours, setLegal_ot_hours] = useState(0);
      const [hide_ot_others, setHide_ot_others] = useState(true);
+
+
+     const [disabled_pm_official, setdisabled_pm_official] = useState(true);
+     const [disabled_am_official, setdisabled_am_official] = useState(false);
+     const [disabled_pm_time, setdisabled_pm_time] = useState(false);
+     const [disabled_am_time, setdisabled_am_time] = useState(false);
      // const handleOvertime = (event) => {
      //      const type = event.target.value
      //      if (type != "none") {
@@ -801,25 +1197,11 @@ const Dtr = (props) => {
      const [openError, setOpenError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
 
-     const handleClearFields = () => {
-          setOfficial_am_timein(0)
-          setAm_in_hour(0)
-          setAm_in_min(0)
-          setAm_out_hour(0)
-          setAm_out_min(0)
-          setPm_in_hour(0)
-          setPm_in_min(0)
-          setPm_out_hour(0)
-          setPm_out_min(0)
-          setTotal_working_hour(0)
-          setOt_type('none')
-          setLeaveType('none')
-          setTotal_tardiness_min(0)
-          setAbsent_hours(0)
-          setIs_tardiness(0)
-     }
+
 
      const handleDelete = async () => {
+
+
           const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/dtr/' + id, {
                method: 'DELETE',
                headers: {
@@ -833,12 +1215,16 @@ const Dtr = (props) => {
           handleCloseDelete();
           successToast('Deleted Successfully')
           handleRefresher();
-         
+          setId('')
+
+
+
      }
+
      const handleAdd = async (e) => {
           e.preventDefault()
 
-          if (name === "" || official_am_timein === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
+          if (name === "" || official_am_hour === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
                errorToast('Fill up the required fields completely')
           }
           else if (total_ot_hour > 0 && ot_type == "none") {
@@ -877,7 +1263,7 @@ const Dtr = (props) => {
                          sl_hours: sl_wpay_hours,
                          el_hours: el_wpay_hours,
                          is_tardiness: is_tardiness,
-                         official_am_timein: official_am_timein,
+                         official_am_hour: official_am_hour,
                          absent_hours: absent_hours,
                          leave_type: leave_type
                     }
@@ -1245,8 +1631,8 @@ const Dtr = (props) => {
                                                        </Button>
                                                   </ThemeProvider>
                                              </div>
-                                             <div style={{ marginTop: "20px"}}>
-                                                  For updating DTR, please delete the old one and create an updated one. 
+                                             <div style={{ marginTop: "20px" }}>
+                                                  For updating DTR, please delete the old one and create an updated one.
                                              </div>
                                              <EditDeleteContainer>
 
@@ -1274,40 +1660,23 @@ const Dtr = (props) => {
                                              <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
                                                   {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
-                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                       <DatePicker
-                                                            label="Date"
-                                                            value={date}
-
-                                                            inputFormat="MM-DD-YYYY"
-                                                            onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px" }}{...params} error={false} />}
-                                                       />
-                                                  </LocalizationProvider>
-
-                                                  {/* <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Search Employee"
-                                                       fullWidth
-                                                       select
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleName}
-                                                       value={name}
-                                                  >
-                                                       {emp.map((data) => {
-                                                            // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                            return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                       })}
-                                                  </TextField> */}
-                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                       <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                 label="Date"
+                                                                 value={date}
+                                                                 inputFormat="MM-DD-YYYY"
+                                                                 onChange={convertDateToString}
+                                                                 renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px", marginRight: "10px" }}{...params} error={false} />}
+                                                            />
+                                                       </LocalizationProvider>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Filter by department"
                                                             fullWidth
                                                             select
-                                                            style={{ paddingBottom: "20px", marginRight: "10px", width: "150px" }}
+                                                            style={{ width: "100%" }}
                                                             onChange={(e) => setdepartmentfilter(e.target.value)}
                                                             value={departmentfilter}
                                                        >
@@ -1316,6 +1685,10 @@ const Dtr = (props) => {
                                                                  return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
                                                             })}
                                                        </TextField>
+                                                  </div>
+
+                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+
                                                        <Autocomplete
                                                             style={{ width: "100%" }}
                                                             value={name}
@@ -1327,24 +1700,25 @@ const Dtr = (props) => {
                                                                       required
                                                                       label="Search Employee"
                                                                       fullWidth
-                                                                      style={{ paddingBottom: "20px", width: "100%" }}
+                                                                      style={{ width: "100%", paddingBottom: "20px" }}
                                                                  />
                                                             )}
                                                        />
-                                                  </div>
-
-                                                  <TimeContainer>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Employee_id"
                                                             fullWidth
-                                                            style={{ paddingBottom: "80px", paddingRight: "10px" }}
+                                                            style={{ paddingBottom: "20px", marginLeft: "10px" }}
                                                             value={employeeId}
                                                             InputProps={{
                                                                  readOnly: true,
                                                             }}
                                                        />
+
+                                                  </div>
+
+                                                  <TimeContainer>
 
                                                        <TextField
                                                             required
@@ -1352,15 +1726,16 @@ const Dtr = (props) => {
                                                             label="Choose Leave Type"
                                                             fullWidth
                                                             select
-                                                            style={{ paddingBottom: "20px" }}
+                                                            style={{ paddingBottom: "40px" }}
                                                             onChange={handleSelectChange}
                                                             value={leave_type}
                                                        >
 
                                                             <MenuItem value={'none'}>None</MenuItem>
                                                             <MenuItem value={'restday'}>Rest Day</MenuItem>
-                                                            <MenuItem value={'absent'}>Absent - Whole Day</MenuItem>
-                                                            <MenuItem value={'absent_halfday'}>Absent - Half Day</MenuItem>
+                                                            <MenuItem value={'absent'}>Absent Wholeday</MenuItem>
+                                                            <MenuItem value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>
+                                                            <MenuItem value={'absent_halfday_afternoon'}>Absent - Halfday - Afternoon Work</MenuItem>
                                                             <MenuItem value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
                                                             <MenuItem value={'vl_halfday'}>VL With Pay Halfday</MenuItem>
                                                             <MenuItem value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
@@ -1376,139 +1751,187 @@ const Dtr = (props) => {
                                                             <MenuItem value={'el_nopay_halfday'}>EL No Pay Halfday</MenuItem>
 
                                                        </TextField>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Day Type (e.g: restday but overtime)"
+                                                            fullWidth
+                                                            select
+                                                            style={{ marginLeft: '10px' }}
+                                                            onChange={handleDayType}
+                                                            value={day_type}
+                                                       >
+                                                            <MenuItem value={'regday'}>Regular Day</MenuItem>
+                                                            <MenuItem value={'otday'}>Overtime Day</MenuItem>
+
+
+                                                       </TextField>
 
                                                   </TimeContainer>
 
-                                                  <Warnings>
-                                                       <div>*Please use military time format</div>
-                                                       <div>**Leave "0" (zero) if the field not in use</div>
-                                                       <div>***For Official AM Timein, if time in is 8:30, please input 8.5. (30mins / 60mins = 0.5)</div>
-                                                  </Warnings>
                                                   {hide === true ? null : <Others id="others">
-                                                       <TimeContainer>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="Official AM Timein"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setOfficial_am_timein(e.target.value)}
-                                                                 value={official_am_timein}
-                                                            />
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Day Type (e.g: restday but overtime)"
-                                                                 fullWidth
-                                                                 select
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={handleDayType}
-                                                                 value={day_type}
-                                                            >
-                                                                 <MenuItem value={'regday'}>Regular Day</MenuItem>
-                                                                 <MenuItem value={'otday'}>Overtime Day</MenuItem>
+                                                       < div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                            <div style={{ marginRight: '40px' }}>
+                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >AM TIME</h1>
+                                                                 <TimeContainer style={{ marginTop: "20px" }}>
+                                                                      <TextField
+                                                                           disabled={disabled_am_official}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Official AM (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setofficial_am_hour(e.target.value)}
+                                                                           value={official_am_hour}
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_am_official}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Official AM (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setofficial_am_min(e.target.value)}
+                                                                           value={official_am_min}
+                                                                      />
+                                                                 </TimeContainer>
 
+                                                                 <TimeContainer>
+                                                                      <TextField
+                                                                           disabled={disabled_am_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="AM IN (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setAm_in_hour(e.target.value)}
+                                                                           value={am_in_hour}
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_am_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="AM IN (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setAm_in_min(e.target.value)}
+                                                                           value={am_in_min}
 
-                                                            </TextField>
-                                                       </TimeContainer>
-                                                       <TimeContainer>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="Time in (hour)"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setAm_in_hour(e.target.value)}
-                                                                 value={am_in_hour}
+                                                                      />
+                                                                 </TimeContainer>
+                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                      <TextField
+                                                                           disabled={disabled_am_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="AM OUT (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setAm_out_hour(e.target.value)}
+                                                                           value={am_out_hour}
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_am_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="AM OUT (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setAm_out_min(e.target.value)}
+                                                                           value={am_out_min}
 
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="Time in (mins)"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setAm_in_min(e.target.value)}
-                                                                 value={am_in_min}
+                                                                      />
+                                                                 </TimeContainer >
+                                                            </div>
 
-                                                            />
-                                                       </TimeContainer>
-                                                       <TimeContainer style={{ paddingBottom: "40px" }}>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="AM-OUT Hour"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setAm_out_hour(e.target.value)}
-                                                                 value={am_out_hour}
+                                                            <div>
+                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >PM TIME</h1>
+                                                                 <TimeContainer style={{ marginTop: "20px" }}>
+                                                                      <TextField
+                                                                           disabled={disabled_pm_official}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Official PM (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setofficial_pm_hour(e.target.value)}
+                                                                           value={official_pm_hour}
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_pm_official}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Official PM (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setofficial_pm_hour(e.target.value)}
+                                                                           value={official_pm_min}
+                                                                      />
+                                                                 </TimeContainer>
+                                                                 <TimeContainer >
 
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="AM-OUT Min"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setAm_out_min(e.target.value)}
-                                                                 value={am_out_min}
+                                                                      <TextField
+                                                                           disabled={disabled_pm_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="PM IN (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setPm_in_hour(e.target.value)}
+                                                                           value={pm_in_hour}
 
-                                                            />
-                                                       </TimeContainer >
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_pm_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="PM IN (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setPm_in_min(e.target.value)}
+                                                                           value={pm_in_min}
 
-                                                       <TimeContainer>
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="PM-IN Hour"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setPm_in_hour(e.target.value)}
-                                                                 value={pm_in_hour}
+                                                                      />
+                                                                 </TimeContainer>
+                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                      <TextField
+                                                                           disabled={disabled_pm_time}
+                                                                           type="number"
+                                                                           fullWidth
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="PM OUT (hour)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setPm_out_hour(e.target.value)}
+                                                                           value={pm_out_hour}
 
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="PM-IN Min"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setPm_in_min(e.target.value)}
-                                                                 value={pm_in_min}
+                                                                      />
+                                                                      <TextField
+                                                                           disabled={disabled_pm_time}
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="PM OUT (mins)"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setPm_out_min(e.target.value)}
+                                                                           value={pm_out_min}
 
-                                                            />
-                                                       </TimeContainer>
-                                                       <TimeContainer style={{ paddingBottom: "40px" }}>
-                                                            <TextField
-                                                                 type="number"
-                                                                 fullWidth
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="PM-OUT Hour"
-                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                                 onChange={(e) => setPm_out_hour(e.target.value)}
-                                                                 value={pm_out_hour}
+                                                                      />
+                                                                 </TimeContainer>
+                                                            </div>
 
-                                                            />
-                                                            <TextField
-                                                                 type="number"
-                                                                 required
-                                                                 fullWidth
-                                                                 id="outlined-required"
-                                                                 label="PM-OUT Min"
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setPm_out_min(e.target.value)}
-                                                                 value={pm_out_min}
-
-                                                            />
-                                                       </TimeContainer>
+                                                       </div>
 
 
                                                        {/* {hide_ot_others === true ? null : <OthersOT id="othersOt">
