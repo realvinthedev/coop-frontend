@@ -31,6 +31,7 @@ import { ElevatorSharp, Flare } from '@mui/icons-material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useRef } from 'react';
 import Employees from './Employees';
+import { isUnitless } from '@mui/material/styles/cssUtils';
 
 
 const theme = createTheme({
@@ -148,10 +149,10 @@ const columns = [
      { field: 'sl_hours', headerName: 'SL Hours', width: 80 },
      { field: 'el_hours', headerName: 'EL Hours', width: 80 },
      { field: 'leave_type', headerName: 'Leave Type', width: 80 },
-     { field: 'absent_hours', headerName: 'Absent Hours', width: 80 },
-     { field: 'vl_nopay_hours', headerName: 'VL No Pay Hours', width: 80 },
-     { field: 'sl_nopay_hours', headerName: 'SL No Pay Hours', width: 80 },
-     { field: 'el_nopay_hours', headerName: 'EL No Pay Hours', width: 80 },
+     { field: 'absent_day', headerName: 'Absent Hours', width: 80 },
+     { field: 'vl_nopay_day', headerName: 'VL No Pay Hours', width: 80 },
+     { field: 'sl_nopay_day', headerName: 'SL No Pay Hours', width: 80 },
+     { field: 'el_nopay_day', headerName: 'EL No Pay Hours', width: 80 },
      { field: 'regular_ot_hours', headerName: 'Regular OT Hours', width: 80 },
      { field: 'restday_ot_hours', headerName: 'Restday OT Hours', width: 80 },
      { field: 'special_ot_hours', headerName: 'Special OT Hours', width: 80 },
@@ -246,6 +247,7 @@ const Dtr = (props) => {
      const [pm_in_min, setPm_in_min] = useState(0)
      const [pm_out_hour, setPm_out_hour] = useState(0)
      const [pm_out_min, setPm_out_min] = useState(0)
+     const [total_undertime_min, settotal_undertime_min] = useState(0)
      const [ot_in_hour, setOt_in_hour] = useState(0)
      const [ot_in_min, setOt_in_min] = useState(0)
      const [ot_out_hour, setOt_out_hour] = useState(0)
@@ -254,6 +256,7 @@ const Dtr = (props) => {
      const [total_tardiness_min, setTotal_tardiness_min] = useState(0)
      const [ot_type, setOt_type] = useState("none")
      const [is_tardiness, setIs_tardiness] = useState(0)
+     const [is_restday, setis_restday] = useState("No")
 
      const [departmentfilter, setdepartmentfilter] = useState('all')
 
@@ -288,8 +291,9 @@ const Dtr = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
-     const [day_type, setDay_type] = useState("regday")
-
+     const [overtime, setovertime] = useState("not_approved")
+     const [disabled_day_type, setdisabled_day_type] = useState(false)
+     
      const handleOpenAdd = () => {
           setOpenAdd(true);
      };
@@ -313,7 +317,14 @@ const Dtr = (props) => {
      const handleCloseAddAdditionals = () => {
           setOpenAddAdditionals(false);
      };
-
+     useEffect(() => {
+          if (total_ot_hour > 0) {
+               setdisabled_overtime(false)
+          }
+          else {
+               setdisabled_overtime(true)
+          }
+     }, [total_ot_hour])
 
      // function DataList({ date }) {
      //      const [data, setData] = useState([]);
@@ -338,6 +349,7 @@ const Dtr = (props) => {
      //      );
 
      //    }
+
 
      const [dept, setDept] = useState([])
      useEffect(() => {
@@ -387,16 +399,18 @@ const Dtr = (props) => {
                fetchDtr();
           }
      }, [employeeId, refresher, startDate])
-     const [official_am_hour, setofficial_am_hour] = useState(0);
-     const [official_am_min, setofficial_am_min] = useState(0);
+     const [official_am_in_hour, setofficial_am_in_hour] = useState(0);
+     const [official_am_in_min, setofficial_am_in_min] = useState(0);
 
-     const [official_pm_hour, setofficial_pm_hour] = useState(0);
-     const [official_pm_min, setofficial_pm_min] = useState(0);
+     const [official_pm_in_hour, setofficial_pm_in_hour] = useState(0);
+     const [official_pm_in_min, setofficial_pm_in_min] = useState(0);
 
      const [leave_type, setLeaveType] = useState('none');
      const [hide, setHide] = useState(false);
      const [hideWithPayLeaves, setHideWithPayLeaves] = useState(true)
      const [hideNoPayLeaves, setHideNoPayLeaves] = useState(true)
+     const [day_type, setday_type] = useState('normal_day_today');
+
 
 
      //Run every time fields changes
@@ -409,11 +423,16 @@ const Dtr = (props) => {
           //      CalculateTotalOtHours();
           //CalculateTotalHours();
           handleCalculateTotalHours();
-          CalculateTotalOtHours();
+          handleCalculateTardiness()
+          handleCalculateUndertime();
+          handleCalculateOvertime();
      }, [
-          day_type,
+          overtime,
           leave_type,
-          official_am_hour,
+          official_am_in_hour,
+          official_am_in_min,
+          official_pm_in_hour,
+          official_pm_in_min,
           am_in_hour,
           am_in_min,
           am_out_hour,
@@ -426,166 +445,249 @@ const Dtr = (props) => {
      ])
 
 
-     const [vl_wpay_hours, setVl_wpay_hours] = useState(0);
-     const [sl_wpay_hours, setSl_wpay_hours] = useState(0);
-     const [el_wpay_hours, setEl_wpay_hours] = useState(0);
+     const [vl_day, setvl_day] = useState(0);
+     const [sl_day, setsl_day] = useState(0);
+     const [el_day, setel_day] = useState(0);
 
-     const [vl_nopay_hours, setVl_nopay_hours] = useState(0);
-     const [sl_nopay_hours, setSl_nopay_hours] = useState(0);
-     const [el_nopay_hours, setEl_nopay_hours] = useState(0);
+     const [vl_nopay_day, setvl_nopay_day] = useState(0);
+     const [sl_nopay_day, setsl_nopay_day] = useState(0);
+     const [el_nopay_day, setel_nopay_day] = useState(0);
 
      const handleCloseWarning = () => {
           setOpenWarning(false);
      };
 
      const handleDisabledAbsence = (status) => {
-          if (status == "absent_halfday_morning") {
+          if (
+               status == "absent_halfday_morning" ||
+               status == "vl_halfday_morning" ||
+               status == "sl_halfday_morning" ||
+               status == "el_halfday_morning" ||
+               status == "vl_nopay_halfday_morning" ||
+               status == "sl_nopay_halfday_morning" ||
+               status == "el_nopay_halfday_morning"
+
+          ) {
                setdisabled_pm_official(true)
                setdisabled_pm_time(true)
                setdisabled_am_official(false)
                setdisabled_am_time(false)
+               setovertime('none')
+               setdisabled_overtime(false)
+               setdisabled_day_type(false)
           }
-          else if (status == "absent_halfday_afternoon") {
+          else if (
+               status == "absent_halfday_afternoon" ||
+               status == "vl_halfday_afternoon" ||
+               status == "sl_halfday_afternoon" ||
+               status == "el_halfday_afternoon" ||
+               status == "vl_nopay_halfday_afternoon" ||
+               status == "sl_nopay_halfday_afternoon" ||
+               status == "el_nopay_halfday_afternoon"
+          ) {
                setdisabled_pm_official(false)
                setdisabled_pm_time(false)
                setdisabled_am_official(true)
+
                setdisabled_am_time(true)
+               setdisabled_overtime(false)
+               setovertime('none')
+               setdisabled_day_type(false)
           }
           else {
                setdisabled_am_official(false)
                setdisabled_am_time(false)
                setdisabled_pm_official(true)
                setdisabled_pm_time(false)
+               setdisabled_day_type(false)
+          }
+
+          if (status == "restday_overtime") {
+               setovertime('none')
+               setdisabled_overtime(false)
+               setdisabled_day_type(false)
+          }
+          if (status == "restday") {
+               setovertime('none')
+               setdisabled_overtime(true)
+               setdisabled_day_type(true)
+           
+
+          }
+          if (status == "none") {
+               setovertime('none')
+               setdisabled_overtime(false)
+               setdisabled_day_type(false)
+
+          }
+          if (status == "absent") {
+               setovertime('none')
+               setdisabled_overtime(true)
+               setdisabled_day_type(true)
+          }
+          if (status == "vl_wholeday" || status == "vl_nopay_wholeday" || status == "sl_wholeday" || status == "sl_nopay_wholeday" || status == "el_wholeday" || status == "el_nopay_wholeday") {
+               setovertime('none')
+               setdisabled_overtime(true)
+               setdisabled_day_type(true)
           }
 
      }
-
-     const handleSelectChange = (event) => {
+     const handleDayTypeChange = (event) => {
+          const type = event.target.value
+          setday_type(type);
+     } 
+     const handleSelectLeaveTypeChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
           handleDisabledAbsence(type)
+          handleClearTotal();
+        
+
           if (type == "none") {
                setHide(false)
-               setAbsent_hours(0)
+               setabsent_day(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
           }
-          else if (type == "vl_halfday" || type == "sl_halfday" || type == "el_halfday") {
-               if (type == "vl_halfday") {
-                    setVl_wpay_hours(4)
-                    setSl_wpay_hours(0)
-                    setEl_wpay_hours(0)
-               }
-               else if (type == "sl_halfday") {
-                    setVl_wpay_hours(0)
-                    setSl_wpay_hours(4)
-                    setEl_wpay_hours(0)
-               }
-               else {
-                    setVl_wpay_hours(0)
-                    setSl_wpay_hours(0)
-                    setEl_wpay_hours(4)
-               }
+          else if (type === "restday") {
                setHide(true)
-               setAbsent_hours(0)
+          }
+          else if (type === "restday_overtime") {
+               setHide(false)
+          }
+          else if (type == "vl_halfday_morning" || type == "vl_halfday_afternoon" || type == "sl_halfday_morning" || type == "sl_halfday_afternoon" || type == "el_halfday_morning" || type == "el_halfday_afternoon") {
+               setHide(false)
+               setabsent_day(0)
                setHideWithPayLeaves(false)
                setHideNoPayLeaves(true)
                handleClearForLeave()
+               if (type == "vl_halfday_afternoon" || type == "vl_halfday_morning") {
+                    setvl_day(0.5)
+                    setsl_day(0)
+                    setel_day(0)
+               }
+               else if (type == "sl_halfday_afternoon" || type == "sl_halfday_morning") {
+                    setvl_day(0)
+                    setsl_day(0.5)
+                    setel_day(0)
+               }
+               else {
+                    setvl_day(0)
+                    setsl_day(0)
+                    setel_day(0.5)
+               }
+
           }
-          else if (type == "vl_wholeday" || type == "sl_wholeday" || type == "el_wholeday") {
+          else if (type == "vl_wholeday" || type == "sl_wholeday" || type == "el_wholeday" || type == "absent") {
+               setHide(true)
+               setabsent_day(0)
+               setHideWithPayLeaves(false)
+               setHideNoPayLeaves(true)
+               handleClearForLeave()
                if (type == "vl_wholeday") {
-                    setVl_wpay_hours(8)
-                    setSl_wpay_hours(0)
-                    setEl_wpay_hours(0)
+                    setvl_day(1)
+                    setsl_day(0)
+                    setel_day(0)
                }
                else if (type == "sl_wholeday") {
-                    setVl_wpay_hours(0)
-                    setSl_wpay_hours(8)
-                    setEl_wpay_hours(0)
+                    setvl_day(0)
+                    setsl_day(1)
+                    setel_day(0)
                }
                else {
-                    setVl_wpay_hours(0)
-                    setSl_wpay_hours(0)
-                    setEl_wpay_hours(8)
+                    setvl_day(0)
+                    setsl_day(0)
+                    setel_day(1)
                }
-               setHide(true)
-               setAbsent_hours(0)
-               setHideWithPayLeaves(false)
-               setHideNoPayLeaves(true)
-               handleClearForLeave()
+
           }
-          else if (type == "vl_nopay_halfday" || type == "sl_nopay_halfday" || type == "el_nopay_halfday") {
-               if (type == "vl_nopay_halfday") {
-                    setVl_nopay_hours(4)
-                    setSl_nopay_hours(0)
-                    setEl_nopay_hours(0)
-               }
-               else if (type == "sl_nopay_halfday") {
-                    setVl_nopay_hours(0)
-                    setSl_nopay_hours(4)
-                    setEl_nopay_hours(0)
-               }
-               else {
-                    setVl_nopay_hours(0)
-                    setSl_nopay_hours(0)
-                    setEl_nopay_hours(4)
-               }
-               setHide(true)
-               setAbsent_hours(0)
+          else if (type == "vl_nopay_halfday_morning" || type == "vl_nopay_halfday_afternoon" || type == "sl_nopay_halfday_morning" || type == "sl_nopay_halfday_afternoon" || type == "el_nopay_halfday_morning" || type == "el_nopay_halfday_afternoon") {
+               setHide(false)
+               setabsent_day(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
                handleClearForLeave()
+               if (type == "vl_nopay_halfday_afternoon" || type == "vl_nopay_halfday_morning") {
+                    setvl_nopay_day(0.5)
+                    setsl_nopay_day(0)
+                    setel_nopay_day(0)
+                    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+               }
+               else if (type == "sl_nopay_halfday_afternoon" || type == "sl_nopay_halfday_morning") {
+                    setvl_nopay_day(0)
+                    setsl_nopay_day(0.5)
+                    setel_nopay_day(0)
+               }
+               else {
+                    setvl_nopay_day(0)
+                    setsl_nopay_day(0)
+                    setel_nopay_day(0.5)
+               }
+
           }
           else if (type == "vl_nopay_wholeday" || type == "sl_nopay_wholeday" || type == "el_nopay_wholeday") {
-               if (type == "vl_nopay_wholeday") {
-                    setVl_nopay_hours(8)
-                    setSl_nopay_hours(0)
-                    setEl_nopay_hours(0)
-               }
-               else if (type == "sl_nopay_wholeday") {
-                    setVl_nopay_hours(0)
-                    setSl_nopay_hours(8)
-                    setEl_nopay_hours(0)
-               }
-               else {
-                    setVl_nopay_hours(0)
-                    setSl_nopay_hours(0)
-                    setEl_nopay_hours(8)
-               }
                setHide(true)
-               setAbsent_hours(0)
+               setabsent_day(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
                handleClearForLeave()
+               if (type == "vl_nopay_wholeday") {
+                    setvl_nopay_day(1)
+                    setsl_nopay_day(0)
+                    setel_nopay_day(0)
+               }
+               else if (type == "sl_nopay_wholeday") {
+                    setvl_nopay_day(0)
+                    setsl_nopay_day(1)
+                    setel_nopay_day(0)
+               }
+               else {
+                    setvl_nopay_day(0)
+                    setsl_nopay_day(0)
+                    setel_nopay_day(1)
+               }
+
           }
           else if (type == "absent") {
-               setAbsent_hours(8)
-               setHide(false)
+
+               setabsent_day(1)
+               setHide(true)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForAbsent()
+             
           }
           else if (type == "absent_halfday_morning" || type == "absent_halfday_afternoon") {
-               setAbsent_hours(4)
+               setabsent_day(0.5)
                setHide(false)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForAbsent()
           }
           else if (type == "restday") {
-               setAbsent_hours(0)
+               setabsent_day(0)
                setHide(true)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForRestDay()
+            
           }
-
+          else if (type == "restday_overtime") {
+               setabsent_day(0)
+               setHide(false)
+               setHideWithPayLeaves(true)
+               setHideNoPayLeaves(true)
+               handleClearForRestDay()
+          }
           else {
-
           }
      };
+
      const handleClearForLeave = () => {
-          setofficial_am_hour(0)
+          setofficial_am_in_hour(0)
+          setofficial_am_in_min(0)
+          setofficial_pm_in_hour(0)
+          setofficial_pm_in_min(0)
           setAm_in_hour(0)
           setAm_in_min(0)
           setAm_out_hour(0)
@@ -597,12 +699,15 @@ const Dtr = (props) => {
           setTotal_working_hour(0)
           setOt_type('none')
           setTotal_tardiness_min(0)
+          setTotal_ot_hour(0)
           setIs_tardiness(0)
-          setDay_type('regday')
-          setAbsent_hours(0)
+          setabsent_day(0)
      }
      const handleClearFields = () => {
-          setofficial_am_hour(0)
+          setofficial_am_in_hour(0)
+          setofficial_am_in_min(0)
+          setofficial_pm_in_hour(0)
+          setofficial_pm_in_min(0)
           setAm_in_hour(0)
           setAm_in_min(0)
           setAm_out_hour(0)
@@ -615,18 +720,22 @@ const Dtr = (props) => {
           setOt_type('none')
           setLeaveType('none')
           setTotal_tardiness_min(0)
-          setAbsent_hours(0)
+          setabsent_day(0)
           setIs_tardiness(0)
-          setVl_wpay_hours(0)
-          setSl_wpay_hours(0)
-          setEl_wpay_hours(0)
-          setVl_nopay_hours(0)
-          setSl_nopay_hours(0)
-          setEl_nopay_hours(0)
-          setDay_type('regday')
+          setvl_day(0)
+          setsl_day(0)
+          setel_day(0)
+          setvl_nopay_day(0)
+          setsl_nopay_day(0)
+          setel_nopay_day(0)
+          setTotal_ot_hour(0)
+          setovertime('not_approved')
      }
      const handleClearForAbsent = () => {
-          setofficial_am_hour(0)
+          setofficial_am_in_hour(0)
+          setofficial_am_in_min(0)
+          setofficial_pm_in_hour(0)
+          setofficial_pm_in_min(0)
           setAm_in_hour(0)
           setAm_in_min(0)
           setAm_out_hour(0)
@@ -639,16 +748,20 @@ const Dtr = (props) => {
           setOt_type('none')
           setTotal_tardiness_min(0)
           setIs_tardiness(0)
-          setVl_wpay_hours(0)
-          setSl_wpay_hours(0)
-          setEl_wpay_hours(0)
-          setVl_nopay_hours(0)
-          setSl_nopay_hours(0)
-          setEl_nopay_hours(0)
-          setDay_type('regday')
+          setvl_day(0)
+          setsl_day(0)
+          setel_day(0)
+          setvl_nopay_day(0)
+          setsl_nopay_day(0)
+          setTotal_ot_hour(0)
+          setel_nopay_day(0)
+          setovertime('regular')
      }
      const handleClearForRestDay = () => {
-          setofficial_am_hour(0)
+          setofficial_am_in_hour(0)
+          setofficial_am_in_min(0)
+          setofficial_pm_in_hour(0)
+          setofficial_pm_in_min(0)
           setAm_in_hour(0)
           setAm_in_min(0)
           setAm_out_hour(0)
@@ -656,36 +769,38 @@ const Dtr = (props) => {
           setPm_in_hour(0)
           setPm_in_min(0)
           setPm_out_hour(0)
+          setTotal_ot_hour(0)
           setPm_out_min(0)
           setTotal_working_hour(0)
           setOt_type('none')
           setTotal_tardiness_min(0)
           setIs_tardiness(0)
-          setVl_wpay_hours(0)
-          setSl_wpay_hours(0)
-          setEl_wpay_hours(0)
-          setVl_nopay_hours(0)
-          setSl_nopay_hours(0)
-          setEl_nopay_hours(0)
-          setDay_type('regday')
-          setAbsent_hours(0)
+          setvl_day(0)
+          setsl_day(0)
+          setel_day(0)
+          setvl_nopay_day(0)
+          setsl_nopay_day(0)
+          setel_nopay_day(0)
+          setovertime('none')
+          setabsent_day(0)
      }
 
-     //Textfields Events
-
-
-
-
-
-
-
-
-
-
-
+     const handleClearTotal = () => {
+          setTotal_working_hour(0)
+          setTotal_tardiness_min(0)
+          setabsent_day(0)
+          setIs_tardiness(0)
+          setvl_day(0)
+          setsl_day(0)
+          setel_day(0)
+          setvl_nopay_day(0)
+          setsl_nopay_day(0)
+          setel_nopay_day(0)
+          setTotal_ot_hour(0)
+     }
 
      const [leaveHours, setLeaveHours] = useState(0);
-     const [absent_hours, setAbsent_hours] = useState(0);
+     const [absent_day, setabsent_day] = useState(0);
      const handleLeaveHours = (event) => {
 
           const hour = event.target.value
@@ -709,20 +824,296 @@ const Dtr = (props) => {
 
      }
 
-     const handleDayType = (e) => {
-          const type = e.target.value;
-          setDay_type(type)
+     const handleOTType = () => {
+          
+          if (day_type === "normal_day_today") {
+               setRegular_ot_hours(total_ot_hour)
+               setSpecial_ot_hours(0)
+               setLegal_ot_hours(0)
+          }
+          else if (day_type === "special_holiday_today") {
+               setSpecial_ot_hours(total_ot_hour)
+               setRegular_ot_hours(0)
+               setLegal_ot_hours(0)
+          }
+          else if (day_type === "legal_holiday_today") {
+               setLegal_ot_hours(total_ot_hour)
+               setRegular_ot_hours(0)
+               setSpecial_ot_hours(0)
+          }
+     }
+     useEffect(() => {
+          handleOTType();
+     }, [day_type])
+
+  
+
+
+
+     // const handleCalculateTardiness = () => {
+     //      const amStartHour = official_am_in_hour
+     //      const amStartMin = 0;
+     //      let hourDiff = am_in_hour - amStartHour;
+     //      let minDiff = am_in_min - amStartMin;
+     //      let totalHourDiff = hourDiff //1
+     //      let convertedTotalHourDiff = totalHourDiff * 60;
+     //      let totalMinDiff = convertedTotalHourDiff + minDiff //10
+     //      if (totalMinDiff > 0) {
+     //           setTotal_tardiness_min(totalMinDiff)
+
+     //      } else {
+     //           setTotal_tardiness_min(0)
+     //      }
+     // }
+
+     const handleCalculateUndertime = () => {
+
+          let am_in_mins = am_in_min / 60;
+          let am_out_mins = am_out_min / 60;
+          let pm_in_mins = pm_in_min / 60;
+          let pm_out_mins = pm_out_min / 60;
+          let official_am_in_mins = official_am_in_min / 60;
+          let official_pm_in_mins = official_pm_in_min / 60;
+
+          let official_am_in_hours = parseFloat(official_am_in_hour) + parseFloat(official_am_in_mins)
+          let official_pm_in_hours = parseFloat(official_pm_in_hour) + parseFloat(official_pm_in_mins)
+          let actual_am_in_hours = parseFloat(am_in_hour) + parseFloat(am_in_mins);
+          let actual_am_out_hours = parseFloat(am_out_hour) + parseFloat(am_out_mins);
+          let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
+          let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
+
+          if (leave_type == "none") {
+               let total_hours = (official_am_in_hours + 9)
+               let is_undertime = (total_hours - actual_pm_out_hours) * 60
+               // meaning, if there's an undertime, AND the official hours and pm hours has value
+               if (is_undertime > 0 && official_am_in_hours > 0 && actual_pm_out_hours > 0) {
+                    let rounded_is_undertime = Math.round(is_undertime)
+                    settotal_undertime_min(rounded_is_undertime)
+               }
+               else {
+                    settotal_undertime_min(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_morning" ||
+               leave_type == "vl_halfday_morning" ||
+               leave_type == "vl_nopay_halfday_morning" ||
+
+               leave_type == "sl_halfday_morning" ||
+               leave_type == "sl_nopay_halfday_morning" ||
+
+               leave_type == "el_halfday_morning" ||
+               leave_type == "el_nopay_halfday_morning"
+
+          ) {
+               let total_hours = (official_am_in_hours + 4)
+               let is_undertime = (total_hours - actual_am_out_hours) * 60
+               // meaning, if there's an undertime, AND the official hours and pm hours has value
+               if (is_undertime > 0 && official_am_in_hours > 0 && actual_am_out_hours > 0) {
+                    let rounded_is_undertime = Math.round(is_undertime)
+                    settotal_undertime_min(rounded_is_undertime)
+               }
+               else {
+                    settotal_undertime_min(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_afternoon" ||
+               leave_type == "vl_halfday_afternoon" ||
+               leave_type == "vl_nopay_halfday_afternoon" ||
+
+               leave_type == "sl_halfday_afternoon" ||
+               leave_type == "sl_nopay_halfday_afternoon" ||
+
+               leave_type == "el_halfday_afternoon" ||
+               leave_type == "el_nopay_halfday_afternoon"
+          ) {
+               let total_hours = (official_pm_in_hours + 4)
+               let is_undertime = (total_hours - actual_pm_out_hours) * 60
+               // meaning, if there's an undertime, AND the official hours and pm hours has value
+               if (is_undertime > 0 && official_pm_in_hours > 0 && actual_pm_out_hours > 0) {
+                    let rounded_is_undertime = Math.round(is_undertime)
+                    settotal_undertime_min(rounded_is_undertime)
+               }
+               else {
+                    settotal_undertime_min(0)
+               }
+          }
+
+     }
+     const handleCalculateTardiness = () => {
+          let am_in_mins = am_in_min / 60;
+          let am_out_mins = am_out_min / 60;
+          let pm_in_mins = pm_in_min / 60;
+          let pm_out_mins = pm_out_min / 60;
+          let official_am_in_mins = official_am_in_min / 60;
+          let official_pm_in_mins = official_pm_in_min / 60;
+
+          let official_am_in_hours = parseFloat(official_am_in_hour) + parseFloat(official_am_in_mins)
+          let official_pm_in_hours = parseFloat(official_pm_in_hour) + parseFloat(official_pm_in_mins)
+          let actual_am_in_hours = parseFloat(am_in_hour) + parseFloat(am_in_mins);
+          let actual_am_out_hours = parseFloat(am_out_hour) + parseFloat(am_out_mins);
+          let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
+          let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
+
+
+          /**OVERBREAK */
+          /**meaning, if he is overlunch, add the overlunch time to tardiness */
+          // let overbreak
+          // if (actual_pm_in_hours - actual_am_out_hours > 1) {
+          //      overbreak = actual_pm_in_hours - actual_am_out_hours;
+          // }
+
+          if (leave_type == "none") {
+               let difference = (actual_am_in_hours - official_am_in_hours) * 60
+               if (actual_am_in_hours > official_am_in_hours) {
+                    let rounded_difference = Math.round(difference)
+                    setTotal_tardiness_min(rounded_difference)
+                    setIs_tardiness(1)
+               }
+               else {
+                    setTotal_tardiness_min(0)
+                    setIs_tardiness(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_morning" ||
+               leave_type == "vl_halfday_morning" ||
+               leave_type == "vl_nopay_halfday_morning" ||
+
+               leave_type == "sl_halfday_morning" ||
+               leave_type == "sl_nopay_halfday_morning" ||
+
+               leave_type == "el_halfday_morning" ||
+               leave_type == "el_nopay_halfday_morning"
+
+          ) {
+
+               /**meaning, this is the difference minutes if he is late. if not, 0 */
+               let difference = (actual_am_in_hours - official_am_in_hours) * 60
+               if (actual_am_in_hours > official_am_in_hours) {
+                    let rounded_difference = Math.round(difference)
+                    setTotal_tardiness_min(rounded_difference)
+                    setIs_tardiness(1)
+               }
+               else {
+                    setTotal_tardiness_min(0)
+                    setIs_tardiness(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_afternoon" ||
+               leave_type == "vl_halfday_afternoon" ||
+               leave_type == "vl_nopay_halfday_afternoon" ||
+
+               leave_type == "sl_halfday_afternoon" ||
+               leave_type == "sl_nopay_halfday_afternoon" ||
+
+               leave_type == "el_halfday_afternoon" ||
+               leave_type == "el_nopay_halfday_afternoon"
+          ) {
+               let difference = (actual_pm_in_hours - official_pm_in_hours) * 60
+               if (actual_pm_in_hours > official_pm_in_hours) {
+                    let rounded_difference = Math.round(difference)
+                    setTotal_tardiness_min(rounded_difference)
+                    setIs_tardiness(1)
+               }
+               else {
+                    setTotal_tardiness_min(0)
+                    setIs_tardiness(0)
+               }
+          }
+     }
+
+     const handleCalculateOvertime = () => {
+          let am_in_mins = am_in_min / 60;
+          let am_out_mins = am_out_min / 60;
+          let pm_in_mins = pm_in_min / 60;
+          let pm_out_mins = pm_out_min / 60;
+          let official_am_in_mins = official_am_in_min / 60;
+          let official_pm_in_mins = official_pm_in_min / 60;
+
+          let official_am_in_hours = parseFloat(official_am_in_hour) + parseFloat(official_am_in_mins)
+          let official_pm_in_hours = parseFloat(official_pm_in_hour) + parseFloat(official_pm_in_mins)
+          let actual_am_in_hours = parseFloat(am_in_hour) + parseFloat(am_in_mins);
+          let actual_am_out_hours = parseFloat(am_out_hour) + parseFloat(am_out_mins);
+          let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
+          let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
+
+
+          // let total_ot_am_hours
+          //      if (leave_type == "absent_halfday_morning" && total_am_hours > 4) {
+          //           total_ot_am_hours = total_am_hours - 4
+          //           setTotal_working_hour(4)
+          //           setTotal_ot_hour(total_ot_am_hours)
+          //      }
+          //      else {
+          //           
+          //      }
+          if (leave_type == "none") {
+               let total_hours = official_am_in_hours + 9;
+               let is_overtime = actual_pm_out_hours - total_hours;
+               if (is_overtime > 0 && official_am_in_hours > 0 && actual_pm_out_hours > 0) {
+                    let toFixed_isovertime = is_overtime.toFixed(2)
+                    setTotal_ot_hour(toFixed_isovertime)
+               }
+               else {
+                    setTotal_ot_hour(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_morning" ||
+               leave_type == "vl_halfday_morning" ||
+               leave_type == "vl_nopay_halfday_morning" ||
+               leave_type == "sl_halfday_morning" ||
+               leave_type == "sl_nopay_halfday_morning" ||
+               leave_type == "el_halfday_morning" ||
+               leave_type == "el_nopay_halfday_morning"
+
+          ) {
+               let total_hours = official_am_in_hours + 4;
+               let is_overtime = actual_am_out_hours - total_hours;
+               if (is_overtime > 0 && official_am_in_hours > 0 && actual_am_out_hours > 0) {
+                    let toFixed_isovertime = is_overtime.toFixed(2)
+                    setTotal_ot_hour(toFixed_isovertime)
+               }
+               else {
+                    setTotal_ot_hour(0)
+               }
+          }
+          else if (
+               leave_type == "absent_halfday_afternoon" ||
+               leave_type == "vl_halfday_afternoon" ||
+               leave_type == "vl_nopay_halfday_afternoon" ||
+
+               leave_type == "sl_halfday_afternoon" ||
+               leave_type == "sl_nopay_halfday_afternoon" ||
+
+               leave_type == "el_halfday_afternoon" ||
+               leave_type == "el_nopay_halfday_afternoon"
+          ) {
+               let total_hours = official_pm_in_hours + 4;
+               let is_overtime = actual_pm_out_hours - total_hours;
+               if (is_overtime > 0 && official_pm_in_hours > 0 && actual_pm_out_hours > 0) {
+                    let toFixed_isovertime = is_overtime.toFixed(2)
+                    setTotal_ot_hour(toFixed_isovertime)
+               }
+               else {
+                    setTotal_ot_hour(0)
+               }
+          }
+
      }
      const handleCalculateTotalHours = () => {
           let am_in_mins = am_in_min / 60;
           let am_out_mins = am_out_min / 60;
           let pm_in_mins = pm_in_min / 60;
           let pm_out_mins = pm_out_min / 60;
-          let official_am_mins = official_am_min / 60;
-          let official_pm_mins = official_pm_min / 60;
+          let official_am_in_mins = official_am_in_min / 60;
+          let official_pm_in_mins = official_pm_in_min / 60;
 
-          let official_am_hours = parseFloat(official_am_hour) + parseFloat(official_am_mins)
-          let official_pm_hours = parseFloat(official_pm_hour) + parseFloat(official_pm_mins)
+          let official_am_in_hours = parseFloat(official_am_in_hour) + parseFloat(official_am_in_mins)
+          let official_pm_in_hours = parseFloat(official_pm_in_hour) + parseFloat(official_pm_in_mins)
           let actual_am_in_hours = parseFloat(am_in_hour) + parseFloat(am_in_mins);
           let actual_am_out_hours = parseFloat(am_out_hour) + parseFloat(am_out_mins);
           let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
@@ -738,8 +1129,8 @@ const Dtr = (props) => {
           /** Holding the AM total number of hours  */
           let total_am_hours
           /** If he is EARLY, use the offical time in */
-          if (actual_am_in_hours <= official_am_hour) {
-               total_am_hours = actual_am_out_hours - official_am_hours;
+          if (actual_am_in_hours <= official_am_in_hour) {
+               total_am_hours = actual_am_out_hours - official_am_in_hours;
           }
           /** else if he is LATE, use the actual time in */
           else {
@@ -757,8 +1148,8 @@ const Dtr = (props) => {
           /** Holding the PM total number of hours  */
           let total_pm_hours
           /** If he is EARLY, use the offical time in */
-          if (actual_pm_in_hours <= official_pm_hour) {
-               total_pm_hours = actual_pm_out_hours - official_pm_hours;
+          if (actual_pm_in_hours <= official_pm_in_hour) {
+               total_pm_hours = actual_pm_out_hours - official_pm_in_hours;
           }
           /** else if he is LATE, use the actual time in */
           else {
@@ -768,328 +1159,156 @@ const Dtr = (props) => {
 
 
 
-          /////////////////////
-          /////////////////////
-          /** TOTAL TARDINESS */
-          /////////////////////
-          /////////////////////
-          let total_tardiness;
-          /**meaning, if he is overlunch, add the overlunch time to tardiness */
-          if(actual_pm_in_hours - actual_am_out_hours > 1){
-               let total_overlunch
-               total_overlunch = actual_pm_in_hours - actual_am_out_hours;
-               total_tardiness += total_overlunch
-          }
-
 
 
           /////////////////////
           /////////////////////
-          /** TOTAL UNDERTIME */
+          /** TOTAL OVERBREAK */
           /////////////////////
           /////////////////////
-          let total_undertime =  (official_am_hours + parseFloat(9)) - actual_pm_out_hours
-          
-       
 
 
-
-
-          /////////////////////
-          /////////////////////
-          /** TOTAL OVERTIME */
-          /////////////////////
-          /////////////////////
-          let total_ot_am_hours
-          if (leave_type == "absent_halfday_morning" && total_am_hours > 4) {
-               total_ot_am_hours = total_am_hours - 4
-               setTotal_working_hour(4)
-               setTotal_ot_hour(total_ot_am_hours)
-          }
-          else{
-               setTotal_working_hour(total_am_hours+total_pm_hours)
-          }
-
-
-
-
-
-
-
-          // if (leave_type == "none") {
-          //      let proper_am_in_hours;
-          //      let extra_hours = actual_pm_out_hours - (official_am_hours + parseFloat(9))
-          //      if (extra_hours > 0) {
-          //           total_ot = extra_hours
-          //      }
-          //      else {
-          //           total_ot = 0;
-          //      }
-
-          //      if (actual_am_in_hours <= official_am_hours) {
-          //           proper_am_in_hours = official_am_hours;
-          //      }
-          //      else {
-          //           proper_am_in_hours = actual_am_in_hours
-          //      }
-          //      overall_total_hours = actual_pm_out_hours - proper_am_in_hours
-          // }
-          // if (day_type === "regday") {
-          //      if (overall_total_hours > 8) {
-          //           //dont use uquation insde useState "set". it will return an error
-          //           setTotal_working_hour(8)
-          //           setTotal_ot_hour(total_ot)
-          //           if (ot_type == "regular") {
-          //                setRegular_ot_hours(total_ot_hour)
-          //                setRestday_ot_hours(0)
-          //                setSpecial_ot_hours(0)
-          //                setLegal_ot_hours(0)
-          //           }
-          //           else if (ot_type == "restday") {
-          //                setRegular_ot_hours(0)
-          //                setRestday_ot_hours(total_ot_hour)
-          //                setSpecial_ot_hours(0)
-          //                setLegal_ot_hours(0)
-          //           }
-          //           else if (ot_type == "special") {
-          //                setRegular_ot_hours(0)
-          //                setRestday_ot_hours(0)
-          //                setSpecial_ot_hours(total_ot_hour)
-          //                setLegal_ot_hours(0)
-          //           }
-          //           else if (ot_type == "legal") {
-          //                setRegular_ot_hours(0)
-          //                setRestday_ot_hours(0)
-          //                setSpecial_ot_hours(0)
-          //                setLegal_ot_hours(total_ot_hour)
-          //           }
-          //           else {
-          //                setRegular_ot_hours(0)
-          //                setRestday_ot_hours(0)
-          //                setSpecial_ot_hours(0)
-          //                setLegal_ot_hours(0)
-          //           }
-          //      } else {
-          //           setTotal_working_hour(overall_total_hours)
-          //           setTotal_ot_hour(0)
-          //      }
-          // } else {
-          //      setTotal_working_hour(0)
-          //      setTotal_ot_hour(overall_total_hours)
-          //      if (ot_type == "regular") {
-          //           setRegular_ot_hours(total_ot_hour)
-          //           setRestday_ot_hours(0)
-          //           setSpecial_ot_hours(0)
-          //           setLegal_ot_hours(0)
-          //      }
-          //      else if (ot_type == "restday") {
-          //           setRegular_ot_hours(0)
-          //           setRestday_ot_hours(total_ot_hour)
-          //           setSpecial_ot_hours(0)
-          //           setLegal_ot_hours(0)
-          //      }
-          //      else if (ot_type == "special") {
-          //           setRegular_ot_hours(0)
-          //           setRestday_ot_hours(0)
-          //           setSpecial_ot_hours(total_ot_hour)
-          //           setLegal_ot_hours(0)
-          //      }
-          //      else if (ot_type == "legal") {
-          //           setRegular_ot_hours(0)
-          //           setRestday_ot_hours(0)
-          //           setSpecial_ot_hours(0)
-          //           setLegal_ot_hours(total_ot_hour)
-          //      }
-          //      else {
-          //           setRegular_ot_hours(0)
-          //           setRestday_ot_hours(0)
-          //           setSpecial_ot_hours(0)
-          //           setLegal_ot_hours(0)
-          //      }
-          // }
-
-          // else if (leave_type == "absent_halfday_morning") {
-
-          // }
-          // else{
-
-          // }
+          setTotal_working_hour(total_am_hours + total_pm_hours)
      }
 
 
-     const CalculateTotalHours = () => {
-          //30 / 60 = 0.5
-          let convertedAmMinsIn = am_in_min / 60;
-          let convertedAmMinsOut = am_out_min / 60;
-          let convertedPmMinsIn = pm_in_min / 60;
-          let convertedPmMinsOut = pm_out_min / 60;
-          let convertedOfficialAmMins = official_am_min / 60;
-          let convertedOfficialPmMins = official_pm_min / 60;
+     // const CalculateTotalHours = () => {
+     //      //30 / 60 = 0.5
+     //      let convertedAmMinsIn = am_in_min / 60;
+     //      let convertedAmMinsOut = am_out_min / 60;
+     //      let convertedPmMinsIn = pm_in_min / 60;
+     //      let convertedPmMinsOut = pm_out_min / 60;
+     //      let convertedOfficialAmMins = official_am_in_min / 60;
+     //      let convertedOfficialPmMins = official_pm_in_min / 60;
 
 
-          // this is the official time in
-          let officialTimeinAm = parseFloat(official_am_hour) + parseFloat(convertedOfficialAmMins)
-          let officialTimeinPm = parseFloat(official_pm_hour) + parseFloat(convertedOfficialPmMins)
-          // this is actual time in
-          let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
+     //      // this is the official time in
+     //      let officialTimeinAm = parseFloat(official_am_in_hour) + parseFloat(convertedOfficialAmMins)
+     //      let officialTimeinPm = parseFloat(official_pm_in_hour) + parseFloat(convertedOfficialPmMins)
+     //      // this is actual time in
+     //      let convertedAmIn_regular = parseFloat(am_in_hour) + parseFloat(convertedAmMinsIn);
 
-          // this variable whether it is official time in, or actual timein
-          let finalAmInHour;
-          // meaning, if he is earlier than the official time, use the official time
-          if (convertedAmIn_regular <= official_am_hour) {
-               finalAmInHour = officialTimeinAm
-               // meaning, if he is not earlier than the official time, use the actual time he arrived
-          } else {
-               // this is the ACTUAL TIME IN
-               finalAmInHour = convertedAmIn_regular
-          }
-          // this is the ACTUAL TIME OUT
-          let convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
-
-
-          //ACTUAL PM TIME IN
-          let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
-
-          //ACTUAL PM TIME OUT
-          let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
+     //      // this variable whether it is official time in, or actual timein
+     //      let finalAmInHour;
+     //      // meaning, if he is earlier than the official time, use the official time
+     //      if (convertedAmIn_regular <= official_am_in_hour) {
+     //           finalAmInHour = officialTimeinAm
+     //           // meaning, if he is not earlier than the official time, use the actual time he arrived
+     //      } else {
+     //           // this is the ACTUAL TIME IN
+     //           finalAmInHour = convertedAmIn_regular
+     //      }
+     //      // this is the ACTUAL TIME OUT
+     //      let convertedAmOut_regular = parseFloat(am_out_hour) + parseFloat(convertedAmMinsOut)
 
 
-          //ACTUAL AM TOTAL HOURS
-          let calculateAmTotalHours = convertedAmOut_regular - finalAmInHour
+     //      //ACTUAL PM TIME IN
+     //      let pmTimeIn = parseFloat(pm_in_hour) + parseFloat(convertedPmMinsIn)
 
-          //ACTUAL PM TOTAL HOURS
-          let calcualatePmTotalHours = pmTimOut - pmTimeIn
-
-          let total = 0;
-          total = calculateAmTotalHours + calcualatePmTotalHours
+     //      //ACTUAL PM TIME OUT
+     //      let pmTimOut = parseFloat(pm_out_hour) + parseFloat(convertedPmMinsOut)
 
 
-          let extra2
-                              //1     -      8 + 9 =  0 
-          let checkForExtra = pmTimOut - (officialTimeinAm + parseFloat(9))
-          if (checkForExtra > 0) {
-               extra2 = checkForExtra;
-          }
-          else {
-               extra2 = 0
-          }
+     //      //ACTUAL AM TOTAL HOURS
+     //      let calculateAmTotalHours = convertedAmOut_regular - finalAmInHour
+
+     //      //ACTUAL PM TOTAL HOURS
+     //      let calcualatePmTotalHours = pmTimOut - pmTimeIn
+
+     //      let total = 0;
+     //      total = calculateAmTotalHours + calcualatePmTotalHours
 
 
-
-          if (day_type === "regday") {
-               if (total > 8) {
-                    //dont use uquation insde useState "set". it will return an error
-                    setTotal_working_hour(8)
-                    setTotal_ot_hour(extra2)
-                    if (ot_type == "regular") {
-                         setRegular_ot_hours(total_ot_hour)
-                         setRestday_ot_hours(0)
-                         setSpecial_ot_hours(0)
-                         setLegal_ot_hours(0)
-                    }
-                    else if (ot_type == "restday") {
-                         setRegular_ot_hours(0)
-                         setRestday_ot_hours(total_ot_hour)
-                         setSpecial_ot_hours(0)
-                         setLegal_ot_hours(0)
-                    }
-                    else if (ot_type == "special") {
-                         setRegular_ot_hours(0)
-                         setRestday_ot_hours(0)
-                         setSpecial_ot_hours(total_ot_hour)
-                         setLegal_ot_hours(0)
-                    }
-                    else if (ot_type == "legal") {
-                         setRegular_ot_hours(0)
-                         setRestday_ot_hours(0)
-                         setSpecial_ot_hours(0)
-                         setLegal_ot_hours(total_ot_hour)
-                    }
-                    else {
-                         setRegular_ot_hours(0)
-                         setRestday_ot_hours(0)
-                         setSpecial_ot_hours(0)
-                         setLegal_ot_hours(0)
-                    }
-               } else {
-                    setTotal_working_hour(total)
-                    setTotal_ot_hour(0)
-               }
-          } else {
-               setTotal_working_hour(0)
-               setTotal_ot_hour(total)
-               if (ot_type == "regular") {
-                    setRegular_ot_hours(total_ot_hour)
-                    setRestday_ot_hours(0)
-                    setSpecial_ot_hours(0)
-                    setLegal_ot_hours(0)
-               }
-               else if (ot_type == "restday") {
-                    setRegular_ot_hours(0)
-                    setRestday_ot_hours(total_ot_hour)
-                    setSpecial_ot_hours(0)
-                    setLegal_ot_hours(0)
-               }
-               else if (ot_type == "special") {
-                    setRegular_ot_hours(0)
-                    setRestday_ot_hours(0)
-                    setSpecial_ot_hours(total_ot_hour)
-                    setLegal_ot_hours(0)
-               }
-               else if (ot_type == "legal") {
-                    setRegular_ot_hours(0)
-                    setRestday_ot_hours(0)
-                    setSpecial_ot_hours(0)
-                    setLegal_ot_hours(total_ot_hour)
-               }
-               else {
-                    setRegular_ot_hours(0)
-                    setRestday_ot_hours(0)
-                    setSpecial_ot_hours(0)
-                    setLegal_ot_hours(0)
-               }
-          }
-
-
-          calculateTardiness()
-          if (total_tardiness_min > 0) {
-               setIs_tardiness(1)
-          } else {
-               setIs_tardiness(0)
-          }
-
-
-     }
-
-     const CalculateTotalOtHours = () => {
-
-          calculateTardiness()
-          if (total_tardiness_min > 0) {
-               setIs_tardiness(1)
-          } else {
-               setIs_tardiness(0)
-          }
-
-
-     }
-     const calculateTardiness = () => {
-          const amStartHour = official_am_hour
-          const amStartMin = 0;
-          let hourDiff = am_in_hour - amStartHour;
-          let minDiff = am_in_min - amStartMin;
-          let totalHourDiff = hourDiff //1
-          let convertedTotalHourDiff = totalHourDiff * 60;
-          let totalMinDiff = convertedTotalHourDiff + minDiff //10
-          if (totalMinDiff > 0) {
-               setTotal_tardiness_min(totalMinDiff)
-
-          } else {
-               setTotal_tardiness_min(0)
-          }
+     //      let extra2
+     //      //1     -      8 + 9 =  0 
+     //      let checkForExtra = pmTimOut - (officialTimeinAm + parseFloat(9))
+     //      if (checkForExtra > 0) {
+     //           extra2 = checkForExtra;
+     //      }
+     //      else {
+     //           extra2 = 0
+     //      }
 
 
 
-     }
+     //      if (overtime === "regday") {
+     //           if (total > 8) {
+     //                //dont use uquation insde useState "set". it will return an error
+     //                setTotal_working_hour(8)
+     //                setTotal_ot_hour(extra2)
+     //                if (ot_type == "regular") {
+     //                     setRegular_ot_hours(total_ot_hour)
+     //                     setRestday_ot_hours(0)
+     //                     setSpecial_ot_hours(0)
+     //                     setLegal_ot_hours(0)
+     //                }
+     //                else if (ot_type == "restday") {
+     //                     setRegular_ot_hours(0)
+     //                     setRestday_ot_hours(total_ot_hour)
+     //                     setSpecial_ot_hours(0)
+     //                     setLegal_ot_hours(0)
+     //                }
+     //                else if (ot_type == "special") {
+     //                     setRegular_ot_hours(0)
+     //                     setRestday_ot_hours(0)
+     //                     setSpecial_ot_hours(total_ot_hour)
+     //                     setLegal_ot_hours(0)
+     //                }
+     //                else if (ot_type == "legal") {
+     //                     setRegular_ot_hours(0)
+     //                     setRestday_ot_hours(0)
+     //                     setSpecial_ot_hours(0)
+     //                     setLegal_ot_hours(total_ot_hour)
+     //                }
+     //                else {
+     //                     setRegular_ot_hours(0)
+     //                     setRestday_ot_hours(0)
+     //                     setSpecial_ot_hours(0)
+     //                     setLegal_ot_hours(0)
+     //                }
+     //           } else {
+     //                setTotal_working_hour(total)
+     //                setTotal_ot_hour(0)
+     //           }
+     //      } else {
+     //           setTotal_working_hour(0)
+     //           setTotal_ot_hour(total)
+     //           if (ot_type == "regular") {
+     //                setRegular_ot_hours(total_ot_hour)
+     //                setRestday_ot_hours(0)
+     //                setSpecial_ot_hours(0)
+     //                setLegal_ot_hours(0)
+     //           }
+     //           else if (ot_type == "restday") {
+     //                setRegular_ot_hours(0)
+     //                setRestday_ot_hours(total_ot_hour)
+     //                setSpecial_ot_hours(0)
+     //                setLegal_ot_hours(0)
+     //           }
+     //           else if (ot_type == "special") {
+     //                setRegular_ot_hours(0)
+     //                setRestday_ot_hours(0)
+     //                setSpecial_ot_hours(total_ot_hour)
+     //                setLegal_ot_hours(0)
+     //           }
+     //           else if (ot_type == "legal") {
+     //                setRegular_ot_hours(0)
+     //                setRestday_ot_hours(0)
+     //                setSpecial_ot_hours(0)
+     //                setLegal_ot_hours(total_ot_hour)
+     //           }
+     //           else {
+     //                setRegular_ot_hours(0)
+     //                setRestday_ot_hours(0)
+     //                setSpecial_ot_hours(0)
+     //                setLegal_ot_hours(0)
+     //           }
+     //      }
+
+     // }
+
+
+
 
      const [selectedText, setSelectedText] = useState("")
 
@@ -1111,6 +1330,7 @@ const Dtr = (props) => {
      const [disabled_am_official, setdisabled_am_official] = useState(false);
      const [disabled_pm_time, setdisabled_pm_time] = useState(false);
      const [disabled_am_time, setdisabled_am_time] = useState(false);
+     const [disabled_overtime, setdisabled_overtime] = useState(false);
      // const handleOvertime = (event) => {
      //      const type = event.target.value
      //      if (type != "none") {
@@ -1160,6 +1380,7 @@ const Dtr = (props) => {
      ];
 
      const [currentDate, setCurrentDate] = useState();
+
 
 
 
@@ -1224,12 +1445,8 @@ const Dtr = (props) => {
      const handleAdd = async (e) => {
           e.preventDefault()
 
-          if (name === "" || official_am_hour === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
+          if (name === "" || official_am_in_hour === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
                errorToast('Fill up the required fields completely')
-          }
-          else if (total_ot_hour > 0 && ot_type == "none") {
-               errorToast('Overtime detected. Overtime type should not be "None". Please select proper overtime type')
-
           }
           else {
                if (!user) {
@@ -1241,6 +1458,10 @@ const Dtr = (props) => {
                          employee_id: employeeId,
                          name: name,
                          date: date,
+                         official_am_in_hour: official_am_in_hour,
+                         official_am_in_min: official_am_in_min,
+                         official_pm_in_hour: official_pm_in_hour,
+                         official_pm_in_min: official_pm_in_min,
                          am_in_hour: am_in_hour,
                          am_in_min: am_in_min,
                          am_out_hour: am_out_hour,
@@ -1249,23 +1470,22 @@ const Dtr = (props) => {
                          pm_in_min: pm_in_min,
                          pm_out_hour: pm_out_hour,
                          pm_out_min: pm_out_min,
-                         total_working_hour: total_working_hour,
+                         is_restday: is_restday,
                          total_tardiness_min: total_tardiness_min,
-                         ot_type: ot_type,
+                         total_undertime_min: total_undertime_min,
+                         leave_type: leave_type,
+                         absent_day: absent_day,
+                         vl_day: vl_day,
+                         sl_day: sl_day,
+                         el_day: el_day,
+                         vl_nopay_day: vl_nopay_day,
+                         sl_nopay_day: sl_nopay_day,
+                         el_nopay_day: el_nopay_day,
                          regular_ot_hours: regular_ot_hours,
                          restday_ot_hours: restday_ot_hours,
                          special_ot_hours: special_ot_hours,
                          legal_ot_hours: legal_ot_hours,
-                         vl_nopay_hours: vl_nopay_hours,
-                         sl_nopay_hours: sl_nopay_hours,
-                         el_nopay_hours: el_nopay_hours,
-                         vl_hours: vl_wpay_hours,
-                         sl_hours: sl_wpay_hours,
-                         el_hours: el_wpay_hours,
-                         is_tardiness: is_tardiness,
-                         official_am_hour: official_am_hour,
-                         absent_hours: absent_hours,
-                         leave_type: leave_type
+                         approve_ot: overtime,
                     }
                     const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/dtr', {
                          method: 'POST',
@@ -1289,13 +1509,8 @@ const Dtr = (props) => {
                     handleRefresher()
                     handleCloseAdd()
 
-
                }
           }
-
-
-
-
      }
 
 
@@ -1387,6 +1602,47 @@ const Dtr = (props) => {
      const handleallowance = (event) => {
           const value = parseInt(event.target.value);
           setallowance(value);
+     }
+     const handleZeroOnBlur = () => {
+          if (official_am_in_hour === "") {
+               setofficial_am_in_hour(0)
+          }
+          else if (official_am_in_min === "") {
+               setofficial_am_in_min(0)
+          }
+          else if (am_in_hour === "") {
+               setAm_in_hour(0)
+          }
+          else if (am_in_min === "") {
+               setAm_in_min(0)
+          }
+          else if (am_out_hour === "") {
+               setAm_out_hour(0)
+          }
+          else if (am_out_min === "") {
+               setAm_out_min(0)
+          }
+          else if (official_pm_in_hour === "") {
+               setofficial_pm_in_hour(0)
+          }
+          else if (official_pm_in_min === "") {
+               setofficial_pm_in_min(0)
+          }
+          else if (pm_in_hour === "") {
+               setPm_in_hour(0)
+          }
+          else if (pm_in_min === "") {
+               setPm_in_min(0)
+          }
+          else if (pm_out_hour === "") {
+               setPm_out_hour(0)
+          }
+          else if (pm_out_min === "") {
+               setPm_out_min(0)
+          }
+          else {
+
+          }
      }
 
 
@@ -1726,46 +1982,59 @@ const Dtr = (props) => {
                                                             label="Choose Leave Type"
                                                             fullWidth
                                                             select
-                                                            style={{ paddingBottom: "40px" }}
-                                                            onChange={handleSelectChange}
+                                                            style={{ paddingBottom: "40px", marginRight: "10px" }}
+                                                            onChange={handleSelectLeaveTypeChange}
                                                             value={leave_type}
                                                        >
 
-                                                            <MenuItem value={'none'}>None</MenuItem>
-                                                            <MenuItem value={'restday'}>Rest Day</MenuItem>
-                                                            <MenuItem value={'absent'}>Absent Wholeday</MenuItem>
-                                                            <MenuItem value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>
-                                                            <MenuItem value={'absent_halfday_afternoon'}>Absent - Halfday - Afternoon Work</MenuItem>
-                                                            <MenuItem value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'vl_halfday'}>VL With Pay Halfday</MenuItem>
-                                                            <MenuItem value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'sl_halfday'}>SL With Pay Halfday</MenuItem>
-                                                            <MenuItem value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'el_halfday'}>EL With Pay Halfday</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'none'}>Working Day</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday'}>Rest Day</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_overtime'}>Rest Day - Overtime (RDOT)</MenuItem>
 
-                                                            <MenuItem value={'vl_nopay_wholeday'}>VL No Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'vl_nopay_halfday'}>VL No Pay Halfday</MenuItem>
-                                                            <MenuItem value={'sl_nopay_wholeday'}>SL No Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'sl_nopay_halfday'}>SL No Pay Halfday</MenuItem>
-                                                            <MenuItem value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
-                                                            <MenuItem value={'el_nopay_halfday'}>EL No Pay Halfday</MenuItem>
+                                                            <MenuItem style={{ color: '#11b602', marginTop: "30px" }} value={'absent'}>Absent Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_afternoon'}>Absent Halfday - Afternoon Work</MenuItem>
+
+                                                            <MenuItem style={{ color: '#02a1b6', marginTop: "30px" }} value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_morning'}>VL With Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_afternoon'}>VL With Pay Halfday - Afternoon Work</MenuItem>
+                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_wholeday'}>VL No Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_morning'}>VL No Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_afternoon'}>VL No Pay Halfday - Afternoon Work</MenuItem>
+
+                                                            <MenuItem style={{ color: 'orange', marginTop: "30px" }} value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: 'orange' }} value={'sl_halfday_morning'}>SL With Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: 'orange' }} value={'sl_halfday_afternoon'}>SL With Pay Halfday - Afternoon Work</MenuItem>
+                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_wholeday'}>SL No Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_morning'}>SL No Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_afternoon'}>SL No Pay Halfday - Afternoon Work</MenuItem>
+
+
+                                                            <MenuItem style={{ color: 'red', marginTop: "30px" }} value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: 'red' }} value={'el_halfday_morning'}>EL With Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: 'red' }} value={'el_halfday_afternoon'}>EL With Pay Halfday - Afternoon Work</MenuItem>
+                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_morning'}>EL No Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_afternoon'}>EL No Pay Halfday - Afternoon Work</MenuItem>
 
                                                        </TextField>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
-                                                            label="Day Type (e.g: restday but overtime)"
+                                                            label="Day Type"
                                                             fullWidth
                                                             select
-                                                            style={{ marginLeft: '10px' }}
-                                                            onChange={handleDayType}
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={handleDayTypeChange}
                                                             value={day_type}
+                                                            disabled={disabled_day_type}
+
                                                        >
-                                                            <MenuItem value={'regday'}>Regular Day</MenuItem>
-                                                            <MenuItem value={'otday'}>Overtime Day</MenuItem>
-
-
+                                                            <MenuItem value={'normal_day_today'}>Normal Day</MenuItem>
+                                                            <MenuItem value={'special_holiday_today'}>Special Non Working Holiday </MenuItem>
+                                                            <MenuItem value={'legal_holiday_today'}>Legal Holiday</MenuItem>
                                                        </TextField>
+
 
                                                   </TimeContainer>
 
@@ -1782,8 +2051,10 @@ const Dtr = (props) => {
                                                                            id="outlined-required"
                                                                            label="Official AM (hour)"
                                                                            style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_am_hour(e.target.value)}
-                                                                           value={official_am_hour}
+                                                                           onChange={(e) => setofficial_am_in_hour(e.target.value)}
+                                                                           onBlur={handleZeroOnBlur}
+                                                                           value={official_am_in_hour}
+
                                                                       />
                                                                       <TextField
                                                                            disabled={disabled_am_official}
@@ -1792,9 +2063,10 @@ const Dtr = (props) => {
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="Official AM (mins)"
+                                                                           onBlur={handleZeroOnBlur}
                                                                            style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_am_min(e.target.value)}
-                                                                           value={official_am_min}
+                                                                           onChange={(e) => setofficial_am_in_min(e.target.value)}
+                                                                           value={official_am_in_min}
                                                                       />
                                                                  </TimeContainer>
 
@@ -1804,6 +2076,7 @@ const Dtr = (props) => {
                                                                            type="number"
                                                                            required
                                                                            fullWidth
+                                                                           onBlur={handleZeroOnBlur}
                                                                            id="outlined-required"
                                                                            label="AM IN (hour)"
                                                                            style={{ paddingBottom: "20px" }}
@@ -1814,6 +2087,7 @@ const Dtr = (props) => {
                                                                            disabled={disabled_am_time}
                                                                            type="number"
                                                                            required
+                                                                           onBlur={handleZeroOnBlur}
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="AM IN (mins)"
@@ -1828,6 +2102,7 @@ const Dtr = (props) => {
                                                                            disabled={disabled_am_time}
                                                                            type="number"
                                                                            required
+                                                                           onBlur={handleZeroOnBlur}
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="AM OUT (hour)"
@@ -1840,6 +2115,7 @@ const Dtr = (props) => {
                                                                            type="number"
                                                                            required
                                                                            fullWidth
+                                                                           onBlur={handleZeroOnBlur}
                                                                            id="outlined-required"
                                                                            label="AM OUT (mins)"
                                                                            style={{ paddingBottom: "20px" }}
@@ -1858,22 +2134,24 @@ const Dtr = (props) => {
                                                                            type="number"
                                                                            required
                                                                            fullWidth
+                                                                           onBlur={handleZeroOnBlur}
                                                                            id="outlined-required"
                                                                            label="Official PM (hour)"
                                                                            style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_pm_hour(e.target.value)}
-                                                                           value={official_pm_hour}
+                                                                           onChange={(e) => setofficial_pm_in_hour(e.target.value)}
+                                                                           value={official_pm_in_hour}
                                                                       />
                                                                       <TextField
                                                                            disabled={disabled_pm_official}
                                                                            type="number"
                                                                            required
+                                                                           onBlur={handleZeroOnBlur}
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="Official PM (mins)"
                                                                            style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_pm_hour(e.target.value)}
-                                                                           value={official_pm_min}
+                                                                           onChange={(e) => setofficial_pm_in_min(e.target.value)}
+                                                                           value={official_pm_in_min}
                                                                       />
                                                                  </TimeContainer>
                                                                  <TimeContainer >
@@ -1882,6 +2160,7 @@ const Dtr = (props) => {
                                                                            disabled={disabled_pm_time}
                                                                            type="number"
                                                                            required
+                                                                           onBlur={handleZeroOnBlur}
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="PM IN (hour)"
@@ -1897,6 +2176,7 @@ const Dtr = (props) => {
                                                                            fullWidth
                                                                            id="outlined-required"
                                                                            label="PM IN (mins)"
+                                                                           onBlur={handleZeroOnBlur}
                                                                            style={{ paddingBottom: "20px" }}
                                                                            onChange={(e) => setPm_in_min(e.target.value)}
                                                                            value={pm_in_min}
@@ -1910,6 +2190,7 @@ const Dtr = (props) => {
                                                                            fullWidth
                                                                            required
                                                                            id="outlined-required"
+                                                                           onBlur={handleZeroOnBlur}
                                                                            label="PM OUT (hour)"
                                                                            style={{ paddingBottom: "20px" }}
                                                                            onChange={(e) => setPm_out_hour(e.target.value)}
@@ -1921,6 +2202,7 @@ const Dtr = (props) => {
                                                                            type="number"
                                                                            required
                                                                            fullWidth
+                                                                           onBlur={handleZeroOnBlur}
                                                                            id="outlined-required"
                                                                            label="PM OUT (mins)"
                                                                            style={{ paddingBottom: "20px" }}
@@ -1934,223 +2216,163 @@ const Dtr = (props) => {
                                                        </div>
 
 
-                                                       {/* {hide_ot_others === true ? null : <OthersOT id="othersOt">
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Regular Overtime in hour"
-                                                                 fullWidth
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setRegular_ot_hours(e.target.value)}
-                                                                 value={regular_ot_hours}
-                                                                 InputProps={{
-                                                                      readOnly: true,
-                                                                 }}
-                                                            />
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Restday Overtime in hour"
-                                                                 fullWidth
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setRestday_ot_hours(e.target.value)}
-                                                                 value={restday_ot_hours}
-                                                                 InputProps={{
-                                                                      readOnly: true,
-                                                                 }}
-                                                            />
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Special Overtime in hour"
-                                                                 fullWidth
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setSpecial_ot_hours(e.target.value)}
-                                                                 value={special_ot_hours}
-                                                                 InputProps={{
-                                                                      readOnly: true,
-                                                                 }}
-                                                            />
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Legal Overtime in hour"
-                                                                 fullWidth
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={(e) => setLegal_ot_hours(e.target.value)}
-                                                                 value={legal_ot_hours}
-                                                                 InputProps={{
-                                                                      readOnly: true,
-                                                                 }}
-                                                            />
 
-                                                       </OthersOT>} */}
-                                                       <ThemeProvider theme={theme}>
+                                                       <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <div style={{ display: "flex", flexDirection: "column" }}>
 
-                                                       </ThemeProvider>
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Total Work Hour"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setTotal_working_hour(e.target.value)}
-                                                            value={total_working_hour}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Total Overtime Hour"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setTotal_ot_hour(e.target.value)}
-                                                            value={total_ot_hour}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Overtime Type"
-                                                            fullWidth
-                                                            select
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setOt_type(e.target.value)}
-                                                            value={ot_type}
-                                                       >
-                                                            <MenuItem value={'none'}>None</MenuItem>
-                                                            <MenuItem value={'regular'}>Regular</MenuItem>
-                                                            <MenuItem value={'restday'}>Rest Day</MenuItem>
-                                                            <MenuItem value={'special'}>Special Holiday</MenuItem>
-                                                            <MenuItem value={'legal'}>Legal Holiday</MenuItem>
+                                                                 <TextField
+                                                                      type="number"
 
-                                                       </TextField>
+                                                                      id="outlined-required"
+                                                                      label="Total Overtime Hour"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setTotal_ot_hour(e.target.value)}
+                                                                      value={total_ot_hour}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Approve overtime?"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setovertime(e.target.value)}
+                                                                      value={overtime}
+                                                                      disabled={disabled_overtime}
+                                                                 >
+                                                                      <MenuItem value={'not_approved'}>Don't Approve</MenuItem>
+                                                                      <MenuItem value={'approved'}>Approved</MenuItem>
 
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Tardiness in minutes"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setTotal_tardiness_min(e.target.value)}
-                                                            value={total_tardiness_min}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Absent Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setAbsent_hours(e.target.value)}
-                                                            value={absent_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Is Tardiness?"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setIs_tardiness(e.target.value)}
-                                                            value={is_tardiness}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      type="number"
+
+                                                                      id="outlined-required"
+                                                                      label="Total Undertime Minutes"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => settotal_undertime_min(e.target.value)}
+                                                                      value={total_undertime_min}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+
+                                                                 <TextField
+                                                                      type="number"
+
+                                                                      id="outlined-required"
+                                                                      label="Total Tardiness Minutes"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setTotal_tardiness_min(e.target.value)}
+                                                                      value={total_tardiness_min}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+
+                                                                      id="outlined-required"
+                                                                      label="Absent"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setabsent_day(e.target.value)}
+                                                                      value={absent_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                            </div>
+                                                            <div style={{ display: "flex", flexDirection: "column" }}>
 
 
+                                                                 <TextField
 
+                                                                      id="outlined-required"
+                                                                      label="VL with pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setvl_day(e.target.value)}
+                                                                      value={vl_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
 
+                                                                      id="outlined-required"
+                                                                      label="SL with pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setsl_day(e.target.value)}
+                                                                      value={sl_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+
+                                                                      id="outlined-required"
+                                                                      label="EL with pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setel_day(e.target.value)}
+                                                                      value={el_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+
+                                                                      id="outlined-required"
+                                                                      label="VL no pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setvl_nopay_day(e.target.value)}
+                                                                      value={vl_nopay_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+
+                                                                      id="outlined-required"
+                                                                      label="SL no pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setsl_nopay_day(e.target.value)}
+                                                                      value={sl_nopay_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+
+                                                                      id="outlined-required"
+                                                                      label="EL no pay"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setel_nopay_day(e.target.value)}
+                                                                      value={el_nopay_day}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+                                                            </div>
+                                                       </div>
                                                   </Others>}
                                                   {hideWithPayLeaves === true ? null : <OthersWithPayLeaves id="othersWithPayLeaves">
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="VL With Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setVl_wpay_hours(e.target.value)}
-                                                            value={vl_wpay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="SL With Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setSl_wpay_hours(e.target.value)}
-                                                            value={sl_wpay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="EL With Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setEl_wpay_hours(e.target.value)}
-                                                            value={el_wpay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
+
                                                   </OthersWithPayLeaves>}
 
 
                                                   {hideNoPayLeaves === true ? null : <OthersNoPayLeaves id="othersNoPayLeaves">
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="VL No Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setVl_nopay_hours(e.target.value)}
-                                                            value={vl_nopay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="SL No Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setSl_nopay_hours(e.target.value)}
-                                                            value={sl_nopay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="EL No Pay Hours"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setEl_nopay_hours(e.target.value)}
-                                                            value={el_nopay_hours}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
+
                                                   </OthersNoPayLeaves>}
                                                   {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}

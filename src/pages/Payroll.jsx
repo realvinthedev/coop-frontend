@@ -431,6 +431,10 @@ const Payroll = (props) => {
      const [default_daily, setdefault_daily] = useState(0)
      const [default_hourly, setdefault_hourly] = useState(0)
      const [default_minute, setdefault_minute] = useState(0)
+     const [default_regular_ot, setdefault_regular_ot] = useState(0)
+     const [default_restday_ot, setdefault_restday_ot] = useState(0)
+     const [default_special_ot, setdefault_special_ot] = useState(0)
+     const [default_legal_ot, setdefault_legal_ot] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + employeeId, {
@@ -446,11 +450,10 @@ const Payroll = (props) => {
                     setdefault_daily(json.daily_salary ? json.daily_salary : 0)
                     setdefault_hourly(json.hourly_salary ? json.hourly_salary : 0)
                     setdefault_minute(json.minute_salary ? json.minute_salary : 0)
-                    // setdefault_base(json.base_salary ? json.base_salary.toLocaleString() : 0)
-                    // setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary.toLocaleString() : 0)
-                    // setdefault_daily(json.daily_salary ? json.daily_salary.toLocaleString() : 0)
-                    // setdefault_hourly(json.hourly_salary ? json.hourly_salary.toLocaleString() : 0)
-                    // setdefault_minute(json.minute_salary ? json.minute_salary.toLocaleString() : 0)
+                    setdefault_regular_ot(json.regular_ot? json.regular_ot : 0)
+                    setdefault_restday_ot(json.restday_ot? json.restday_ot : 0)
+                    setdefault_special_ot(json.special_ot? json.special_ot : 0)
+                    setdefault_legal_ot(json.legal_ot? json.legal_ot : 0)
                     setFullEmp(json)
                }
           }
@@ -589,7 +592,6 @@ const Payroll = (props) => {
      const calculateGrossPay = () => {
 
           let total_working_hour = total.total_working_hour
-
           let regular_ot_hours = total.regular_ot_hours
           let restday_ot_hours = total.restday_ot_hours
           let special_ot_hours = total.special_ot_hours

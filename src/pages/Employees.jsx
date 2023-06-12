@@ -149,7 +149,6 @@ const Employees = (props) => {
      const [sick_leave, setSick_leave] = useState('')
      const [vacation_leave, setVacation_leave] = useState('')
      const [emergency_leave, setEmergencty_leave] = useState('')
-     const [photo, setPhoto] = useState('')
 
      const [openError, setOpenError] = useState(false);
      const { user } = useAuthContext()
@@ -163,6 +162,11 @@ const Employees = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
+
+     const [regular_ot, setregular_ot] = useState(0)
+     const [restday_ot, setrestday_ot] = useState(0)
+     const [special_ot, setspecial_ot] = useState(0)
+     const [legal_ot, setlegal_ot] = useState(0)
 
      const { signup, error, isLoading } = useSignup()
      const handleRefresher = () => {
@@ -199,7 +203,10 @@ const Employees = (props) => {
           setSick_leave('')
           setVacation_leave('')
           setEmergencty_leave('')
-          setPhoto('')
+          setregular_ot('')
+          setrestday_ot('')
+          setspecial_ot('')
+          setlegal_ot('')
 
      }
      const handleOpenAdd = () => {
@@ -314,8 +321,10 @@ const Employees = (props) => {
           { field: 'sick_leave', headerName: 'Sick Leave', width: 300, sortable: false },
           { field: 'vacation_leave', headerName: 'Vacation Leave', width: 300, sortable: false },
           { field: 'emergency_leave', headerName: 'Emergency Leave', width: 300, sortable: false },
-          { field: 'photo', headerName: 'Photo', width: 300, sortable: false }
-
+          { field: 'regular_ot', headerName: 'Regular OT Percentage', width: 300, sortable: false },
+          { field: 'restday_ot', headerName: 'Restday OT Percentage', width: 300, sortable: false },
+          { field: 'special_ot', headerName: 'Special OT Percentage', width: 300, sortable: false },
+          { field: 'legal_ot', headerName: 'Legal OT Percentage', width: 300, sortable: false },
      ];
 
      const handleAdd = async (e) => {
@@ -351,7 +360,11 @@ const Employees = (props) => {
                sick_leave: sick_leave,
                vacation_leave: vacation_leave,
                emergency_leave: emergency_leave,
-               photo: photo,
+               regular_ot: regular_ot,
+               restday_ot: restday_ot,
+               special_ot: special_ot,
+               legal_ot: legal_ot,
+
           }
 
           if (
@@ -417,7 +430,11 @@ const Employees = (props) => {
                     setSick_leave('')
                     setVacation_leave('')
                     setEmergencty_leave('')
-                    setPhoto('')
+                    setlegal_ot('')
+                    setspecial_ot('')
+                    setrestday_ot('')
+                    setregular_ot('')
+
                     successToast('Added Successfully')
                     handleRefresher();
                     handleCloseAdd();
@@ -460,7 +477,11 @@ const Employees = (props) => {
                sick_leave: sick_leave,
                vacation_leave: vacation_leave,
                emergency_leave: emergency_leave,
-               photo: photo,
+               regular_ot: regular_ot,
+               restday_ot: restday_ot,
+               special_ot: special_ot,
+               legal_ot: legal_ot,
+
 
           }
 
@@ -526,7 +547,11 @@ const Employees = (props) => {
                     setSick_leave('')
                     setVacation_leave('')
                     setEmergencty_leave('')
-                    setPhoto('')
+                    setlegal_ot('')
+                    setspecial_ot('')
+                    setrestday_ot('')
+                    setregular_ot('')
+
 
                     successToast('Updated Successfully')
                     handleRefresher();
@@ -568,17 +593,17 @@ const Employees = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    if (departmentfilter === "all"){
+                    if (departmentfilter === "all") {
                          setEmployee(json)
                     }
-                    else{
+                    else {
                          const filteredData = json.filter(item => {
                               const department = item.department
                               return department === departmentfilter
                          });
                          setEmployee(filteredData)
                     }
-                   
+
                }
           }
           if (user) {
@@ -586,7 +611,7 @@ const Employees = (props) => {
           }
 
      }, [user, refresher, departmentfilter])
-     
+
 
      const handleRowClick = async (params) => {
           setEmployee_id(params.row.employee_id)
@@ -616,7 +641,11 @@ const Employees = (props) => {
           setSick_leave(params.row.sick_leave)
           setVacation_leave(params.row.vacation_leave)
           setEmergencty_leave(params.row.emergency_leave)
-          setPhoto(params.row.photo)
+          setlegal_ot(params.row.legal_ot)
+          setspecial_ot(params.row.special_ot)
+          setrestday_ot(params.row.restday_ot)
+          setregular_ot(params.row.regular_ot)
+
 
           console.log(is_active)
 
@@ -921,6 +950,41 @@ const Employees = (props) => {
                                                                       />
                                                                  </LocalizationProvider>
                                                                  <FormSeparator>
+                                                                      Overtime Percentage
+                                                                 </FormSeparator>
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Regular OT Percentage"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      fullWidth
+                                                                      onChange={(e) => setregular_ot(e.target.value)}
+                                                                      value={regular_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Restday OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setrestday_ot(e.target.value)}
+                                                                      value={restday_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Special OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setspecial_ot(e.target.value)}
+                                                                      value={special_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      id="outlined-required"
+                                                                      label="Legal OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setlegal_ot(e.target.value)}
+                                                                      value={legal_ot}
+                                                                 />
+                                                                 <FormSeparator>
                                                                       Government Taxes
                                                                  </FormSeparator>
                                                                  <TextField
@@ -1009,18 +1073,9 @@ const Employees = (props) => {
                                                                       value={emergency_leave}
                                                                  />
 
-                                                                 <FormSeparator>
-                                                                      Photo
-                                                                 </FormSeparator>
 
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Photo Link"
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      fullWidth
-                                                                      onChange={(e) => setPhoto(e.target.value)}
-                                                                      value={photo}
-                                                                 />
+
+
                                                             </DialogContent>
                                                             <DialogActions>
                                                                  <Button onClick={handlePatch}>Update</Button>
@@ -1210,6 +1265,45 @@ const Employees = (props) => {
                                                                       />
                                                                  </LocalizationProvider>
                                                                  <FormSeparator>
+                                                                      Overtime Percentage
+                                                                 </FormSeparator>
+                                                                 <TextField
+                                                                      type="number"
+                                                                      id="outlined-required"
+                                                                      label="Regular OT Percentage"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      fullWidth
+                                                                      onChange={(e) => setregular_ot(e.target.value)}
+                                                                      value={regular_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      id="outlined-required"
+                                                                      label="Restday OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setrestday_ot(e.target.value)}
+                                                                      value={restday_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      id="outlined-required"
+                                                                      label="Special OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setspecial_ot(e.target.value)}
+                                                                      value={special_ot}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      id="outlined-required"
+                                                                      label="Legal OT Percentage"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setlegal_ot(e.target.value)}
+                                                                      value={legal_ot}
+                                                                 />
+                                                                 <FormSeparator>
                                                                       Government Taxes
                                                                  </FormSeparator>
                                                                  <TextField
@@ -1320,18 +1414,7 @@ const Employees = (props) => {
                                                                            </Button>
                                                                       </ThemeProvider>
                                                                  </IDGeneratorContainer>
-                                                                 <FormSeparator>
-                                                                      Photo
-                                                                 </FormSeparator>
 
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Photo Link"
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      fullWidth
-                                                                      onChange={(e) => setPhoto(e.target.value)}
-                                                                      value={photo}
-                                                                 />
 
 
                                                             </DialogContent>
