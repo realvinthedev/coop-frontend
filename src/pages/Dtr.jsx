@@ -133,30 +133,48 @@ const columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'employee_id', headerName: 'Employee ID', width: 100 },
      { field: 'name', headerName: 'Fullname', width: 200 },
+
+
+     { field: 'official_am_in_hour', headerName: 'Official AM IN', width: 80 },
+     { field: 'official_am_in_min', headerName: '', width: 80 },
      { field: 'am_in_hour', headerName: 'AM IN', width: 80 },
      { field: 'am_in_min', headerName: '', width: 80 },
      { field: 'am_out_hour', headerName: 'AM OUT', width: 80 },
      { field: 'am_out_min', headerName: '', width: 80 },
+
+
+
+     { field: 'official_pm_in_hour', headerName: 'Official PM IN', width: 80 },
+     { field: 'official_pm_in_min', headerName: '', width: 80 },
      { field: 'pm_in_hour', headerName: 'PM IN', width: 80 },
      { field: 'pm_in_min', headerName: '', width: 80 },
      { field: 'pm_out_hour', headerName: 'PM OUT', width: 80 },
      { field: 'pm_out_min', headerName: '', width: 80 },
-     { field: 'total_working_hour', headerName: 'Total Working Hour', width: 140 },
-     { field: 'ot_type', headerName: 'OT Type', width: 140 },
+
+
+
+
+     { field: 'is_restday', headerName: 'Is Restday?', width: 140 },
      { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 140 },
-     { field: 'is_tardiness', headerName: 'Is Tardiness?', width: 80 },
-     { field: 'vl_hours', headerName: 'VL Hours', width: 80 },
-     { field: 'sl_hours', headerName: 'SL Hours', width: 80 },
-     { field: 'el_hours', headerName: 'EL Hours', width: 80 },
-     { field: 'leave_type', headerName: 'Leave Type', width: 80 },
-     { field: 'absent_day', headerName: 'Absent Hours', width: 80 },
-     { field: 'vl_nopay_day', headerName: 'VL No Pay Hours', width: 80 },
-     { field: 'sl_nopay_day', headerName: 'SL No Pay Hours', width: 80 },
-     { field: 'el_nopay_day', headerName: 'EL No Pay Hours', width: 80 },
-     { field: 'regular_ot_hours', headerName: 'Regular OT Hours', width: 80 },
-     { field: 'restday_ot_hours', headerName: 'Restday OT Hours', width: 80 },
-     { field: 'special_ot_hours', headerName: 'Special OT Hours', width: 80 },
-     { field: 'legal_ot_hours', headerName: 'Legal OT Hours', width: 80 },
+     { field: 'total_undertime_min', headerName: 'Undertime in Minutes', width: 140 },
+
+
+     { field: 'leave_type', headerName: 'Leave Type', width: 140 },
+     { field: 'absent_day', headerName: 'Absent', width: 140 },
+     { field: 'vl_day', headerName: 'VL - Paid', width: 140 },
+     { field: 'sl_day', headerName: 'SL - Paid', width: 140 },
+     { field: 'el_day', headerName: 'EL - Paid', width: 140 },
+
+     { field: 'vl_nopay_day', headerName: 'VL - No Pay', width: 140 },
+     { field: 'sl_nopay_day', headerName: 'SL - No Pay', width: 140 },
+     { field: 'el_nopay_day', headerName: 'EL - No Pay', width: 140 },
+
+
+     { field: 'approve_ot', headerName: 'Approved Overtime?', width: 140 },
+     { field: 'regular_ot_hours', headerName: 'Regular - OT', width: 140 },
+     { field: 'restday_ot_hours', headerName: 'Restday - OT', width: 140 },
+     { field: 'special_ot_hours', headerName: 'Spec. Non Working - OT', width: 140 },
+     { field: 'legal_ot_hours', headerName: 'Legal Holiday - OT', width: 140 },
 ];
 
 
@@ -293,7 +311,7 @@ const Dtr = (props) => {
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
      const [overtime, setovertime] = useState("not_approved")
      const [disabled_day_type, setdisabled_day_type] = useState(false)
-     
+
      const handleOpenAdd = () => {
           setOpenAdd(true);
      };
@@ -325,30 +343,6 @@ const Dtr = (props) => {
                setdisabled_overtime(true)
           }
      }, [total_ot_hour])
-
-     // function DataList({ date }) {
-     //      const [data, setData] = useState([]);
-
-     //      useEffect(() => {
-     //        async function fetchData() {
-     //          const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/${date}`);
-     //          const data = await response.json();
-     //          setData(data);
-     //        }
-     //        fetchData();
-     //        console.log(data)
-     //      }, [date]);
-
-     //      return (
-     //        <ul>
-     //          {data.map((item) => (
-     //            <li key={item._id}>{item.name}</li>
-     //          ))}
-     //        </ul>
-
-     //      );
-
-     //    }
 
 
      const [dept, setDept] = useState([])
@@ -405,7 +399,7 @@ const Dtr = (props) => {
      const [official_pm_in_hour, setofficial_pm_in_hour] = useState(0);
      const [official_pm_in_min, setofficial_pm_in_min] = useState(0);
 
-     const [leave_type, setLeaveType] = useState('none');
+     const [leave_type, setLeaveType] = useState('working_day');
      const [hide, setHide] = useState(false);
      const [hideWithPayLeaves, setHideWithPayLeaves] = useState(true)
      const [hideNoPayLeaves, setHideNoPayLeaves] = useState(true)
@@ -415,17 +409,12 @@ const Dtr = (props) => {
 
      //Run every time fields changes
      useEffect(() => {
-          // if (am_in_hour.length === 1 || am_in_hour.length === 2) {
-          //      CalculateTotalHours();
-
-          // }
-
-          //      CalculateTotalOtHours();
-          //CalculateTotalHours();
           handleCalculateTotalHours();
           handleCalculateTardiness()
           handleCalculateUndertime();
           handleCalculateOvertime();
+          handleOTType()
+          console.log(')))))))))))))))))))))))))))))))))))))))))))))))))))', regular_ot_hours)
      }, [
           overtime,
           leave_type,
@@ -468,12 +457,12 @@ const Dtr = (props) => {
                status == "el_nopay_halfday_morning"
 
           ) {
-               setdisabled_pm_official(true)
-               setdisabled_pm_time(true)
-               setdisabled_am_official(false)
-               setdisabled_am_time(false)
-               setovertime('none')
-               setdisabled_overtime(false)
+               setdisabled_pm_official(true) //correct
+               setdisabled_pm_time(true) //true
+               setdisabled_am_official(false) //true
+               setdisabled_am_time(false) //true
+               setovertime('not_approved')
+               // setdisabled_overtime(false)
                setdisabled_day_type(false)
           }
           else if (
@@ -490,8 +479,8 @@ const Dtr = (props) => {
                setdisabled_am_official(true)
 
                setdisabled_am_time(true)
-               setdisabled_overtime(false)
-               setovertime('none')
+               // setdisabled_overtime(false)
+               setovertime('not_approved')
                setdisabled_day_type(false)
           }
           else {
@@ -501,32 +490,28 @@ const Dtr = (props) => {
                setdisabled_pm_time(false)
                setdisabled_day_type(false)
           }
-
-          if (status == "restday_overtime") {
-               setovertime('none')
-               setdisabled_overtime(false)
-               setdisabled_day_type(false)
-          }
-          if (status == "restday") {
-               setovertime('none')
-               setdisabled_overtime(true)
-               setdisabled_day_type(true)
-           
-
-          }
-          if (status == "none") {
-               setovertime('none')
-               setdisabled_overtime(false)
-               setdisabled_day_type(false)
-
-          }
+          // if (status == "_overtime") {
+          //      setovertime('not_approved')
+          //      setdisabled_overtime(false)
+          //      setdisabled_day_type(false)
+          // }
+          // if (status == "") {
+          //      setovertime('not_approved')
+          //      setdisabled_overtime(true)
+          //      setdisabled_day_type(true)
+          // }
+          // if (status == "none") {
+          //      setovertime('not_approved')
+          //      setdisabled_overtime(false)
+          //      setdisabled_day_type(false)
+          // }
           if (status == "absent") {
-               setovertime('none')
+               setovertime('not_approved')
                setdisabled_overtime(true)
                setdisabled_day_type(true)
           }
           if (status == "vl_wholeday" || status == "vl_nopay_wholeday" || status == "sl_wholeday" || status == "sl_nopay_wholeday" || status == "el_wholeday" || status == "el_nopay_wholeday") {
-               setovertime('none')
+               setovertime('not_approved')
                setdisabled_overtime(true)
                setdisabled_day_type(true)
           }
@@ -535,24 +520,22 @@ const Dtr = (props) => {
      const handleDayTypeChange = (event) => {
           const type = event.target.value
           setday_type(type);
-     } 
+     }
      const handleSelectLeaveTypeChange = (event) => {
           const type = event.target.value
           setLeaveType(event.target.value);
           handleDisabledAbsence(type)
           handleClearTotal();
-        
 
-          if (type == "none") {
+
+          if (type == "working_day") {
                setHide(false)
                setabsent_day(0)
                setHideWithPayLeaves(true)
+               setis_restday("No")
                setHideNoPayLeaves(true)
           }
-          else if (type === "restday") {
-               setHide(true)
-          }
-          else if (type === "restday_overtime") {
+          else if (type === "_overtime") {
                setHide(false)
           }
           else if (type == "vl_halfday_morning" || type == "vl_halfday_afternoon" || type == "sl_halfday_morning" || type == "sl_halfday_afternoon" || type == "el_halfday_morning" || type == "el_halfday_afternoon") {
@@ -560,6 +543,7 @@ const Dtr = (props) => {
                setabsent_day(0)
                setHideWithPayLeaves(false)
                setHideNoPayLeaves(true)
+               setis_restday("No")
                handleClearForLeave()
                if (type == "vl_halfday_afternoon" || type == "vl_halfday_morning") {
                     setvl_day(0.5)
@@ -583,6 +567,7 @@ const Dtr = (props) => {
                setabsent_day(0)
                setHideWithPayLeaves(false)
                setHideNoPayLeaves(true)
+               setis_restday("No")
                handleClearForLeave()
                if (type == "vl_wholeday") {
                     setvl_day(1)
@@ -607,6 +592,7 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
                handleClearForLeave()
+               setis_restday("No")
                if (type == "vl_nopay_halfday_afternoon" || type == "vl_nopay_halfday_morning") {
                     setvl_nopay_day(0.5)
                     setsl_nopay_day(0)
@@ -630,6 +616,7 @@ const Dtr = (props) => {
                setabsent_day(0)
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(false)
+               setis_restday("No")
                handleClearForLeave()
                if (type == "vl_nopay_wholeday") {
                     setvl_nopay_day(1)
@@ -655,7 +642,8 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForAbsent()
-             
+               setis_restday("No")
+
           }
           else if (type == "absent_halfday_morning" || type == "absent_halfday_afternoon") {
                setabsent_day(0.5)
@@ -663,6 +651,7 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForAbsent()
+               setis_restday("No")
           }
           else if (type == "restday") {
                setabsent_day(0)
@@ -670,7 +659,7 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForRestDay()
-            
+               setis_restday("Yes")
           }
           else if (type == "restday_overtime") {
                setabsent_day(0)
@@ -678,6 +667,8 @@ const Dtr = (props) => {
                setHideWithPayLeaves(true)
                setHideNoPayLeaves(true)
                handleClearForRestDay()
+               setis_restday("No")
+
           }
           else {
           }
@@ -718,7 +709,13 @@ const Dtr = (props) => {
           setPm_out_min(0)
           setTotal_working_hour(0)
           setOt_type('none')
-          setLeaveType('none')
+          setLeaveType('working_day')
+          setHide(false)
+          setdisabled_am_official(false)
+          setdisabled_am_time(false)
+          setdisabled_day_type(false)
+          setdisabled_pm_official(true)
+          setdisabled_pm_time(false)
           setTotal_tardiness_min(0)
           setabsent_day(0)
           setIs_tardiness(0)
@@ -755,7 +752,7 @@ const Dtr = (props) => {
           setsl_nopay_day(0)
           setTotal_ot_hour(0)
           setel_nopay_day(0)
-          setovertime('regular')
+          setovertime('not_approved')
      }
      const handleClearForRestDay = () => {
           setofficial_am_in_hour(0)
@@ -781,7 +778,7 @@ const Dtr = (props) => {
           setvl_nopay_day(0)
           setsl_nopay_day(0)
           setel_nopay_day(0)
-          setovertime('none')
+          setovertime('not_approved')
           setabsent_day(0)
      }
 
@@ -825,7 +822,7 @@ const Dtr = (props) => {
      }
 
      const handleOTType = () => {
-          
+
           if (day_type === "normal_day_today") {
                setRegular_ot_hours(total_ot_hour)
                setSpecial_ot_hours(0)
@@ -844,9 +841,9 @@ const Dtr = (props) => {
      }
      useEffect(() => {
           handleOTType();
-     }, [day_type])
+     }, [user, day_type, total_ot_hour])
 
-  
+
 
 
 
@@ -882,7 +879,7 @@ const Dtr = (props) => {
           let actual_pm_in_hours = parseFloat(pm_in_hour) + parseFloat(pm_in_mins);
           let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
 
-          if (leave_type == "none") {
+          if (leave_type == "working_day") {
                let total_hours = (official_am_in_hours + 9)
                let is_undertime = (total_hours - actual_pm_out_hours) * 60
                // meaning, if there's an undertime, AND the official hours and pm hours has value
@@ -964,7 +961,7 @@ const Dtr = (props) => {
           //      overbreak = actual_pm_in_hours - actual_am_out_hours;
           // }
 
-          if (leave_type == "none") {
+          if (leave_type == "working_day") {
                let difference = (actual_am_in_hours - official_am_in_hours) * 60
                if (actual_am_in_hours > official_am_in_hours) {
                     let rounded_difference = Math.round(difference)
@@ -1041,16 +1038,8 @@ const Dtr = (props) => {
           let actual_pm_out_hours = parseFloat(pm_out_hour) + parseFloat(pm_out_mins);
 
 
-          // let total_ot_am_hours
-          //      if (leave_type == "absent_halfday_morning" && total_am_hours > 4) {
-          //           total_ot_am_hours = total_am_hours - 4
-          //           setTotal_working_hour(4)
-          //           setTotal_ot_hour(total_ot_am_hours)
-          //      }
-          //      else {
-          //           
-          //      }
-          if (leave_type == "none") {
+
+          if (leave_type == "working_day") {
                let total_hours = official_am_in_hours + 9;
                let is_overtime = actual_pm_out_hours - total_hours;
                if (is_overtime > 0 && official_am_in_hours > 0 && actual_pm_out_hours > 0) {
@@ -1445,8 +1434,41 @@ const Dtr = (props) => {
      const handleAdd = async (e) => {
           e.preventDefault()
 
-          if (name === "" || official_am_in_hour === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "" || total_working_hour === "") {
+          if (name === "" || official_am_in_hour === "" || am_in_hour === "" || am_out_hour === "" || pm_in_hour === "" || pm_out_hour === "") {
                errorToast('Fill up the required fields completely')
+          }
+          else if (
+               (leave_type == "absent_halfday_morning" ||
+                    leave_type == "vl_halfday_morning" ||
+                    leave_type == "vl_nopay_halfday_morning" ||
+                    leave_type == "sl_halfday_morning" ||
+                    leave_type == "sl_nopay_halfday_morning" ||
+                    leave_type == "el_halfday_morning" ||
+                    leave_type == "el_nopay_halfday_morning")
+
+               &&
+
+               official_am_in_hour === 0 
+                   
+
+
+          ) {
+               errorToast(leave_type + " " + official_am_in_hour + " " + am_in_hour + " " + am_out_hour)
+          }
+          else if (
+               (leave_type == "absent_halfday_afternoon" ||
+               leave_type == "vl_halfday_afternoon" ||
+               leave_type == "vl_nopay_halfday_afternoon" ||
+               leave_type == "sl_halfday_afternoon" ||
+               leave_type == "sl_nopay_halfday_afternoon" ||
+               leave_type == "el_halfday_afternoon" ||
+               leave_type == "el_nopay_halfday_afternoon")
+
+               &&
+
+               official_pm_in_hour === 0 
+          ) {
+               errorToast("Please input time in and timeout first AFTERNOON")
           }
           else {
                if (!user) {
@@ -1533,7 +1555,7 @@ const Dtr = (props) => {
      const [total_earnings, settotal_earnings] = useState(0)
      const [allowance, setallowance] = useState(0)
      const [error, setError] = useState("")
-     const [tferror, setTferror] = useState(false)
+
 
      const handleRowClick = (params) => {
           setId(params.row._id);
@@ -1607,37 +1629,121 @@ const Dtr = (props) => {
           if (official_am_in_hour === "") {
                setofficial_am_in_hour(0)
           }
+          else if(official_am_in_hour > 24){
+               errorToast("Invalid time")
+               setofficial_am_in_hour(0)
+          }
+
+
+          
+
           else if (official_am_in_min === "") {
                setofficial_am_in_min(0)
           }
+          else if(official_am_in_min > 59){
+               errorToast("Invalid time")
+               setofficial_am_in_min(0)
+          }
+
+
+
           else if (am_in_hour === "") {
                setAm_in_hour(0)
           }
+          else if(am_in_hour > 24){
+               errorToast("Invalid time")
+               setAm_in_hour(0)
+          }
+
+
+
           else if (am_in_min === "") {
                setAm_in_min(0)
           }
+          else if(am_in_min > 59){
+               errorToast("Invalid time")
+               setAm_in_min(0)
+          }
+
+
+
           else if (am_out_hour === "") {
                setAm_out_hour(0)
           }
+          else if(am_out_hour > 24){
+               errorToast("Invalid time")
+               setAm_out_hour(0)
+          }
+
+
           else if (am_out_min === "") {
                setAm_out_min(0)
           }
+          else if(am_out_min > 59){
+               errorToast("Invalid time")
+               setAm_out_min(0)
+          }
+
+
+
           else if (official_pm_in_hour === "") {
                setofficial_pm_in_hour(0)
           }
+          else if(official_pm_in_hour > 24){
+               errorToast("Invalid time")
+               setofficial_pm_in_hour(0)
+          }
+
+
+
           else if (official_pm_in_min === "") {
                setofficial_pm_in_min(0)
           }
+          else if(official_pm_in_min > 59){
+               errorToast("Invalid time")
+               setofficial_pm_in_min(0)
+          }
+
+
+
           else if (pm_in_hour === "") {
                setPm_in_hour(0)
           }
+          else if(pm_in_hour > 24){
+               errorToast("Invalid time")
+               setPm_in_hour(0)
+          }
+
+
+
           else if (pm_in_min === "") {
                setPm_in_min(0)
           }
+          else if(pm_in_min > 59){
+               errorToast("Invalid time")
+               setPm_in_min(0)
+          }
+
+
+
+
+
           else if (pm_out_hour === "") {
                setPm_out_hour(0)
           }
+          else if(pm_out_hour > 24){
+               errorToast("Invalid time")
+               setPm_out_hour(0)
+          }
+
+
+
+
           else if (pm_out_min === "") {
+               setPm_out_min(0)
+          }
+          else if(pm_out_min > 59){
+               errorToast("Invalid time")
                setPm_out_min(0)
           }
           else {
@@ -1987,7 +2093,7 @@ const Dtr = (props) => {
                                                             value={leave_type}
                                                        >
 
-                                                            <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'none'}>Working Day</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'working_day'}>Working Day</MenuItem>
                                                             <MenuItem style={{ color: '#a41fe2' }} value={'restday'}>Rest Day</MenuItem>
                                                             <MenuItem style={{ color: '#a41fe2' }} value={'restday_overtime'}>Rest Day - Overtime (RDOT)</MenuItem>
 
