@@ -1483,6 +1483,25 @@ const Employees = (props) => {
                                                             </TableBody>
                                                        </Table>
                                                   </TableContainer>
+
+
+
+
+                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                       <h3>Overtime Percentage</h3>
+                                                  </div>
+                                                  <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                            <TableBody>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Regular OT Percentage</TableCell><TableCell align="left">{regular_ot}%</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Restday OT Percentage</TableCell><TableCell align="left">{restday_ot}%</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Special OT Percentage</TableCell><TableCell align="left">{special_ot}%</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Legal OT Percentage</TableCell><TableCell align="left">{legal_ot}%</TableCell></TableRow>
+                                                            </TableBody>
+                                                       </Table>
+                                                  </TableContainer>
+
+
                                                   <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                        <h3>Governement Taxes</h3>
                                                   </div>
@@ -1546,6 +1565,10 @@ const Employees = (props) => {
                                                                       vacation_leave={vacation_leave}
                                                                       sick_leave={sick_leave}
                                                                       emergency_leave={emergency_leave}
+                                                                      regular_ot={regular_ot}
+                                                                      restday_ot={restday_ot}
+                                                                      special_ot={special_ot}
+                                                                      legal_ot={legal_ot}
                                                                  />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
                                                             </PDFDownloadLink>

@@ -175,8 +175,16 @@ const Additionals = (props) => {
           let currentDate = `${month}-${day}-${year}`;
           return currentDate
      })
+     const [period, setPeriod] = useState('first');
+     const handleMonthChange = (e) => {
+          setMonth(e.target.value)
 
 
+
+     }
+     const handlePeriodChange = (e) => {
+          setPeriod(e.target.value)
+     }
 
 
 
@@ -307,16 +315,135 @@ const Additionals = (props) => {
           let currentDate = `${month}-${day}-${year}`;
           return currentDate
      })
-     const convertDateToStringFrom = (date) => {
-          const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-          const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
-          setdate_from(dateString)
-     };
-     const convertDateToStringTo = (date) => {
-          const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-          const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
-          setdate_to(dateString)
-     };
+     // const convertDateToStringFrom = (date) => {
+     //      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+     //      const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
+     //      setdate_from(dateString)
+     // };
+     // const convertDateToStringTo = (date) => {
+     //      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+     //      const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
+     //      setdate_to(dateString)
+     // };
+
+     const [month, setMonth] = useState('january');
+     const [start_date, setStartDate] = useState("");
+     const [end_date, setEndDate] = useState("");
+
+     useEffect(() => {
+          handleDates();
+     }, [month, name, end_date, start_date, period])
+
+
+     const handleDates = () => {
+          if (month == "january" && period == "first") {
+               setStartDate(`01-01-2023`)
+               setEndDate(`01-15-2023`)
+          }
+          if (month == "january" && period == "second") {
+               setStartDate(`01-16-2023`)
+               setEndDate(`01-31-2023`)
+          }
+
+          if (month == "february" && period == "first") {
+               setStartDate(`02-01-2023`)
+               setEndDate(`02-15-2023`)
+          }
+          if (month == "february" && period == "second") {
+               setStartDate(`02-16-2023`)
+               setEndDate(`02-29-2023`)
+          }
+
+          if (month == "march" && period == "first") {
+               setStartDate(`03-01-2023`)
+               setEndDate(`03-15-2023`)
+          }
+          if (month == "march" && period == "second") {
+               setStartDate(`03-16-2023`)
+               setEndDate(`03-31-2023`)
+          }
+
+          if (month == "april" && period == "first") {
+               setStartDate(`04-01-2023`)
+               setEndDate(`04-15-2023`)
+          }
+          if (month == "april" && period == "second") {
+               setStartDate(`04-16-2023`)
+               setEndDate(`04-30-2023`)
+          }
+
+          if (month == "may" && period == "first") {
+               setStartDate(`05-01-2023`)
+               setEndDate(`05-15-2023`)
+          }
+          if (month == "may" && period == "second") {
+               setStartDate(`05-16-2023`)
+               setEndDate(`05-31-2023`)
+          }
+
+          if (month == "june" && period == "first") {
+               setStartDate(`06-01-2023`)
+               setEndDate(`06-15-2023`)
+          }
+          if (month == "june" && period == "second") {
+               setStartDate(`06-16-2023`)
+               setEndDate(`06-30-2023`)
+          }
+
+          if (month == "july" && period == "first") {
+               setStartDate(`07-01-2023`)
+               setEndDate(`07-15-2023`)
+          }
+          if (month == "july" && period == "second") {
+               setStartDate(`07-16-2023`)
+               setEndDate(`07-31-2023`)
+          }
+
+          if (month == "august" && period == "first") {
+               setStartDate(`08-01-2023`)
+               setEndDate(`08-15-2023`)
+          }
+          if (month == "august" && period == "second") {
+               setStartDate(`08-16-2023`)
+               setEndDate(`08-31-2023`)
+          }
+
+          if (month == "september" && period == "first") {
+               setStartDate(`09-01-2023`)
+               setEndDate(`09-15-2023`)
+          }
+          if (month == "september" && period == "second") {
+               setStartDate(`09-16-2023`)
+               setEndDate(`09-30-2023`)
+          }
+
+          if (month == "october" && period == "first") {
+               setStartDate(`10-01-2023`)
+               setEndDate(`10-15-2023`)
+          }
+          if (month == "october" && period == "second") {
+               setStartDate(`10-16-2023`)
+               setEndDate(`10-31-2023`)
+          }
+
+          if (month == "november" && period == "first") {
+               setStartDate(`11-01-2023`)
+               setEndDate(`11-15-2023`)
+          }
+          if (month == "november" && period == "second") {
+               setStartDate(`11-16-2023`)
+               setEndDate(`11-30-2023`)
+          }
+
+          if (month == "december" && period == "first") {
+               setStartDate(`12-01-2023`)
+               setEndDate(`12-15-2023`)
+          }
+          if (month == "december" && period == "second") {
+               setStartDate(`12-16-2023`)
+               setEndDate(`12-31-2023`)
+          }
+     }
 
      const [additionals, setAdditionals] = useState([])
      useEffect(() => {
@@ -333,23 +460,37 @@ const Additionals = (props) => {
                          const date = item.date_covered
                          const employee_id = item.employee_id
                          if (name == "all") {
-                              return date >= date_from && date <= date_to
+                              return date >= start_date && date <= end_date
                          }
                          else {
-                              return date >= date_from && date <= date_to && employee_id == employeeId
+                              return date >= start_date && date <= end_date && employee_id == employeeId
                          }
-
-
                     });
-
                     setAdditionals(filteredData)
+                    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', filteredData)
+                    // setEmployee_dtr(json)
+
+                    // const filteredData = json.filter(item => {
+                    //      const date = item.date_covered
+                    //      const employee_id = item.employee_id
+                    //      if (name == "all") {
+                    //           return date >= date_from && date <= date_to
+                    //      }
+                    //      else {
+                    //           return date >= date_from && date <= date_to && employee_id == employeeId
+                    //      }
+
+
+                    // });
+
+
                }
           }
           if (user) {
                fetchAdditionals();
           }
 
-     }, [date_to, date_from, employeeId, refresher])
+     }, [start_date, end_date, name])
 
 
 
@@ -551,6 +692,7 @@ const Additionals = (props) => {
                          console.log(error)
                     }
                     successToast('Added Successfully')
+                    handleCloseAddAdditionals();
                     handleRefresher()
                }
 
@@ -596,7 +738,7 @@ const Additionals = (props) => {
 
                                    <div style={{ height: 500, width: '100%' }}>
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                             {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                   <DatePicker
                                                        label="Date From"
                                                        value={date_from}
@@ -604,8 +746,61 @@ const Additionals = (props) => {
                                                        onChange={convertDateToStringFrom}
                                                        renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                   />
-                                             </LocalizationProvider>
-                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                             </LocalizationProvider> */}
+                                             <TextField
+                                                  required
+                                                  id="outlined-required"
+                                                  label="Month"
+                                                  fullWidth
+                                                  select
+                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                  onChange={handleMonthChange}
+                                                  value={month}
+                                             >
+                                                  <MenuItem value={'january'}>January 2023</MenuItem>
+                                                  <MenuItem value={'february'}>February 2023</MenuItem>
+                                                  <MenuItem value={'march'}>March 2023</MenuItem>
+                                                  <MenuItem value={'april'}>April 2023</MenuItem>
+                                                  <MenuItem value={'may'}>May 2023</MenuItem>
+                                                  <MenuItem value={'june'}>June 2023</MenuItem>
+                                                  <MenuItem value={'july'}>July 2023</MenuItem>
+                                                  <MenuItem value={'august'}>August 2023</MenuItem>
+                                                  <MenuItem value={'september'}>September 2023</MenuItem>
+                                                  <MenuItem value={'october'}>October 2023</MenuItem>
+                                                  <MenuItem value={'november'}>November 2023</MenuItem>
+                                                  <MenuItem value={'december'}>December 2023</MenuItem>
+
+                                             </TextField>
+                                             <TextField
+                                                  required
+                                                  id="outlined-required"
+                                                  label="Period"
+                                                  fullWidth
+                                                  select
+                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                  onChange={handlePeriodChange}
+                                                  value={period}
+                                             >
+                                                  <MenuItem value={'first'}>First Half</MenuItem>
+                                                  <MenuItem value={'second'}>Second Half</MenuItem>
+                                             </TextField>
+                                             <TextField
+                                                  required
+                                                  id="outlined-required"
+                                                  label="Search Employee"
+                                                  fullWidth
+                                                  select
+                                                  style={{ paddingBottom: "20px" }}
+                                                  onChange={handleName}
+                                                  value={name}
+                                             >
+                                                  <MenuItem value={'all'}>All</MenuItem>
+                                                  {emp.map((data) => {
+                                                       // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                       return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                  })}
+                                             </TextField>
+                                             {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                   <DatePicker
                                                        label="Date To"
                                                        value={date_to}
@@ -613,7 +808,7 @@ const Additionals = (props) => {
                                                        onChange={convertDateToStringTo}
                                                        renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                   />
-                                             </LocalizationProvider>
+                                             </LocalizationProvider> */}
                                         </div>
                                         <DataGrid
                                              getRowId={(row) => row._id}
@@ -624,22 +819,7 @@ const Additionals = (props) => {
                                              style={{ marginBottom: "20px" }}
                                              onRowClick={handleRowClick}
                                         />
-                                        <TextField
-                                             required
-                                             id="outlined-required"
-                                             label="Search Employee"
-                                             fullWidth
-                                             select
-                                             style={{ paddingBottom: "20px" }}
-                                             onChange={handleName}
-                                             value={name}
-                                        >
-                                             <MenuItem value={'all'}>All</MenuItem>
-                                             {emp.map((data) => {
-                                                  // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                  return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                             })}
-                                        </TextField>
+
 
 
                                         <ButtonContainer>

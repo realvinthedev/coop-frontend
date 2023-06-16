@@ -703,12 +703,11 @@ const Payroll = (props) => {
           //SUBTOTAL
           let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin
           let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours
-          let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
-          let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
-          let gross = (bimonthly + earnings) - deductions //CORRECT!!!!!!!!!!!!
+          let gross = (bimonthly + earnings) - deductions 
           let final_gross = gross + additional_earnings
           let net = final_gross - additional_deductions
-
+          let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
+          let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
 
           setfinal_earnings(additional_earnings)
           setfinal_gross_pay(final_gross)

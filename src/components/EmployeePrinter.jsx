@@ -83,6 +83,10 @@ const EmployeePrinter = ({
      vacation_leave,
      sick_leave,
      emergency_leave,
+     regular_ot,
+     restday_ot,
+     special_ot,
+     legal_ot,
 }) => {
 
      const [currentDate, setCurrentDate] = useState(() => {
@@ -119,6 +123,12 @@ const EmployeePrinter = ({
                          <View style={styles.row}><Text style={styles.data}>Base Salary</Text><Text style={styles.data}>{base_salary}</Text></View>
                          <View style={styles.row}><Text style={styles.data}>Start Date</Text><Text style={styles.data}>{start_date}</Text></View>
                          <View style={styles.row}><Text style={styles.data}>End Date</Text><Text style={styles.data}>{end_date}</Text></View>
+
+                           <View style={styles.row}><Text style={styles.title}>Government Taxes</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Regular OT Percentage</Text><Text style={styles.data}>{regular_ot}</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Restday OT Percentage</Text><Text style={styles.data}>{restday_ot}</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Special OT Percentage</Text><Text style={styles.data}>{special_ot}</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Legal OT Percentage</Text><Text style={styles.data}>{legal_ot}</Text></View>
 
                          <View style={styles.row}><Text style={styles.title}>Government Taxes</Text></View>
                          <View style={styles.row}><Text style={styles.data}>SSS Number</Text><Text style={styles.data}>{sss}</Text></View>
