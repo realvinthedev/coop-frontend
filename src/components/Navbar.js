@@ -164,7 +164,7 @@ const Navbar = () => {
                                              <MoneyIcon />
                                         </ListItemIcon>
                                    </div>
-                                   <ListItemText primary="Earnings & Deductions" />
+                                   <ListItemText primary="Additional Earnings & Deductions" />
                               </ListItemButton>
                          </Link>}
                     {user && currentUser == "admin" &&

@@ -162,14 +162,8 @@ const Payroll = (props) => {
      }
      useEffect(() => {
           handleDates();
-     }, [month])
+     }, [month, name, end_date, start_date, period])
 
-     useEffect(() => {
-          handleDates();
-     }, [period])
-     // useEffect(() => {
-     //      calculateGrossPay()
-     // }, [user, month, period, name, employeeId])
      const handleDates = () => {
           if (month == "january" && period == "first") {
                setStartDate(`01-01-2023`)
@@ -302,6 +296,11 @@ const Payroll = (props) => {
           setCurrent_date(dateString)
      };
 
+     useEffect(() => {
+          console.log(filtered_additional, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+          console.log(employeeId, "#########################################")
+     }, [month, period])
+
      const handleOpenAdd = () => {
           setOpenAdd(true);
      };
@@ -386,7 +385,9 @@ const Payroll = (props) => {
                if (response.ok) {
                     const filteredData = json.filter(item => {
                          const date = item.date_covered
-                         return date >= start_date && date <= end_date
+                         if (employeeId !== "") {
+                              return date >= start_date && date <= end_date
+                         }
 
                     });
                     setFiltered_Additional(filteredData)
@@ -396,9 +397,13 @@ const Payroll = (props) => {
                fetchEmp();
                console.log(filtered_additional)
           }
-     }, [employeeId, start_date, end_date, period, name])
 
+          // }, [employeeId, start_date, end_date, period, name])
+     }, [employeeId, start_date, end_date])
 
+     useEffect(() => {
+          console.log('%%%%%%%%%%%%%%%%%%%%%%%%', filtered_additional)
+     }, [period])
 
 
 
@@ -435,6 +440,11 @@ const Payroll = (props) => {
      const [default_restday_ot, setdefault_restday_ot] = useState(0)
      const [default_special_ot, setdefault_special_ot] = useState(0)
      const [default_legal_ot, setdefault_legal_ot] = useState(0)
+
+
+     const [default_first_eight_restday_ot, setdefault_first_eight_restday_ot] = useState(0)
+     const [default_first_eight_special_ot, setdefault_first_eight_special_ot] = useState(0)
+     const [default_first_eight_legal_ot, setdefault_first_eight_legal_ot] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + employeeId, {
@@ -454,6 +464,11 @@ const Payroll = (props) => {
                     setdefault_restday_ot(json.restday_ot ? json.restday_ot : 0)
                     setdefault_special_ot(json.special_ot ? json.special_ot : 0)
                     setdefault_legal_ot(json.legal_ot ? json.legal_ot : 0)
+
+
+                    setdefault_first_eight_restday_ot(json.restday_first_eight_ot ? json.special_first_eight_ot : 0)
+                    setdefault_first_eight_special_ot(json.special_first_eight_ot ? json.special_first_eight_ot : 0)
+                    setdefault_first_eight_legal_ot(json.legal_first_eight_ot ? json.legal_first_eight_ot : 0)
                     setFullEmp(json)
                }
           }
@@ -491,6 +506,8 @@ const Payroll = (props) => {
           vl_nopay_day: 0,
           sl_nopay_day: 0,
           el_nopay_day: 0,
+
+          // Extra of 8 hours
           regular_ot_hours: 0,
           restday_ot_hours: 0,
           special_ot_hours: 0,
@@ -498,9 +515,11 @@ const Payroll = (props) => {
 
           restday_counter: 0,
           working_day_counter: 0,
-          restday_overtime_counter: 0
 
-
+          // First 8 hours
+          restday_overtime_counter: 0,
+          special_working_day_counter: 0,
+          legal_working_day_counter: 0
      });
 
 
@@ -513,7 +532,7 @@ const Payroll = (props) => {
 
 
      useEffect(() => {
-       
+
           /**GOAL: KUHAON NKO ANG 
            * 1. RESTDAY (WITH PAY) - ADD (RESTDAY_COUNTER = 1)  
            * 2. WORKING DAY - (ADD WORKING_DAY_COUNTER = 1 IF WORKING DAY, IF HALFDAYS, PRESENT DAY = .5)
@@ -536,6 +555,7 @@ const Payroll = (props) => {
           let sl_nopay_day = 0;
           let el_nopay_day = 0;
 
+          //total extra from 8 hours
           let regular_ot_hours = 0
           let restday_ot_hours = 0
           let special_ot_hours = 0
@@ -543,7 +563,12 @@ const Payroll = (props) => {
 
           let restday_counter = 0
           let working_day_counter = 0
+
+          //total first 8 hours
           let restday_overtime_counter = 0
+          let special_working_day_counter = 0
+          let legal_working_day_counter = 0
+
 
 
           filtered_employee_dtr.forEach((item) => {
@@ -567,8 +592,21 @@ const Payroll = (props) => {
                     special_ot_hours += item.special_ot_hours
                     legal_ot_hours += item.legal_ot_hours
                }
+
                restday_counter += item.restday_counter
-               working_day_counter += item.working_day_counter
+
+               // First 8 hours
+               if (item.day_type === "special_holiday_today") {
+                    special_working_day_counter += item.working_day_counter
+                    working_day_counter += item.working_day_counter
+               }
+               else if (item.day_type === "legal_holiday_today") {
+                    legal_working_day_counter += item.working_day_counter
+                    working_day_counter += item.working_day_counter
+               }
+               else {
+                    working_day_counter += item.working_day_counter
+               }
                restday_overtime_counter += restday_overtime_counter
 
 
@@ -589,7 +627,7 @@ const Payroll = (props) => {
                el_nopay_day: el_nopay_day,
 
 
-
+               // Extra of 8 hours
                regular_ot_hours: regular_ot_hours,
                restday_ot_hours: restday_ot_hours,
                special_ot_hours: special_ot_hours,
@@ -597,6 +635,10 @@ const Payroll = (props) => {
 
                restday_counter: restday_counter,
                working_day_counter: working_day_counter,
+
+               // First 8 hours
+               special_working_day_counter: special_working_day_counter,
+               legal_working_day_counter: legal_working_day_counter,
                restday_overtime_counter: restday_overtime_counter
 
           });
@@ -643,13 +685,18 @@ const Payroll = (props) => {
           let sl_nopay_day = total.sl_nopay_day
           let el_nopay_day = total.el_nopay_day
 
+
+          // Extra of 8 hours
           let regular_ot_hours = total.regular_ot_hours
           let restday_ot_hours = total.restday_ot_hours
           let special_ot_hours = total.special_ot_hours
           let legal_ot_hours = total.legal_ot_hours
 
+          // First 8 hours
           let restday_counter = total.restday_counter
           let working_day_counter = total.working_day_counter
+
+
           let restday_overtime_counter = total.restday_overtime_counter
           let bimonthly = default_bimonthly;
           let daily = default_daily;
@@ -659,6 +706,22 @@ const Payroll = (props) => {
           let restday_ot_percentage = default_restday_ot / 100
           let special_ot_percentage = default_special_ot / 100
           let legal_ot_percentage = default_legal_ot / 100
+
+          //to be defined
+       
+          let first_eight_restday_percentage = default_first_eight_restday_ot / 100
+          let first_eight_special_percentage = default_first_eight_special_ot / 100
+          let first_eight_legal_percentage = default_first_eight_legal_ot / 100
+
+
+
+            
+          // The result of this, add this to the grosspay
+                                                  // 2 days * 130% * P500(daily) - 2days*P500(daily)
+          let total_pay_first_eight_restday_percentage = (total.restday_overtime_counter * first_eight_restday_percentage * daily) - (total.restday_overtime_counter * daily);
+          let total_pay_first_eight_special_percentage = (total.special_working_day_counter * first_eight_special_percentage * daily) - (total.restday_overtime_counter * daily)
+          let total_pay_first_eight_legal_percentage = (total.special_working_day_counter * first_eight_legal_percentage * daily) - (total.restday_overtime_counter * daily)
+       
 
           //Pay
           //Earnings
@@ -680,14 +743,44 @@ const Payroll = (props) => {
           setvl_nopay_amount(total_pay_vlnopay.toFixed(2))
           setsl_nopay_amount(total_pay_slnopay.toFixed(2))
           setel_nopay_amount(total_pay_elnopay.toFixed(2))
-          
+
 
 
           //Additional Earnings
-          let total_pay_regularothours = regular_ot_hours * hourly * regular_ot_percentage
-          let total_pay_restdayothours = restday_ot_hours * hourly * restday_ot_percentage
-          let total_pay_specialothours = special_ot_hours * hourly * special_ot_percentage
-          let total_pay_legalothours = legal_ot_hours * hourly * legal_ot_percentage
+          let total_pay_regularothours;
+          if (regular_ot_hours > 0) {
+                                           // 1hour * 49.31  * 1.25
+              // total_pay_regularothours = (regular_ot_hours * hourly * regular_ot_percentage)
+              total_pay_regularothours = (regular_ot_hours * hourly) + (regular_ot_hours * hourly * regular_ot_percentage)
+          }
+          else {
+               total_pay_regularothours = 0
+          }
+
+          let total_pay_restdayothours;
+          if (restday_ot_hours > 0) {
+               total_pay_restdayothours = (restday_ot_hours * hourly) + (restday_ot_hours * hourly * restday_ot_percentage)
+          }
+          else {
+               total_pay_restdayothours = 0
+          }
+
+          let total_pay_specialothours;
+          if (special_ot_hours > 0) {
+               total_pay_specialothours = (special_ot_hours * hourly) + (special_ot_hours * hourly * special_ot_percentage)
+          }
+          else {
+               total_pay_specialothours = 0
+          }
+
+          let total_pay_legalothours;
+          if (legal_ot_hours > 0) {
+               total_pay_legalothours = (legal_ot_hours * hourly) + (legal_ot_hours * hourly * legal_ot_percentage)
+          }
+          else {
+               total_pay_legalothours = 0
+          }
+
 
           setregular_ot_amount(total_pay_regularothours.toFixed(2))
           setrestday_ot_amount(total_pay_restdayothours.toFixed(2))
@@ -701,13 +794,14 @@ const Payroll = (props) => {
           settardiness_amount(total_pay_tardinessmin.toFixed(2))
 
           //SUBTOTAL
-          let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin
-          let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours
-          let gross = (bimonthly + earnings) - deductions 
-          let final_gross = gross + additional_earnings
-          let net = final_gross - additional_deductions
           let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
+          let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin
+          let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours + total_pay_first_eight_restday_percentage + total_pay_first_eight_special_percentage + total_pay_first_eight_legal_percentage
+          let gross = (bimonthly + earnings) - deductions
+          let final_gross = gross + additional_earnings
+          let net = final_gross - additional_deductions
+
 
           setfinal_earnings(additional_earnings)
           setfinal_gross_pay(final_gross)
@@ -900,6 +994,7 @@ const Payroll = (props) => {
                                                   <TableHead>
                                                        <TableCell style={{ backgroundColor: 'orange' }}>Summary</TableCell>
                                                        <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                   </TableHead>
                                                   <TableBody>
                                                        <TableRow >
@@ -912,19 +1007,23 @@ const Payroll = (props) => {
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Approved Regular OT</TableCell>
-                                                            <TableCell>{total.regular_ot_hours} - P{regular_ot_amount}</TableCell>
+                                                            <TableCell>{total.regular_ot_hours}</TableCell>
+                                                            <TableCell>P{regular_ot_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Approved Restday OT</TableCell>
-                                                            <TableCell>{total.restday_ot_hours} - P{restday_ot_amount}</TableCell>
+                                                            <TableCell>{total.restday_ot_hours}</TableCell>
+                                                            <TableCell>P{restday_ot_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Approved Special OT</TableCell>
-                                                            <TableCell>{total.special_ot_hours} - P{special_ot_amount}</TableCell>
+                                                            <TableCell>{total.special_ot_hours}</TableCell>
+                                                            <TableCell>P{special_ot_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Approved Legal OT</TableCell>
-                                                            <TableCell>{total.legal_ot_hours} - P{legal_ot_amount}</TableCell>
+                                                            <TableCell>{total.legal_ot_hours}</TableCell>
+                                                            <TableCell>P{legal_ot_amount}</TableCell>
                                                        </TableRow>
 
 
@@ -944,28 +1043,34 @@ const Payroll = (props) => {
 
                                                        <TableRow >
                                                             <TableCell>No Pay VL</TableCell>
-                                                            <TableCell>{total.vl_nopay_day} - P{vl_nopay_amount}</TableCell>
+                                                            <TableCell>{total.vl_nopay_day}</TableCell>
+                                                            <TableCell>P{vl_nopay_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>No Pay SL</TableCell>
-                                                            <TableCell>{total.sl_nopay_day} - P{sl_nopay_amount}</TableCell>
+                                                            <TableCell>{total.sl_nopay_day}</TableCell>
+                                                            <TableCell>P{sl_nopay_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>No Pay EL</TableCell>
-                                                            <TableCell>{total.el_nopay_day} - P{el_nopay_amount}</TableCell>
+                                                            <TableCell>{total.el_nopay_day}</TableCell>
+                                                            <TableCell>P{el_nopay_amount}</TableCell>
                                                        </TableRow>
 
                                                        <TableRow >
                                                             <TableCell>Tardiness - in min</TableCell>
-                                                            <TableCell>{total.total_tardiness_min} - P{tardiness_amount}</TableCell>
+                                                            <TableCell>{total.total_tardiness_min}</TableCell>
+                                                            <TableCell>P{tardiness_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Absence Days</TableCell>
-                                                            <TableCell>{total.absent_day} - P{absence_amount}</TableCell>
+                                                            <TableCell>{total.absent_day}</TableCell>
+                                                            <TableCell>P{absence_amount}</TableCell>
                                                        </TableRow>
                                                        <TableRow >
                                                             <TableCell>Undertime - in min</TableCell>
-                                                            <TableCell>{total.total_undertime_min} - P{undertime_amount} </TableCell>
+                                                            <TableCell>{total.total_undertime_min}</TableCell>
+                                                            <TableCell>P{undertime_amount} </TableCell>
                                                        </TableRow>
 
 

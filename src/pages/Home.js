@@ -75,7 +75,7 @@ const Home = () => {
                     />
                     <Route
                         path="/additionals"
-                        element={user ? <Additionals title="Earnings & Deductions" user="User" /> : <Navigate to="/login" />}
+                        element={user ? <Additionals title="Additional Earnings & Deductions" user="User" /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/payroll"

@@ -168,6 +168,10 @@ const Employees = (props) => {
      const [special_ot, setspecial_ot] = useState(0)
      const [legal_ot, setlegal_ot] = useState(0)
 
+     const [restday_first_eight_ot, setrestday_first_eight_ot] = useState(0)
+     const [special_first_eight_ot, setspecial_first_eight_ot] = useState(0)
+     const [legal_first_eight_ot, setlegal_first_eight_ot] = useState(0)
+
      const { signup, error, isLoading } = useSignup()
      const handleRefresher = () => {
           setRefresher(Math.random())
@@ -208,6 +212,10 @@ const Employees = (props) => {
           setspecial_ot('')
           setlegal_ot('')
 
+          setrestday_first_eight_ot('')
+          setspecial_first_eight_ot('')
+          setlegal_first_eight_ot('')
+
      }
      const handleOpenAdd = () => {
           handleClearInputs()
@@ -237,7 +245,7 @@ const Employees = (props) => {
      };
      const handleOpenEdit = () => {
           if (id == "") {
-               setOpenWarning(true)
+               errorToast("Please select an item to edit")
           }
           else {
                setOpenEdit(true);
@@ -321,10 +329,14 @@ const Employees = (props) => {
           { field: 'sick_leave', headerName: 'Sick Leave', width: 300, sortable: false },
           { field: 'vacation_leave', headerName: 'Vacation Leave', width: 300, sortable: false },
           { field: 'emergency_leave', headerName: 'Emergency Leave', width: 300, sortable: false },
-          { field: 'regular_ot', headerName: 'Regular OT Percentage', width: 300, sortable: false },
-          { field: 'restday_ot', headerName: 'Restday OT Percentage', width: 300, sortable: false },
-          { field: 'special_ot', headerName: 'Special OT Percentage', width: 300, sortable: false },
-          { field: 'legal_ot', headerName: 'Legal OT Percentage', width: 300, sortable: false },
+          { field: 'regular_ot', headerName: 'Regular OT %', width: 300, sortable: false },
+          { field: 'restday_ot', headerName: 'Restday OT %', width: 300, sortable: false },
+          { field: 'special_ot', headerName: 'Special OT %', width: 300, sortable: false },
+          { field: 'legal_ot', headerName: 'Legal OT %', width: 300, sortable: false },
+
+          { field: 'restday_first_eight_ot', headerName: 'Restday First 8 Hours - OT%', width: 300, sortable: false },
+          { field: 'special_first_eight_ot', headerName: 'Special First 8 Hours - OT%', width: 300, sortable: false },
+          { field: 'legal_first_eight_ot', headerName: 'Legal First 8 Hours - OT%', width: 300, sortable: false },
      ];
 
      const handleAdd = async (e) => {
@@ -364,6 +376,10 @@ const Employees = (props) => {
                restday_ot: restday_ot,
                special_ot: special_ot,
                legal_ot: legal_ot,
+
+               restday_first_eight_ot: restday_first_eight_ot,
+               special_first_eight_ot: special_first_eight_ot,
+               legal_first_eight_ot: legal_first_eight_ot,
 
           }
 
@@ -434,6 +450,9 @@ const Employees = (props) => {
                     setspecial_ot('')
                     setrestday_ot('')
                     setregular_ot('')
+                    setrestday_first_eight_ot('')
+                    setspecial_first_eight_ot('')
+                    setlegal_first_eight_ot('')
 
                     successToast('Added Successfully')
                     handleRefresher();
@@ -481,6 +500,9 @@ const Employees = (props) => {
                restday_ot: restday_ot,
                special_ot: special_ot,
                legal_ot: legal_ot,
+               restday_first_eight_ot: restday_first_eight_ot,
+               special_first_eight_ot: special_first_eight_ot,
+               legal_first_eight_ot: legal_first_eight_ot,
 
 
           }
@@ -521,36 +543,39 @@ const Employees = (props) => {
                     setError(json.error)
                }
                else {
-                    setEmployee_id('')
-                    setFirstname('')
-                    setMiddleName('')
-                    setLastname('')
-                    setAge('')
-                    setBirthday('')
-                    setAddress('')
-                    setEmail('')
-                    setContact_number('')
-                    setIncase_of_emergency('')
-                    setJob_title('')
-                    setBase_salary(0)
-                    setStart_date('')
-                    setEnd_date('')
-                    setContract('')
-                    setDepartment('')
-                    setIs_active('')
-                    setSss('')
-                    setPagibig('')
-                    setTin('')
-                    setPhilhealth('')
-                    setBank_name('')
-                    setBank_account_number('')
-                    setSick_leave('')
-                    setVacation_leave('')
-                    setEmergencty_leave('')
-                    setlegal_ot('')
-                    setspecial_ot('')
-                    setrestday_ot('')
-                    setregular_ot('')
+                    // setFirstname('')
+                    // setMiddleName('')
+                    // setLastname('')
+                    // setAge('')
+                    // setBirthday('')
+                    // setAddress('')
+                    // setEmail('')
+                    // setContact_number('')
+                    // setIncase_of_emergency('')
+                    // setJob_title('')
+                    // setBase_salary(0)
+                    // setStart_date('')
+                    // setEnd_date('')
+                    // setContract('')
+                    // setDepartment('')
+                    // setIs_active('')
+                    // setSss('')
+                    // setPagibig('')
+                    // setTin('')
+                    // setPhilhealth('')
+                    // setBank_name('')
+                    // setBank_account_number('')
+                    // setSick_leave('')
+                    // setVacation_leave('')
+                    // setEmergencty_leave('')
+                    // setlegal_ot('')
+                    // setspecial_ot('')
+                    // setrestday_ot('')
+                    // setregular_ot('')
+                    // setrestday_first_eight_ot('')
+                    // setspecial_first_eight_ot('')
+                    // setlegal_first_eight_ot('')
+
 
 
                     successToast('Updated Successfully')
@@ -645,6 +670,10 @@ const Employees = (props) => {
           setspecial_ot(params.row.special_ot)
           setrestday_ot(params.row.restday_ot)
           setregular_ot(params.row.regular_ot)
+
+          setrestday_first_eight_ot(params.row.restday_first_eight_ot)
+          setspecial_first_eight_ot(params.row.special_first_eight_ot)
+          setlegal_first_eight_ot(params.row.legal_first_eight_ot)
 
 
           console.log(is_active)
@@ -949,41 +978,83 @@ const Employees = (props) => {
                                                                            renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
-                                                                 <FormSeparator>
-                                                                      Overtime Percentage
-                                                                 </FormSeparator>
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Regular OT Percentage"
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      fullWidth
-                                                                      onChange={(e) => setregular_ot(e.target.value)}
-                                                                      value={regular_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Restday OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setrestday_ot(e.target.value)}
-                                                                      value={restday_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Special OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setspecial_ot(e.target.value)}
-                                                                      value={special_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Legal OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setlegal_ot(e.target.value)}
-                                                                      value={legal_ot}
-                                                                 />
+                                                                 <div style={{ display: 'flex', justifyContent: "center" }}>
+                                                                      <div style={{ width: "100%", marginRight: "10px" }}>
+                                                                           <FormSeparator>
+                                                                                First 8 Hours
+                                                                           </FormSeparator>
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Restday OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setrestday_first_eight_ot(e.target.value)}
+                                                                                value={restday_first_eight_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Special OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setspecial_first_eight_ot(e.target.value)}
+                                                                                value={special_first_eight_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Legal OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setlegal_first_eight_ot(e.target.value)}
+                                                                                value={legal_first_eight_ot}
+                                                                           />
+                                                                      </div>
+                                                                      <div style={{ width: "100%" }}>
+                                                                           <FormSeparator>
+                                                                                Excess Hours: (add % per hour)
+
+                                                                           </FormSeparator>
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Regular OT Percentage"
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                fullWidth
+                                                                                onChange={(e) => setregular_ot(e.target.value)}
+                                                                                value={regular_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Restday OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setrestday_ot(e.target.value)}
+                                                                                value={restday_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Special OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setspecial_ot(e.target.value)}
+                                                                                value={special_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Legal OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setlegal_ot(e.target.value)}
+                                                                                value={legal_ot}
+                                                                           />
+                                                                      </div>
+                                                                 </div>
+
                                                                  <FormSeparator>
                                                                       Government Taxes
                                                                  </FormSeparator>
@@ -1264,45 +1335,84 @@ const Employees = (props) => {
                                                                            renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
-                                                                 <FormSeparator>
-                                                                      Overtime Percentage
-                                                                 </FormSeparator>
-                                                                 <TextField
-                                                                      type="number"
-                                                                      id="outlined-required"
-                                                                      label="Regular OT Percentage"
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      fullWidth
-                                                                      onChange={(e) => setregular_ot(e.target.value)}
-                                                                      value={regular_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      type="number"
-                                                                      id="outlined-required"
-                                                                      label="Restday OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setrestday_ot(e.target.value)}
-                                                                      value={restday_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      type="number"
-                                                                      id="outlined-required"
-                                                                      label="Special OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setspecial_ot(e.target.value)}
-                                                                      value={special_ot}
-                                                                 />
-                                                                 <TextField
-                                                                      type="number"
-                                                                      id="outlined-required"
-                                                                      label="Legal OT Percentage"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setlegal_ot(e.target.value)}
-                                                                      value={legal_ot}
-                                                                 />
+
+
+                                                                 <div style={{ display: 'flex', justifyContent: "center" }}>
+                                                                      <div style={{ width: "100%", marginRight: "10px" }}>
+                                                                           <FormSeparator>
+                                                                                First 8 Hours
+                                                                           </FormSeparator>
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Restday OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setrestday_first_eight_ot(e.target.value)}
+                                                                                value={restday_first_eight_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Special OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setspecial_first_eight_ot(e.target.value)}
+                                                                                value={special_first_eight_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Legal OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setlegal_first_eight_ot(e.target.value)}
+                                                                                value={legal_first_eight_ot}
+                                                                           />
+                                                                      </div>
+                                                                      <div style={{ width: "100%" }}>
+                                                                           <FormSeparator>
+                                                                                Excess Hours: (add % per hour)
+
+                                                                           </FormSeparator>
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Regular OT Percentage"
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                fullWidth
+                                                                                onChange={(e) => setregular_ot(e.target.value)}
+                                                                                value={regular_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Restday OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setrestday_ot(e.target.value)}
+                                                                                value={restday_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Special OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setspecial_ot(e.target.value)}
+                                                                                value={special_ot}
+                                                                           />
+                                                                           <TextField
+                                                                                type="number"
+                                                                                id="outlined-required"
+                                                                                label="Legal OT Percentage"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                onChange={(e) => setlegal_ot(e.target.value)}
+                                                                                value={legal_ot}
+                                                                           />
+                                                                      </div>
+                                                                 </div>
                                                                  <FormSeparator>
                                                                       Government Taxes
                                                                  </FormSeparator>
@@ -1492,12 +1602,20 @@ const Employees = (props) => {
                                                   </div>
                                                   <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
                                                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                                            <TableBody>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Regular OT Percentage</TableCell><TableCell align="left">{regular_ot}%</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Restday OT Percentage</TableCell><TableCell align="left">{restday_ot}%</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Special OT Percentage</TableCell><TableCell align="left">{special_ot}%</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Legal OT Percentage</TableCell><TableCell align="left">{legal_ot}%</TableCell></TableRow>
-                                                            </TableBody>
+                                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                 <TableBody>
+
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Restday - First 8 hours</TableCell><TableCell align="left">{restday_first_eight_ot}%</TableCell></TableRow>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Special Holiday - First 8 hours</TableCell><TableCell align="left">{special_first_eight_ot}%</TableCell></TableRow>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Legal Holiday - First 8 hours</TableCell><TableCell align="left">{legal_first_eight_ot}%</TableCell></TableRow>
+                                                                 </TableBody>
+                                                                 <TableBody>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Regular OT Percentage</TableCell><TableCell align="left">{regular_ot}%</TableCell></TableRow>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Restday OT Percentage</TableCell><TableCell align="left">{restday_ot}%</TableCell></TableRow>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Special OT Percentage</TableCell><TableCell align="left">{special_ot}%</TableCell></TableRow>
+                                                                      <TableRow><TableCell sx={{ width: 300 }}>Legal OT Percentage</TableCell><TableCell align="left">{legal_ot}%</TableCell></TableRow>
+                                                                 </TableBody>
+                                                            </div>
                                                        </Table>
                                                   </TableContainer>
 
@@ -1569,6 +1687,10 @@ const Employees = (props) => {
                                                                       restday_ot={restday_ot}
                                                                       special_ot={special_ot}
                                                                       legal_ot={legal_ot}
+
+                                                                      restday_first_eight_ot={restday_first_eight_ot}
+                                                                      special_first_eight_ot={special_first_eight_ot}
+                                                                      legal_first_eight_ot={legal_first_eight_ot}
                                                                  />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
                                                             </PDFDownloadLink>

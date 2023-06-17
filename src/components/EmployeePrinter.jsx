@@ -87,6 +87,10 @@ const EmployeePrinter = ({
      restday_ot,
      special_ot,
      legal_ot,
+
+     restday_first_eight_ot,
+     special_first_eight_ot,
+     legal_first_eight_ot
 }) => {
 
      const [currentDate, setCurrentDate] = useState(() => {
@@ -124,7 +128,12 @@ const EmployeePrinter = ({
                          <View style={styles.row}><Text style={styles.data}>Start Date</Text><Text style={styles.data}>{start_date}</Text></View>
                          <View style={styles.row}><Text style={styles.data}>End Date</Text><Text style={styles.data}>{end_date}</Text></View>
 
-                           <View style={styles.row}><Text style={styles.title}>Government Taxes</Text></View>
+                         <View style={styles.row}><Text style={styles.title}>Overtime Percentage</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Restday - First 8 hours</Text><Text style={styles.data}>{restday_first_eight_ot}</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Special Holiday - First 8 hours</Text><Text style={styles.data}>{special_first_eight_ot}</Text></View>
+                         <View style={styles.row}><Text style={styles.data}>Legal Holiday - First 8 hours</Text><Text style={styles.data}>{legal_first_eight_ot}</Text></View>
+
+
                          <View style={styles.row}><Text style={styles.data}>Regular OT Percentage</Text><Text style={styles.data}>{regular_ot}</Text></View>
                          <View style={styles.row}><Text style={styles.data}>Restday OT Percentage</Text><Text style={styles.data}>{restday_ot}</Text></View>
                          <View style={styles.row}><Text style={styles.data}>Special OT Percentage</Text><Text style={styles.data}>{special_ot}</Text></View>

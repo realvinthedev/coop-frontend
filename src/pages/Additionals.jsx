@@ -490,7 +490,7 @@ const Additionals = (props) => {
                fetchAdditionals();
           }
 
-     }, [start_date, end_date, name])
+     }, [start_date, end_date, name, refresher])
 
 
 
@@ -716,6 +716,7 @@ const Additionals = (props) => {
                console.log('deleted', json)
           }
           successToast('Deleted Successfully')
+          handleCloseDelete()
           handleRefresher()
      }
 

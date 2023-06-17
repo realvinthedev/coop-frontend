@@ -508,12 +508,12 @@ const Dtr = (props) => {
      useEffect(() => {
           // Invoke the handler function on the first render
           handleSelectLeaveTypeChange({ target: { value: leave_type } });
-        }, [refresher]);
+     }, [refresher]);
 
 
      const handleSelectLeaveTypeChange = (event) => {
           const type = event.target.value
-          
+
           setLeaveType(event.target.value);
           //handleDisabledAbsence(type)
 
@@ -1146,7 +1146,7 @@ const Dtr = (props) => {
           setsl_nopay_day(0)
           setTotal_ot_hour(0)
           setel_nopay_day(0)
-          
+
           setovertime('not_approved')
      }
      const handleClearForRestDay = () => {
@@ -1238,7 +1238,7 @@ const Dtr = (props) => {
           handleOTType();
      }, [user, day_type, total_ot_hour])
 
-     
+
 
 
 
@@ -1360,15 +1360,27 @@ const Dtr = (props) => {
 
           if (leave_type == "working_day" || leave_type == "restday_overtime") {
                let difference = (actual_am_in_hours - official_am_in_hours) * 60
+               let difference_pm = ((actual_pm_in_hours - actual_am_out_hours) - 1) * 60
+               let total_difference = 0;
                if (actual_am_in_hours > official_am_in_hours) {
                     let rounded_difference = Math.round(difference)
-                    setTotal_tardiness_min(rounded_difference)
+                    total_difference += rounded_difference
+                    setIs_tardiness(1)
+                    // let rounded_difference = Math.round(difference)
+                    // setTotal_tardiness_min(total_difference)
+                    // setIs_tardiness(1)
+               }
+               if (actual_pm_in_hours - actual_am_out_hours > 1) {
+                    let rounded_difference = Math.round(difference_pm)
+                    total_difference += rounded_difference
                     setIs_tardiness(1)
                }
+
                else {
                     setTotal_tardiness_min(0)
                     setIs_tardiness(0)
                }
+               setTotal_tardiness_min(total_difference)
           }
           else if (
                leave_type == "restday_overtime_morning" ||
