@@ -167,6 +167,7 @@ const columns = [
      { field: 'vl_nopay_day', headerName: 'VL - No Pay', width: 140 },
      { field: 'sl_nopay_day', headerName: 'SL - No Pay', width: 140 },
      { field: 'el_nopay_day', headerName: 'EL - No Pay', width: 140 },
+     { field: 'restday_nopay_day', headerName: 'Restday - No Pay', width: 140 },
 
 
      { field: 'approve_ot', headerName: 'Approved Overtime?', width: 140 },
@@ -437,6 +438,7 @@ const Dtr = (props) => {
      const [vl_nopay_day, setvl_nopay_day] = useState(0);
      const [sl_nopay_day, setsl_nopay_day] = useState(0);
      const [el_nopay_day, setel_nopay_day] = useState(0);
+     const [restday_nopay_day, setrestday_nopay_day] = useState(0);
      const [restday_overtime_counter, setrestday_overtime_counter] = useState(0);
 
      const handleCloseWarning = () => {
@@ -530,6 +532,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
 
                /**Shower And Hider */
                setHide(false)
@@ -552,11 +555,79 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForRestDay()
 
                /**Shower And Hider */
                setHide(true)
                setdisabled_day_type(true)
+          }
+          else if (type === "restday_nopay") {
+               /**Main Function */
+               setworking_day_counter(0)
+               setrestday_counter(1)
+               setrestday_overtime_counter(0)
+               setabsent_day(0)
+               setvl_day(0)
+               setsl_day(0)
+               setel_day(0)
+               setvl_nopay_day(0)
+               setsl_nopay_day(0)
+               setel_nopay_day(0)
+               setrestday_nopay_day(1)
+               handleClearForRestDay()
+
+               /**Shower And Hider */
+               setHide(true)
+               setdisabled_day_type(true)
+          }
+          else if (type === "restdaynopay_halfday_morning") {
+               /**Main Functions */
+               setworking_day_counter(0.5)
+               setrestday_counter(0)
+               setrestday_overtime_counter(0)
+               setabsent_day(0)
+               setvl_day(0)
+               setsl_day(0)
+               setel_day(0)
+               setvl_nopay_day(0)
+               setsl_nopay_day(0)
+               setel_nopay_day(0)
+               setrestday_nopay_day(0.5)
+               handleClearTime()
+
+
+               /**Shower And Hider */
+               setHide(false)
+               setdisabled_day_type(false)
+               setdisabled_am_official(false)
+               setdisabled_am_time(false)
+               setdisabled_pm_official(true)
+               setdisabled_pm_time(true)
+          }
+          else if (type === "restdaynopay_halfday_afternoon") {
+               /**Main Functions */
+               setworking_day_counter(0.5)
+               setrestday_counter(0)
+               setrestday_overtime_counter(0)
+               setabsent_day(0)
+               setvl_day(0)
+               setsl_day(0)
+               setel_day(0)
+               setvl_nopay_day(0)
+               setsl_nopay_day(0)
+               setel_nopay_day(0)
+               setrestday_nopay_day(0.5)
+               handleClearTime()
+
+
+               /**Shower And Hider */
+               setHide(false)
+               setdisabled_day_type(false)
+               setdisabled_am_official(true)
+               setdisabled_am_time(true)
+               setdisabled_pm_official(false)
+               setdisabled_pm_time(false)
           }
           else if (type === "restday_overtime") {
                /**Main Function */
@@ -570,6 +641,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
 
                /**Shower and Hider */
                setHide(false)
@@ -591,6 +663,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -613,6 +687,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower and Hider */
                setHide(false)
@@ -636,6 +712,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
 
 
                /**Shower And Hider */
@@ -656,6 +733,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -678,7 +757,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -700,6 +780,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -719,6 +800,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -737,6 +819,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -755,6 +838,7 @@ const Dtr = (props) => {
                setvl_nopay_day(1)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -773,6 +857,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(1)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -791,6 +876,7 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(1)
+               setrestday_nopay_day(0)
                handleClearForLeave()
 
                /**Shower And Hider */
@@ -809,6 +895,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
 
@@ -832,6 +920,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -854,6 +944,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -876,7 +968,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -898,6 +991,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -920,7 +1015,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -945,6 +1041,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0.5)
                setsl_nopay_day(0)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -967,7 +1065,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0.5)
                setel_nopay_day(0)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -989,7 +1088,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0.5)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -1012,7 +1112,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0.5)
                setsl_nopay_day(0)
                setel_nopay_day(0)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
 
                /**Shower And Hider */
                setHide(false)
@@ -1034,6 +1135,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0.5)
                setel_nopay_day(0)
+               setrestday_nopay_day(0)
+               handleClearTime()
 
 
                /**Shower And Hider */
@@ -1056,7 +1159,8 @@ const Dtr = (props) => {
                setvl_nopay_day(0)
                setsl_nopay_day(0)
                setel_nopay_day(0.5)
-
+               setrestday_nopay_day(0)
+               handleClearTime()
                /**Shower And Hider */
                setHide(false)
                setdisabled_day_type(false)
@@ -1121,6 +1225,20 @@ const Dtr = (props) => {
           setel_nopay_day(0)
           setTotal_ot_hour(0)
           setovertime('not_approved')
+     }
+     const handleClearTime = () => {
+          setofficial_am_in_hour(0)
+          setofficial_am_in_min(0)
+          setofficial_pm_in_hour(0)
+          setofficial_pm_in_min(0)
+          setAm_in_hour(0)
+          setAm_in_min(0)
+          setAm_out_hour(0)
+          setAm_out_min(0)
+          setPm_in_hour(0)
+          setPm_in_min(0)
+          setPm_out_hour(0)
+          setPm_out_min(0)
      }
      const handleClearForAbsent = () => {
           setofficial_am_in_hour(0)
@@ -1287,6 +1405,7 @@ const Dtr = (props) => {
                }
           }
           else if (
+               leave_type == "restdaynopay_halfday_morning" ||
                leave_type == "restday_overtime_morning" ||
                leave_type == "absent_halfday_morning" ||
                leave_type == "vl_halfday_morning" ||
@@ -1311,6 +1430,7 @@ const Dtr = (props) => {
                }
           }
           else if (
+               leave_type == "restdaynopay_halfday_afternoon" ||
                leave_type == "restday_overtime_afternoon" ||
                leave_type == "absent_halfday_afternoon" ||
                leave_type == "vl_halfday_afternoon" ||
@@ -1383,6 +1503,7 @@ const Dtr = (props) => {
                setTotal_tardiness_min(total_difference)
           }
           else if (
+               leave_type == "restdaynopay_halfday_morning" ||
                leave_type == "restday_overtime_morning" ||
                leave_type == "absent_halfday_morning" ||
                leave_type == "vl_halfday_morning" ||
@@ -1409,6 +1530,7 @@ const Dtr = (props) => {
                }
           }
           else if (
+               leave_type == "restdaynopay_halfday_afternoon" ||
                leave_type == "restday_overtime_afternoon" ||
                leave_type == "absent_halfday_afternoon" ||
                leave_type == "vl_halfday_afternoon" ||
@@ -1462,6 +1584,8 @@ const Dtr = (props) => {
                }
           }
           else if (
+
+               leave_type == "restdaynopay_halfday_morning" ||
                leave_type == "absent_halfday_morning" ||
                leave_type == "restday_overtime_morning" ||
                leave_type == "vl_halfday_morning" ||
@@ -1483,6 +1607,7 @@ const Dtr = (props) => {
                }
           }
           else if (
+               leave_type == "restdaynopay_halfday_afternoon" ||
                leave_type == "absent_halfday_afternoon" ||
                leave_type == "vl_halfday_afternoon" ||
                leave_type == "vl_nopay_halfday_afternoon" ||
@@ -1766,6 +1891,7 @@ const Dtr = (props) => {
                          vl_nopay_day: vl_nopay_day,
                          sl_nopay_day: sl_nopay_day,
                          el_nopay_day: el_nopay_day,
+                         restday_nopay_day: restday_nopay_day,
                          regular_ot_hours: regular_ot_hours,
                          restday_ot_hours: restday_ot_hours,
                          special_ot_hours: special_ot_hours,
@@ -2359,12 +2485,15 @@ const Dtr = (props) => {
                                                             onChange={handleSelectLeaveTypeChange}
                                                             value={leave_type}
                                                        >
-
                                                             <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'working_day'}>Working Day</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday'}>Rest Day - Paid</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_overtime'}>RDOT - Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_overtime_morning'}>RDOT - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_overtime_afternoon'}>RDOT - Afternoon Work</MenuItem>
+
+                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_nopay'}>Restday No Pay</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_morning'}>Restday No Pay Halfday - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_afternoon'}>Restday No Pay Halfday - Afternoon Work</MenuItem>
+                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday'}>Restday - Paid</MenuItem>
+                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime'}>RDOT - Wholeday</MenuItem>
+                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_morning'}>RDOT - Morning Work</MenuItem>
+                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_afternoon'}>RDOT - Afternoon Work</MenuItem>
 
                                                             <MenuItem style={{ color: '#11b602', marginTop: "30px" }} value={'absent'}>Absent Wholeday</MenuItem>
                                                             <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>

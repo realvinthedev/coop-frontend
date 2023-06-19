@@ -506,6 +506,7 @@ const Payroll = (props) => {
           vl_nopay_day: 0,
           sl_nopay_day: 0,
           el_nopay_day: 0,
+          restday_nopay_day: 0,
 
           // Extra of 8 hours
           regular_ot_hours: 0,
@@ -519,7 +520,9 @@ const Payroll = (props) => {
           // First 8 hours
           restday_overtime_counter: 0,
           special_working_day_counter: 0,
-          legal_working_day_counter: 0
+          legal_working_day_counter: 0,
+
+      
      });
 
 
@@ -554,6 +557,7 @@ const Payroll = (props) => {
           let vl_nopay_day = 0;
           let sl_nopay_day = 0;
           let el_nopay_day = 0;
+          let restday_nopay_day = 0;
 
           //total extra from 8 hours
           let regular_ot_hours = 0
@@ -571,6 +575,7 @@ const Payroll = (props) => {
 
 
 
+
           filtered_employee_dtr.forEach((item) => {
                //NEW
                total_tardiness_min += item.total_tardiness_min
@@ -585,6 +590,7 @@ const Payroll = (props) => {
                vl_nopay_day += item.vl_nopay_day;
                sl_nopay_day += item.sl_nopay_day
                el_nopay_day += item.el_nopay_day
+               restday_nopay_day += item.restday_nopay_day
 
                if (item.approve_ot == "approved") {
                     regular_ot_hours += item.regular_ot_hours
@@ -594,8 +600,8 @@ const Payroll = (props) => {
                }
 
                restday_counter += item.restday_counter
-
-               // First 8 hours
+               restday_overtime_counter += item.restday_overtime_counter
+               
                if (item.day_type === "special_holiday_today") {
                     special_working_day_counter += item.working_day_counter
                     working_day_counter += item.working_day_counter
@@ -607,7 +613,11 @@ const Payroll = (props) => {
                else {
                     working_day_counter += item.working_day_counter
                }
-               restday_overtime_counter += restday_overtime_counter
+
+
+
+          
+              
 
 
           });
@@ -625,6 +635,7 @@ const Payroll = (props) => {
                vl_nopay_day: vl_nopay_day,
                sl_nopay_day: sl_nopay_day,
                el_nopay_day: el_nopay_day,
+               restday_nopay_day: restday_nopay_day,
 
 
                // Extra of 8 hours
@@ -639,7 +650,10 @@ const Payroll = (props) => {
                // First 8 hours
                special_working_day_counter: special_working_day_counter,
                legal_working_day_counter: legal_working_day_counter,
-               restday_overtime_counter: restday_overtime_counter
+               restday_overtime_counter: restday_overtime_counter,
+
+
+            
 
           });
 
@@ -663,6 +677,10 @@ const Payroll = (props) => {
      const [special_ot_amount, setspecial_ot_amount] = useState(0);
      const [legal_ot_amount, setlegal_ot_amount] = useState(0);
 
+     const [restday_ot_amount_eight_hours, setrestday_ot_amount_eight_hours] = useState(0);
+     const [special_ot_amount_eight_hours, setspecial_ot_amount_eight_hours] = useState(0);
+     const [legal_ot_amount_eight_hours, setlegal_ot_amount_eight_hours] = useState(0);
+
      const [undertime_amount, setundertime_amount] = useState(0);
      const [tardiness_amount, settardiness_amount] = useState(0);
 
@@ -670,6 +688,7 @@ const Payroll = (props) => {
      const [vl_nopay_amount, setvl_nopay_amount] = useState(0);
      const [sl_nopay_amount, setsl_nopay_amount] = useState(0);
      const [el_nopay_amount, setel_nopay_amount] = useState(0);
+     const [restday_nopay_amount, setrestday_nopay_amount] = useState(0);
 
      const calculateGrossPay = () => {
           //NEW
@@ -684,6 +703,7 @@ const Payroll = (props) => {
           let vl_nopay_day = total.vl_nopay_day
           let sl_nopay_day = total.sl_nopay_day
           let el_nopay_day = total.el_nopay_day
+          let restday_nopay_day = total.restday_nopay_day
 
 
           // Extra of 8 hours
@@ -708,20 +728,32 @@ const Payroll = (props) => {
           let legal_ot_percentage = default_legal_ot / 100
 
           //to be defined
-       
+
           let first_eight_restday_percentage = default_first_eight_restday_ot / 100
           let first_eight_special_percentage = default_first_eight_special_ot / 100
           let first_eight_legal_percentage = default_first_eight_legal_ot / 100
 
+        
 
 
-            
+
           // The result of this, add this to the grosspay
-                                                  // 2 days * 130% * P500(daily) - 2days*P500(daily)
-          let total_pay_first_eight_restday_percentage = (total.restday_overtime_counter * first_eight_restday_percentage * daily) - (total.restday_overtime_counter * daily);
-          let total_pay_first_eight_special_percentage = (total.special_working_day_counter * first_eight_special_percentage * daily) - (total.restday_overtime_counter * daily)
-          let total_pay_first_eight_legal_percentage = (total.special_working_day_counter * first_eight_legal_percentage * daily) - (total.restday_overtime_counter * daily)
-       
+          // 2 days * 130% * P500(daily) - 2days*P500(daily)
+          // let total_pay_first_eight_restday_percentage = (total.restday_overtime_counter * first_eight_restday_percentage * daily) - (total.restday_overtime_counter * daily);
+          // let total_pay_first_eight_special_percentage = (total.special_working_day_counter * first_eight_special_percentage * daily) - (total.restday_overtime_counter * daily)
+          // let total_pay_first_eight_legal_percentage = (total.special_working_day_counter * first_eight_legal_percentage * daily) - (total.restday_overtime_counter * daily)
+
+
+          // Additional Pay not whole pay
+          //  420 * .30  * 1  =  125(additional pay for the restday OT)
+          let total_pay_first_eight_restday_percentage = daily * first_eight_restday_percentage * total.restday_overtime_counter
+          let total_pay_first_eight_special_percentage = daily * first_eight_special_percentage * total.special_working_day_counter
+          let total_pay_first_eight_legal_percentage = daily * first_eight_legal_percentage * total.legal_working_day_counter
+        
+         
+          setrestday_ot_amount_eight_hours(total_pay_first_eight_restday_percentage.toFixed(2))
+          setspecial_ot_amount_eight_hours(total_pay_first_eight_special_percentage.toFixed(2))
+          setlegal_ot_amount_eight_hours(total_pay_first_eight_legal_percentage.toFixed(2))
 
           //Pay
           //Earnings
@@ -738,20 +770,22 @@ const Payroll = (props) => {
           let total_pay_vlnopay = vl_nopay_day * daily
           let total_pay_slnopay = sl_nopay_day * daily
           let total_pay_elnopay = el_nopay_day * daily
+          let total_pay_restdaynopay = restday_nopay_day * daily
 
           setabsence_amount(total_pay_absence.toFixed(2))
           setvl_nopay_amount(total_pay_vlnopay.toFixed(2))
           setsl_nopay_amount(total_pay_slnopay.toFixed(2))
           setel_nopay_amount(total_pay_elnopay.toFixed(2))
+          setrestday_nopay_amount(total_pay_restdaynopay.toFixed(2))
 
 
 
           //Additional Earnings
           let total_pay_regularothours;
           if (regular_ot_hours > 0) {
-                                           // 1hour * 49.31  * 1.25
-              // total_pay_regularothours = (regular_ot_hours * hourly * regular_ot_percentage)
-              total_pay_regularothours = (regular_ot_hours * hourly) + (regular_ot_hours * hourly * regular_ot_percentage)
+               //52.50 * .25  + 52.50 =65.625
+               let hourly_with_overtime = (hourly * regular_ot_percentage) + hourly
+               total_pay_regularothours = hourly_with_overtime * regular_ot_hours
           }
           else {
                total_pay_regularothours = 0
@@ -759,7 +793,9 @@ const Payroll = (props) => {
 
           let total_pay_restdayothours;
           if (restday_ot_hours > 0) {
-               total_pay_restdayothours = (restday_ot_hours * hourly) + (restday_ot_hours * hourly * restday_ot_percentage)
+               //total_pay_restdayothours = (restday_ot_hours * hourly) + (restday_ot_hours * hourly * restday_ot_percentage)
+               let hourly_with_overtime = (hourly * restday_ot_percentage) + hourly
+               total_pay_restdayothours = hourly_with_overtime * restday_ot_hours
           }
           else {
                total_pay_restdayothours = 0
@@ -767,7 +803,8 @@ const Payroll = (props) => {
 
           let total_pay_specialothours;
           if (special_ot_hours > 0) {
-               total_pay_specialothours = (special_ot_hours * hourly) + (special_ot_hours * hourly * special_ot_percentage)
+               let hourly_with_overtime = (hourly * special_ot_percentage) + hourly
+               total_pay_specialothours = hourly_with_overtime * special_ot_hours
           }
           else {
                total_pay_specialothours = 0
@@ -775,7 +812,8 @@ const Payroll = (props) => {
 
           let total_pay_legalothours;
           if (legal_ot_hours > 0) {
-               total_pay_legalothours = (legal_ot_hours * hourly) + (legal_ot_hours * hourly * legal_ot_percentage)
+               let hourly_with_overtime = (hourly * legal_ot_percentage) + hourly
+               total_pay_legalothours = hourly_with_overtime * legal_ot_hours
           }
           else {
                total_pay_legalothours = 0
@@ -796,18 +834,19 @@ const Payroll = (props) => {
           //SUBTOTAL
           let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
-          let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin
+          let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin + total_pay_restdaynopay
           let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours + total_pay_first_eight_restday_percentage + total_pay_first_eight_special_percentage + total_pay_first_eight_legal_percentage
           let gross = (bimonthly + earnings) - deductions
           let final_gross = gross + additional_earnings
           let net = final_gross - additional_deductions
-
+          
 
           setfinal_earnings(additional_earnings)
           setfinal_gross_pay(final_gross)
           setfinal_deduction(additional_deductions)
           setfinal_net_pay(net)
 
+          console.log(total_pay_restdaynopay, "*************************************")
 
 
           /**THEIR GROSS PAY:

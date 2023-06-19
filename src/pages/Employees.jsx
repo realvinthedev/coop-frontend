@@ -36,7 +36,9 @@ import Paper from '@mui/material/Paper';
 import { TableRowsOutlined } from '@mui/icons-material';
 import EmployeePrinter from '../components/EmployeePrinter';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-
+import {
+     Tooltip,
+} from 'react-tippy';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -712,6 +714,7 @@ const Employees = (props) => {
                                              </Box>
                                              <TabPanel value="1">
                                                   <SearchContainer>
+
                                                        <TextField
                                                             style={{ marginRight: "10px" }}
                                                             required
@@ -982,11 +985,32 @@ const Employees = (props) => {
                                                                       <div style={{ width: "100%", marginRight: "10px" }}>
                                                                            <FormSeparator>
                                                                                 First 8 Hours
+                                                                                
                                                                            </FormSeparator>
+                                                                           <div style={{marginBottom: "30px"}}>
+                                                                                     <Tooltip
+                                                                                          html={(
+                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                                    <p>
+                                                                                                         Sample Scenario<br />
+                                                                                                         <br />
+                                                                                                         Day type: Special non working holiday<br/>
+                                                                                                         Daily Rate: P420.00 <br />
+                                                                                                         Percentage Set: 30<br />
+                                                                                                         <br />
+                                                                                                         Calculation:
+                                                                                                         P420 X .30 X 1day = P126.00
+                                                                                                         </p>
+                                                                                               </div>
+                                                                                          )}
+                                                                                     >
+                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                     </Tooltip>
+                                                                                </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Restday OT Percentage"
+                                                                                label="Restday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setrestday_first_eight_ot(e.target.value)}
@@ -995,7 +1019,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Special OT Percentage"
+                                                                                label="Special Non Working"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setspecial_first_eight_ot(e.target.value)}
@@ -1004,7 +1028,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Legal OT Percentage"
+                                                                                label="Legal Holiday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setlegal_first_eight_ot(e.target.value)}
@@ -1013,13 +1037,34 @@ const Employees = (props) => {
                                                                       </div>
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
-                                                                                Excess Hours: (add % per hour)
-
+                                                                                Exess Hours %
+                                                                                
                                                                            </FormSeparator>
+                                                                           <div style={{marginBottom: "30px"}}>
+                                                                                     <Tooltip
+                                                                                          html={(
+                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                                    <p>
+                                                                                                         Sample Scenario<br />
+                                                                                                         <br />
+                                                                                                         Day type: Special non working holiday<br/>
+                                                                                                         Hourly Rate: P52.50 <br />
+                                                                                                         Percentage Set: 30<br />
+                                                                                                         Excess Hours: 2 hours <br />
+                                                                                                         <br />
+                                                                                                         Calculation:
+                                                                                                         (P52.50  X .30) + P52.50 = P68.25
+                                                                                                    </p>
+                                                                                               </div>
+                                                                                          )}
+                                                                                     >
+                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                     </Tooltip>
+                                                                                </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Regular OT Percentage"
+                                                                                label="Regular Day"
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 fullWidth
                                                                                 onChange={(e) => setregular_ot(e.target.value)}
@@ -1028,7 +1073,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Restday OT Percentage"
+                                                                                label="Restday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setrestday_ot(e.target.value)}
@@ -1037,7 +1082,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Special OT Percentage"
+                                                                                label="Special Non Working"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setspecial_ot(e.target.value)}
@@ -1046,7 +1091,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Legal OT Percentage"
+                                                                                label="Legal Holiday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setlegal_ot(e.target.value)}
@@ -1335,17 +1380,36 @@ const Employees = (props) => {
                                                                            renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
-
-
                                                                  <div style={{ display: 'flex', justifyContent: "center" }}>
                                                                       <div style={{ width: "100%", marginRight: "10px" }}>
                                                                            <FormSeparator>
                                                                                 First 8 Hours
+                                                                                
                                                                            </FormSeparator>
+                                                                           <div style={{marginBottom: "30px"}}>
+                                                                                     <Tooltip
+                                                                                          html={(
+                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                                    <p>
+                                                                                                         Sample Scenario<br />
+                                                                                                         <br />
+                                                                                                         Day type: Special non working holiday<br/>
+                                                                                                         Daily Rate: P420.00 <br />
+                                                                                                         Percentage Set: 30<br />
+                                                                                                         <br />
+                                                                                                         Calculation:
+                                                                                                         P420 X .30 X 1day = P126.00
+                                                                                                         </p>
+                                                                                               </div>
+                                                                                          )}
+                                                                                     >
+                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                     </Tooltip>
+                                                                                </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Restday OT Percentage"
+                                                                                label="Restday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setrestday_first_eight_ot(e.target.value)}
@@ -1354,7 +1418,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Special OT Percentage"
+                                                                                label="Special Non Working"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setspecial_first_eight_ot(e.target.value)}
@@ -1363,7 +1427,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Legal OT Percentage"
+                                                                                label="Legal Holiday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setlegal_first_eight_ot(e.target.value)}
@@ -1372,13 +1436,34 @@ const Employees = (props) => {
                                                                       </div>
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
-                                                                                Excess Hours: (add % per hour)
-
+                                                                                Exess Hours %
+                                                                                
                                                                            </FormSeparator>
+                                                                           <div style={{marginBottom: "30px"}}>
+                                                                                     <Tooltip
+                                                                                          html={(
+                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                                    <p>
+                                                                                                         Sample Scenario<br />
+                                                                                                         <br />
+                                                                                                         Day type: Special non working holiday<br/>
+                                                                                                         Hourly Rate: P52.50 <br />
+                                                                                                         Percentage Set: 30<br />
+                                                                                                         Excess Hours: 2 hours <br />
+                                                                                                         <br />
+                                                                                                         Calculation:
+                                                                                                         (P52.50  X .30) + P52.50 = P68.25
+                                                                                                    </p>
+                                                                                               </div>
+                                                                                          )}
+                                                                                     >
+                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                     </Tooltip>
+                                                                                </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Regular OT Percentage"
+                                                                                label="Regular Day"
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 fullWidth
                                                                                 onChange={(e) => setregular_ot(e.target.value)}
@@ -1387,7 +1472,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Restday OT Percentage"
+                                                                                label="Restday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setrestday_ot(e.target.value)}
@@ -1396,7 +1481,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Special OT Percentage"
+                                                                                label="Special Non Working"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setspecial_ot(e.target.value)}
@@ -1405,7 +1490,7 @@ const Employees = (props) => {
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
-                                                                                label="Legal OT Percentage"
+                                                                                label="Legal Holiday"
                                                                                 fullWidth
                                                                                 style={{ paddingBottom: "20px" }}
                                                                                 onChange={(e) => setlegal_ot(e.target.value)}
@@ -1413,6 +1498,7 @@ const Employees = (props) => {
                                                                            />
                                                                       </div>
                                                                  </div>
+
                                                                  <FormSeparator>
                                                                       Government Taxes
                                                                  </FormSeparator>
