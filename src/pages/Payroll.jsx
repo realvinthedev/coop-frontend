@@ -846,7 +846,13 @@ const Payroll = (props) => {
           setfinal_deduction(additional_deductions)
           setfinal_net_pay(net)
 
-          console.log(total_pay_restdaynopay, "*************************************")
+          console.log(additional_earnings, "additional_earnings")
+          console.log(additional_deductions, "additional_deductions")
+          console.log(deductions, "deductions")
+          console.log(total_pay_first_eight_legal_percentage, "earnings")
+          console.log(gross, "gross")
+          console.log(final_gross, "final_gross")
+          console.log(net, "net")
 
 
           /**THEIR GROSS PAY:

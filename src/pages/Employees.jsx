@@ -967,7 +967,7 @@ const Employees = (props) => {
 
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
-                                                                           label="Start Date"
+                                                                           label="Date Hired"
                                                                            value={start_date}
                                                                            onChange={(newValue) => { setStart_date(newValue) }}
                                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
@@ -1037,7 +1037,7 @@ const Employees = (props) => {
                                                                       </div>
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
-                                                                                Exess Hours %
+                                                                                Excess Hours %
                                                                                 
                                                                            </FormSeparator>
                                                                            <div style={{marginBottom: "30px"}}>
@@ -1366,7 +1366,7 @@ const Employees = (props) => {
 
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
-                                                                           label="Start Date"
+                                                                           label="Date Hired"
                                                                            value={start_date}
                                                                            onChange={(newValue) => { setStart_date(newValue) }}
                                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
@@ -1436,7 +1436,7 @@ const Employees = (props) => {
                                                                       </div>
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
-                                                                                Exess Hours %
+                                                                                Excess Hours %
                                                                                 
                                                                            </FormSeparator>
                                                                            <div style={{marginBottom: "30px"}}>
