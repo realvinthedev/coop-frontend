@@ -36,7 +36,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { EarbudsOutlined, TableRows, TempleHinduTwoTone } from '@mui/icons-material';
 import PayslipPrinter from '../components/PayslipPrinter';
-
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver-es';
+import { useRef } from 'react';
 
 const theme = createTheme({
      palette: {
@@ -113,18 +115,17 @@ const EditDeleteContainer = styled.div`
     justify-content: right;
 `
 const DateContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
+   
 `
 const TablesContainer = styled.div`
+     padding-left: 50px;
+     padding-right: 50px;
+     padding-bottom: 50px;
      display: flex;
      justify-content: space-between;
-
 `
 const NameIDContainer = styled.div`
-     display: flex;
-     justify-content: space-between;
-     margin-top: 20px;
+   
 `
 const columns = [
      { field: 'name', headerName: 'Name', width: 100 },
@@ -149,6 +150,7 @@ const Payroll = (props) => {
      const [current_date, setCurrent_date] = useState('January');
      const [payroll, setPayroll] = useState([]);
      const [name, setName] = useState("");
+     const [new_name, setNew_name] = useState("");
      const [employeeId, setEmployeeId] = useState('')
      const [start_date, setStartDate] = useState("");
      const [end_date, setEndDate] = useState("");
@@ -163,7 +165,15 @@ const Payroll = (props) => {
      useEffect(() => {
           handleDates();
      }, [month, name, end_date, start_date, period])
-
+     const appRef = useRef(null);
+     const captureScreenshot = () => {
+          const element = appRef.current;
+          html2canvas(element).then((canvas) => {
+               canvas.toBlob((blob) => {
+                    saveAs(blob, 'screenshot.png');
+               });
+          });
+     };
      const handleDates = () => {
           if (month == "january" && period == "first") {
                setStartDate(`01-01-2023`)
@@ -276,6 +286,7 @@ const Payroll = (props) => {
 
 
 
+
      const handlePeriodChange = (e) => {
           setPeriod(e.target.value)
      }
@@ -332,7 +343,9 @@ const Payroll = (props) => {
      }
      const handleName = (event) => {
           const name = event.target.value;
+          const new_name = name.split("- ")[1].trim();
           setName(name)
+          setNew_name(new_name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
 
@@ -445,6 +458,14 @@ const Payroll = (props) => {
      const [default_first_eight_restday_ot, setdefault_first_eight_restday_ot] = useState(0)
      const [default_first_eight_special_ot, setdefault_first_eight_special_ot] = useState(0)
      const [default_first_eight_legal_ot, setdefault_first_eight_legal_ot] = useState(0)
+
+
+
+     const [restday_first_eight, setrestday_first_eight] = useState(0);
+     const [special_first_eight, setspecial_first_eight] = useState(0);
+     const [legal_first_eight, setlegal_first_eight] = useState(0);
+
+
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + employeeId, {
@@ -522,7 +543,7 @@ const Payroll = (props) => {
           special_working_day_counter: 0,
           legal_working_day_counter: 0,
 
-      
+
      });
 
 
@@ -601,7 +622,7 @@ const Payroll = (props) => {
 
                restday_counter += item.restday_counter
                restday_overtime_counter += item.restday_overtime_counter
-               
+
                if (item.day_type === "special_holiday_today") {
                     special_working_day_counter += item.working_day_counter
                     working_day_counter += item.working_day_counter
@@ -616,8 +637,8 @@ const Payroll = (props) => {
 
 
 
-          
-              
+
+
 
 
           });
@@ -653,7 +674,7 @@ const Payroll = (props) => {
                restday_overtime_counter: restday_overtime_counter,
 
 
-            
+
 
           });
 
@@ -671,6 +692,9 @@ const Payroll = (props) => {
      const [final_earnings, setfinal_earnings] = useState(0);
      const [final_net_pay, setfinal_net_pay] = useState(0);
      const [grosspay_without_earnings, setgrosspay_without_earnings] = useState(0);
+     const [new_earnings_total, setnew_earnings_total] = useState(0);
+     const [new_deduction_total, setnew_deduction_total] = useState(0);
+     const [new_net_total, setnew_net_total] = useState(0);
 
      const [regular_ot_amount, setregular_ot_amount] = useState(0);
      const [restday_ot_amount, setrestday_ot_amount] = useState(0);
@@ -727,13 +751,13 @@ const Payroll = (props) => {
           let special_ot_percentage = default_special_ot / 100
           let legal_ot_percentage = default_legal_ot / 100
 
-          //to be defined
+
 
           let first_eight_restday_percentage = default_first_eight_restday_ot / 100
           let first_eight_special_percentage = default_first_eight_special_ot / 100
           let first_eight_legal_percentage = default_first_eight_legal_ot / 100
 
-        
+
 
 
 
@@ -749,11 +773,11 @@ const Payroll = (props) => {
           let total_pay_first_eight_restday_percentage = daily * first_eight_restday_percentage * total.restday_overtime_counter
           let total_pay_first_eight_special_percentage = daily * first_eight_special_percentage * total.special_working_day_counter
           let total_pay_first_eight_legal_percentage = daily * first_eight_legal_percentage * total.legal_working_day_counter
-        
-         
-          setrestday_ot_amount_eight_hours(total_pay_first_eight_restday_percentage.toFixed(2))
-          setspecial_ot_amount_eight_hours(total_pay_first_eight_special_percentage.toFixed(2))
-          setlegal_ot_amount_eight_hours(total_pay_first_eight_legal_percentage.toFixed(2))
+
+
+          setrestday_ot_amount_eight_hours(total_pay_first_eight_restday_percentage)
+          setspecial_ot_amount_eight_hours(total_pay_first_eight_special_percentage)
+          setlegal_ot_amount_eight_hours(total_pay_first_eight_legal_percentage)
 
           //Pay
           //Earnings
@@ -772,11 +796,11 @@ const Payroll = (props) => {
           let total_pay_elnopay = el_nopay_day * daily
           let total_pay_restdaynopay = restday_nopay_day * daily
 
-          setabsence_amount(total_pay_absence.toFixed(2))
-          setvl_nopay_amount(total_pay_vlnopay.toFixed(2))
-          setsl_nopay_amount(total_pay_slnopay.toFixed(2))
-          setel_nopay_amount(total_pay_elnopay.toFixed(2))
-          setrestday_nopay_amount(total_pay_restdaynopay.toFixed(2))
+          setabsence_amount(total_pay_absence)
+          setvl_nopay_amount(total_pay_vlnopay)
+          setsl_nopay_amount(total_pay_slnopay)
+          setel_nopay_amount(total_pay_elnopay)
+          setrestday_nopay_amount(total_pay_restdaynopay)
 
 
 
@@ -820,16 +844,24 @@ const Payroll = (props) => {
           }
 
 
-          setregular_ot_amount(total_pay_regularothours.toFixed(2))
-          setrestday_ot_amount(total_pay_restdayothours.toFixed(2))
-          setspecial_ot_amount(total_pay_specialothours.toFixed(2))
-          setlegal_ot_amount(total_pay_legalothours.toFixed(2))
+          setregular_ot_amount(total_pay_regularothours)
+          setrestday_ot_amount(total_pay_restdayothours)
+          setspecial_ot_amount(total_pay_specialothours)
+          setlegal_ot_amount(total_pay_legalothours)
+
+
+          setrestday_first_eight(total_pay_first_eight_restday_percentage)
+          setspecial_first_eight(total_pay_first_eight_special_percentage)
+          setlegal_first_eight(total_pay_first_eight_legal_percentage)
+
+
+
 
           //Additional Deductions
           let total_pay_undertimemin = total_undertime_min * minutely
           let total_pay_tardinessmin = total_tardiness_min * minutely
-          setundertime_amount(total_pay_undertimemin.toFixed(2))
-          settardiness_amount(total_pay_tardinessmin.toFixed(2))
+          setundertime_amount(total_pay_undertimemin)
+          settardiness_amount(total_pay_tardinessmin)
 
           //SUBTOTAL
           let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
@@ -839,75 +871,55 @@ const Payroll = (props) => {
           let gross = (bimonthly + earnings) - deductions
           let final_gross = gross + additional_earnings
           let net = final_gross - additional_deductions
-          
+
+
+          //NEW Earnings
+          let new_allowance = filtered_additional && filtered_additional[0]?.allowance
+          let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
+          let new_others = filtered_additional && filtered_additional[0]?.other_earnings
+          let new_earnings_total = bimonthly + earnings + new_allowance + new_pay_adj + new_others
+
+
+          //NEW Deductions
+          let new_deductions_total = additional_deductions + deductions
+          let new_net_total = new_earnings_total - new_deductions_total
+
 
           setfinal_earnings(additional_earnings)
           setfinal_gross_pay(final_gross)
           setfinal_deduction(additional_deductions)
           setfinal_net_pay(net)
 
-          console.log(additional_earnings, "additional_earnings")
-          console.log(additional_deductions, "additional_deductions")
-          console.log(deductions, "deductions")
-          console.log(total_pay_first_eight_legal_percentage, "earnings")
-          console.log(gross, "gross")
-          console.log(final_gross, "final_gross")
-          console.log(net, "net")
 
 
-          /**THEIR GROSS PAY:
-           * GROSSPAY = (BIMONTHLY + OT) - (TARDINESS + ABSENCE + UNDERTIME)
-           * TOTAL_GROSSPAY = GROSSPAY + ALLOWANCE + PAY ADJUSTMENT (OR OUR "EARNINGS")
-           */
 
 
-          //OLD
-          // let total_working_hour = total.total_working_hour
-          // let regular_ot_hours = total.regular_ot_hours
-          // let restday_ot_hours = total.restday_ot_hours
-          // let special_ot_hours = total.special_ot_hours
-          // let legal_ot_hours = total.legal_ot_hours
-          // let total_tardiness_min = total.total_tardiness_min
-          // let vl_hours = total.vl_hours
-          // let sl_hours = total.sl_hours
-          // let el_hours = total.el_hours
-          // let vl_nopay_hours = total.vl_nopay_hours
-          // let sl_nopay_hours = total.sl_nopay_hours
-          // let el_nopay_hours = total.el_nopay_hours
-          // let absent_hours = total.absent_hours
+          setnew_deduction_total(new_deductions_total)
+          setnew_earnings_total(new_earnings_total)
+          setnew_net_total(new_net_total)
 
 
-          // let final_bimonthly_pay = default_bimonthly;
-          // let final_total_working_hour = total_working_hour * default_hourly;
-          // let final_regular_ot_hours = (regular_ot_hours * default_hourly) + (regular_ot_hours * .25)
-          // let final_special_ot_hours = (special_ot_hours * default_hourly) + (special_ot_hours * .30)
-          // let final_legal_ot_hours = (restday_ot_hours * default_hourly) + (restday_ot_hours * .30)
-          // let final_total_tardiness_min = total_tardiness_min * default_minute;
-          // let final_vl_hours = vl_hours * default_hourly;
-          // let final_sl_hours = sl_hours * default_hourly;
-          // let final_el_hours = el_hours * default_hourly;
-          // let final_vl_nopay_hours = vl_nopay_hours * default_hourly
-          // let final_sl_nopay_hours = sl_nopay_hours * default_hourly
-          // let final_el_nopay_hours = el_nopay_hours * default_hourly
-          // let final_absent_hours = absent_hours * default_hourly
 
 
-          // let final_absent_deduction = final_vl_nopay_hours + final_sl_nopay_hours + final_el_nopay_hours + final_absent_hours + final_total_tardiness_min
-          // let grosspay = (final_bimonthly_pay + final_regular_ot_hours + final_special_ot_hours + final_legal_ot_hours + final_vl_hours + final_sl_hours + final_el_hours)
-          // // let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
-          // // let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction
-          // let final_earnings = filtered_additional && filtered_additional[0]?.total_earnings
-          // let final_deduction = filtered_additional && filtered_additional[0]?.total_deduction + final_absent_deduction
 
 
-          // setfinal_earnings(final_earnings)
-          // //setfinal_gross_pay(grosspay )
-          // setfinal_gross_pay(grosspay + final_earnings)
-          // setgrosspay_without_earnings(grosspay)
-          // setfinal_deduction(final_deduction)
-          // setfinal_net_pay((grosspay - final_deduction) + final_earnings)
 
 
+
+
+
+
+
+
+          console.log(new_allowance, "new_earnings_total")
+          //      console.log(additional_earnings, "additional_earnings")
+          //      console.log(additional_deductions, "additional_deductions")
+          //      console.log(deductions, "deductions")
+          //      console.log(total_pay_first_eight_legal_percentage, "earnings")
+          //      console.log(gross, "gross")
+          //      console.log(final_gross, "final_gross")
+          //      console.log(net, "net")
+          // 
 
      }
 
@@ -924,376 +936,422 @@ const Payroll = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateContainer>
-                                             <TextField
-                                                  required
-                                                  id="outlined-required"
-                                                  label="Month"
-                                                  fullWidth
-                                                  select
-                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                  onChange={handleMonthChange}
-                                                  value={month}
-                                             >
-                                                  <MenuItem value={'january'}>January 2023</MenuItem>
-                                                  <MenuItem value={'february'}>February 2023</MenuItem>
-                                                  <MenuItem value={'march'}>March 2023</MenuItem>
-                                                  <MenuItem value={'april'}>April 2023</MenuItem>
-                                                  <MenuItem value={'may'}>May 2023</MenuItem>
-                                                  <MenuItem value={'june'}>June 2023</MenuItem>
-                                                  <MenuItem value={'july'}>July 2023</MenuItem>
-                                                  <MenuItem value={'august'}>August 2023</MenuItem>
-                                                  <MenuItem value={'september'}>September 2023</MenuItem>
-                                                  <MenuItem value={'october'}>October 2023</MenuItem>
-                                                  <MenuItem value={'november'}>November 2023</MenuItem>
-                                                  <MenuItem value={'december'}>December 2023</MenuItem>
+                                   <div style={{ display: "flex", width: "100%", }}>
+                                        <div style={{ width: "100%" }}>
+                                             <div style={{ display: "flex", paddingRight: "20px" }}>
+                                                  <div>
+                                                       <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DateContainer>
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Month"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                      onChange={handleMonthChange}
+                                                                      value={month}
+                                                                 >
+                                                                      <MenuItem value={'january'}>January 2023</MenuItem>
+                                                                      <MenuItem value={'february'}>February 2023</MenuItem>
+                                                                      <MenuItem value={'march'}>March 2023</MenuItem>
+                                                                      <MenuItem value={'april'}>April 2023</MenuItem>
+                                                                      <MenuItem value={'may'}>May 2023</MenuItem>
+                                                                      <MenuItem value={'june'}>June 2023</MenuItem>
+                                                                      <MenuItem value={'july'}>July 2023</MenuItem>
+                                                                      <MenuItem value={'august'}>August 2023</MenuItem>
+                                                                      <MenuItem value={'september'}>September 2023</MenuItem>
+                                                                      <MenuItem value={'october'}>October 2023</MenuItem>
+                                                                      <MenuItem value={'november'}>November 2023</MenuItem>
+                                                                      <MenuItem value={'december'}>December 2023</MenuItem>
 
-                                             </TextField>
+                                                                 </TextField>
 
-                                             <TextField
-                                                  required
-                                                  id="outlined-required"
-                                                  label="Period"
-                                                  fullWidth
-                                                  select
-                                                  style={{ paddingBottom: "20px", paddingRight: "10px" }}
-                                                  onChange={handlePeriodChange}
-                                                  value={period}
-                                             >
-                                                  <MenuItem value={'first'}>First Half</MenuItem>
-                                                  <MenuItem value={'second'}>Second Half</MenuItem>
-                                             </TextField>
-                                        </DateContainer>
-                                   </LocalizationProvider>
-                                   {/* <div style={{ height: 400, width: '100%' }}>
-                                        <DataGrid
-                                             getRowId={(row) => row._id}
-                                             rows={payroll}
-                                             columns={columns}
-                                             pageSize={7}
-                                             rowsPerPageOptions={[10]}
-                                             style={{ marginBottom: "20px" }}
-                                        />
-                                   </div> */}
-                                   <NameIDContainer>
-                                        <TextField
-                                             required
-                                             id="outlined-required"
-                                             label="Search Employee"
-                                             fullWidth
-                                             style={{ marginRight: "10px" }}
-                                             select
-                                             onChange={handleName}
-                                             value={name}
-                                        >
-                                             {emp.map((data) => {
-                                                  // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                  return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                             })}
-                                        </TextField>
-                                        <TextField
-                                             required
-                                             id="outlined-required"
-                                             label="Employee_id"
-                                             fullWidth
-                                             style={{ paddingBottom: "40px" }}
-                                             value={employeeId}
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Period"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                      onChange={handlePeriodChange}
+                                                                      value={period}
+                                                                 >
+                                                                      <MenuItem value={'first'}>First Half</MenuItem>
+                                                                      <MenuItem value={'second'}>Second Half</MenuItem>
+                                                                 </TextField>
+                                                            </DateContainer>
+                                                       </LocalizationProvider>
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
+                                                                 Generate
+                                                            </Button>
+                                                       </ThemeProvider>
+                                                  </div>
+                                                  <div>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Search Employee"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                            select
+                                                            onChange={handleName}
+                                                            value={name}
+                                                       >
+                                                            {emp.map((data) => {
+                                                                 // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                                 return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                            })}
+                                                       </TextField>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Employee_id"
+                                                            fullWidth
+                                                            style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                            value={employeeId}
 
-                                             InputProps={{
-                                                  readOnly: true,
-                                             }}
-                                        />
-                                   </NameIDContainer>
-                                   <TableContainer component={Paper}
-                                        style={{ width: "100%", marginBottom: "40px" }} >
-                                        <Table sx={{ width: 1300 }} aria-label="simple table">
-                                             <TableHead>
-                                                  <TableRow  >
-                                                       <TableCell >Employee ID</TableCell>
-                                                       <TableCell>Name</TableCell>
-                                                       <TableCell>Base Salary</TableCell>
-                                                       <TableCell>Bimonthly Salary</TableCell>
-                                                       <TableCell>Daily Rate</TableCell>
-                                                       <TableCell>Hourly Rate</TableCell>
-                                                       <TableCell>Minute Rate</TableCell>
-                                                  </TableRow>
-                                             </TableHead>
-                                             <TableBody>
-                                                  <TableRow >
-                                                       <TableCell>{employeeId}</TableCell>
-                                                       <TableCell>{name}</TableCell>
-                                                       <TableCell>{default_base.toLocaleString()}</TableCell>
-                                                       <TableCell>{default_bimonthly.toLocaleString()}</TableCell>
-                                                       <TableCell>{default_daily.toLocaleString()}</TableCell>
-                                                       <TableCell>{default_hourly.toLocaleString()}</TableCell>
-                                                       <TableCell>{default_minute.toLocaleString()}</TableCell>
-                                                  </TableRow>
-                                             </TableBody>
-                                        </Table>
-                                   </TableContainer>
-                                   <TablesContainer>
-                                        <TableContainer component={Paper}
-                                             style={{ width: "400px" }} >
-                                             <Table sx={{ width: 400 }} aria-label="simple table">
-                                                  <TableHead>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}>Summary</TableCell>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                       <TableRow >
-                                                            <TableCell>Total Working Days</TableCell>
-                                                            <TableCell>{total.working_day_counter}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Total Rest Days</TableCell>
-                                                            <TableCell>{total.restday_counter}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Approved Regular OT</TableCell>
-                                                            <TableCell>{total.regular_ot_hours}</TableCell>
-                                                            <TableCell>P{regular_ot_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Approved Restday OT</TableCell>
-                                                            <TableCell>{total.restday_ot_hours}</TableCell>
-                                                            <TableCell>P{restday_ot_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Approved Special OT</TableCell>
-                                                            <TableCell>{total.special_ot_hours}</TableCell>
-                                                            <TableCell>P{special_ot_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Approved Legal OT</TableCell>
-                                                            <TableCell>{total.legal_ot_hours}</TableCell>
-                                                            <TableCell>P{legal_ot_amount}</TableCell>
-                                                       </TableRow>
+                                                            InputProps={{
+                                                                 readOnly: true,
+                                                            }}
+                                                       />
 
+                                                  </div>
 
-
-                                                       <TableRow >
-                                                            <TableCell>Paid VL</TableCell>
-                                                            <TableCell>{total.vl_day}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Paid SL</TableCell>
-                                                            <TableCell>{total.sl_day}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Paid EL</TableCell>
-                                                            <TableCell>{total.el_day}</TableCell>
-                                                       </TableRow>
-
-                                                       <TableRow >
-                                                            <TableCell>No Pay VL</TableCell>
-                                                            <TableCell>{total.vl_nopay_day}</TableCell>
-                                                            <TableCell>P{vl_nopay_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>No Pay SL</TableCell>
-                                                            <TableCell>{total.sl_nopay_day}</TableCell>
-                                                            <TableCell>P{sl_nopay_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>No Pay EL</TableCell>
-                                                            <TableCell>{total.el_nopay_day}</TableCell>
-                                                            <TableCell>P{el_nopay_amount}</TableCell>
-                                                       </TableRow>
-
-                                                       <TableRow >
-                                                            <TableCell>Tardiness - in min</TableCell>
-                                                            <TableCell>{total.total_tardiness_min}</TableCell>
-                                                            <TableCell>P{tardiness_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Absence Days</TableCell>
-                                                            <TableCell>{total.absent_day}</TableCell>
-                                                            <TableCell>P{absence_amount}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Undertime - in min</TableCell>
-                                                            <TableCell>{total.total_undertime_min}</TableCell>
-                                                            <TableCell>P{undertime_amount} </TableCell>
-                                                       </TableRow>
-
-
-                                                  </TableBody>
-                                             </Table>
-                                        </TableContainer>
-
-                                        <TableContainer component={Paper}
-                                             style={{ width: "400px" }} >
-                                             <Table sx={{ width: 400, marginBottom: "20px" }} aria-label="simple table">
-                                                  <TableHead>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}>Earnings</TableCell>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                       <TableRow >
-                                                            <TableCell>Allowances</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Pay Adjustment - (Earnings)</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Other Earnings</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_earnings}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>Total Earnings</TableCell>
-                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_earnings}</TableCell>
-                                                       </TableRow>
-
-
-                                                  </TableBody>
-                                             </Table>
-                                             <Table sx={{ width: 400 }} aria-label="simple table">
-                                                  <TableHead>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}>Deduction</TableCell>
-                                                       <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                       <TableRow >
-                                                            <TableCell>SSS Contribution</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.sss}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>PhilHealth</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.philhealth}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>WTAX</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.wtax}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>PAGIBIG</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pagibig}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Lodging</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.lodging}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Water/Electricity</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.water_electricity}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>HMO</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>HHHC Savings</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>HHHC Membership Fee</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_membership_fee}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Cash Advances</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.cash_advances}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Pay Adjustment - (Deduction)</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_deduction}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell>Other Deductions</TableCell>
-                                                            <TableCell>{filtered_additional && filtered_additional[0]?.other_deduction}</TableCell>
-                                                       </TableRow>
-                                                       <TableRow >
-                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>Total Deduction</TableCell>
-                                                            {/* <TableCell style={{ backgroundColor: '#e7e7e7' }}>{filtered_additional && filtered_additional[0]?.total_deduction.toLocaleString()}</TableCell> */}
-                                                            <TableCell style={{ backgroundColor: '#e7e7e7' }}>{firstFinalDeduction ? firstFinalDeduction.toLocaleString() : 0}</TableCell>
-                                                       </TableRow>
-                                                  </TableBody>
-                                             </Table>
-
-                                        </TableContainer>
-                                        <div style={{ display: "flex", flexDirection: "column" }}>
-                                             <TableContainer component={Paper}
-                                                  style={{ width: "400px", height: "400px" }} >
-                                                  <Table sx={{ width: 400 }} aria-label="simple table">
+                                             </div>
+                                        </div>
+                                        <div style={{ display: "flex", width: "100%" }}>
+                                             <div>
+                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Base Salary</p></div>
+                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Bimonthly Salary</p></div>
+                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Daily Salary</p></div>
+                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Hourly Salary</p></div>
+                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Minute Salary</p></div>
+                                             </div>
+                                             <div>
+                                                  <p>{default_base.toLocaleString()}</p>
+                                                  <p>{default_bimonthly.toLocaleString()}</p>
+                                                  <p>{default_daily.toLocaleString()}</p>
+                                                  <p>{default_hourly.toLocaleString()}</p>
+                                                  <p>{default_minute.toLocaleString()}</p>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div ref={appRef}>
+                                        <div style={{ marginBottom: "20px", marginTop: "50px" }}>
+                                             <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+                                                  <p>HAPPY HOMES HOUSING COOPERATIVE</p>
+                                                  <p>FOR THE CUT-OFF PERIOD {start_date + " - " + end_date}</p>
+                                             </div>
+                                             <div style={{ paddingLeft: "50px" }}>Name: {new_name}</div>
+                                        </div>
+                                        <TablesContainer >
+                                             <TableContainer
+                                                  style={{ width: "100%" }} >
+                                                  <Table sx={{ width: 600 }} aria-label="simple table">
                                                        <TableHead>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Final Computation</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Earnings</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Days</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Hours</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Mins</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Amount</TableCell>
                                                        </TableHead>
                                                        <TableBody>
-                                                            {/* <TableRow >
-
-                                                            <TableCell>Additional Earnings</TableCell>
-                                                            <TableCell>{final_earnings ? final_earnings.toLocaleString() : 0}</TableCell>
-                                                       </TableRow> */}
                                                             <TableRow >
-                                                                 <TableCell>Gross Pay</TableCell>
-                                                                 <TableCell>{final_gross_pay ? final_gross_pay.toLocaleString() : 0}</TableCell>
+                                                                 <TableCell>Basic Pay</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{default_bimonthly.toLocaleString()}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
-                                                                 <TableCell>Deductions</TableCell>
-                                                                 <TableCell>{final_deduction ? final_deduction.toLocaleString() : 0}</TableCell>
+                                                                 <TableCell>Allowance</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
-                                                                 <TableCell>Net Pay</TableCell>
-                                                                 <TableCell>{final_net_pay ? final_net_pay.toLocaleString() : 0}</TableCell>
+                                                                 <TableCell>Overtime (Regular)</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.regular_ot_hours}</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{regular_ot_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Overtime (Restday)</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.restday_ot_hours}</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{restday_ot_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Overtime (Special Working Hol.)</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.special_ot_hours}</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{special_ot_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Overtime (Legal Hol.)</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.legal_ot_hours}</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{legal_ot_amount}</TableCell>
                                                             </TableRow>
 
 
                                                             <TableRow >
-                                                                 <p style={{ fontStyle: "italic", fontSize: "12px", marginTop: "30px" }}>
-                                                                      Important: Please input all absences, leaves without pay, and other deductions before clicking Calculate
-                                                                      to prevent incorrect Gross Pay Calculations. The reason for this is because the current gross pay calculation is:
-                                                                 </p>
-                                                                 <p>
-                                                                      <span style={{ color: "red", fontSize: "12px" }}>Gross Pay = (Bimonthly salary - absences(etc)) +  Allowances</span>
-                                                                 </p>
+                                                                 <TableCell>Add: Restday OT</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{restday_first_eight}</TableCell>
+                                                            </TableRow>
 
+                                                            <TableRow >
+                                                                 <TableCell>Add: Special Working Hol </TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{special_first_eight}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Add: Legal Holiday</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>P{legal_first_eight}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Night Differential</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Prior Period Adj</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'orange' }}>{new_earnings_total.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>Net Pay</TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}><strong>{new_net_total.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</strong></TableCell>
+                                                            </TableRow>
+
+                                                       </TableBody>
+                                                  </Table>
+
+                                             </TableContainer>
+
+                                             <TableContainer
+                                                  style={{ width: "100%" }} >
+                                                  <Table sx={{ width: 600, marginBottom: "20px" }} aria-label="simple table">
+                                                       <TableHead>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Deduction</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Days</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Hours</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Mins</TableCell>
+                                                            <TableCell style={{ backgroundColor: 'orange' }}>Amount</TableCell>
+                                                       </TableHead>
+                                                       <TableBody>
+                                                            <TableRow >
+                                                                 <TableCell>Tardiness</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.total_tardiness_min}</TableCell>
+                                                                 <TableCell>{tardiness_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Undertime</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{total.total_undertime_min}</TableCell>
+                                                                 <TableCell>{undertime_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Restday No Pay</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{undertime_amount}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Absences</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>VL Without Pay</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>SL Without Pay</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>EL Without Pay</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>SSS Contributions</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.sss}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Philhealth Contributions</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.philhealth}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>HDMF Contributions</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.pagibig}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>WTAX</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.wtax}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Cash Advance/Loans</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.cash_advances}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Others</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>HHHC Savings</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>HHHC Membership Fee</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>HMO</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Lodging</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.lodging}</TableCell>
+
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell>Utilities</TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell></TableCell>
+                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.water_electricity}</TableCell>
+                                                            </TableRow>
+                                                            <TableRow >
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>Total</TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>{new_deduction_total.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                        </TableBody>
-
                                                   </Table>
                                              </TableContainer>
-                                             <ThemeProvider theme={theme}>
-                                                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", width: "100%" }}>
-                                                       <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
-                                                            Calculate
-                                                       </Button>
-                                                       <Button style={{ width: "100%" }} variant="contained" color="green">
-                                                            {filtered_additional.length > 0 ? (
-                                                                 <PDFDownloadLink fileName="savings_summary" document={
-                                                                      < PayslipPrinter
-                                                                           month={month}
-                                                                           period={period}
-                                                                           employeeId={employeeId}
-                                                                           name={name}
-                                                                           grosspay_without_earnings={grosspay_without_earnings}
-                                                                           filtered_additional={filtered_additional}
-                                                                           filtered_employee_dtr={filtered_employee_dtr}
-                                                                           default_base={default_base}
-                                                                           default_bimonthly={default_bimonthly}
-                                                                           default_daily={default_daily}
-                                                                           default_hourly={default_hourly}
-                                                                           default_minute={default_minute}
-                                                                           final_gross_pay={final_gross_pay}
-                                                                           final_deduction={final_deduction}
-                                                                           final_earnings={final_earnings}
-                                                                           final_net_pay={final_net_pay}
-                                                                      />} >
-                                                                      {({ loading }) => (loading ? 'Loading document...' : 'Download Payslip')}
-                                                                 </PDFDownloadLink>
-                                                            ) : (
-                                                                 <p>Waiting for data...</p>
-                                                            )}
-                                                       </Button>
-                                                  </div>
-                                             </ThemeProvider>
+                                        </TablesContainer>
+                                   </div>
+                                   <ThemeProvider theme={theme}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", width: "100%" }}>
+
+                                             <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
+                                                  Print
+                                             </Button>
+                                             {/* <Button style={{ width: "100%" }} variant="contained" color="green">
+                                                                           {filtered_additional.length > 0 ? (
+                                                                                <PDFDownloadLink fileName="savings_summary" document={
+                                                                                     < PayslipPrinter
+                                                                                          month={month}
+                                                                                          period={period}
+                                                                                          employeeId={employeeId}
+                                                                                          name={name}
+                                                                                          grosspay_without_earnings={grosspay_without_earnings}
+                                                                                          filtered_additional={filtered_additional}
+                                                                                          filtered_employee_dtr={filtered_employee_dtr}
+                                                                                          default_base={default_base}
+                                                                                          default_bimonthly={default_bimonthly}
+                                                                                          default_daily={default_daily}
+                                                                                          default_hourly={default_hourly}
+                                                                                          default_minute={default_minute}
+                                                                                          final_gross_pay={final_gross_pay}
+                                                                                          final_deduction={final_deduction}
+                                                                                          final_earnings={final_earnings}
+                                                                                          final_net_pay={final_net_pay}
+                                                                                     />} >
+                                                                                     {({ loading }) => (loading ? 'Loading document...' : 'Download Payslip')}
+                                                                                </PDFDownloadLink>
+                                                                           ) : (
+                                                                                <p>Waiting for data...</p>
+                                                                           )}
+                                                                      </Button> */}
                                         </div>
-                                   </TablesContainer>
-
-
+                                   </ThemeProvider>
                                    <ButtonContainer>
 
                                         <EditDeleteContainer>
