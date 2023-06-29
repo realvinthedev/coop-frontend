@@ -170,7 +170,7 @@ const Payroll = (props) => {
           const element = appRef.current;
           html2canvas(element).then((canvas) => {
                canvas.toBlob((blob) => {
-                    saveAs(blob, 'screenshot.png');
+                    saveAs(blob, `payslip_`+month+`_`+period+`_period`+`_`+new_name);
                });
           });
      };
@@ -872,7 +872,7 @@ const Payroll = (props) => {
           let final_gross = gross + additional_earnings
           let net = final_gross - additional_deductions
 
-
+          console.log(total_pay_absence, "total_pay_absence")
           //NEW Earnings
           let new_allowance = filtered_additional && filtered_additional[0]?.allowance
           let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
@@ -911,7 +911,7 @@ const Payroll = (props) => {
 
 
 
-          console.log(new_allowance, "new_earnings_total")
+
           //      console.log(additional_earnings, "additional_earnings")
           //      console.log(additional_deductions, "additional_deductions")
           //      console.log(deductions, "deductions")
@@ -1038,7 +1038,7 @@ const Payroll = (props) => {
                                              </div>
                                         </div>
                                    </div>
-                                   <div ref={appRef}>
+                                   <div ref={appRef} style={{ border: "solid 1px #d3d3d3", marginTop: "20px" }}>
                                         <div style={{ marginBottom: "20px", marginTop: "50px" }}>
                                              <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
                                                   <p>HAPPY HOMES HOUSING COOPERATIVE</p>
@@ -1063,42 +1063,60 @@ const Payroll = (props) => {
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{default_bimonthly.toLocaleString()}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{default_bimonthly.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Allowance</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.allowance}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.allowance.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Overtime (Regular)</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.regular_ot_hours}</TableCell>
+                                                                 <TableCell>{total.regular_ot_hours !=0? total.regular_ot_hours: ""}</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{regular_ot_amount}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{regular_ot_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Overtime (Restday)</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.restday_ot_hours}</TableCell>
+                                                                 <TableCell>{total.restday_ot_hours !=0? total.restday_ot_hours: ""}</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{restday_ot_amount}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_ot_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Overtime (Special Working Hol.)</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.special_ot_hours}</TableCell>
+                                                                 <TableCell>{total.special_ot_hours !=0? total.special_ot_hours : ""}</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{special_ot_amount}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{special_ot_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Overtime (Legal Hol.)</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.legal_ot_hours}</TableCell>
+                                                                 <TableCell>{total.legal_ot_hours !=0? total.legal_ot_hours : ""}</TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{legal_ot_amount}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{legal_ot_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
 
 
@@ -1107,7 +1125,10 @@ const Payroll = (props) => {
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{restday_first_eight}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_first_eight.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
 
                                                             <TableRow >
@@ -1115,45 +1136,54 @@ const Payroll = (props) => {
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{special_first_eight}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{special_first_eight.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Add: Legal Holiday</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>P{legal_first_eight}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{legal_first_eight.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Night Differential</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P0.00</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Prior Period Adj</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
                                                                  <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'orange' }}>{new_earnings_total.toLocaleString(undefined, {
+                                                                 <TableCell style={{ backgroundColor: 'orange', textAlign: "right" }}>{new_earnings_total.toLocaleString(undefined, {
                                                                       minimumFractionDigits: 2,
                                                                       maximumFractionDigits: 2
                                                                  })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>Net Pay</TableCell>
+                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}><strong>Net Pay</strong></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}><strong>{new_net_total.toLocaleString(undefined, {
+                                                                 <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right" }}><strong>{new_net_total.toLocaleString(undefined, {
                                                                       minimumFractionDigits: 2,
                                                                       maximumFractionDigits: 2
                                                                  })}</strong></TableCell>
@@ -1179,120 +1209,168 @@ const Payroll = (props) => {
                                                                  <TableCell>Tardiness</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.total_tardiness_min}</TableCell>
-                                                                 <TableCell>{tardiness_amount}</TableCell>
+                                                                 <TableCell>{total.total_tardiness_min != 0 ? total.total_tardiness_min : ""}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{tardiness_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Undertime</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{total.total_undertime_min}</TableCell>
-                                                                 <TableCell>{undertime_amount}</TableCell>
+                                                                 <TableCell>{total.total_undertime_min != 0 ? total.total_undertime_min : ""}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{undertime_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Restday No Pay</TableCell>
+                                                                 <TableCell>{total.restday_nopay_day != 0 ? total.restday_nopay_day : ""}</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{undertime_amount}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_nopay_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Absences</TableCell>
+                                                                 <TableCell>{total.absent_day != 0 ? total.absent_day : ""}</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{absence_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>VL Without Pay</TableCell>
+                                                                 <TableCell>{total.vl_nopay_day != 0 ? total.vl_nopay_day : ""}</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{vl_nopay_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>SL Without Pay</TableCell>
+                                                                 <TableCell>{total.sl_nopay_day != 0 ? total.sl_nopay_day : ""}</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{sl_nopay_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>EL Without Pay</TableCell>
+                                                                 <TableCell>{total.el_nopay_day != 0 ? total.el_nopay_day : ""}</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{el_nopay_amount.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>SSS Contributions</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.sss}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.sss.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Philhealth Contributions</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.philhealth}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.philhealth.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>HDMF Contributions</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.pagibig}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pagibig.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>WTAX</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.wtax}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.wtax.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Cash Advance/Loans</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.cash_advances}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.cash_advances.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
-                                                                 <TableCell>Others</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
+                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}>Others</TableCell>
+                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>HHHC Savings</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_savings.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>HHHC Membership Fee</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hhhc_savings}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_membership_fee.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>HMO</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.hmo}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hmo.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell>Lodging</TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.lodging}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.lodging.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
 
                                                             </TableRow>
                                                             <TableRow >
@@ -1300,14 +1378,17 @@ const Payroll = (props) => {
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
                                                                  <TableCell></TableCell>
-                                                                 <TableCell>{filtered_additional && filtered_additional[0]?.water_electricity}</TableCell>
+                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.water_electricity.toLocaleString(undefined, {
+                                                                      minimumFractionDigits: 2,
+                                                                      maximumFractionDigits: 2
+                                                                 })}</TableCell>
                                                             </TableRow>
                                                             <TableRow >
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}>Total</TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                  <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>{new_deduction_total.toLocaleString(undefined, {
+                                                                 <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right" }}>P{new_deduction_total.toLocaleString(undefined, {
                                                                       minimumFractionDigits: 2,
                                                                       maximumFractionDigits: 2
                                                                  })}</TableCell>
