@@ -584,7 +584,7 @@ const Dtr = (props) => {
 
                /**Shower And Hider */
                setHide(true)
-               setdisabled_day_type(true)
+               setdisabled_day_type(false)
           }
           else if (type === "restdaynopay_halfday_morning") {
                /**Main Functions */

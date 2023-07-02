@@ -174,6 +174,10 @@ const Employees = (props) => {
      const [special_first_eight_ot, setspecial_first_eight_ot] = useState(0)
      const [legal_first_eight_ot, setlegal_first_eight_ot] = useState(0)
 
+
+
+     const [employmentStatus, setemploymentStatus] = useState('regular')
+
      const { signup, error, isLoading } = useSignup()
      const handleRefresher = () => {
           setRefresher(Math.random())
@@ -213,6 +217,7 @@ const Employees = (props) => {
           setrestday_ot('')
           setspecial_ot('')
           setlegal_ot('')
+          setemploymentStatus('')
 
           setrestday_first_eight_ot('')
           setspecial_first_eight_ot('')
@@ -319,6 +324,7 @@ const Employees = (props) => {
           { field: 'minute_salary', headerName: 'Minute Salary', width: 300, sortable: false },
           { field: 'start_date', headerName: 'Hired Date', width: 300, sortable: false },
           { field: 'end_date', headerName: 'End Date', width: 300, sortable: false },
+          { field: 'employment_status', headerName: 'Employment Status', width: 300, sortable: false },
           { field: 'contract', headerName: 'Contract', width: 300, sortable: false },
           { field: 'department', headerName: 'Department', width: 300, sortable: false },
           { field: 'is_active', headerName: 'Is Active', width: 300, sortable: false },
@@ -356,12 +362,13 @@ const Employees = (props) => {
                incase_of_emergency: incase_of_emergency,
                job_title: job_title,
                base_salary: base_salary,
-               bimonthly_salary: (base_salary / 2).toFixed(2),
-               daily_salary: (base_salary * 12 / 365).toFixed(2),
-               hourly_salary: ((base_salary * 12 / 365) / 8).toFixed(2),
-               minute_salary: (((base_salary * 12 / 365) / 8) / 60).toFixed(2),
+               bimonthly_salary: employmentStatus != "daily" ? (base_salary / 2).toFixed(2) : base_salary,
+               daily_salary: employmentStatus != "daily" ? (base_salary * 12 / 365).toFixed(2) : base_salary,
+               hourly_salary: employmentStatus != "daily" ? ((base_salary * 12 / 365) / 8).toFixed(2) : (base_salary / 8).toFixed(2),
+               minute_salary: employmentStatus != "daily" ? (((base_salary * 12 / 365) / 8) / 60).toFixed(2) : ((base_salary / 8) / 60).toFixed(2),
                start_date: start_date,
                end_date: end_date,
+               employment_status: employmentStatus,
                contract: contract,
                department: department,
                is_active: is_active,
@@ -398,7 +405,8 @@ const Employees = (props) => {
                department === "" ||
                sick_leave === "" ||
                vacation_leave === "" ||
-               emergency_leave === ""
+               emergency_leave === "" ||
+               employmentStatus === ""
           ) {
                errorToast('Fill up the required fields completely')
           }
@@ -442,6 +450,7 @@ const Employees = (props) => {
                     setSss('')
                     setPagibig('')
                     setTin('')
+                    setemploymentStatus('')
                     setPhilhealth('')
                     setBank_name('')
                     setBank_account_number('')
@@ -480,12 +489,13 @@ const Employees = (props) => {
                incase_of_emergency: incase_of_emergency,
                job_title: job_title,
                base_salary: base_salary,
-               bimonthly_salary: (base_salary / 2).toFixed(2),
-               daily_salary: (base_salary * 12 / 365).toFixed(2),
-               hourly_salary: ((base_salary * 12 / 365) / 8).toFixed(2),
-               minute_salary: (((base_salary * 12 / 365) / 8) / 60).toFixed(2),
+               bimonthly_salary: employmentStatus != "daily" ? (base_salary / 2).toFixed(2) : base_salary,
+               daily_salary: employmentStatus != "daily" ? (base_salary * 12 / 365).toFixed(2) : base_salary,
+               hourly_salary: employmentStatus != "daily" ? ((base_salary * 12 / 365) / 8).toFixed(2) : (base_salary / 8).toFixed(2),
+               minute_salary: employmentStatus != "daily" ? (((base_salary * 12 / 365) / 8) / 60).toFixed(2) : ((base_salary / 8) / 60).toFixed(2),
                start_date: start_date,
                end_date: end_date,
+               employment_status: employmentStatus,
                contract: contract,
                department: department,
                is_active: is_active,
@@ -522,7 +532,8 @@ const Employees = (props) => {
                department === "" ||
                sick_leave === "" ||
                vacation_leave === "" ||
-               emergency_leave === ""
+               emergency_leave === "" ||
+               employmentStatus === ""
           ) {
                errorToast('Fill up the required fields completely')
           }
@@ -656,6 +667,7 @@ const Employees = (props) => {
           setBase_salary(params.row.base_salary)
           setStart_date(params.row.start_date)
           setEnd_date(params.row.end_date)
+          setemploymentStatus(params.row.employment_status)
           setContract(params.row.contract)
           setDepartment(params.row.department)
           setIs_active(params.row.is_active)
@@ -953,6 +965,18 @@ const Employees = (props) => {
                                                                       <MenuItem value={false}>Not anymore</MenuItem>
                                                                  </TextField>
                                                                  <TextField
+                                                                      id="outlined-required"
+                                                                      label="Employment Status"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setemploymentStatus(e.target.value)}
+                                                                      value={employmentStatus}
+                                                                 >
+                                                                      <MenuItem value={"regular"}>Regular Employee</MenuItem>
+                                                                      <MenuItem value={"daily"}>Daily Employee</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
                                                                       type="number"
                                                                       required
                                                                       id="outlined-required"
@@ -982,32 +1006,33 @@ const Employees = (props) => {
                                                                            renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
+
                                                                  <div style={{ display: 'flex', justifyContent: "center" }}>
                                                                       <div style={{ width: "100%", marginRight: "10px" }}>
                                                                            <FormSeparator>
                                                                                 First 8 Hours
-                                                                                
+
                                                                            </FormSeparator>
-                                                                           <div style={{marginBottom: "30px"}}>
-                                                                                     <Tooltip
-                                                                                          html={(
-                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
-                                                                                                    <p>
-                                                                                                         Sample Scenario<br />
-                                                                                                         <br />
-                                                                                                         Day type: Special non working holiday<br/>
-                                                                                                         Daily Rate: P420.00 <br />
-                                                                                                         Percentage Set: 30<br />
-                                                                                                         <br />
-                                                                                                         Calculation:
-                                                                                                         P420 X .30 X 1day = P126.00
-                                                                                                         </p>
-                                                                                               </div>
-                                                                                          )}
-                                                                                     >
-                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
-                                                                                     </Tooltip>
-                                                                                </div>
+                                                                           <div style={{ marginBottom: "30px" }}>
+                                                                                <Tooltip
+                                                                                     html={(
+                                                                                          <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                               <p>
+                                                                                                    Sample Scenario<br />
+                                                                                                    <br />
+                                                                                                    Day type: Special non working holiday<br />
+                                                                                                    Daily Rate: P420.00 <br />
+                                                                                                    Percentage Set: 30<br />
+                                                                                                    <br />
+                                                                                                    Calculation:
+                                                                                                    P420 X .30 X 1day = P126.00
+                                                                                               </p>
+                                                                                          </div>
+                                                                                     )}
+                                                                                >
+                                                                                     <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                </Tooltip>
+                                                                           </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
@@ -1039,29 +1064,29 @@ const Employees = (props) => {
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
                                                                                 Excess Hours %
-                                                                                
+
                                                                            </FormSeparator>
-                                                                           <div style={{marginBottom: "30px"}}>
-                                                                                     <Tooltip
-                                                                                          html={(
-                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
-                                                                                                    <p>
-                                                                                                         Sample Scenario<br />
-                                                                                                         <br />
-                                                                                                         Day type: Special non working holiday<br/>
-                                                                                                         Hourly Rate: P52.50 <br />
-                                                                                                         Percentage Set: 30<br />
-                                                                                                         Excess Hours: 2 hours <br />
-                                                                                                         <br />
-                                                                                                         Calculation:
-                                                                                                         (P52.50  X .30) + P52.50 = P68.25
-                                                                                                    </p>
-                                                                                               </div>
-                                                                                          )}
-                                                                                     >
-                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
-                                                                                     </Tooltip>
-                                                                                </div>
+                                                                           <div style={{ marginBottom: "30px" }}>
+                                                                                <Tooltip
+                                                                                     html={(
+                                                                                          <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                               <p>
+                                                                                                    Sample Scenario<br />
+                                                                                                    <br />
+                                                                                                    Day type: Special non working holiday<br />
+                                                                                                    Hourly Rate: P52.50 <br />
+                                                                                                    Percentage Set: 30<br />
+                                                                                                    Excess Hours: 2 hours <br />
+                                                                                                    <br />
+                                                                                                    Calculation:
+                                                                                                    (P52.50  X .30) + P52.50 = P68.25
+                                                                                               </p>
+                                                                                          </div>
+                                                                                     )}
+                                                                                >
+                                                                                     <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                </Tooltip>
+                                                                           </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
@@ -1353,6 +1378,18 @@ const Employees = (props) => {
                                                                       <MenuItem value={false}>Not anymore</MenuItem>
                                                                  </TextField>
                                                                  <TextField
+                                                                      id="outlined-required"
+                                                                      label="Employment Status"
+                                                                      fullWidth
+                                                                      select
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={(e) => setemploymentStatus(e.target.value)}
+                                                                      value={employmentStatus}
+                                                                 >
+                                                                      <MenuItem value={"regular"}>Regular Employee</MenuItem>
+                                                                      <MenuItem value={"daily"}>Daily Employee</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
                                                                       type="number"
                                                                       required
                                                                       id="outlined-required"
@@ -1382,32 +1419,33 @@ const Employees = (props) => {
                                                                            renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
+
                                                                  <div style={{ display: 'flex', justifyContent: "center" }}>
                                                                       <div style={{ width: "100%", marginRight: "10px" }}>
                                                                            <FormSeparator>
                                                                                 First 8 Hours
-                                                                                
+
                                                                            </FormSeparator>
-                                                                           <div style={{marginBottom: "30px"}}>
-                                                                                     <Tooltip
-                                                                                          html={(
-                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
-                                                                                                    <p>
-                                                                                                         Sample Scenario<br />
-                                                                                                         <br />
-                                                                                                         Day type: Special non working holiday<br/>
-                                                                                                         Daily Rate: P420.00 <br />
-                                                                                                         Percentage Set: 30<br />
-                                                                                                         <br />
-                                                                                                         Calculation:
-                                                                                                         P420 X .30 X 1day = P126.00
-                                                                                                         </p>
-                                                                                               </div>
-                                                                                          )}
-                                                                                     >
-                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
-                                                                                     </Tooltip>
-                                                                                </div>
+                                                                           <div style={{ marginBottom: "30px" }}>
+                                                                                <Tooltip
+                                                                                     html={(
+                                                                                          <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                               <p>
+                                                                                                    Sample Scenario<br />
+                                                                                                    <br />
+                                                                                                    Day type: Special non working holiday<br />
+                                                                                                    Daily Rate: P420.00 <br />
+                                                                                                    Percentage Set: 30<br />
+                                                                                                    <br />
+                                                                                                    Calculation:
+                                                                                                    P420 X .30 X 1day = P126.00
+                                                                                               </p>
+                                                                                          </div>
+                                                                                     )}
+                                                                                >
+                                                                                     <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                </Tooltip>
+                                                                           </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"
@@ -1439,29 +1477,29 @@ const Employees = (props) => {
                                                                       <div style={{ width: "100%" }}>
                                                                            <FormSeparator>
                                                                                 Excess Hours %
-                                                                                
+
                                                                            </FormSeparator>
-                                                                           <div style={{marginBottom: "30px"}}>
-                                                                                     <Tooltip
-                                                                                          html={(
-                                                                                               <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
-                                                                                                    <p>
-                                                                                                         Sample Scenario<br />
-                                                                                                         <br />
-                                                                                                         Day type: Special non working holiday<br/>
-                                                                                                         Hourly Rate: P52.50 <br />
-                                                                                                         Percentage Set: 30<br />
-                                                                                                         Excess Hours: 2 hours <br />
-                                                                                                         <br />
-                                                                                                         Calculation:
-                                                                                                         (P52.50  X .30) + P52.50 = P68.25
-                                                                                                    </p>
-                                                                                               </div>
-                                                                                          )}
-                                                                                     >
-                                                                                          <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
-                                                                                     </Tooltip>
-                                                                                </div>
+                                                                           <div style={{ marginBottom: "30px" }}>
+                                                                                <Tooltip
+                                                                                     html={(
+                                                                                          <div style={{ fontSize: "12px", backgroundColor: "black", padding: "20px", color: "white", borderRadius: "20px", width: "400px" }}>
+                                                                                               <p>
+                                                                                                    Sample Scenario<br />
+                                                                                                    <br />
+                                                                                                    Day type: Special non working holiday<br />
+                                                                                                    Hourly Rate: P52.50 <br />
+                                                                                                    Percentage Set: 30<br />
+                                                                                                    Excess Hours: 2 hours <br />
+                                                                                                    <br />
+                                                                                                    Calculation:
+                                                                                                    (P52.50  X .30) + P52.50 = P68.25
+                                                                                               </p>
+                                                                                          </div>
+                                                                                     )}
+                                                                                >
+                                                                                     <div style={{ fontSize: "12px", color: "red" }}>Show Calculation</div>
+                                                                                </Tooltip>
+                                                                           </div>
                                                                            <TextField
                                                                                 type="number"
                                                                                 id="outlined-required"

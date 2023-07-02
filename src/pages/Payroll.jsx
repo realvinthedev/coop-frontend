@@ -167,6 +167,8 @@ const Payroll = (props) => {
      const [start_date2, setStartDate2] = useState("");
      const [end_date2, setEndDate2] = useState("");
 
+     const [employmentStatus, setemploymentStatus] = useState("");
+
 
      const [month, setMonth] = useState('January');
 
@@ -446,10 +448,7 @@ const Payroll = (props) => {
           setCurrent_date(dateString)
      };
 
-     useEffect(() => {
-          console.log(filtered_additional, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-          console.log(employeeId, "#########################################")
-     }, [month, period])
+    
 
      const handleOpenAdd = () => {
           setOpenAdd(true);
@@ -577,13 +576,13 @@ const Payroll = (props) => {
                          const period = item.period
 
                          if (employeeId2 !== "") {
-                              if(period2 !== "whole_month"){
+                              if (period2 !== "whole_month") {
                                    return month == month2 && period == period2
                               }
-                              else{
+                              else {
                                    return month == month2
                               }
-                             
+
                          }
 
                     });
@@ -716,6 +715,7 @@ const Payroll = (props) => {
                     setdefault_restday_ot(json.restday_ot ? json.restday_ot : 0)
                     setdefault_special_ot(json.special_ot ? json.special_ot : 0)
                     setdefault_legal_ot(json.legal_ot ? json.legal_ot : 0)
+                    setemploymentStatus(json.employment_status ? json.employment_status: "regular")
 
 
                     setdefault_first_eight_restday_ot(json.restday_first_eight_ot ? json.special_first_eight_ot : 0)
@@ -939,6 +939,7 @@ const Payroll = (props) => {
      const [sl_nopay_amount, setsl_nopay_amount] = useState(0);
      const [el_nopay_amount, setel_nopay_amount] = useState(0);
      const [restday_nopay_amount, setrestday_nopay_amount] = useState(0);
+     const [working_day_counter, setworking_day_counter] = useState(0);
 
      const calculateGrossPay = () => {
           //NEW
@@ -965,6 +966,7 @@ const Payroll = (props) => {
           // First 8 hours
           let restday_counter = total.restday_counter
           let working_day_counter = total.working_day_counter
+          setworking_day_counter(working_day_counter)
 
 
           let restday_overtime_counter = total.restday_overtime_counter
@@ -1093,10 +1095,23 @@ const Payroll = (props) => {
           let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
           let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin + total_pay_restdaynopay
+          let daily_deductions = total_pay_undertimemin + total_pay_tardinessmin 
           let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours + total_pay_first_eight_restday_percentage + total_pay_first_eight_special_percentage + total_pay_first_eight_legal_percentage
+
+          //Daily
+          let daily_earnings = working_day_counter * daily
+
+          let daily_gross = (daily_earnings + earnings) - deductions
+          let daily_final_gross = daily_gross + additional_earnings
+          let daily_net = daily_final_gross - additional_deductions
+
           let gross = (bimonthly + earnings) - deductions
           let final_gross = gross + additional_earnings
           let net = final_gross - additional_deductions
+
+
+
+
 
           console.log(total_pay_absence, "total_pay_absence")
           //NEW Earnings
@@ -1104,13 +1119,23 @@ const Payroll = (props) => {
           let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
           let new_others = filtered_additional && filtered_additional[0]?.other_earnings
           let new_earnings_total = bimonthly + earnings + new_allowance + new_pay_adj + new_others
+          let new_daily_earnings_total =  daily_earnings + earnings + new_allowance + new_pay_adj + new_others
 
 
           //NEW Deductions
           let new_deductions_total = additional_deductions
+          let new_daily_deductions_total = additional_deductions
+
           let new_net_total = new_earnings_total - new_deductions_total
+          let new_daily_net_total = new_earnings_total - new_daily_deductions_total
+
+
           let grosspay = new_earnings_total - deductions;
+          let daily_grosspay = new_daily_earnings_total - daily_deductions;
+
+
           let netpay = grosspay - additional_deductions;
+          let daily_netpay = daily_grosspay - additional_deductions;
 
 
 
@@ -1120,16 +1145,16 @@ const Payroll = (props) => {
           setfinal_net_pay(net)
 
 
-
+          successToast(new_daily_earnings_total)
 
 
           setnew_deduction_total(new_deductions_total)
-          setnew_earnings_total(new_earnings_total)
-          setnew_net_total(netpay)
+          setnew_earnings_total(employmentStatus!== "daily"? new_earnings_total :new_daily_earnings_total )
+          setnew_net_total(employmentStatus!== "daily"? netpay : daily_netpay)
+          setearning_deduction(employmentStatus !== "daily" ? deductions : daily_deductions)
 
-          setearning_deduction(deductions)
 
-          setgrosspay(grosspay)
+          setgrosspay(employmentStatus!== "daily"? grosspay: daily_grosspay)
 
 
 
@@ -1321,7 +1346,7 @@ const Payroll = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Payslip" value="1" />
-                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled/>
+                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -1448,7 +1473,7 @@ const Payroll = (props) => {
                                                                       <TableBody>
                                                                            <TableRow >
                                                                                 <TableCell>Basic Pay</TableCell>
-                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{employmentStatus !== "daily"? "" : total.working_day_counter != 0 ? total.working_day_counter : ""}</TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell style={{ textAlign: "right" }}>P{default_bimonthly.toLocaleString(undefined, {
@@ -1608,7 +1633,7 @@ const Payroll = (props) => {
                                                                                 <TableCell>{total.restday_nopay_day != 0 ? total.restday_nopay_day : ""}</TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
-                                                                                <TableCell style={{ textAlign: "right" }}>P{restday_nopay_amount.toLocaleString(undefined, {
+                                                                                <TableCell style={{ textAlign: "right" }}>P{employmentStatus === "daily"? "0.00" : restday_nopay_amount.toLocaleString(undefined, {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</TableCell>
