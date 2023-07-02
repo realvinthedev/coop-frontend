@@ -1138,7 +1138,7 @@ const Member = (props) => {
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{total_kayasavings}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL KAYA SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
                                                                  </div>
                                                                  <div>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{total_others}</p>
@@ -1769,7 +1769,7 @@ const Member = (props) => {
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL KAYA SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
                                                                  </div>
                                                                  <div>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others}</p>
@@ -1896,7 +1896,7 @@ const Member = (props) => {
                                                                       <MenuItem value={'CAPITAL'}>Capital</MenuItem>
                                                                       <MenuItem value={'SAVINGS'}>Savings</MenuItem>
                                                                       <MenuItem value={'LOANS'}>Loans</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Special Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
                                                                  </TextField>
 

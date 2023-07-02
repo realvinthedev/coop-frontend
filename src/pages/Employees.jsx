@@ -77,16 +77,16 @@ const Wrapper = styled.div`
     align-items: center;
 `
 const Main = styled.div`
-    width: 1020px;
-    height: 650px;
+      width: 1400px;
+      height: 750px;
 `
 const Card = styled.div`
     background-color: white;
-    height: 680px;
+    height: 750px;
     width: 100%;
+    overflow: scroll;
     border-radius: 20px;
     padding: 30px;
-    overflow: scroll;
     justify-content: space-between;
 `
 const FormContainer = styled.div`
@@ -317,7 +317,7 @@ const Employees = (props) => {
           { field: 'daily_salary', headerName: 'Daily Salary', width: 300, sortable: false },
           { field: 'hourly_salary', headerName: 'Hourly Salary', width: 300, sortable: false },
           { field: 'minute_salary', headerName: 'Minute Salary', width: 300, sortable: false },
-          { field: 'start_date', headerName: 'Start Date', width: 300, sortable: false },
+          { field: 'start_date', headerName: 'Hired Date', width: 300, sortable: false },
           { field: 'end_date', headerName: 'End Date', width: 300, sortable: false },
           { field: 'contract', headerName: 'Contract', width: 300, sortable: false },
           { field: 'department', headerName: 'Department', width: 300, sortable: false },
@@ -330,7 +330,7 @@ const Employees = (props) => {
           { field: 'bank_account_number', headerName: 'Account Number', width: 300, sortable: false },
           { field: 'sick_leave', headerName: 'Sick Leave', width: 300, sortable: false },
           { field: 'vacation_leave', headerName: 'Vacation Leave', width: 300, sortable: false },
-          { field: 'emergency_leave', headerName: 'Emergency Leave', width: 300, sortable: false },
+          { field: 'emergency_leave', headerName: 'Service Incentive Leave', width: 300, sortable: false },
           { field: 'regular_ot', headerName: 'Regular OT %', width: 300, sortable: false },
           { field: 'restday_ot', headerName: 'Restday OT %', width: 300, sortable: false },
           { field: 'special_ot', headerName: 'Special OT %', width: 300, sortable: false },
@@ -924,6 +924,7 @@ const Employees = (props) => {
                                                                       <MenuItem value={"Contractual"}>Contractual</MenuItem>
                                                                       <MenuItem value={"Permanent"}>Permanent</MenuItem>
                                                                       <MenuItem value={"Provisionary"}>Provisionary</MenuItem>
+                                                                      <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
                                                                  </TextField>
                                                                  <TextField
                                                                       required
@@ -1182,7 +1183,7 @@ const Employees = (props) => {
                                                                       type="number"
                                                                       required
                                                                       id="outlined-required"
-                                                                      label="Emergency Leave"
+                                                                      label="Service Incentive Leave"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={(e) => setEmergencty_leave(e.target.value)}
@@ -1323,6 +1324,7 @@ const Employees = (props) => {
                                                                       <MenuItem value={"Contractual"}>Contractual</MenuItem>
                                                                       <MenuItem value={"Permanent"}>Permanent</MenuItem>
                                                                       <MenuItem value={"Provisionary"}>Provisionary</MenuItem>
+                                                                      <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
                                                                  </TextField>
                                                                  <TextField
                                                                       required
@@ -1581,7 +1583,7 @@ const Employees = (props) => {
                                                                       type="number"
                                                                       required
                                                                       id="outlined-required"
-                                                                      label="Emergency Leave"
+                                                                      label="Service Incentive Leave"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={(e) => setEmergencty_leave(e.target.value)}
@@ -1674,7 +1676,7 @@ const Employees = (props) => {
                                                                  <TableRow><TableCell sx={{ width: 300 }}>Department</TableCell><TableCell align="left">{department}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }}>Is Active</TableCell><TableCell align="left">{is_active.toString()}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }}>Base Salary</TableCell><TableCell align="left">{base_salary}</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Start Date</TableCell><TableCell align="left">{start_date}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Hired Date</TableCell><TableCell align="left">{start_date}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }}>End Date</TableCell><TableCell align="left">{end_date}</TableCell></TableRow>
                                                             </TableBody>
                                                        </Table>
@@ -1738,7 +1740,7 @@ const Employees = (props) => {
                                                             <TableBody>
                                                                  <TableRow><TableCell sx={{ width: 300 }}>Vacation Leave</TableCell><TableCell align="left">{vacation_leave}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }}>Sick Leave</TableCell><TableCell align="left">{sick_leave}</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }}>Emergency Leave</TableCell><TableCell align="left">{emergency_leave}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }}>Service Incentive Leave</TableCell><TableCell align="left">{emergency_leave}</TableCell></TableRow>
                                                             </TableBody>
                                                        </Table>
                                                   </TableContainer>

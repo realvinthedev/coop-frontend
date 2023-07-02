@@ -37,8 +37,15 @@ import Paper from '@mui/material/Paper';
 import { EarbudsOutlined, TableRows, TempleHinduTwoTone } from '@mui/icons-material';
 import PayslipPrinter from '../components/PayslipPrinter';
 import html2canvas from 'html2canvas';
+import Autocomplete from '@mui/material/Autocomplete';
 import { saveAs } from 'file-saver-es';
 import { useRef } from 'react';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import { toast } from 'react-toastify';
 
 const theme = createTheme({
      palette: {
@@ -118,8 +125,8 @@ const DateContainer = styled.div`
    
 `
 const TablesContainer = styled.div`
-     padding-left: 50px;
-     padding-right: 50px;
+     padding-left: 30px;
+     padding-right: 3px;
      padding-bottom: 50px;
      display: flex;
      justify-content: space-between;
@@ -150,27 +157,156 @@ const Payroll = (props) => {
      const [current_date, setCurrent_date] = useState('January');
      const [payroll, setPayroll] = useState([]);
      const [name, setName] = useState("");
+     const [name2, setName2] = useState("");
      const [new_name, setNew_name] = useState("");
      const [employeeId, setEmployeeId] = useState('')
+     const [employeeId2, setEmployeeId2] = useState('')
      const [start_date, setStartDate] = useState("");
      const [end_date, setEndDate] = useState("");
+
+     const [start_date2, setStartDate2] = useState("");
+     const [end_date2, setEndDate2] = useState("");
+
+
      const [month, setMonth] = useState('January');
 
      const [period, setPeriod] = useState('First Half');
+     const [period2, setPeriod2] = useState('First Half');
 
+     const [month2, setmonth2] = useState('January');
+     const handleMonthChange2 = (e) => {
+          setmonth2(e.target.value)
+
+     }
      const handleMonthChange = (e) => {
           setMonth(e.target.value)
 
      }
+
      useEffect(() => {
           handleDates();
      }, [month, name, end_date, start_date, period])
+
+     useEffect(() => {
+          handleDate2();
+     }, [month2, name2, end_date2, start_date2, period2])
+
+
+     const handleDate2 = () => {
+          if (month2 == "january" && period2 == "first") {
+               setStartDate2(`01-01-2023`)
+               setEndDate2(`01-15-2023`)
+          }
+          if (month2 == "january" && period2 == "second") {
+               setStartDate2(`01-16-2023`)
+               setEndDate2(`01-31-2023`)
+          }
+
+          if (month2 == "february" && period2 == "first") {
+               setStartDate2(`02-01-2023`)
+               setEndDate2(`02-15-2023`)
+          }
+          if (month2 == "february" && period2 == "second") {
+               setStartDate2(`02-16-2023`)
+               setEndDate2(`02-29-2023`)
+          }
+
+          if (month2 == "march" && period2 == "first") {
+               setStartDate2(`03-01-2023`)
+               setEndDate2(`03-15-2023`)
+          }
+          if (month2 == "march" && period2 == "second") {
+               setStartDate2(`03-16-2023`)
+               setEndDate2(`03-31-2023`)
+          }
+
+          if (month2 == "april" && period2 == "first") {
+               setStartDate2(`04-01-2023`)
+               setEndDate2(`04-15-2023`)
+          }
+          if (month2 == "april" && period2 == "second") {
+               setStartDate2(`04-16-2023`)
+               setEndDate2(`04-30-2023`)
+          }
+
+          if (month2 == "may" && period2 == "first") {
+               setStartDate2(`05-01-2023`)
+               setEndDate2(`05-15-2023`)
+          }
+          if (month2 == "may" && period2 == "second") {
+               setStartDate2(`05-16-2023`)
+               setEndDate2(`05-31-2023`)
+          }
+
+          if (month2 == "june" && period2 == "first") {
+               setStartDate2(`06-01-2023`)
+               setEndDate2(`06-15-2023`)
+          }
+          if (month2 == "june" && period2 == "second") {
+               setStartDate2(`06-16-2023`)
+               setEndDate2(`06-30-2023`)
+          }
+
+          if (month2 == "july" && period2 == "first") {
+               setStartDate2(`07-01-2023`)
+               setEndDate2(`07-15-2023`)
+          }
+          if (month2 == "july" && period2 == "second") {
+               setStartDate2(`07-16-2023`)
+               setEndDate2(`07-31-2023`)
+          }
+
+          if (month2 == "august" && period2 == "first") {
+               setStartDate2(`08-01-2023`)
+               setEndDate2(`08-15-2023`)
+          }
+          if (month2 == "august" && period2 == "second") {
+               setStartDate2(`08-16-2023`)
+               setEndDate2(`08-31-2023`)
+          }
+
+          if (month2 == "september" && period2 == "first") {
+               setStartDate2(`09-01-2023`)
+               setEndDate2(`09-15-2023`)
+          }
+          if (month2 == "september" && period2 == "second") {
+               setStartDate2(`09-16-2023`)
+               setEndDate2(`09-30-2023`)
+          }
+
+          if (month2 == "october" && period2 == "first") {
+               setStartDate2(`10-01-2023`)
+               setEndDate2(`10-15-2023`)
+          }
+          if (month2 == "october" && period2 == "second") {
+               setStartDate2(`10-16-2023`)
+               setEndDate2(`10-31-2023`)
+          }
+
+          if (month2 == "november" && period2 == "first") {
+               setStartDate2(`11-01-2023`)
+               setEndDate2(`11-15-2023`)
+          }
+          if (month2 == "november" && period2 == "second") {
+               setStartDate2(`11-16-2023`)
+               setEndDate2(`11-30-2023`)
+          }
+
+          if (month2 == "december" && period2 == "first") {
+               setStartDate2(`12-01-2023`)
+               setEndDate2(`12-15-2023`)
+          }
+          if (month2 == "december" && period2 == "second") {
+               setStartDate2(`12-16-2023`)
+               setEndDate2(`12-31-2023`)
+          }
+     }
      const appRef = useRef(null);
      const captureScreenshot = () => {
           const element = appRef.current;
           html2canvas(element).then((canvas) => {
                canvas.toBlob((blob) => {
-                    saveAs(blob, `payslip_`+month+`_`+period+`_period`+`_`+new_name);
+                    saveAs(blob, `payslip_` + month + `_` + period + `_period` + `_` + new_name);
                });
           });
      };
@@ -290,6 +426,9 @@ const Payroll = (props) => {
      const handlePeriodChange = (e) => {
           setPeriod(e.target.value)
      }
+     const handlePeriodChange2 = (e) => {
+          setPeriod2(e.target.value)
+     }
      const [date, setDate] = useState(() => {
           const date = new Date();
 
@@ -338,9 +477,7 @@ const Payroll = (props) => {
 
      };
 
-     const handleAdd = () => {
 
-     }
      const handleName = (event) => {
           const name = event.target.value;
           const new_name = name.split("- ")[1].trim();
@@ -348,6 +485,13 @@ const Payroll = (props) => {
           setNew_name(new_name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
+
+     }
+     const handleName2 = (event) => {
+          const name = event.target.value;
+          setName2(name)
+          const firstWord = name.split(" ")[0];
+          setEmployeeId2(firstWord)
 
      }
 
@@ -414,12 +558,44 @@ const Payroll = (props) => {
           // }, [employeeId, start_date, end_date, period, name])
      }, [employeeId, start_date, end_date])
 
+
+
+
+     const [summaryTotal, setsummaryTotal] = useState([]);
      useEffect(() => {
-          console.log('%%%%%%%%%%%%%%%%%%%%%%%%', filtered_additional)
-     }, [period])
+          const fetchPayslip = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip/' + employeeId, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
 
+               if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const month = item.month;
+                         const period = item.period
 
+                         if (employeeId2 !== "") {
+                              if(period2 !== "whole_month"){
+                                   return month == month2 && period == period2
+                              }
+                              else{
+                                   return month == month2
+                              }
+                             
+                         }
 
+                    });
+                    setsummaryTotal(filteredData)
+               }
+          }
+          if (user) {
+               fetchPayslip();
+          }
+
+          // }, [employeeId, start_date, end_date, period, name])
+     }, [employeeId2, start_date2, end_date2])
 
      const [emp, setEmp] = useState([])
      useEffect(() => {
@@ -464,6 +640,61 @@ const Payroll = (props) => {
      const [restday_first_eight, setrestday_first_eight] = useState(0);
      const [special_first_eight, setspecial_first_eight] = useState(0);
      const [legal_first_eight, setlegal_first_eight] = useState(0);
+
+
+
+
+     //Save to DB
+     const [db_employeeid, setdb_employeeid] = useState("")
+     const [db_month, setdb_month] = useState("")
+     const [db_period, setdb_period] = useState("")
+     const [db_name, setdb_name] = useState("")
+     const [db_base_salary, setdb_base_salary] = useState(0)
+     const [db_bimonthly, setdb_bimonthly] = useState(0)
+     const [db_daily, setdb_daily] = useState(0)
+     const [db_hourly, setdb_hourly] = useState(0)
+     const [db_minute, setdb_minute] = useState(0)
+     const [db_basic, setdb_basic] = useState(0)
+     const [db_allowance, setdb_allowance] = useState(0)
+     const [db_ot_regular_amount, setdb_ot_regular_amount] = useState(0)
+     const [db_ot_restday_amount, setdb_ot_restday_amount] = useState(0)
+     const [db_ot_special_amount, setdb_ot_special_amount] = useState(0)
+     const [db_ot_legal_amount, setdb_ot_legal_amount] = useState(0)
+     const [db_add_ot_restday_amount, setdb_add_ot_restday_amount] = useState(0)
+     const [db_add_ot_special_amount, setdb_add_ot_special_amount] = useState(0)
+     const [db_add_ot_legal_amount, setdb_add_ot_legal_amount] = useState(0)
+     const [db_nightdiff, setdb_nightdiff] = useState(0)
+     const [db_prior_period_adj_earnings, setdb_prior_period_adj_earnings] = useState(0)
+     const [db_earnings_total, setdb_earnings_total] = useState(0)
+     const [db_tardiness_amount, setdb_tardiness_amount] = useState(0)
+     const [db_undertime_amount, setdb_undertime_amount] = useState(0)
+     const [db_restday_nopay_amount, setdb_restday_nopay_amount] = useState(0)
+     const [db_absence_amount, setdb_absence_amount] = useState(0)
+     const [db_vl_nopay_amount, setdb_vl_nopay_amount] = useState(0)
+     const [db_sl_nopay_amount, setdb_sl_nopay_amount] = useState(0)
+     const [db_el_nopay_amount, setdb_el_nopay_amount] = useState(0)
+     const [db_earnings_deduction_total, setdb_earnings_deduction_total] = useState(0)
+     const [db_sss, setdb_sss] = useState(0)
+     const [db_philhealth, setdb_philhealth] = useState(0)
+     const [db_hdmf, setdb_hdmf] = useState(0)
+     const [db_wtax, setdb_wtax] = useState(0)
+     const [db_cash_advance_loans, setdb_cash_advance_loans] = useState(0)
+     const [db_hhhc_savings, setdb_hhhc_savings] = useState(0)
+     const [db_hhhc_membership_fee, setdb_hhhc_membership_fee] = useState(0)
+     const [db_hmo, setdb_hmo] = useState(0)
+     const [db_lodging, setdb_lodging] = useState(0)
+     const [db_utilities, setdb_utilities] = useState(0)
+     const [db_deduction_total, setdb_deduction_total] = useState(0)
+     const [db_grosspay, setdb_grosspay] = useState(0)
+     const [db_net_pay, setdb_net_pay] = useState(0)
+     const [db_other_earnings, setdb_other_earnings] = useState(0)
+     const [db_other_deductions, setdb_other_deductions] = useState(0)
+     const [db_share_capital, setdb_share_capital] = useState(0)
+     const [db_pay_adjustment_deduction, setdb_pay_adjustment_deduction] = useState(0)
+
+
+
+
 
 
      useEffect(() => {
@@ -635,12 +866,6 @@ const Payroll = (props) => {
                     working_day_counter += item.working_day_counter
                }
 
-
-
-
-
-
-
           });
 
 
@@ -694,8 +919,9 @@ const Payroll = (props) => {
      const [grosspay_without_earnings, setgrosspay_without_earnings] = useState(0);
      const [new_earnings_total, setnew_earnings_total] = useState(0);
      const [new_deduction_total, setnew_deduction_total] = useState(0);
+     const [earning_deduction, setearning_deduction] = useState(0);
      const [new_net_total, setnew_net_total] = useState(0);
-
+     const [grosspay, setgrosspay] = useState(0);
      const [regular_ot_amount, setregular_ot_amount] = useState(0);
      const [restday_ot_amount, setrestday_ot_amount] = useState(0);
      const [special_ot_amount, setspecial_ot_amount] = useState(0);
@@ -881,8 +1107,11 @@ const Payroll = (props) => {
 
 
           //NEW Deductions
-          let new_deductions_total = additional_deductions + deductions
+          let new_deductions_total = additional_deductions
           let new_net_total = new_earnings_total - new_deductions_total
+          let grosspay = new_earnings_total - deductions;
+          let netpay = grosspay - additional_deductions;
+
 
 
           setfinal_earnings(additional_earnings)
@@ -896,7 +1125,11 @@ const Payroll = (props) => {
 
           setnew_deduction_total(new_deductions_total)
           setnew_earnings_total(new_earnings_total)
-          setnew_net_total(new_net_total)
+          setnew_net_total(netpay)
+
+          setearning_deduction(deductions)
+
+          setgrosspay(grosspay)
 
 
 
@@ -921,12 +1154,159 @@ const Payroll = (props) => {
           //      console.log(net, "net")
           // 
 
+
+
+          //Save to DB
+
+          setdb_employeeid(employeeId);
+          setdb_month(month)
+          setdb_period(period)
+          setdb_name(name)
+          setdb_base_salary(default_base);
+          setdb_bimonthly(default_bimonthly)
+          setdb_daily(default_daily)
+          setdb_hourly(default_hourly)
+          setdb_minute(default_minute)
+          setdb_basic(default_bimonthly)
+          setdb_allowance(filtered_additional && filtered_additional[0]?.allowance)
+          setdb_ot_regular_amount(total_pay_regularothours)
+          setdb_ot_restday_amount(total_pay_restdayothours)
+          setdb_ot_special_amount(total_pay_specialothours)
+          setdb_ot_legal_amount(total_pay_legalothours)
+          setdb_add_ot_restday_amount(total_pay_first_eight_restday_percentage)
+          setdb_add_ot_special_amount(total_pay_first_eight_special_percentage)
+          setdb_add_ot_legal_amount(total_pay_first_eight_legal_percentage)
+          setdb_nightdiff(0)
+          setdb_prior_period_adj_earnings(filtered_additional && filtered_additional[0]?.pay_adjustment_earnings)
+          setdb_earnings_total(new_earnings_total)
+          setdb_tardiness_amount(total_pay_tardinessmin)
+          setdb_undertime_amount(total_pay_undertimemin)
+          setdb_restday_nopay_amount(total_pay_restdaynopay)
+          setdb_absence_amount(total_pay_absence)
+          setdb_vl_nopay_amount(total_pay_vlnopay)
+          setdb_sl_nopay_amount(total_pay_slnopay)
+          setdb_el_nopay_amount(total_pay_elnopay)
+          setdb_earnings_deduction_total(deductions)
+          setdb_sss(filtered_additional && filtered_additional[0]?.sss)
+          setdb_philhealth(filtered_additional && filtered_additional[0]?.philhealth)
+          setdb_hdmf(filtered_additional && filtered_additional[0]?.pagibig)
+          setdb_wtax(filtered_additional && filtered_additional[0]?.wtax)
+          setdb_cash_advance_loans(filtered_additional && filtered_additional[0]?.cash_advances)
+          setdb_hhhc_savings(filtered_additional && filtered_additional[0]?.hhhc_savings)
+          setdb_hhhc_membership_fee(filtered_additional && filtered_additional[0]?.hhhc_membership_fee)
+          setdb_hmo(filtered_additional && filtered_additional[0]?.hmo)
+          setdb_lodging(filtered_additional && filtered_additional[0]?.lodging)
+          setdb_utilities(filtered_additional && filtered_additional[0]?.water_electricity)
+          setdb_deduction_total(new_deductions_total)
+          setdb_grosspay(grosspay)
+          setdb_net_pay(net)
+          setdb_other_deductions(filtered_additional && filtered_additional[0]?.other_deduction)
+          setdb_other_earnings(filtered_additional && filtered_additional[0]?.other_earnings)
+          setdb_pay_adjustment_deduction(filtered_additional && filtered_additional[0]?.pay_adjustment_deduction)
+          setdb_share_capital(filtered_additional && filtered_additional[0]?.share_capital)
+
+     }
+     const handleChange = (event, newValue) => {
+          settabvalue(newValue);
+     };
+     const [tabvalue, settabvalue] = React.useState('1');
+     const handleGoToSummary = () => {
+          // setbuttonReceiptDisabled(true)
+          settabvalue('2')
      }
 
      const calculateFinalDeduction = () => {
           return filtered_additional && filtered_additional[0]?.total_deduction
      }
      const firstFinalDeduction = calculateFinalDeduction();
+
+     const successToast = (success) => {
+          toast.success(success);
+     };
+     const errorToast = (error) => {
+          toast.error(error);
+     };
+
+
+
+     const handleAdd = async (e) => {
+          e.preventDefault()
+
+          if (name === "" || period === "" || month === "" || employeeId === "") {
+               errorToast('Saving failed, please finalize payroll properly')
+          }
+          else {
+               if (!user) {
+                    console.log('You must be logged in first')
+                    return
+               }
+               else {
+                    const payslip = {
+                         month: db_month,
+                         period: db_period,
+                         name: db_name,
+                         employee_id: db_employeeid,
+
+                         base_salary: db_base_salary,
+                         bi_monthly: db_bimonthly,
+                         daily: db_daily,
+                         hourly: db_hourly,
+                         minute: db_minute,
+
+                         basic_pay: db_basic,
+                         allowance: db_allowance,
+                         ot_regular_amount: db_ot_regular_amount,
+                         ot_restday_amount: db_ot_restday_amount,
+                         ot_special_amount: db_ot_special_amount,
+                         ot_legal_amount: db_ot_legal_amount,
+
+                         add_ot_restday_amount: db_add_ot_restday_amount,
+                         add_ot_special_amount: db_add_ot_special_amount,
+                         add_ot_legal_amount: db_add_ot_legal_amount,
+                         night_diff_amount: db_nightdiff,
+                         prior_period_adj_earnings: db_prior_period_adj_earnings,
+                         earnings_total: db_earnings_total,
+
+
+                         tardiness_amount: db_tardiness_amount,
+                         undertime_amount: db_undertime_amount,
+                         restday_nopay_amount: db_restday_nopay_amount,
+                         absence_amount: db_absence_amount,
+                         vl_nopay_amount: db_vl_nopay_amount,
+                         sl_nopay_amount: db_sl_nopay_amount,
+                         el_nopay_amount: db_el_nopay_amount,
+                         earning_deduction_total: db_earnings_deduction_total,
+
+
+                         sss: db_sss,
+                         philhealth: db_philhealth,
+                         hdmf: db_hdmf,
+                         wtax: db_wtax,
+                         cash_advance_loans: db_cash_advance_loans,
+                         hhhc_savings: db_hhhc_savings,
+                         hhhc_membership_fee: db_hhhc_membership_fee,
+                         hmo: db_hmo,
+                         lodging: db_lodging,
+                         utilities: db_utilities,
+                         deduction_total: db_deduction_total,
+                         gross_pay: db_grosspay,
+                         net_pay: db_net_pay,
+                    }
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip', {
+                         method: 'POST',
+                         body: JSON.stringify(payslip),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+
+                    successToast('Added Successfully')
+
+               }
+          }
+     }
      return (
 
           <div style={{ display: "flex" }}>
@@ -936,511 +1316,735 @@ const Payroll = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   <div style={{ display: "flex", width: "100%", }}>
-                                        <div style={{ width: "100%" }}>
-                                             <div style={{ display: "flex", paddingRight: "20px" }}>
-                                                  <div>
-                                                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DateContainer>
-                                                                 <TextField
-                                                                      required
-                                                                      id="outlined-required"
-                                                                      label="Month"
-                                                                      fullWidth
-                                                                      select
-                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
-                                                                      onChange={handleMonthChange}
-                                                                      value={month}
-                                                                 >
-                                                                      <MenuItem value={'january'}>January 2023</MenuItem>
-                                                                      <MenuItem value={'february'}>February 2023</MenuItem>
-                                                                      <MenuItem value={'march'}>March 2023</MenuItem>
-                                                                      <MenuItem value={'april'}>April 2023</MenuItem>
-                                                                      <MenuItem value={'may'}>May 2023</MenuItem>
-                                                                      <MenuItem value={'june'}>June 2023</MenuItem>
-                                                                      <MenuItem value={'july'}>July 2023</MenuItem>
-                                                                      <MenuItem value={'august'}>August 2023</MenuItem>
-                                                                      <MenuItem value={'september'}>September 2023</MenuItem>
-                                                                      <MenuItem value={'october'}>October 2023</MenuItem>
-                                                                      <MenuItem value={'november'}>November 2023</MenuItem>
-                                                                      <MenuItem value={'december'}>December 2023</MenuItem>
+                                   <Box>
+                                        <TabContext value={tabvalue}>
+                                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                                       <Tab label="Payslip" value="1" />
+                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled/>
+                                                  </TabList>
+                                             </Box>
+                                             <TabPanel value="1">
+                                                  <div style={{ display: "flex", width: "100%", }}>
+                                                       <div style={{ width: "100%" }}>
+                                                            <div style={{ display: "flex", paddingRight: "20px" }}>
+                                                                 <div>
+                                                                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                           <DateContainer>
+                                                                                <TextField
+                                                                                     required
+                                                                                     id="outlined-required"
+                                                                                     label="Month"
+                                                                                     fullWidth
+                                                                                     select
+                                                                                     style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                     onChange={handleMonthChange}
+                                                                                     value={month}
+                                                                                >
+                                                                                     <MenuItem value={'january'}>January 2023</MenuItem>
+                                                                                     <MenuItem value={'february'}>February 2023</MenuItem>
+                                                                                     <MenuItem value={'march'}>March 2023</MenuItem>
+                                                                                     <MenuItem value={'april'}>April 2023</MenuItem>
+                                                                                     <MenuItem value={'may'}>May 2023</MenuItem>
+                                                                                     <MenuItem value={'june'}>June 2023</MenuItem>
+                                                                                     <MenuItem value={'july'}>July 2023</MenuItem>
+                                                                                     <MenuItem value={'august'}>August 2023</MenuItem>
+                                                                                     <MenuItem value={'september'}>September 2023</MenuItem>
+                                                                                     <MenuItem value={'october'}>October 2023</MenuItem>
+                                                                                     <MenuItem value={'november'}>November 2023</MenuItem>
+                                                                                     <MenuItem value={'december'}>December 2023</MenuItem>
 
-                                                                 </TextField>
+                                                                                </TextField>
 
-                                                                 <TextField
-                                                                      required
-                                                                      id="outlined-required"
-                                                                      label="Period"
-                                                                      fullWidth
-                                                                      select
-                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
-                                                                      onChange={handlePeriodChange}
-                                                                      value={period}
-                                                                 >
-                                                                      <MenuItem value={'first'}>First Half</MenuItem>
-                                                                      <MenuItem value={'second'}>Second Half</MenuItem>
-                                                                 </TextField>
-                                                            </DateContainer>
-                                                       </LocalizationProvider>
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
-                                                                 Generate
-                                                            </Button>
-                                                       </ThemeProvider>
-                                                  </div>
-                                                  <div>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Search Employee"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
-                                                            select
-                                                            onChange={handleName}
-                                                            value={name}
-                                                       >
-                                                            {emp.map((data) => {
-                                                                 // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                                 return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                            })}
-                                                       </TextField>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Employee_id"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
-                                                            value={employeeId}
-
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-
-                                                  </div>
-
-                                             </div>
-                                        </div>
-                                        <div style={{ display: "flex", width: "100%" }}>
-                                             <div>
-                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Base Salary</p></div>
-                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Bimonthly Salary</p></div>
-                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Daily Salary</p></div>
-                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Hourly Salary</p></div>
-                                                  <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Minute Salary</p></div>
-                                             </div>
-                                             <div>
-                                                  <p>{default_base.toLocaleString()}</p>
-                                                  <p>{default_bimonthly.toLocaleString()}</p>
-                                                  <p>{default_daily.toLocaleString()}</p>
-                                                  <p>{default_hourly.toLocaleString()}</p>
-                                                  <p>{default_minute.toLocaleString()}</p>
-                                             </div>
-                                        </div>
-                                   </div>
-                                   <div ref={appRef} style={{ border: "solid 1px #d3d3d3", marginTop: "20px" }}>
-                                        <div style={{ marginBottom: "20px", marginTop: "50px" }}>
-                                             <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-                                                  <p>HAPPY HOMES HOUSING COOPERATIVE</p>
-                                                  <p>FOR THE CUT-OFF PERIOD {start_date + " - " + end_date}</p>
-                                             </div>
-                                             <div style={{ paddingLeft: "50px" }}>Name: {new_name}</div>
-                                        </div>
-                                        <TablesContainer >
-                                             <TableContainer
-                                                  style={{ width: "100%" }} >
-                                                  <Table sx={{ width: 600 }} aria-label="simple table">
-                                                       <TableHead>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Earnings</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Days</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Hours</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Mins</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Amount</TableCell>
-                                                       </TableHead>
-                                                       <TableBody>
-                                                            <TableRow >
-                                                                 <TableCell>Basic Pay</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{default_bimonthly.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Allowance</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.allowance.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Overtime (Regular)</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.regular_ot_hours !=0? total.regular_ot_hours: ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{regular_ot_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Overtime (Restday)</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.restday_ot_hours !=0? total.restday_ot_hours: ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_ot_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Overtime (Special Working Hol.)</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.special_ot_hours !=0? total.special_ot_hours : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{special_ot_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Overtime (Legal Hol.)</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.legal_ot_hours !=0? total.legal_ot_hours : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{legal_ot_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-
-
-                                                            <TableRow >
-                                                                 <TableCell>Add: Restday OT</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_first_eight.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-
-                                                            <TableRow >
-                                                                 <TableCell>Add: Special Working Hol </TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{special_first_eight.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Add: Legal Holiday</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{legal_first_eight.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Night Differential</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P0.00</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Prior Period Adj</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'orange', textAlign: "right" }}>{new_earnings_total.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}><strong>Net Pay</strong></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right" }}><strong>{new_net_total.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</strong></TableCell>
-                                                            </TableRow>
-
-                                                       </TableBody>
-                                                  </Table>
-
-                                             </TableContainer>
-
-                                             <TableContainer
-                                                  style={{ width: "100%" }} >
-                                                  <Table sx={{ width: 600, marginBottom: "20px" }} aria-label="simple table">
-                                                       <TableHead>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Deduction</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Days</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Hours</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Mins</TableCell>
-                                                            <TableCell style={{ backgroundColor: 'orange' }}>Amount</TableCell>
-                                                       </TableHead>
-                                                       <TableBody>
-                                                            <TableRow >
-                                                                 <TableCell>Tardiness</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.total_tardiness_min != 0 ? total.total_tardiness_min : ""}</TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{tardiness_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Undertime</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell>{total.total_undertime_min != 0 ? total.total_undertime_min : ""}</TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{undertime_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Restday No Pay</TableCell>
-                                                                 <TableCell>{total.restday_nopay_day != 0 ? total.restday_nopay_day : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{restday_nopay_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Absences</TableCell>
-                                                                 <TableCell>{total.absent_day != 0 ? total.absent_day : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{absence_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>VL Without Pay</TableCell>
-                                                                 <TableCell>{total.vl_nopay_day != 0 ? total.vl_nopay_day : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{vl_nopay_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>SL Without Pay</TableCell>
-                                                                 <TableCell>{total.sl_nopay_day != 0 ? total.sl_nopay_day : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{sl_nopay_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>EL Without Pay</TableCell>
-                                                                 <TableCell>{total.el_nopay_day != 0 ? total.el_nopay_day : ""}</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{el_nopay_amount.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>SSS Contributions</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.sss.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Philhealth Contributions</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.philhealth.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>HDMF Contributions</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pagibig.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>WTAX</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.wtax.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Cash Advance/Loans</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.cash_advances.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}>Others</TableCell>
-                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>HHHC Savings</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_savings.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>HHHC Membership Fee</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_membership_fee.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>HMO</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hmo.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Lodging</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.lodging.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell>Utilities</TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell></TableCell>
-                                                                 <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.water_electricity.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                            <TableRow >
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}>Total</TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                 <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right" }}>P{new_deduction_total.toLocaleString(undefined, {
-                                                                      minimumFractionDigits: 2,
-                                                                      maximumFractionDigits: 2
-                                                                 })}</TableCell>
-                                                            </TableRow>
-                                                       </TableBody>
-                                                  </Table>
-                                             </TableContainer>
-                                        </TablesContainer>
-                                   </div>
-                                   <ThemeProvider theme={theme}>
-                                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", width: "100%" }}>
-
-                                             <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
-                                                  Print
-                                             </Button>
-                                             {/* <Button style={{ width: "100%" }} variant="contained" color="green">
-                                                                           {filtered_additional.length > 0 ? (
-                                                                                <PDFDownloadLink fileName="savings_summary" document={
-                                                                                     < PayslipPrinter
-                                                                                          month={month}
-                                                                                          period={period}
-                                                                                          employeeId={employeeId}
-                                                                                          name={name}
-                                                                                          grosspay_without_earnings={grosspay_without_earnings}
-                                                                                          filtered_additional={filtered_additional}
-                                                                                          filtered_employee_dtr={filtered_employee_dtr}
-                                                                                          default_base={default_base}
-                                                                                          default_bimonthly={default_bimonthly}
-                                                                                          default_daily={default_daily}
-                                                                                          default_hourly={default_hourly}
-                                                                                          default_minute={default_minute}
-                                                                                          final_gross_pay={final_gross_pay}
-                                                                                          final_deduction={final_deduction}
-                                                                                          final_earnings={final_earnings}
-                                                                                          final_net_pay={final_net_pay}
-                                                                                     />} >
-                                                                                     {({ loading }) => (loading ? 'Loading document...' : 'Download Payslip')}
-                                                                                </PDFDownloadLink>
-                                                                           ) : (
-                                                                                <p>Waiting for data...</p>
+                                                                                <TextField
+                                                                                     required
+                                                                                     id="outlined-required"
+                                                                                     label="Period"
+                                                                                     fullWidth
+                                                                                     select
+                                                                                     style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                     onChange={handlePeriodChange}
+                                                                                     value={period}
+                                                                                >
+                                                                                     <MenuItem value={'first'}>First Half</MenuItem>
+                                                                                     <MenuItem value={'second'}>Second Half</MenuItem>
+                                                                                </TextField>
+                                                                           </DateContainer>
+                                                                      </LocalizationProvider>
+                                                                      <ThemeProvider theme={theme}>
+                                                                           <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
+                                                                                Generate
+                                                                           </Button>
+                                                                      </ThemeProvider>
+                                                                 </div>
+                                                                 <div>
+                                                                      <Autocomplete
+                                                                           value={name}
+                                                                           style={{ marginRight: "10px" }}
+                                                                           onSelect={handleName}
+                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                           renderInput={(params) => (
+                                                                                <TextField
+                                                                                     {...params}
+                                                                                     required
+                                                                                     label="Search Employee"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px", width: "500px" }}
+                                                                                />
                                                                            )}
-                                                                      </Button> */}
-                                        </div>
-                                   </ThemeProvider>
-                                   <ButtonContainer>
+                                                                      />
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Employee_id"
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                           value={employeeId}
 
-                                        <EditDeleteContainer>
-                                             <ThemeProvider theme={theme}>
-                                             </ThemeProvider>
-                                        </EditDeleteContainer>
-                                   </ButtonContainer>
+                                                                           InputProps={{
+                                                                                readOnly: true,
+                                                                           }}
+                                                                      />
 
+                                                                 </div>
+
+                                                            </div>
+                                                       </div>
+                                                       <div style={{ display: "flex", width: "100%" }}>
+                                                            <div>
+                                                                 <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Base Salary</p></div>
+                                                                 <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Bimonthly Salary</p></div>
+                                                                 <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Daily Salary</p></div>
+                                                                 <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Hourly Salary</p></div>
+                                                                 <div style={{ display: "flex" }}><p style={{ marginRight: "200px" }}>Minute Salary</p></div>
+                                                            </div>
+                                                            <div>
+                                                                 <p>{default_base.toLocaleString()}</p>
+                                                                 <p>{default_bimonthly.toLocaleString()}</p>
+                                                                 <p>{default_daily.toLocaleString()}</p>
+                                                                 <p>{default_hourly.toLocaleString()}</p>
+                                                                 <p>{default_minute.toLocaleString()}</p>
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                                  <div ref={appRef} style={{ border: "solid 1px #d3d3d3", marginTop: "20px" }}>
+                                                       <div style={{ marginBottom: "20px", marginTop: "50px" }}>
+                                                            <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+                                                                 <p>HAPPY HOMES HOUSING COOPERATIVE</p>
+                                                                 <p>FOR THE CUT-OFF PERIOD {start_date + " - " + end_date}</p>
+                                                            </div>
+                                                            <div style={{ paddingLeft: "50px" }}>Name: {new_name}</div>
+                                                       </div>
+                                                       <TablesContainer >
+                                                            <TableContainer
+                                                                 style={{ width: "100%" }} >
+                                                                 <Table sx={{ width: 600 }} aria-label="simple table">
+                                                                      <TableHead>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Earnings</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Days</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Hours</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Mins</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Amount</TableCell>
+                                                                      </TableHead>
+                                                                      <TableBody>
+                                                                           <TableRow >
+                                                                                <TableCell>Basic Pay</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{default_bimonthly.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Allowance</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.allowance.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Overtime (Regular)</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.regular_ot_hours != 0 ? total.regular_ot_hours : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{regular_ot_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Overtime (Restday)</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.restday_ot_hours != 0 ? total.restday_ot_hours : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{restday_ot_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Overtime (Special Working Hol.)</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.special_ot_hours != 0 ? total.special_ot_hours : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{special_ot_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Overtime (Legal Hol.)</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.legal_ot_hours != 0 ? total.legal_ot_hours : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{legal_ot_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+
+
+                                                                           <TableRow >
+                                                                                <TableCell>Add: Restday OT</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{restday_first_eight.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+
+                                                                           <TableRow >
+                                                                                <TableCell>Add: Special Working Hol </TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{special_first_eight.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Add: Legal Holiday</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{legal_first_eight.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Night Differential</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P0.00</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Prior Period Adjustment</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pay_adjustment_earnings.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Other Earnings</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.other_earnings.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}>Sub Total</TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1', textAlign: "right" }}>{new_earnings_total.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Tardiness</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.total_tardiness_min != 0 ? total.total_tardiness_min : ""}</TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{tardiness_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Undertime</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell>{total.total_undertime_min != 0 ? total.total_undertime_min : ""}</TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{undertime_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Restday No Pay</TableCell>
+                                                                                <TableCell>{total.restday_nopay_day != 0 ? total.restday_nopay_day : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{restday_nopay_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Absences</TableCell>
+                                                                                <TableCell>{total.absent_day != 0 ? total.absent_day : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{absence_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>VL Without Pay</TableCell>
+                                                                                <TableCell>{total.vl_nopay_day != 0 ? total.vl_nopay_day : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{vl_nopay_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>SL Without Pay</TableCell>
+                                                                                <TableCell>{total.sl_nopay_day != 0 ? total.sl_nopay_day : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{sl_nopay_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>SIL Without Pay</TableCell>
+                                                                                <TableCell>{total.el_nopay_day != 0 ? total.el_nopay_day : ""}</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{el_nopay_amount.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}>Sub Total</TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1', textAlign: "right" }}>(P{earning_deduction.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })})</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: 'orange' }}><strong>Gross Pay</strong></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'orange', textAlign: "right" }}><strong>{grosspay.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</strong></TableCell>
+                                                                           </TableRow>
+
+
+
+
+                                                                      </TableBody>
+                                                                 </Table>
+
+                                                            </TableContainer>
+
+                                                            <TableContainer
+                                                                 style={{ width: "100%" }} >
+                                                                 <Table sx={{ width: 600, marginBottom: "20px" }} aria-label="simple table">
+                                                                      <TableHead>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Deduction</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
+                                                                      </TableHead>
+                                                                      <TableBody>
+                                                                           <TableRow >
+                                                                                <TableCell>SSS Contributions</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.sss.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Philhealth Contributions</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.philhealth.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>HDMF Contributions</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pagibig.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>WTAX</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.wtax.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: '#e6e6e6' }}>Others</TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#e6e6e6' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#e6e6e6' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#e6e6e6' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#e6e6e6' }}></TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Cash Advance/Loans</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.cash_advances.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Share Capital</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.share_capital.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>HHHC Savings</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_savings.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>HHHC Membership Fee</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hhhc_membership_fee.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>HMO</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.hmo.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Lodging</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.lodging.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Utilities</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.water_electricity.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Pay Adjustment - Deduction</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.pay_adjustment_deduction.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell>Other Deductions</TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell></TableCell>
+                                                                                <TableCell style={{ textAlign: "right" }}>P{filtered_additional && filtered_additional[0]?.other_deduction.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}>Sub Total</TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1', textAlign: "right" }}>P{new_deduction_total && new_deduction_total.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell>
+                                                                           </TableRow>
+                                                                           <TableRow >
+
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+                                                                                <TableCell ></TableCell>
+
+                                                                           </TableRow>
+
+
+                                                                           <TableRow >
+                                                                                <TableCell style={{ backgroundColor: 'darkorange' }}><strong>Net Pay</strong></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
+                                                                                <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right" }}><strong>{new_net_total.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</strong></TableCell>
+                                                                           </TableRow>
+                                                                      </TableBody>
+                                                                 </Table>
+                                                            </TableContainer>
+
+                                                       </TablesContainer>
+
+                                                  </div>
+                                                  <ThemeProvider theme={theme}>
+
+                                                       <div style={{ display: "flex", justifyContent: "left", marginTop: "20px", width: "100%" }}>
+                                                            {/* <Button style={{ marginRight: "10px" }} variant="contained" color="red" onClick={handleAdd}>
+                                                                 Save to Database
+                                                            </Button> */}
+                                                            <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
+                                                                 Print
+                                                            </Button>
+                                                       </div>
+
+                                                  </ThemeProvider>
+                                                  <ButtonContainer>
+
+                                                       <EditDeleteContainer>
+                                                            <ThemeProvider theme={theme}>
+                                                            </ThemeProvider>
+                                                       </EditDeleteContainer>
+                                                  </ButtonContainer>
+                                             </TabPanel>
+                                             <TabPanel value="2">
+                                                  <div style={{ width: "100%" }}>
+                                                       <div style={{ display: "flex", paddingRight: "20px" }}>
+                                                            <div>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DateContainer>
+
+                                                                           <TextField
+                                                                                required
+                                                                                id="outlined-required"
+                                                                                label="Month"
+                                                                                fullWidth
+                                                                                select
+                                                                                style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                onChange={handleMonthChange2}
+                                                                                value={month2}
+                                                                           >
+                                                                                <MenuItem value={'january'}>January 2023</MenuItem>
+                                                                                <MenuItem value={'february'}>February 2023</MenuItem>
+                                                                                <MenuItem value={'march'}>March 2023</MenuItem>
+                                                                                <MenuItem value={'april'}>April 2023</MenuItem>
+                                                                                <MenuItem value={'may'}>May 2023</MenuItem>
+                                                                                <MenuItem value={'june'}>June 2023</MenuItem>
+                                                                                <MenuItem value={'july'}>July 2023</MenuItem>
+                                                                                <MenuItem value={'august'}>August 2023</MenuItem>
+                                                                                <MenuItem value={'september'}>September 2023</MenuItem>
+                                                                                <MenuItem value={'october'}>October 2023</MenuItem>
+                                                                                <MenuItem value={'november'}>November 2023</MenuItem>
+                                                                                <MenuItem value={'december'}>December 2023</MenuItem>
+
+                                                                           </TextField>
+
+                                                                           <TextField
+                                                                                required
+                                                                                id="outlined-required"
+                                                                                label="Period"
+                                                                                fullWidth
+                                                                                select
+                                                                                style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                onChange={handlePeriodChange2}
+                                                                                value={period2}
+                                                                           >
+                                                                                <MenuItem value={'first'}>First Half</MenuItem>
+                                                                                <MenuItem value={'second'}>Second Half</MenuItem>
+                                                                                <MenuItem value={'whole_month'}>Whole Month</MenuItem>
+                                                                           </TextField>
+                                                                      </DateContainer>
+                                                                 </LocalizationProvider>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
+                                                                           Generate
+                                                                      </Button>
+                                                                 </ThemeProvider>
+                                                            </div>
+                                                            <div>
+
+                                                                 <Autocomplete
+                                                                      value={name2}
+                                                                      style={{ marginRight: "10px" }}
+                                                                      onSelect={handleName2}
+                                                                      options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                      renderInput={(params) => (
+                                                                           <TextField
+                                                                                {...params}
+                                                                                required
+                                                                                label="Search Employee"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px", width: "500px" }}
+                                                                           />
+                                                                      )}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Employee_id"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                      value={employeeId2}
+
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+
+                                                            </div>
+                                                       </div>
+                                                       <div>
+                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                 <h3>Earnings</h3>
+                                                            </div>
+                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                                 <Table aria-label="simple table">
+                                                                      <TableBody>
+                                                                           {/* <TableRow><TableCell sx={{ width: 300 }}>Allowance</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Regular)</TableCell><TableCell>{age}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Restday)</TableCell><TableCell>{birthday}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Special Working Hol.)</TableCell><TableCell>{email}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Legal Hol.)</TableCell><TableCell>{contact_number}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Restday OT</TableCell><TableCell>{address}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Special Working Hol.</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Legal Holiday</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Night Differential</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Prior Period Adj</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Total</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow> */}
+                                                                      </TableBody>
+                                                                 </Table>
+                                                            </TableContainer>
+                                                       </div>
+                                                       <div>
+                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                 <h3>Deduction</h3>
+                                                            </div>
+                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                                 <Table aria-label="simple table">
+                                                                      <TableBody>
+                                                                           {/*<TableRow> <TableCell sx={{ width: 300 }}>Allowance</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Tardiness</TableCell><TableCell>{age}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Undertime</TableCell><TableCell>{birthday}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Restday No Pay</TableCell><TableCell>{email}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Absences</TableCell><TableCell>{contact_number}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>VL Without Pay</TableCell><TableCell>{address}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>SL Without Pay</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>SIL Without Pay</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Philhealth Contributions</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>HDMF Contributions</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>WTAX</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Cash Advance/Loans	</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>HHHC Savings</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>HHHC Membership Fee</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>HMO</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Lodging</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Utilities</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Total</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow> */}
+                                                                      </TableBody>
+                                                                 </Table>
+                                                            </TableContainer>
+                                                       </div>
+                                                       <div>
+                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                 <h3>Total</h3>
+                                                            </div>
+                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                                 <Table aria-label="simple table">
+                                                                      <TableBody>
+                                                                           <TableRow>
+                                                                                {/* <TableCell sx={{ width: 300 }}>Net Pay</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell> */}
+                                                                           </TableRow>
+                                                                      </TableBody>
+                                                                 </Table>
+                                                            </TableContainer>
+                                                       </div>
+                                                  </div>
+                                             </TabPanel>
+                                        </TabContext>
+                                   </Box>
                               </Card>
                          </Main>
                     </Wrapper>

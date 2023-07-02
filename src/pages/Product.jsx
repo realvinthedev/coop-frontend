@@ -55,12 +55,12 @@ const Wrapper = styled.div`
     align-items: center;
 `
 const Main = styled.div`
-    width: 1020px;
-    height: 650px;
+    width: 1400px;
+    height: 750px;
 `
 const Card = styled.div`
     background-color: white;
-    height: 680px;
+    height: 750px;
     width: 100%;
     border-radius: 20px;
     padding: 30px;

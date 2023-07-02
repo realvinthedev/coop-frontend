@@ -32,6 +32,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useRef } from 'react';
 import Employees from './Employees';
 import { isUnitless } from '@mui/material/styles/cssUtils';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
 
 
 const theme = createTheme({
@@ -560,7 +565,7 @@ const Dtr = (props) => {
 
                /**Shower And Hider */
                setHide(true)
-               setdisabled_day_type(true)
+               setdisabled_day_type(false)
           }
           else if (type === "restday_nopay") {
                /**Main Function */
@@ -2274,7 +2279,14 @@ const Dtr = (props) => {
           }
      }
 
-
+     const handleChange = (event, newValue) => {
+          settabvalue(newValue);
+     };
+     const [tabvalue, settabvalue] = React.useState('1');
+     const handleGoToSummary = () => {
+          // setbuttonReceiptDisabled(true)
+          settabvalue('2')
+     }
 
      return (
 
@@ -2285,23 +2297,32 @@ const Dtr = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <TextField
-                                             required
-                                             id="outlined-required"
-                                             label="Filter by department"
-                                             fullWidth
-                                             select
-                                             style={{ paddingBottom: "20px", marginRight: "10px" }}
-                                             onChange={(e) => setdepartmentfilter(e.target.value)}
-                                             value={departmentfilter}
-                                        >
-                                             <MenuItem value="all">All Department</MenuItem>
-                                             {dept.map((data) => {
-                                                  return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
-                                             })}
-                                        </TextField>
-                                        {/* <TextField
+                                   <Box>
+                                        <TabContext value={tabvalue}>
+                                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                                       <Tab label="All Employees" value="1" />
+                                                    
+                                                  </TabList>
+                                             </Box>
+                                             <TabPanel value="1">
+                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Filter by department"
+                                                            fullWidth
+                                                            select
+                                                            style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                                            onChange={(e) => setdepartmentfilter(e.target.value)}
+                                                            value={departmentfilter}
+                                                       >
+                                                            <MenuItem value="all">All Department</MenuItem>
+                                                            {dept.map((data) => {
+                                                                 return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
+                                                            })}
+                                                       </TextField>
+                                                       {/* <TextField
                                              required
                                              id="outlined-required"
                                              label="Search Employee"
@@ -2316,46 +2337,46 @@ const Dtr = (props) => {
                                                   return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
                                              })}
                                         </TextField> */}
-                                        <Autocomplete
-                                             value={name}
-                                             style={{ marginRight: "10px" }}
-                                             onSelect={handleName}
-                                             options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
-                                             renderInput={(params) => (
-                                                  <TextField
-                                                       {...params}
-                                                       required
-                                                       label="Search Employee"
-                                                       fullWidth
-                                                       style={{ paddingBottom: "20px", width: "500px" }}
-                                                  />
-                                             )}
-                                        />
-                                        <TextField
-                                             required
-                                             id="outlined-required"
-                                             label="Month"
-                                             fullWidth
-                                             select
-                                             style={{ paddingBottom: "20px" }}
-                                             onChange={(e) => setMonth(e.target.value)}
-                                             value={month}
-                                        >
-                                             <MenuItem value={'january'}>January 2023</MenuItem>
-                                             <MenuItem value={'february'}>February 2023</MenuItem>
-                                             <MenuItem value={'march'}>March 2023</MenuItem>
-                                             <MenuItem value={'april'}>April 2023</MenuItem>
-                                             <MenuItem value={'may'}>May 2023</MenuItem>
-                                             <MenuItem value={'june'}>June 2023</MenuItem>
-                                             <MenuItem value={'july'}>July 2023</MenuItem>
-                                             <MenuItem value={'august'}>August 2023</MenuItem>
-                                             <MenuItem value={'september'}>September 2023</MenuItem>
-                                             <MenuItem value={'october'}>October 2023</MenuItem>
-                                             <MenuItem value={'november'}>November 2023</MenuItem>
-                                             <MenuItem value={'december'}>December 2023</MenuItem>
+                                                       <Autocomplete
+                                                            value={name}
+                                                            style={{ marginRight: "10px" }}
+                                                            onSelect={handleName}
+                                                            options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                            renderInput={(params) => (
+                                                                 <TextField
+                                                                      {...params}
+                                                                      required
+                                                                      label="Search Employee"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "20px", width: "500px" }}
+                                                                 />
+                                                            )}
+                                                       />
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Month"
+                                                            fullWidth
+                                                            select
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={(e) => setMonth(e.target.value)}
+                                                            value={month}
+                                                       >
+                                                            <MenuItem value={'january'}>January 2023</MenuItem>
+                                                            <MenuItem value={'february'}>February 2023</MenuItem>
+                                                            <MenuItem value={'march'}>March 2023</MenuItem>
+                                                            <MenuItem value={'april'}>April 2023</MenuItem>
+                                                            <MenuItem value={'may'}>May 2023</MenuItem>
+                                                            <MenuItem value={'june'}>June 2023</MenuItem>
+                                                            <MenuItem value={'july'}>July 2023</MenuItem>
+                                                            <MenuItem value={'august'}>August 2023</MenuItem>
+                                                            <MenuItem value={'september'}>September 2023</MenuItem>
+                                                            <MenuItem value={'october'}>October 2023</MenuItem>
+                                                            <MenuItem value={'november'}>November 2023</MenuItem>
+                                                            <MenuItem value={'december'}>December 2023</MenuItem>
 
-                                        </TextField>
-                                        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                       </TextField>
+                                                       {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                                              <DatePicker
                                                   label="Current Date"
                                                   value={currentDate}
@@ -2366,401 +2387,568 @@ const Dtr = (props) => {
                                         </LocalizationProvider> */}
 
 
-                                   </div>
-                                   <div style={{ height: 475, width: '100%' }}>
-                                        <DataGrid
-                                             getRowId={(row) => row._id}
-                                             rows={dtr}
-                                             columns={columns}
-                                             rowsPerPageOptions={[10]}
-                                             style={{ marginBottom: "20px" }}
-                                             onRowClick={handleRowClick}
-                                        />
+                                                  </div>
+                                                  <div style={{ height: 475, width: '100%' }}>
+                                                       <DataGrid
+                                                            getRowId={(row) => row._id}
+                                                            rows={dtr}
+                                                            columns={columns}
+                                                            rowsPerPageOptions={[10]}
+                                                            style={{ marginBottom: "20px" }}
+                                                            onRowClick={handleRowClick}
+                                                       />
 
-                                        <div></div>
-                                        <ButtonContainer>
-                                             <div>
-                                                  <ThemeProvider theme={theme}>
-                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
-                                                            Add New DTR
-                                                       </Button>
-                                                  </ThemeProvider>
-                                             </div>
-                                             <div style={{ marginTop: "20px" }}>
-                                                  For updating DTR, please delete the old one and create an updated one.
-                                             </div>
-                                             <EditDeleteContainer>
+                                                       <div></div>
+                                                       <ButtonContainer>
+                                                            <div>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAdd}>
+                                                                           Add New DTR
+                                                                      </Button>
+                                                                 </ThemeProvider>
+                                                            </div>
+                                                            <div style={{ marginTop: "20px" }}>
+                                                                 For updating DTR, please delete the old one and create an updated one.
+                                                            </div>
+                                                            <EditDeleteContainer>
 
-                                                  <ThemeProvider theme={theme}>
-                                                       {/* <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      {/* <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
                                                             Edit
                                                        </Button> */}
-                                                       <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
-                                                            Delete
-                                                       </Button>
-                                                  </ThemeProvider>
-                                             </EditDeleteContainer>
-                                        </ButtonContainer>
-                                        <Dialog
-                                             ref={dialogRef}
-                                             fullScreen={fullScreen}
-                                             open={openAdd}
-                                             onClose={handleCloseAdd}
-                                             aria-labelledby="alert-dialog-title"
-                                             aria-describedby="alert-dialog-description"
-                                        >
-                                             <DialogTitle id="alert-dialog-title">
-                                                  Add Daily Time Record
-                                             </DialogTitle>
-                                             <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
-                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
-                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
-                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DatePicker
-                                                                 label="Date"
-                                                                 value={date}
-                                                                 inputFormat="MM-DD-YYYY"
-                                                                 onChange={convertDateToString}
-                                                                 renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px", marginRight: "10px" }}{...params} error={false} />}
-                                                            />
-                                                       </LocalizationProvider>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Filter by department"
-                                                            fullWidth
-                                                            select
-                                                            style={{ width: "100%" }}
-                                                            onChange={(e) => setdepartmentfilter(e.target.value)}
-                                                            value={departmentfilter}
+                                                                      <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
+                                                                           Delete
+                                                                      </Button>
+                                                                 </ThemeProvider>
+                                                            </EditDeleteContainer>
+                                                       </ButtonContainer>
+                                                       <Dialog
+                                                            ref={dialogRef}
+                                                            fullScreen={fullScreen}
+                                                            open={openAdd}
+                                                            onClose={handleCloseAdd}
+                                                            aria-labelledby="alert-dialog-title"
+                                                            aria-describedby="alert-dialog-description"
                                                        >
-                                                            <MenuItem value="all">All Department</MenuItem>
-                                                            {dept.map((data) => {
-                                                                 return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
-                                                            })}
-                                                       </TextField>
-                                                  </div>
-
-                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-
-                                                       <Autocomplete
-                                                            style={{ width: "100%" }}
-                                                            value={name}
-                                                            onSelect={handleName}
-                                                            options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
-                                                            renderInput={(params) => (
-                                                                 <TextField
-                                                                      {...params}
-                                                                      required
-                                                                      label="Search Employee"
-                                                                      fullWidth
-                                                                      style={{ width: "100%", paddingBottom: "20px" }}
-                                                                 />
-                                                            )}
-                                                       />
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Employee_id"
-                                                            fullWidth
-                                                            style={{ paddingBottom: "20px", marginLeft: "10px" }}
-                                                            value={employeeId}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-
-                                                  </div>
-
-                                                  <TimeContainer>
-
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Choose Leave Type"
-                                                            fullWidth
-                                                            select
-                                                            style={{ paddingBottom: "40px", marginRight: "10px" }}
-                                                            onChange={handleSelectLeaveTypeChange}
-                                                            value={leave_type}
-                                                       >
-                                                            <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'working_day'}>Working Day</MenuItem>
-
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restday_nopay'}>Restday No Pay</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_morning'}>Restday No Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_afternoon'}>Restday No Pay Halfday - Afternoon Work</MenuItem>
-                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday'}>Restday - Paid</MenuItem>
-                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime'}>RDOT - Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_morning'}>RDOT - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_afternoon'}>RDOT - Afternoon Work</MenuItem>
-
-                                                            <MenuItem style={{ color: '#11b602', marginTop: "30px" }} value={'absent'}>Absent Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_afternoon'}>Absent Halfday - Afternoon Work</MenuItem>
-
-                                                            <MenuItem style={{ color: '#02a1b6', marginTop: "30px" }} value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_morning'}>VL With Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_afternoon'}>VL With Pay Halfday - Afternoon Work</MenuItem>
-                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_wholeday'}>VL No Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_morning'}>VL No Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_afternoon'}>VL No Pay Halfday - Afternoon Work</MenuItem>
-
-                                                            <MenuItem style={{ color: 'orange', marginTop: "30px" }} value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: 'orange' }} value={'sl_halfday_morning'}>SL With Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: 'orange' }} value={'sl_halfday_afternoon'}>SL With Pay Halfday - Afternoon Work</MenuItem>
-                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_wholeday'}>SL No Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_morning'}>SL No Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_afternoon'}>SL No Pay Halfday - Afternoon Work</MenuItem>
-
-
-                                                            <MenuItem style={{ color: 'red', marginTop: "30px" }} value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: 'red' }} value={'el_halfday_morning'}>EL With Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: 'red' }} value={'el_halfday_afternoon'}>EL With Pay Halfday - Afternoon Work</MenuItem>
-                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
-                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_morning'}>EL No Pay Halfday - Morning Work</MenuItem>
-                                                            <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_afternoon'}>EL No Pay Halfday - Afternoon Work</MenuItem>
-
-                                                       </TextField>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Day Type"
-                                                            fullWidth
-                                                            select
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={handleDayTypeChange}
-                                                            value={day_type}
-                                                            disabled={disabled_day_type}
-
-                                                       >
-                                                            <MenuItem value={'normal_day_today'}>Normal Day</MenuItem>
-                                                            <MenuItem value={'special_holiday_today'}>Special Non Working Holiday </MenuItem>
-                                                            <MenuItem value={'legal_holiday_today'}>Legal Holiday</MenuItem>
-                                                       </TextField>
-
-
-                                                  </TimeContainer>
-
-                                                  {hide === true ? null : <Others id="others">
-                                                       < div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                            <div style={{ marginRight: '40px' }}>
-                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >AM TIME</h1>
-                                                                 <TimeContainer style={{ marginTop: "20px" }}>
+                                                            <DialogTitle id="alert-dialog-title">
+                                                                 Add Daily Time Record
+                                                            </DialogTitle>
+                                                            <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+                                                                 {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                                 {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
+                                                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                           <DatePicker
+                                                                                label="Date"
+                                                                                value={date}
+                                                                                inputFormat="MM-DD-YYYY"
+                                                                                onChange={convertDateToString}
+                                                                                renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginTop: "20px", marginRight: "10px" }}{...params} error={false} />}
+                                                                           />
+                                                                      </LocalizationProvider>
                                                                       <TextField
-                                                                           disabled={disabled_am_official}
-                                                                           type="number"
                                                                            required
-                                                                           fullWidth
                                                                            id="outlined-required"
-                                                                           label="Official AM (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_am_in_hour(e.target.value)}
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           value={official_am_in_hour}
+                                                                           label="Filter by department"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ width: "100%" }}
+                                                                           onChange={(e) => setdepartmentfilter(e.target.value)}
+                                                                           value={departmentfilter}
+                                                                      >
+                                                                           <MenuItem value="all">All Department</MenuItem>
+                                                                           {dept.map((data) => {
+                                                                                return <MenuItem key={data._id} value={data.department_name}>{data.department_name}</MenuItem>
+                                                                           })}
+                                                                      </TextField>
+                                                                 </div>
 
+                                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+                                                                      <Autocomplete
+                                                                           style={{ width: "100%" }}
+                                                                           value={name}
+                                                                           onSelect={handleName}
+                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                           renderInput={(params) => (
+                                                                                <TextField
+                                                                                     {...params}
+                                                                                     required
+                                                                                     label="Search Employee"
+                                                                                     fullWidth
+                                                                                     style={{ width: "100%", paddingBottom: "20px" }}
+                                                                                />
+                                                                           )}
                                                                       />
                                                                       <TextField
-                                                                           disabled={disabled_am_official}
-                                                                           type="number"
                                                                            required
-                                                                           fullWidth
                                                                            id="outlined-required"
-                                                                           label="Official AM (mins)"
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_am_in_min(e.target.value)}
-                                                                           value={official_am_in_min}
+                                                                           label="Employee_id"
+                                                                           fullWidth
+                                                                           style={{ paddingBottom: "20px", marginLeft: "10px" }}
+                                                                           value={employeeId}
+                                                                           InputProps={{
+                                                                                readOnly: true,
+                                                                           }}
                                                                       />
-                                                                 </TimeContainer>
+
+                                                                 </div>
 
                                                                  <TimeContainer>
-                                                                      <TextField
-                                                                           disabled={disabled_am_time}
-                                                                           type="number"
-                                                                           required
-                                                                           fullWidth
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           id="outlined-required"
-                                                                           label="AM IN (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setAm_in_hour(e.target.value)}
-                                                                           value={am_in_hour}
-                                                                      />
-                                                                      <TextField
-                                                                           disabled={disabled_am_time}
-                                                                           type="number"
-                                                                           required
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           fullWidth
-                                                                           id="outlined-required"
-                                                                           label="AM IN (mins)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setAm_in_min(e.target.value)}
-                                                                           value={am_in_min}
 
-                                                                      />
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Choose Leave Type"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "40px", marginRight: "10px" }}
+                                                                           onChange={handleSelectLeaveTypeChange}
+                                                                           value={leave_type}
+                                                                      >
+                                                                           <MenuItem style={{ color: '#a41fe2', marginTop: "20px" }} value={'working_day'}>Working Day</MenuItem>
+
+                                                                           <MenuItem style={{ color: '#a41fe2' }} value={'restday_nopay'}>Restday No Pay</MenuItem>
+                                                                           <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_morning'}>Restday No Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#a41fe2' }} value={'restdaynopay_halfday_afternoon'}>Restday No Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#4a0d66' }} value={'restday'}>Restday - Paid</MenuItem>
+                                                                           <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime'}>RDOT - Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_morning'}>RDOT - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#4a0d66' }} value={'restday_overtime_afternoon'}>RDOT - Afternoon Work</MenuItem>
+
+                                                                           <MenuItem style={{ color: '#11b602', marginTop: "30px" }} value={'absent'}>Absent Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_morning'}>Absent Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#11b602' }} value={'absent_halfday_afternoon'}>Absent Halfday - Afternoon Work</MenuItem>
+
+                                                                           <MenuItem style={{ color: '#02a1b6', marginTop: "30px" }} value={'vl_wholeday'}>VL With Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_morning'}>VL With Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#02a1b6' }} value={'vl_halfday_afternoon'}>VL With Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#026977' }} value={'vl_nopay_wholeday'}>VL No Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_morning'}>VL No Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#026977' }} value={'vl_nopay_halfday_afternoon'}>VL No Pay Halfday - Afternoon Work</MenuItem>
+
+                                                                           <MenuItem style={{ color: 'orange', marginTop: "30px" }} value={'sl_wholeday'}>SL With Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: 'orange' }} value={'sl_halfday_morning'}>SL With Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: 'orange' }} value={'sl_halfday_afternoon'}>SL With Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_wholeday'}>SL No Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_morning'}>SL No Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_afternoon'}>SL No Pay Halfday - Afternoon Work</MenuItem>
+
+
+                                                                           <MenuItem style={{ color: 'red', marginTop: "30px" }} value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_morning'}>EL With Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_afternoon'}>EL With Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_morning'}>EL No Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_afternoon'}>EL No Pay Halfday - Afternoon Work</MenuItem>
+
+                                                                      </TextField>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Day Type"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={handleDayTypeChange}
+                                                                           value={day_type}
+                                                                           disabled={disabled_day_type}
+
+                                                                      >
+                                                                           <MenuItem value={'normal_day_today'}>Normal Day</MenuItem>
+                                                                           <MenuItem value={'special_holiday_today'}>Special Non Working Holiday </MenuItem>
+                                                                           <MenuItem value={'legal_holiday_today'}>Legal Holiday</MenuItem>
+                                                                      </TextField>
+
+
                                                                  </TimeContainer>
-                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
-                                                                      <TextField
-                                                                           disabled={disabled_am_time}
-                                                                           type="number"
-                                                                           required
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           fullWidth
-                                                                           id="outlined-required"
-                                                                           label="AM OUT (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setAm_out_hour(e.target.value)}
-                                                                           value={am_out_hour}
+
+                                                                 {hide === true ? null : <Others id="others">
+                                                                      < div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                           <div style={{ marginRight: '40px' }}>
+                                                                                <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >AM TIME</h1>
+                                                                                <TimeContainer style={{ marginTop: "20px" }}>
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Official AM (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setofficial_am_in_hour(e.target.value)}
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          value={official_am_in_hour}
+
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Official AM (mins)"
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setofficial_am_in_min(e.target.value)}
+                                                                                          value={official_am_in_min}
+                                                                                     />
+                                                                                </TimeContainer>
+
+                                                                                <TimeContainer>
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          id="outlined-required"
+                                                                                          label="AM IN (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setAm_in_hour(e.target.value)}
+                                                                                          value={am_in_hour}
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="AM IN (mins)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setAm_in_min(e.target.value)}
+                                                                                          value={am_in_min}
+
+                                                                                     />
+                                                                                </TimeContainer>
+                                                                                <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="AM OUT (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setAm_out_hour(e.target.value)}
+                                                                                          value={am_out_hour}
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_am_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          id="outlined-required"
+                                                                                          label="AM OUT (mins)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setAm_out_min(e.target.value)}
+                                                                                          value={am_out_min}
+
+                                                                                     />
+                                                                                </TimeContainer >
+                                                                           </div>
+
+                                                                           <div>
+                                                                                <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >PM TIME</h1>
+                                                                                <TimeContainer style={{ marginTop: "20px" }}>
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_official}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          id="outlined-required"
+                                                                                          label="Official PM (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setofficial_pm_in_hour(e.target.value)}
+                                                                                          value={official_pm_in_hour}
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_official}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Official PM (mins)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setofficial_pm_in_min(e.target.value)}
+                                                                                          value={official_pm_in_min}
+                                                                                     />
+                                                                                </TimeContainer>
+                                                                                <TimeContainer >
+
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="PM IN (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setPm_in_hour(e.target.value)}
+                                                                                          value={pm_in_hour}
+
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="PM IN (mins)"
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setPm_in_min(e.target.value)}
+                                                                                          value={pm_in_min}
+
+                                                                                     />
+                                                                                </TimeContainer>
+                                                                                <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_time}
+                                                                                          type="number"
+                                                                                          fullWidth
+                                                                                          required
+                                                                                          id="outlined-required"
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          label="PM OUT (hour)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setPm_out_hour(e.target.value)}
+                                                                                          value={pm_out_hour}
+
+                                                                                     />
+                                                                                     <TextField
+                                                                                          disabled={disabled_pm_time}
+                                                                                          type="number"
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          onBlur={handleZeroOnBlur}
+                                                                                          id="outlined-required"
+                                                                                          label="PM OUT (mins)"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={(e) => setPm_out_min(e.target.value)}
+                                                                                          value={pm_out_min}
+
+                                                                                     />
+                                                                                </TimeContainer>
+                                                                           </div>
+
+                                                                      </div>
+
+
+
+                                                                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                           <div style={{ display: "flex", flexDirection: "column" }}>
+
+                                                                                <TextField
+                                                                                     type="number"
+
+                                                                                     id="outlined-required"
+                                                                                     label="Total Overtime Hour"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setTotal_ot_hour(e.target.value)}
+                                                                                     value={total_ot_hour}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+                                                                                     required
+                                                                                     id="outlined-required"
+                                                                                     label="Approve overtime?"
+                                                                                     fullWidth
+                                                                                     select
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setovertime(e.target.value)}
+                                                                                     value={overtime}
+                                                                                     disabled={disabled_overtime}
+                                                                                >
+                                                                                     <MenuItem value={'not_approved'}>Don't Approve</MenuItem>
+                                                                                     <MenuItem value={'approved'}>Approved</MenuItem>
+
+                                                                                </TextField>
+                                                                                <TextField
+                                                                                     type="number"
+
+                                                                                     id="outlined-required"
+                                                                                     label="Total Undertime Minutes"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => settotal_undertime_min(e.target.value)}
+                                                                                     value={total_undertime_min}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+
+                                                                                <TextField
+                                                                                     type="number"
+
+                                                                                     id="outlined-required"
+                                                                                     label="Total Tardiness Minutes"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setTotal_tardiness_min(e.target.value)}
+                                                                                     value={total_tardiness_min}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="Absent"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setabsent_day(e.target.value)}
+                                                                                     value={absent_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                           </div>
+                                                                           <div style={{ display: "flex", flexDirection: "column" }}>
+
+
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="VL with pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setvl_day(e.target.value)}
+                                                                                     value={vl_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="SL with pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setsl_day(e.target.value)}
+                                                                                     value={sl_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="EL with pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setel_day(e.target.value)}
+                                                                                     value={el_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="VL no pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setvl_nopay_day(e.target.value)}
+                                                                                     value={vl_nopay_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="SL no pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setsl_nopay_day(e.target.value)}
+                                                                                     value={sl_nopay_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                                <TextField
+
+                                                                                     id="outlined-required"
+                                                                                     label="EL no pay"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={(e) => setel_nopay_day(e.target.value)}
+                                                                                     value={el_nopay_day}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                           </div>
+                                                                      </div>
+                                                                 </Others>}
+
+
+
+                                                                 {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                                 {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                 {/* <Button onClick={handleAdd}>Add</Button> */}
+                                                                 <Button onClick={handleCloseAdd} autoFocus>
+                                                                      Cancel
+                                                                 </Button>
+                                                                 <Button onClick={handleAdd}>Save</Button>
+                                                            </DialogActions>
+                                                       </Dialog>
+                                                       <Dialog
+                                                            fullScreen={fullScreen}
+                                                            open={openAddAdditionals}
+                                                            onClose={handleCloseAddAdditionals}
+                                                            aria-labelledby="alert-dialog-title"
+                                                            aria-describedby="alert-dialog-description"
+                                                       >
+                                                            <DialogTitle id="alert-dialog-title">
+                                                                 Add Earnings / Deduction
+                                                            </DialogTitle>
+                                                            <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Date"
+                                                                           value={date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
-                                                                      <TextField
-                                                                           disabled={disabled_am_time}
-                                                                           type="number"
-                                                                           required
-                                                                           fullWidth
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           id="outlined-required"
-                                                                           label="AM OUT (mins)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setAm_out_min(e.target.value)}
-                                                                           value={am_out_min}
+                                                                 </LocalizationProvider>
 
-                                                                      />
-                                                                 </TimeContainer >
-                                                            </div>
-
-                                                            <div>
-                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >PM TIME</h1>
-                                                                 <TimeContainer style={{ marginTop: "20px" }}>
-                                                                      <TextField
-                                                                           disabled={disabled_pm_official}
-                                                                           type="number"
-                                                                           required
-                                                                           fullWidth
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           id="outlined-required"
-                                                                           label="Official PM (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_pm_in_hour(e.target.value)}
-                                                                           value={official_pm_in_hour}
-                                                                      />
-                                                                      <TextField
-                                                                           disabled={disabled_pm_official}
-                                                                           type="number"
-                                                                           required
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           fullWidth
-                                                                           id="outlined-required"
-                                                                           label="Official PM (mins)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setofficial_pm_in_min(e.target.value)}
-                                                                           value={official_pm_in_min}
-                                                                      />
-                                                                 </TimeContainer>
-                                                                 <TimeContainer >
-
-                                                                      <TextField
-                                                                           disabled={disabled_pm_time}
-                                                                           type="number"
-                                                                           required
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           fullWidth
-                                                                           id="outlined-required"
-                                                                           label="PM IN (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setPm_in_hour(e.target.value)}
-                                                                           value={pm_in_hour}
-
-                                                                      />
-                                                                      <TextField
-                                                                           disabled={disabled_pm_time}
-                                                                           type="number"
-                                                                           required
-                                                                           fullWidth
-                                                                           id="outlined-required"
-                                                                           label="PM IN (mins)"
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setPm_in_min(e.target.value)}
-                                                                           value={pm_in_min}
-
-                                                                      />
-                                                                 </TimeContainer>
-                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
-                                                                      <TextField
-                                                                           disabled={disabled_pm_time}
-                                                                           type="number"
-                                                                           fullWidth
-                                                                           required
-                                                                           id="outlined-required"
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           label="PM OUT (hour)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setPm_out_hour(e.target.value)}
-                                                                           value={pm_out_hour}
-
-                                                                      />
-                                                                      <TextField
-                                                                           disabled={disabled_pm_time}
-                                                                           type="number"
-                                                                           required
-                                                                           fullWidth
-                                                                           onBlur={handleZeroOnBlur}
-                                                                           id="outlined-required"
-                                                                           label="PM OUT (mins)"
-                                                                           style={{ paddingBottom: "20px" }}
-                                                                           onChange={(e) => setPm_out_min(e.target.value)}
-                                                                           value={pm_out_min}
-
-                                                                      />
-                                                                 </TimeContainer>
-                                                            </div>
-
-                                                       </div>
-
-
-
-                                                       <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                            <div style={{ display: "flex", flexDirection: "column" }}>
-
-                                                                 <TextField
-                                                                      type="number"
-
-                                                                      id="outlined-required"
-                                                                      label="Total Overtime Hour"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setTotal_ot_hour(e.target.value)}
-                                                                      value={total_ot_hour}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
-                                                                 />
                                                                  <TextField
                                                                       required
                                                                       id="outlined-required"
-                                                                      label="Approve overtime?"
+                                                                      label="Search Employee"
                                                                       fullWidth
                                                                       select
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setovertime(e.target.value)}
-                                                                      value={overtime}
-                                                                      disabled={disabled_overtime}
+                                                                      onChange={handleName}
+                                                                      value={name}
                                                                  >
-                                                                      <MenuItem value={'not_approved'}>Don't Approve</MenuItem>
-                                                                      <MenuItem value={'approved'}>Approved</MenuItem>
-
+                                                                      {emp.map((data) => {
+                                                                           // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                                           return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
+                                                                      })}
                                                                  </TextField>
-                                                                 <TextField
-                                                                      type="number"
 
+                                                                 <TextField
+                                                                      required
                                                                       id="outlined-required"
-                                                                      label="Total Undertime Minutes"
+                                                                      label="Employee_id"
                                                                       fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => settotal_undertime_min(e.target.value)}
-                                                                      value={total_undertime_min}
+                                                                      style={{ paddingBottom: "80px" }}
+                                                                      value={employeeId}
                                                                       InputProps={{
                                                                            readOnly: true,
                                                                       }}
@@ -2768,423 +2956,262 @@ const Dtr = (props) => {
 
                                                                  <TextField
                                                                       type="number"
-
-                                                                      id="outlined-required"
-                                                                      label="Total Tardiness Minutes"
+                                                                      required
                                                                       fullWidth
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setTotal_tardiness_min(e.target.value)}
-                                                                      value={total_tardiness_min}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
-                                                                 />
-                                                                 <TextField
-
                                                                       id="outlined-required"
-                                                                      label="Absent"
-                                                                      fullWidth
+                                                                      label="SSS"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setabsent_day(e.target.value)}
-                                                                      value={absent_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlesss}
+                                                                      value={sss}
                                                                  />
-                                                            </div>
-                                                            <div style={{ display: "flex", flexDirection: "column" }}>
-
 
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="VL with pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Philhealth"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setvl_day(e.target.value)}
-                                                                      value={vl_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlephilhealth}
+                                                                      value={philhealth}
                                                                  />
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="SL with pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="WTAX"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setsl_day(e.target.value)}
-                                                                      value={sl_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlewtax}
+                                                                      value={wtax}
                                                                  />
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="EL with pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pagibig"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setel_day(e.target.value)}
-                                                                      value={el_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlepagibig}
+                                                                      value={pagibig}
                                                                  />
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="VL no pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Lodging"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setvl_nopay_day(e.target.value)}
-                                                                      value={vl_nopay_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlelodging}
+                                                                      value={lodging}
                                                                  />
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="SL no pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Water and Electricity"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setsl_nopay_day(e.target.value)}
-                                                                      value={sl_nopay_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlewater_electricity}
+                                                                      value={water_electricity}
                                                                  />
                                                                  <TextField
-
-                                                                      id="outlined-required"
-                                                                      label="EL no pay"
+                                                                      type="number"
+                                                                      required
                                                                       fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HMO"
                                                                       style={{ paddingBottom: "20px" }}
-                                                                      onChange={(e) => setel_nopay_day(e.target.value)}
-                                                                      value={el_nopay_day}
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
+                                                                      onChange={handlehmo}
+                                                                      value={hmo}
                                                                  />
-                                                            </div>
-                                                       </div>
-                                                  </Others>}
-
-
-
-                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
-                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
-                                             </DialogContent>
-                                             <DialogActions>
-                                                  {/* <Button onClick={handleAdd}>Add</Button> */}
-                                                  <Button onClick={handleCloseAdd} autoFocus>
-                                                       Cancel
-                                                  </Button>
-                                                  <Button onClick={handleAdd}>Save</Button>
-                                             </DialogActions>
-                                        </Dialog>
-                                        <Dialog
-                                             fullScreen={fullScreen}
-                                             open={openAddAdditionals}
-                                             onClose={handleCloseAddAdditionals}
-                                             aria-labelledby="alert-dialog-title"
-                                             aria-describedby="alert-dialog-description"
-                                        >
-                                             <DialogTitle id="alert-dialog-title">
-                                                  Add Earnings / Deduction
-                                             </DialogTitle>
-                                             <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
-                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                       <DatePicker
-                                                            label="Date"
-                                                            value={date}
-                                                            inputFormat="MM-DD-YYYY"
-                                                            onChange={convertDateToString}
-                                                            renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
-                                                       />
-                                                  </LocalizationProvider>
-
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Search Employee"
-                                                       fullWidth
-                                                       select
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleName}
-                                                       value={name}
-                                                  >
-                                                       {emp.map((data) => {
-                                                            // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                            return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                       })}
-                                                  </TextField>
-
-                                                  <TextField
-                                                       required
-                                                       id="outlined-required"
-                                                       label="Employee_id"
-                                                       fullWidth
-                                                       style={{ paddingBottom: "80px" }}
-                                                       value={employeeId}
-                                                       InputProps={{
-                                                            readOnly: true,
-                                                       }}
-                                                  />
-
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="SSS"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlesss}
-                                                       value={sss}
-                                                  />
-
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Philhealth"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlephilhealth}
-                                                       value={philhealth}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="WTAX"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlewtax}
-                                                       value={wtax}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Pagibig"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlepagibig}
-                                                       value={pagibig}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Lodging"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlelodging}
-                                                       value={lodging}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Water and Electricity"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlewater_electricity}
-                                                       value={water_electricity}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="HMO"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlehmo}
-                                                       value={hmo}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Share Capital"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleshare_capital}
-                                                       value={share_capital}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="HHHC Savings"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlehhhc_savings}
-                                                       value={hhhc_savings}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="HHHC Membership Fee"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlehhhc_membership_fee}
-                                                       value={hhhc_membership_fee}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Cash Advances"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlecash_advances}
-                                                       value={cash_advances}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Pay Adjustment - (Deduction)"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       o onChange={handlepay_adjustment_deduction}
-                                                       value={pay_adjustment_deduction}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Other Deduction"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleother_deduction}
-                                                       value={other_deduction}
-                                                  />
-                                                  <TotalsContainer>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Total Deduction"
-                                                            fullWidth
-                                                            style={{ marginBottom: "20px", paddingRight: "10px" }}
-                                                            value={total_deduction}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
-                                                                 Calculate
-                                                            </Button>
-                                                       </ThemeProvider>
-                                                  </TotalsContainer>
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Allowance"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleallowance}
-                                                       value={allowance}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Pay Adjustment - (Earnings)"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handlepay_adjustment_earnings}
-                                                       value={pay_adjustment_earnings}
-                                                  />
-                                                  <TextField
-                                                       type="number"
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Other Earnings"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={handleother_earnings}
-                                                       value={other_earnings}
-                                                  />
-                                                  <TotalsContainer>
-                                                       <TextField
-                                                            type="number"
-                                                            required
-                                                            fullWidth
-                                                            id="outlined-required"
-                                                            label="Total Earnings"
-                                                            style={{ paddingBottom: "20px", marginRight: "10px" }}
-                                                            value={total_earnings}
-                                                       />
-                                                       <ThemeProvider theme={theme}>
-                                                            <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
-                                                                 Calculate
-                                                            </Button>
-                                                       </ThemeProvider>
-                                                  </TotalsContainer>
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Share Capital"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleshare_capital}
+                                                                      value={share_capital}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Savings"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlehhhc_savings}
+                                                                      value={hhhc_savings}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Fee"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlehhhc_membership_fee}
+                                                                      value={hhhc_membership_fee}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Cash Advances"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlecash_advances}
+                                                                      value={cash_advances}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pay Adjustment - (Deduction)"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      o onChange={handlepay_adjustment_deduction}
+                                                                      value={pay_adjustment_deduction}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Other Deduction"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleother_deduction}
+                                                                      value={other_deduction}
+                                                                 />
+                                                                 <TotalsContainer>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Total Deduction"
+                                                                           fullWidth
+                                                                           style={{ marginBottom: "20px", paddingRight: "10px" }}
+                                                                           value={total_deduction}
+                                                                           InputProps={{
+                                                                                readOnly: true,
+                                                                           }}
+                                                                      />
+                                                                      <ThemeProvider theme={theme}>
+                                                                           <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
+                                                                                Calculate
+                                                                           </Button>
+                                                                      </ThemeProvider>
+                                                                 </TotalsContainer>
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Allowance"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleallowance}
+                                                                      value={allowance}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pay Adjustment - (Earnings)"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlepay_adjustment_earnings}
+                                                                      value={pay_adjustment_earnings}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Other Earnings"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleother_earnings}
+                                                                      value={other_earnings}
+                                                                 />
+                                                                 <TotalsContainer>
+                                                                      <TextField
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Total Earnings"
+                                                                           style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                                                           value={total_earnings}
+                                                                      />
+                                                                      <ThemeProvider theme={theme}>
+                                                                           <Button variant="outlined" color="green" onClick={handleCalculateTotalCollections}>
+                                                                                Calculate
+                                                                           </Button>
+                                                                      </ThemeProvider>
+                                                                 </TotalsContainer>
 
 
 
 
-                                             </DialogContent>
-                                             <DialogActions>
-                                                  {/* <Button onClick={handleAdd}>Add</Button> */}
-                                                  <Button onClick={handleCloseAddAdditionals} autoFocus>
-                                                       Cancel
-                                                  </Button>
-                                                  <Button onClick={handleAddAdditional}>Add</Button>
-                                             </DialogActions>
-                                        </Dialog>
-                                        <Dialog
-                                             open={openDelete}
-                                             onClose={handleCloseDelete}
-                                             aria-labelledby="alert-dialog-title"
-                                             aria-describedby="alert-dialog-description"
-                                        >
-                                             <DialogTitle id="alert-dialog-title">
-                                                  <h2>{"Are you sure to delete selected item?"}</h2>
-                                             </DialogTitle>
-                                             <DialogContent>
-                                                  <DialogContentText id="alert-dialog-description">
-                                                       Deleted item can't be undone. Confirm by clicking "Delete"
-                                                  </DialogContentText>
-                                             </DialogContent>
-                                             <DialogActions>
-                                                  <Button onClick={handleDelete}>Delete</Button>
-                                                  <Button onClick={handleCloseDelete} autoFocus>
-                                                       Cancel
-                                                  </Button>
-                                             </DialogActions>
-                                        </Dialog>
-                                        <Dialog
-                                             open={openWarning}
-                                             onClose={handleCloseWarning}
-                                             aria-labelledby="alert-dialog-title"
-                                             aria-describedby="alert-dialog-description"
-                                        >
-                                             <DialogTitle id="alert-dialog-title">
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                 {/* <Button onClick={handleAdd}>Add</Button> */}
+                                                                 <Button onClick={handleCloseAddAdditionals} autoFocus>
+                                                                      Cancel
+                                                                 </Button>
+                                                                 <Button onClick={handleAddAdditional}>Add</Button>
+                                                            </DialogActions>
+                                                       </Dialog>
+                                                       <Dialog
+                                                            open={openDelete}
+                                                            onClose={handleCloseDelete}
+                                                            aria-labelledby="alert-dialog-title"
+                                                            aria-describedby="alert-dialog-description"
+                                                       >
+                                                            <DialogTitle id="alert-dialog-title">
+                                                                 <h2>{"Are you sure to delete selected item?"}</h2>
+                                                            </DialogTitle>
+                                                            <DialogContent>
+                                                                 <DialogContentText id="alert-dialog-description">
+                                                                      Deleted item can't be undone. Confirm by clicking "Delete"
+                                                                 </DialogContentText>
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                 <Button onClick={handleDelete}>Delete</Button>
+                                                                 <Button onClick={handleCloseDelete} autoFocus>
+                                                                      Cancel
+                                                                 </Button>
+                                                            </DialogActions>
+                                                       </Dialog>
+                                                       <Dialog
+                                                            open={openWarning}
+                                                            onClose={handleCloseWarning}
+                                                            aria-labelledby="alert-dialog-title"
+                                                            aria-describedby="alert-dialog-description"
+                                                       >
+                                                            <DialogTitle id="alert-dialog-title">
 
-                                                  <h2>{"No data has been selected"}</h2>
-                                             </DialogTitle>
-                                             <DialogContent>
-                                                  <DialogContentText id="alert-dialog-description">
-                                                       You need to select a data first before deleting/editing
-                                                  </DialogContentText>
-                                             </DialogContent>
-                                             <DialogActions>
-                                                  <Button onClick={handleCloseWarning} autoFocus>
-                                                       Okay
-                                                  </Button>
-                                             </DialogActions>
-                                        </Dialog>
+                                                                 <h2>{"No data has been selected"}</h2>
+                                                            </DialogTitle>
+                                                            <DialogContent>
+                                                                 <DialogContentText id="alert-dialog-description">
+                                                                      You need to select a data first before deleting/editing
+                                                                 </DialogContentText>
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                 <Button onClick={handleCloseWarning} autoFocus>
+                                                                      Okay
+                                                                 </Button>
+                                                            </DialogActions>
+                                                       </Dialog>
 
-                                   </div>
+                                                  </div>
+                                             </TabPanel>
+                                             <TabPanel value="2">
+                                                                   //sample
+                                             </TabPanel>
+                                        </TabContext>
+                                   </Box>
                               </Card>
                          </Main>
                     </Wrapper>

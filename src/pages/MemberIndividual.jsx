@@ -356,7 +356,7 @@ const MemberIndividual = (props) => {
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL KAYA SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
                                                                  </div>
                                                                  <div>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others}</p>
