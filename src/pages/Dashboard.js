@@ -270,7 +270,7 @@ const Dashboard = (props) => {
                <Container>
                     <Wrapper>
                          <Header title={props.title} user={props.user} />
-                         {user && currentUser == "admin" &&
+                         {user && currentUser == "happy_admin" &&
                               <div style={{ width: "100%" }}>
                                    <CardContainer>
                                         <Cards title="Total Employees" data={employees.length} color={violet} />
@@ -282,6 +282,7 @@ const Dashboard = (props) => {
                                         <Cards title="Total Savings Member" data={members.length} color={violet} />
                                    </CardContainer>
                                    <CardContainer>
+
                                        
                                    </CardContainer>
                                    <UpdateContainer>
@@ -292,7 +293,7 @@ const Dashboard = (props) => {
 
 
                     </Wrapper>
-                    {user && currentUser != "admin" &&
+                    {user && currentUser != "happy_admin" &&
                          <MemberCardContainer>
                               <p>Hi there, see "My Savings" for your savings</p>
                          </MemberCardContainer>}

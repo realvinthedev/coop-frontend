@@ -153,7 +153,11 @@ const Payroll = (props) => {
      const [openEdit, setOpenEdit] = useState(false);
      const [openWarning, setOpenWarning] = useState(false);
 
-
+     const [randomNum, setrandomNum] = React.useState('1');
+     const random = () => {
+          const number = Math.floor(Math.random() * 1000) + 1;
+          setrandomNum(number)
+     }
      const [current_date, setCurrent_date] = useState('January');
      const [payroll, setPayroll] = useState([]);
      const [name, setName] = useState("");
@@ -178,6 +182,7 @@ const Payroll = (props) => {
      const [month2, setmonth2] = useState('January');
      const handleMonthChange2 = (e) => {
           setmonth2(e.target.value)
+          console.log(filtered_employee_dtr)
 
      }
      const handleMonthChange = (e) => {
@@ -191,7 +196,7 @@ const Payroll = (props) => {
 
      useEffect(() => {
           handleDate2();
-     }, [month2, name2, end_date2, start_date2, period2])
+     }, [month2, end_date2, start_date2, period2])
 
 
      const handleDate2 = () => {
@@ -448,7 +453,7 @@ const Payroll = (props) => {
           setCurrent_date(dateString)
      };
 
-    
+
 
      const handleOpenAdd = () => {
           setOpenAdd(true);
@@ -484,6 +489,7 @@ const Payroll = (props) => {
           setNew_name(new_name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
+          setEmployeeId2(firstWord)
 
      }
      const handleName2 = (event) => {
@@ -494,10 +500,11 @@ const Payroll = (props) => {
 
      }
 
+
+
+
+
      const [filtered_employee_dtr, setFiltered_employee_dtr] = useState([])
-
-
-     const [employee_dtr, setEmployee_dtr] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/employee/${employeeId}`, {
@@ -522,6 +529,84 @@ const Payroll = (props) => {
                fetchEmp();
           }
      }, [employeeId, start_date, end_date, period])
+
+     const [arr, setArr] = useState([])
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/`, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const month = item.month
+                         const period = item.period
+                         const empid = item.employee_id
+                         return month == month && period == period && empid == employeeId
+                    });
+                    setArr(filteredData)
+                    console.log(filteredData)
+               }
+          }
+          if (user) {
+               fetchEmp();
+          }
+         
+     }, [randomNum])
+
+     const [summ, setSumm] = useState([])
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/`, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const month = item.month
+                         const period = item.period
+                         return month == month && period == period
+                    });
+                    setSumm(filteredData)
+                    console.log(filteredData)
+               }
+          }
+          if (user) {
+               fetchEmp();
+          }
+         
+     }, [start_date2, end_date2, period2])
+
+
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/`, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    const filteredData = json.filter(item => {
+                         const date = item.date
+                         return date >= start_date2 && date <= end_date2
+
+                    });
+                    setFiltered_employee_dtr(filteredData)
+                    // setEmployee_dtr(json)
+
+               }
+          }
+          if (user) {
+
+               fetchEmp();
+          }
+     }, [start_date2, end_date2])
+
 
 
 
@@ -560,41 +645,7 @@ const Payroll = (props) => {
 
 
 
-     const [summaryTotal, setsummaryTotal] = useState([]);
-     useEffect(() => {
-          const fetchPayslip = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip/' + employeeId, {
-                    headers: {
-                         'Authorization': `Bearer ${user.token}`
-                    }
-               })
-               const json = await response.json()
 
-               if (response.ok) {
-                    const filteredData = json.filter(item => {
-                         const month = item.month;
-                         const period = item.period
-
-                         if (employeeId2 !== "") {
-                              if (period2 !== "whole_month") {
-                                   return month == month2 && period == period2
-                              }
-                              else {
-                                   return month == month2
-                              }
-
-                         }
-
-                    });
-                    setsummaryTotal(filteredData)
-               }
-          }
-          if (user) {
-               fetchPayslip();
-          }
-
-          // }, [employeeId, start_date, end_date, period, name])
-     }, [employeeId2, start_date2, end_date2])
 
      const [emp, setEmp] = useState([])
      useEffect(() => {
@@ -715,7 +766,7 @@ const Payroll = (props) => {
                     setdefault_restday_ot(json.restday_ot ? json.restday_ot : 0)
                     setdefault_special_ot(json.special_ot ? json.special_ot : 0)
                     setdefault_legal_ot(json.legal_ot ? json.legal_ot : 0)
-                    setemploymentStatus(json.employment_status ? json.employment_status: "regular")
+                    setemploymentStatus(json.employment_status ? json.employment_status : "regular")
 
 
                     setdefault_first_eight_restday_ot(json.restday_first_eight_ot ? json.special_first_eight_ot : 0)
@@ -854,11 +905,12 @@ const Payroll = (props) => {
                restday_counter += item.restday_counter
                restday_overtime_counter += item.restday_overtime_counter
 
-               if (item.day_type === "special_holiday_today") {
+               if (item.day_type === "special_holiday_today" && (item.leave_type !== "restday" || item.leave_type !== "restday_nopay")) {
                     special_working_day_counter += item.working_day_counter
                     working_day_counter += item.working_day_counter
                }
-               else if (item.day_type === "legal_holiday_today") {
+
+               else if (item.day_type === "legal_holiday_today" && (item.leave_type !== "restday" || item.leave_type !== "restday_nopay")) {
                     legal_working_day_counter += item.working_day_counter
                     working_day_counter += item.working_day_counter
                }
@@ -905,6 +957,17 @@ const Payroll = (props) => {
 
      }, [filtered_employee_dtr]);
 
+     const [summ_net, setsumm_net] = useState(0)
+     useEffect(() => {
+          //NEW
+          let net = 0;
+          summ.forEach((item) => {
+               net += item.net
+          });
+          setsumm_net(net);
+
+     }, [summ]);
+
      useEffect(() => {
           setTemp_absent(total.absent_hours * default_hourly)
           setTemp_tardiness(total.total_tardiness_min * default_minute)
@@ -941,7 +1004,12 @@ const Payroll = (props) => {
      const [restday_nopay_amount, setrestday_nopay_amount] = useState(0);
      const [working_day_counter, setworking_day_counter] = useState(0);
 
+     const [summary_grosspay, setsummary_grosspay] = useState(0);
+     const [summary_net, setsummary_net] = useState(0);
+     const [summary_deductions, setsummary_deductions] = useState(0);
+
      const calculateGrossPay = () => {
+          random();
           //NEW
           let total_tardiness_min = total.total_tardiness_min
           let total_undertime_min = total.total_undertime_min
@@ -1001,6 +1069,7 @@ const Payroll = (props) => {
           let total_pay_first_eight_restday_percentage = daily * first_eight_restday_percentage * total.restday_overtime_counter
           let total_pay_first_eight_special_percentage = daily * first_eight_special_percentage * total.special_working_day_counter
           let total_pay_first_eight_legal_percentage = daily * first_eight_legal_percentage * total.legal_working_day_counter
+          //successToast(default_first_eight_legal_ot)
 
 
           setrestday_ot_amount_eight_hours(total_pay_first_eight_restday_percentage)
@@ -1084,7 +1153,6 @@ const Payroll = (props) => {
 
 
 
-
           //Additional Deductions
           let total_pay_undertimemin = total_undertime_min * minutely
           let total_pay_tardinessmin = total_tardiness_min * minutely
@@ -1095,7 +1163,7 @@ const Payroll = (props) => {
           let additional_earnings = filtered_additional && filtered_additional[0]?.total_earnings
           let additional_deductions = filtered_additional && filtered_additional[0]?.total_deduction
           let deductions = total_pay_absence + total_pay_vlnopay + total_pay_slnopay + total_pay_elnopay + total_pay_undertimemin + total_pay_tardinessmin + total_pay_restdaynopay
-          let daily_deductions = total_pay_undertimemin + total_pay_tardinessmin 
+          let daily_deductions = total_pay_undertimemin + total_pay_tardinessmin
           let earnings = total_pay_regularothours + total_pay_restdayothours + total_pay_specialothours + total_pay_legalothours + total_pay_first_eight_restday_percentage + total_pay_first_eight_special_percentage + total_pay_first_eight_legal_percentage
 
           //Daily
@@ -1119,7 +1187,7 @@ const Payroll = (props) => {
           let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
           let new_others = filtered_additional && filtered_additional[0]?.other_earnings
           let new_earnings_total = bimonthly + earnings + new_allowance + new_pay_adj + new_others
-          let new_daily_earnings_total =  daily_earnings + earnings + new_allowance + new_pay_adj + new_others
+          let new_daily_earnings_total = daily_earnings + earnings + new_allowance + new_pay_adj + new_others
 
 
           //NEW Deductions
@@ -1145,29 +1213,28 @@ const Payroll = (props) => {
           setfinal_net_pay(net)
 
 
-          successToast(new_daily_earnings_total)
 
 
           setnew_deduction_total(new_deductions_total)
-          setnew_earnings_total(employmentStatus!== "daily"? new_earnings_total :new_daily_earnings_total )
-          setnew_net_total(employmentStatus!== "daily"? netpay : daily_netpay)
+          setnew_earnings_total(employmentStatus !== "daily" ? new_earnings_total : new_daily_earnings_total)
+          setnew_net_total(employmentStatus !== "daily" ? netpay : daily_netpay)
           setearning_deduction(employmentStatus !== "daily" ? deductions : daily_deductions)
 
 
-          setgrosspay(employmentStatus!== "daily"? grosspay: daily_grosspay)
+          setgrosspay(employmentStatus !== "daily" ? grosspay : daily_grosspay)
 
 
 
 
 
+          setsummary_grosspay(earnings)
+          setsummary_deductions(earnings)
+          setsummary_net(earnings)
 
 
 
 
-
-
-
-
+          
 
 
           //      console.log(additional_earnings, "additional_earnings")
@@ -1186,50 +1253,7 @@ const Payroll = (props) => {
           setdb_employeeid(employeeId);
           setdb_month(month)
           setdb_period(period)
-          setdb_name(name)
-          setdb_base_salary(default_base);
-          setdb_bimonthly(default_bimonthly)
-          setdb_daily(default_daily)
-          setdb_hourly(default_hourly)
-          setdb_minute(default_minute)
-          setdb_basic(default_bimonthly)
-          setdb_allowance(filtered_additional && filtered_additional[0]?.allowance)
-          setdb_ot_regular_amount(total_pay_regularothours)
-          setdb_ot_restday_amount(total_pay_restdayothours)
-          setdb_ot_special_amount(total_pay_specialothours)
-          setdb_ot_legal_amount(total_pay_legalothours)
-          setdb_add_ot_restday_amount(total_pay_first_eight_restday_percentage)
-          setdb_add_ot_special_amount(total_pay_first_eight_special_percentage)
-          setdb_add_ot_legal_amount(total_pay_first_eight_legal_percentage)
-          setdb_nightdiff(0)
-          setdb_prior_period_adj_earnings(filtered_additional && filtered_additional[0]?.pay_adjustment_earnings)
-          setdb_earnings_total(new_earnings_total)
-          setdb_tardiness_amount(total_pay_tardinessmin)
-          setdb_undertime_amount(total_pay_undertimemin)
-          setdb_restday_nopay_amount(total_pay_restdaynopay)
-          setdb_absence_amount(total_pay_absence)
-          setdb_vl_nopay_amount(total_pay_vlnopay)
-          setdb_sl_nopay_amount(total_pay_slnopay)
-          setdb_el_nopay_amount(total_pay_elnopay)
-          setdb_earnings_deduction_total(deductions)
-          setdb_sss(filtered_additional && filtered_additional[0]?.sss)
-          setdb_philhealth(filtered_additional && filtered_additional[0]?.philhealth)
-          setdb_hdmf(filtered_additional && filtered_additional[0]?.pagibig)
-          setdb_wtax(filtered_additional && filtered_additional[0]?.wtax)
-          setdb_cash_advance_loans(filtered_additional && filtered_additional[0]?.cash_advances)
-          setdb_hhhc_savings(filtered_additional && filtered_additional[0]?.hhhc_savings)
-          setdb_hhhc_membership_fee(filtered_additional && filtered_additional[0]?.hhhc_membership_fee)
-          setdb_hmo(filtered_additional && filtered_additional[0]?.hmo)
-          setdb_lodging(filtered_additional && filtered_additional[0]?.lodging)
-          setdb_utilities(filtered_additional && filtered_additional[0]?.water_electricity)
-          setdb_deduction_total(new_deductions_total)
-          setdb_grosspay(grosspay)
-          setdb_net_pay(net)
-          setdb_other_deductions(filtered_additional && filtered_additional[0]?.other_deduction)
-          setdb_other_earnings(filtered_additional && filtered_additional[0]?.other_earnings)
-          setdb_pay_adjustment_deduction(filtered_additional && filtered_additional[0]?.pay_adjustment_deduction)
-          setdb_share_capital(filtered_additional && filtered_additional[0]?.share_capital)
-
+          setdb_net_pay(employmentStatus !== "daily" ? netpay : daily_netpay)
      }
      const handleChange = (event, newValue) => {
           settabvalue(newValue);
@@ -1239,6 +1263,9 @@ const Payroll = (props) => {
           // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
+
+
+     
 
      const calculateFinalDeduction = () => {
           return filtered_additional && filtered_additional[0]?.total_deduction
@@ -1251,86 +1278,82 @@ const Payroll = (props) => {
      const errorToast = (error) => {
           toast.error(error);
      };
+     const handleGenerateSummary = () => {
 
+     }
+    
 
 
      const handleAdd = async (e) => {
           e.preventDefault()
 
-          if (name === "" || period === "" || month === "" || employeeId === "") {
+          if (period === "" || month === "" || employeeId === "") {
                errorToast('Saving failed, please finalize payroll properly')
           }
           else {
-               if (!user) {
-                    console.log('You must be logged in first')
-                    return
-               }
-               else {
-                    const payslip = {
-                         month: db_month,
-                         period: db_period,
-                         name: db_name,
-                         employee_id: db_employeeid,
-
-                         base_salary: db_base_salary,
-                         bi_monthly: db_bimonthly,
-                         daily: db_daily,
-                         hourly: db_hourly,
-                         minute: db_minute,
-
-                         basic_pay: db_basic,
-                         allowance: db_allowance,
-                         ot_regular_amount: db_ot_regular_amount,
-                         ot_restday_amount: db_ot_restday_amount,
-                         ot_special_amount: db_ot_special_amount,
-                         ot_legal_amount: db_ot_legal_amount,
-
-                         add_ot_restday_amount: db_add_ot_restday_amount,
-                         add_ot_special_amount: db_add_ot_special_amount,
-                         add_ot_legal_amount: db_add_ot_legal_amount,
-                         night_diff_amount: db_nightdiff,
-                         prior_period_adj_earnings: db_prior_period_adj_earnings,
-                         earnings_total: db_earnings_total,
-
-
-                         tardiness_amount: db_tardiness_amount,
-                         undertime_amount: db_undertime_amount,
-                         restday_nopay_amount: db_restday_nopay_amount,
-                         absence_amount: db_absence_amount,
-                         vl_nopay_amount: db_vl_nopay_amount,
-                         sl_nopay_amount: db_sl_nopay_amount,
-                         el_nopay_amount: db_el_nopay_amount,
-                         earning_deduction_total: db_earnings_deduction_total,
-
-
-                         sss: db_sss,
-                         philhealth: db_philhealth,
-                         hdmf: db_hdmf,
-                         wtax: db_wtax,
-                         cash_advance_loans: db_cash_advance_loans,
-                         hhhc_savings: db_hhhc_savings,
-                         hhhc_membership_fee: db_hhhc_membership_fee,
-                         hmo: db_hmo,
-                         lodging: db_lodging,
-                         utilities: db_utilities,
-                         deduction_total: db_deduction_total,
-                         gross_pay: db_grosspay,
-                         net_pay: db_net_pay,
+               const isDuplicate = arr.find(item => item.employee_id === employeeId);
+               if(!isDuplicate){
+                    if (!user) {
+                         console.log('You must be logged in first')
+                         return
                     }
-                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip', {
-                         method: 'POST',
-                         body: JSON.stringify(payslip),
-                         headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization': `Bearer ${user.token}`
+                    else {
+                         const payslip = {
+                              month: db_month,
+                              period: db_period,
+                              employee_id: db_employeeid,
+                              net: db_net_pay,
                          }
-                    })
-                    const json = await response.json()
-
-                    successToast('Added Successfully')
-
+                         const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip', {
+                              method: 'POST',
+                              body: JSON.stringify(payslip),
+                              headers: {
+                                   'Content-Type': 'application/json',
+                                   'Authorization': `Bearer ${user.token}`
+                              }
+                         })
+                         const json = await response.json()
+     
+                         successToast('Added Successfully')
+     
+                    }
+               }
+               else{
+                    const payslip = {
+                        net: db_net_pay
+                    }
+                    if (!user) {
+                         console.log('You must be logged in first')
+                         return
+                    }
+                    if (
+                         db_net_pay === ""
+                    ) {
+                         errorToast('Finalize this payroll first before saving')
+                    }
+                    else {
+                         const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/${employeeId}`, {
+                              method: 'PATCH',
+                              body: JSON.stringify(payslip),
+                              headers: {
+                                   'Content-Type': 'application/json',
+                                   'Authorization': `Bearer ${user.token}`
+                              }
+                         })
+                         const json = await response.json()
+                         if (!response.ok) {
+                              errorToast('Network Error')
+                         }
+                         else {
+                              successToast('Item Updated Successfully')
+                         }
+                    }
                }
           }
+          setTimeout(() => {
+               random()
+             }, 1000)
+
      }
      return (
 
@@ -1346,7 +1369,7 @@ const Payroll = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Payslip" value="1" />
-                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled />
+                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -1473,7 +1496,7 @@ const Payroll = (props) => {
                                                                       <TableBody>
                                                                            <TableRow >
                                                                                 <TableCell>Basic Pay</TableCell>
-                                                                                <TableCell>{employmentStatus !== "daily"? "" : total.working_day_counter != 0 ? total.working_day_counter : ""}</TableCell>
+                                                                                <TableCell>{employmentStatus !== "daily" ? "" : total.working_day_counter != 0 ? total.working_day_counter : ""}</TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell style={{ textAlign: "right" }}>P{default_bimonthly.toLocaleString(undefined, {
@@ -1633,7 +1656,7 @@ const Payroll = (props) => {
                                                                                 <TableCell>{total.restday_nopay_day != 0 ? total.restday_nopay_day : ""}</TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
-                                                                                <TableCell style={{ textAlign: "right" }}>P{employmentStatus === "daily"? "0.00" : restday_nopay_amount.toLocaleString(undefined, {
+                                                                                <TableCell style={{ textAlign: "right" }}>P{employmentStatus === "daily" ? "0.00" : restday_nopay_amount.toLocaleString(undefined, {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</TableCell>
@@ -1898,9 +1921,9 @@ const Payroll = (props) => {
                                                   <ThemeProvider theme={theme}>
 
                                                        <div style={{ display: "flex", justifyContent: "left", marginTop: "20px", width: "100%" }}>
-                                                            {/* <Button style={{ marginRight: "10px" }} variant="contained" color="red" onClick={handleAdd}>
+                                                            <Button style={{ marginRight: "10px" }} variant="contained" color="red" onClick={handleAdd}>
                                                                  Save to Database
-                                                            </Button> */}
+                                                            </Button>
                                                             <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
                                                                  Print
                                                             </Button>
@@ -1963,94 +1986,13 @@ const Payroll = (props) => {
                                                                            </TextField>
                                                                       </DateContainer>
                                                                  </LocalizationProvider>
-                                                                 <ThemeProvider theme={theme}>
+                                                                 {/* <ThemeProvider theme={theme}>
                                                                       <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
                                                                            Generate
                                                                       </Button>
-                                                                 </ThemeProvider>
+                                                                 </ThemeProvider> */}
                                                             </div>
-                                                            <div>
 
-                                                                 <Autocomplete
-                                                                      value={name2}
-                                                                      style={{ marginRight: "10px" }}
-                                                                      onSelect={handleName2}
-                                                                      options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
-                                                                      renderInput={(params) => (
-                                                                           <TextField
-                                                                                {...params}
-                                                                                required
-                                                                                label="Search Employee"
-                                                                                fullWidth
-                                                                                style={{ paddingBottom: "20px", width: "500px" }}
-                                                                           />
-                                                                      )}
-                                                                 />
-                                                                 <TextField
-                                                                      required
-                                                                      id="outlined-required"
-                                                                      label="Employee_id"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
-                                                                      value={employeeId2}
-
-                                                                      InputProps={{
-                                                                           readOnly: true,
-                                                                      }}
-                                                                 />
-
-                                                            </div>
-                                                       </div>
-                                                       <div>
-                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
-                                                                 <h3>Earnings</h3>
-                                                            </div>
-                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
-                                                                 <Table aria-label="simple table">
-                                                                      <TableBody>
-                                                                           {/* <TableRow><TableCell sx={{ width: 300 }}>Allowance</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Regular)</TableCell><TableCell>{age}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Restday)</TableCell><TableCell>{birthday}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Special Working Hol.)</TableCell><TableCell>{email}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Overtime (Legal Hol.)</TableCell><TableCell>{contact_number}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Restday OT</TableCell><TableCell>{address}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Special Working Hol.</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Add: Legal Holiday</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Night Differential</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Prior Period Adj</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Total</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow> */}
-                                                                      </TableBody>
-                                                                 </Table>
-                                                            </TableContainer>
-                                                       </div>
-                                                       <div>
-                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
-                                                                 <h3>Deduction</h3>
-                                                            </div>
-                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
-                                                                 <Table aria-label="simple table">
-                                                                      <TableBody>
-                                                                           {/*<TableRow> <TableCell sx={{ width: 300 }}>Allowance</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Tardiness</TableCell><TableCell>{age}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Undertime</TableCell><TableCell>{birthday}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Restday No Pay</TableCell><TableCell>{email}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Absences</TableCell><TableCell>{contact_number}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>VL Without Pay</TableCell><TableCell>{address}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>SL Without Pay</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>SIL Without Pay</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Philhealth Contributions</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>HDMF Contributions</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>WTAX</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Cash Advance/Loans	</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>HHHC Savings</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>HHHC Membership Fee</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>HMO</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Lodging</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Utilities</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Total</TableCell><TableCell>{incase_of_emergency}</TableCell></TableRow> */}
-                                                                      </TableBody>
-                                                                 </Table>
-                                                            </TableContainer>
                                                        </div>
                                                        <div>
                                                             <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
@@ -2059,9 +2001,11 @@ const Payroll = (props) => {
                                                             <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
                                                                  <Table aria-label="simple table">
                                                                       <TableBody>
-                                                                           <TableRow>
-                                                                                {/* <TableCell sx={{ width: 300 }}>Net Pay</TableCell><TableCell>{firstname + " " + middlename + " " + lastname}</TableCell> */}
-                                                                           </TableRow>
+                                                                           <TableRow><TableCell sx={{ width: 300 }}>Grand Total Net Pay</TableCell><TableCell>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                minimumFractionDigits: 2,
+                                                                                maximumFractionDigits: 2
+                                                                           })}</TableCell></TableRow>
+
                                                                       </TableBody>
                                                                  </Table>
                                                             </TableContainer>

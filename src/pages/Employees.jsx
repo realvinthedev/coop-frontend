@@ -115,6 +115,14 @@ const FormSeparator = styled.div`
      padding-top: 50px;
      color: #000;
 `
+const IDFormSeparator = styled.div`
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding-bottom: 20px;
+     
+     color: #000;
+`
 
 const IDGeneratorContainer = styled.div`
      display: flex;
@@ -141,7 +149,7 @@ const Employees = (props) => {
      const [end_date, setEnd_date] = useState('')
      const [contract, setContract] = useState('')
      const [department, setDepartment] = useState('')
-     const [is_active, setIs_active] = useState('')
+     const [is_active, setIs_active] = useState(true)
      const [sss, setSss] = useState('')
      const [pagibig, setPagibig] = useState('')
      const [tin, setTin] = useState('')
@@ -203,7 +211,7 @@ const Employees = (props) => {
           setEnd_date('')
           setContract('')
           setDepartment('')
-          setIs_active('')
+          setIs_active(true)
           setSss('')
           setPagibig('')
           setTin('')
@@ -272,9 +280,16 @@ const Employees = (props) => {
      };
 
      const handleEmployeeId = () => {
-          let num = Math.floor(Math.random() * 90000) + 10000;
-          const value = firstname.charAt(0) + lastname.charAt(0) + num
-          setEmployee_id(value)
+          if(firstname === "" || lastname === "")
+          {
+               errorToast('Please provide firstname and lastname first.')
+          }
+          else{
+               let num = Math.floor(Math.random() * 90000) + 10000;
+               const value = firstname.charAt(0) + lastname.charAt(0) + num
+               setEmployee_id(value)
+          }
+          
      }
 
      const successToast = (success) => {
@@ -395,18 +410,8 @@ const Employees = (props) => {
           if (
                firstname === "" ||
                lastname === "" ||
-               age === "" ||
-               birthday === "" ||
-               address === "" ||
-               job_title === "" ||
                base_salary === "" ||
-               start_date === "" ||
-               contract === "" ||
-               department === "" ||
-               sick_leave === "" ||
-               vacation_leave === "" ||
-               emergency_leave === "" ||
-               employmentStatus === ""
+               employee_id === ""
           ) {
                errorToast('Fill up the required fields completely')
           }
@@ -446,7 +451,7 @@ const Employees = (props) => {
                     setEnd_date('')
                     setContract('')
                     setDepartment('')
-                    setIs_active('')
+                    setIs_active(true)
                     setSss('')
                     setPagibig('')
                     setTin('')
@@ -522,18 +527,8 @@ const Employees = (props) => {
           if (
                firstname === "" ||
                lastname === "" ||
-               age === "" ||
-               birthday === "" ||
-               address === "" ||
-               job_title === "" ||
                base_salary === "" ||
-               start_date === "" ||
-               contract === "" ||
-               department === "" ||
-               sick_leave === "" ||
-               vacation_leave === "" ||
-               emergency_leave === "" ||
-               employmentStatus === ""
+               employee_id === ""
           ) {
                errorToast('Fill up the required fields completely')
           }
@@ -1272,6 +1267,26 @@ const Employees = (props) => {
                                                                       onChange={(e) => setLastname(e.target.value)}
                                                                       value={lastname}
                                                                  />
+
+                                                                 <IDGeneratorContainer>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Permanent Employee ID"
+                                                                           fullWidth
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={(e) => setEmployee_id(e.target.value)}
+                                                                           value={employee_id}
+                                                                           InputProps={{
+                                                                                readOnly: true,
+                                                                           }}
+                                                                      />
+                                                                      <ThemeProvider theme={theme}>
+                                                                           <Button style={{ padding: "15px", marginLeft: "5px", marginBottom: "20px" }} variant="outlined" color="green" onClick={handleEmployeeId}>
+                                                                                Generate
+                                                                           </Button>
+                                                                      </ThemeProvider>
+                                                                 </IDGeneratorContainer>
                                                                  <TextField
                                                                       required
                                                                       id="outlined-required"
@@ -1627,29 +1642,7 @@ const Employees = (props) => {
                                                                       onChange={(e) => setEmergencty_leave(e.target.value)}
                                                                       value={emergency_leave}
                                                                  />
-                                                                 <FormSeparator>
-                                                                      ID Generator
-                                                                      <span style={{ fontStyle: "italic", color: "#d13f3f", fontSize: "12px" }}>*required</span>
-                                                                 </FormSeparator>
-
-                                                                 <IDGeneratorContainer>
-                                                                      <TextField
-                                                                           required
-                                                                           id="outlined-required"
-                                                                           label="Employee ID"
-                                                                           fullWidth
-                                                                           onChange={(e) => setEmployee_id(e.target.value)}
-                                                                           value={employee_id}
-                                                                           InputProps={{
-                                                                                readOnly: true,
-                                                                           }}
-                                                                      />
-                                                                      <ThemeProvider theme={theme}>
-                                                                           <Button style={{ padding: "15px", marginLeft: "5px" }} variant="outlined" color="green" onClick={handleEmployeeId}>
-                                                                                Generate
-                                                                           </Button>
-                                                                      </ThemeProvider>
-                                                                 </IDGeneratorContainer>
+                                                                 
 
 
 

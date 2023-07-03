@@ -33,6 +33,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 
 
@@ -101,7 +102,7 @@ const TimeContainer = styled.div`
 `
 const Card = styled.div`
     background-color: white;
-    height: 680px;
+    height: 750px;
     width: 100%;
     border-radius: 20px;
     padding: 30px;
@@ -599,69 +600,70 @@ const Additionals = (props) => {
      };
 
      const handlesss = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setsss(value);
      }
      const handlepagibig = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setpagibig(value);
      }
      const handlephilhealth = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setphilhealth(value);
      }
      const handlewtax = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setwtax(value);
      }
      const handlelodging = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setlodging(value);
      }
      const handlewater_electricity = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setwater_electricity(value);
      }
      const handlehmo = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           sethmo(value);
      }
      const handleshare_capital = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setshare_capital(value);
      }
      const handlehhhc_savings = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           sethhhc_savings(value);
      }
      const handlehhhc_membership_fee = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           sethhhc_membership_fee(value);
      }
      const handlecash_advances = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setcash_advances(value);
      }
      const handlepay_adjustment_deduction = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setpay_adjustment_deduction(value);
      }
      const handleother_deduction = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setother_deduction(value);
      }
      const handlepay_adjustment_earnings = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setpay_adjustment_earnings(value);
      }
      const handleother_earnings = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setother_earnings(value);
      }
      const handleallowance = (event) => {
-          const value = parseInt(event.target.value);
+          const value = event.target.value.replace(/[^0-9.]/g, '');
           setallowance(value);
      }
+
 
 
      const handleCalculateTotalCollections = () => {
@@ -786,7 +788,7 @@ const Additionals = (props) => {
                                              <TabPanel value="1">
 
 
-                                                  <div style={{ height: 500, width: '100%' }}>
+                                                  <div style={{ height: 400, width: '100%' }}>
                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                             <TextField
                                                                  required
@@ -825,24 +827,23 @@ const Additionals = (props) => {
                                                                  <MenuItem value={'first'}>First Half</MenuItem>
                                                                  <MenuItem value={'second'}>Second Half</MenuItem>
                                                             </TextField>
-                                                            <TextField
-                                                                 required
-                                                                 id="outlined-required"
-                                                                 label="Search Employee"
-                                                                 fullWidth
-                                                                 select
-                                                                 style={{ paddingBottom: "20px" }}
-                                                                 onChange={handleName}
-                                                                 value={name}
-                                                            >
-                                                                 <MenuItem value={'all'}>All</MenuItem>
-                                                                 {emp.map((data) => {
-                                                                      // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                                      return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                                 })}
-                                                            </TextField>
-                                                         
+                                                            <Autocomplete
+                                                                           value={name}
+                                                                           style={{ marginRight: "10px" }}
+                                                                           onSelect={handleName}
+                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                           renderInput={(params) => (
+                                                                                <TextField
+                                                                                     {...params}
+                                                                                     required
+                                                                                     label="Search Employee"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px", width: "500px" }}
+                                                                                />
+                                                                           )}
+                                                                      />
                                                        </div>
+                                                       
                                                        <DataGrid
                                                             getRowId={(row) => row._id}
                                                             rows={additionals}
@@ -929,21 +930,21 @@ const Additionals = (props) => {
                                                                  </div>
                                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
-                                                                 <TextField
-                                                                      required
-                                                                      id="outlined-required"
-                                                                      label="Search Employee"
-                                                                      fullWidth
-                                                                      select
-                                                                      style={{ paddingBottom: "20px" }}
-                                                                      onChange={handleName}
-                                                                      value={name}
-                                                                 >
-                                                                      {emp.map((data) => {
-                                                                           // return <MenuItem key={data._id} value={data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                                           return <MenuItem key={data._id} value={data.employee_id + " - " + data.firstname + " " + data.lastname}>{data.employee_id + " - " + data.firstname + " " + data.lastname}</MenuItem>
-                                                                      })}
-                                                                 </TextField>
+                                                                 <Autocomplete
+                                                                           value={name}
+                                                                           style={{ marginRight: "10px" }}
+                                                                           onSelect={handleName}
+                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                           renderInput={(params) => (
+                                                                                <TextField
+                                                                                     {...params}
+                                                                                     required
+                                                                                     label="Search Employee"
+                                                                                     fullWidth
+                                                                                     style={{ paddingBottom: "20px", width: "500px" }}
+                                                                                />
+                                                                           )}
+                                                                      />
 
                                                                  <TextField
                                                                       required
@@ -966,6 +967,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlesss}
                                                                       value={sss}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
 
                                                                  <TextField
@@ -977,6 +982,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlephilhealth}
                                                                       value={philhealth}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -987,6 +996,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlewtax}
                                                                       value={wtax}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -997,6 +1010,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlepagibig}
                                                                       value={pagibig}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1007,6 +1024,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlelodging}
                                                                       value={lodging}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1017,6 +1038,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlewater_electricity}
                                                                       value={water_electricity}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1027,6 +1052,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehmo}
                                                                       value={hmo}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1037,6 +1066,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleshare_capital}
                                                                       value={share_capital}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1047,6 +1080,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehhhc_savings}
                                                                       value={hhhc_savings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1057,6 +1094,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehhhc_membership_fee}
                                                                       value={hhhc_membership_fee}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1067,6 +1108,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlecash_advances}
                                                                       value={cash_advances}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1077,6 +1122,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       o onChange={handlepay_adjustment_deduction}
                                                                       value={pay_adjustment_deduction}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1087,6 +1136,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleother_deduction}
                                                                       value={other_deduction}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TotalsContainer>
                                                                       <TextField
@@ -1111,6 +1164,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleallowance}
                                                                       value={allowance}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1121,6 +1178,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlepay_adjustment_earnings}
                                                                       value={pay_adjustment_earnings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1131,6 +1192,10 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleother_earnings}
                                                                       value={other_earnings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                         }}
                                                                  />
                                                                  <TotalsContainer>
                                                                       <TextField

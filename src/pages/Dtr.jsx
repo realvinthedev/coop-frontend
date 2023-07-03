@@ -285,12 +285,146 @@ const Dtr = (props) => {
           setRefresher(Math.random())
      };
 
-     // const isEdit_True = () => {
-     //      setIsEdit(true)
-     // };
-     // const isEdit_False = () => {
-     //      setIsEdit(false)
-     // };
+
+
+
+
+
+
+     //Paster
+
+     const [paster_official_am, setpaster_official_am] = useState('');
+     const [hour_official_am, sethour_official_am] = useState('');
+     const [min_official_am, setmin_official_am] = useState('');
+
+     const [paster_timein_am, setpaster_timein_am] = useState('');
+     const [hour_timein_am, sethour_timein_am] = useState('');
+     const [min_timein_am, setmin_timein_am] = useState('');
+
+     const [paster_timeout_am, setpaster_timeout_am] = useState('');
+     const [hour_timeout_am, sethour_timeout_am] = useState('');
+     const [min_timeout_am, setmin_timeout_am] = useState('');
+
+     const [paster_official_pm, setpaster_official_pm] = useState('');
+     const [hour_official_pm, sethour_official_pm] = useState('');
+     const [min_official_pm, setmin_official_pm] = useState('');
+
+     const [paster_timein_pm, setpaster_timein_pm] = useState('');
+     const [hour_timein_pm, sethour_timein_pm] = useState('');
+     const [min_timein_pm, setmin_timein_pm] = useState('');
+
+     const [paster_timeout_pm, setpaster_timeout_pm] = useState('');
+     const [hour_timeout_pm, sethour_timeout_pm] = useState('');
+     const [min_timeout_pm, setmin_timeout_pm] = useState('');
+
+
+     const handlePasteChange_official_am = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               const extractedHour = parseInt(parts[0]);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setofficial_am_in_hour(extractedHour);
+               setofficial_am_in_min(extractedMinute);
+          }
+          setpaster_official_am(time);
+     };
+
+     const handlePasteChange_timein_am = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               const extractedHour = parseInt(parts[0]);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setAm_in_hour(extractedHour);
+               setAm_in_min(extractedMinute);
+          }
+          setpaster_timein_am(time);
+     };
+
+     const handlePasteChange_timeout_am = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               const extractedHour = parseInt(parts[0]);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setAm_out_hour(extractedHour);
+               setAm_out_min(extractedMinute);
+          }
+          setpaster_timeout_am(time);
+     };
+
+
+
+     const handlePasteChange_official_pm = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               let extractedHour = parseInt(parts[0]) + parseInt(12);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setofficial_pm_in_hour(extractedHour);
+               setofficial_pm_in_min(extractedMinute);
+          }
+          setpaster_official_pm(time);
+     };
+
+     const handlePasteChange_timein_pm = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               let extractedHour = parseInt(parts[0]) + parseInt(12);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setPm_in_hour(extractedHour);
+               setPm_in_min(extractedMinute);
+          }
+          setpaster_timein_pm(time);
+     };
+
+     const handlePasteChange_timeout_pm = (event) => {
+          const time = event.target.value.trim();
+
+          if (time !== '') {
+               const parts = time.split(':');
+               let extractedHour = parseInt(parts[0]) + parseInt(12);
+               const extractedMinute = parseInt(parts[1].split(' ')[0]);
+
+               setPm_out_hour(extractedHour);
+               setPm_out_min(extractedMinute);
+          }
+          setpaster_timeout_pm(time);
+     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
      const isAdd_True = () => {
           setIsAdd(true)
      };
@@ -1199,6 +1333,12 @@ const Dtr = (props) => {
           setabsent_day(0)
      }
      const handleClearFields = () => {
+          setpaster_official_am('')
+          setpaster_timein_pm("")
+          setpaster_official_pm('')
+          setpaster_timein_am('')
+          setpaster_timeout_am('')
+          setpaster_timeout_pm('')
           setofficial_am_in_hour(0)
           setofficial_am_in_min(0)
           setofficial_pm_in_hour(0)
@@ -2302,7 +2442,7 @@ const Dtr = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="All Employees" value="1" />
-                                                    
+
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -2433,7 +2573,7 @@ const Dtr = (props) => {
                                                             <DialogTitle id="alert-dialog-title">
                                                                  Add Daily Time Record
                                                             </DialogTitle>
-                                                            <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+                                                            <DialogContent style={{ height: '900px', paddingTop: '20px'}}>
                                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -2568,6 +2708,16 @@ const Dtr = (props) => {
                                                                            <div style={{ marginRight: '40px' }}>
                                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >AM TIME</h1>
                                                                                 <TimeContainer style={{ marginTop: "20px" }}>
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_official_am}
+                                                                                          value={paster_official_am}
+                                                                                     /> */}
                                                                                      <TextField
                                                                                           disabled={disabled_am_official}
                                                                                           type="number"
@@ -2579,6 +2729,8 @@ const Dtr = (props) => {
                                                                                           onChange={(e) => setofficial_am_in_hour(e.target.value)}
                                                                                           onBlur={handleZeroOnBlur}
                                                                                           value={official_am_in_hour}
+
+
 
                                                                                      />
                                                                                      <TextField
@@ -2596,6 +2748,16 @@ const Dtr = (props) => {
                                                                                 </TimeContainer>
 
                                                                                 <TimeContainer>
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_timein_am}
+                                                                                          value={paster_timein_am}
+                                                                                     /> */}
                                                                                      <TextField
                                                                                           disabled={disabled_am_time}
                                                                                           type="number"
@@ -2623,6 +2785,16 @@ const Dtr = (props) => {
                                                                                      />
                                                                                 </TimeContainer>
                                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_timeout_am}
+                                                                                          value={paster_timeout_am}
+                                                                                     /> */}
                                                                                      <TextField
                                                                                           disabled={disabled_am_time}
                                                                                           type="number"
@@ -2654,7 +2826,18 @@ const Dtr = (props) => {
                                                                            <div>
                                                                                 <h1 style={{ padding: "10px", display: 'flex', justifyContent: 'center', backgroundColor: 'orange' }} >PM TIME</h1>
                                                                                 <TimeContainer style={{ marginTop: "20px" }}>
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_official_pm}
+                                                                                          value={paster_official_pm}
+                                                                                     /> */}
                                                                                      <TextField
+
                                                                                           disabled={disabled_pm_official}
                                                                                           type="number"
                                                                                           required
@@ -2680,7 +2863,16 @@ const Dtr = (props) => {
                                                                                      />
                                                                                 </TimeContainer>
                                                                                 <TimeContainer >
-
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_timein_pm}
+                                                                                          value={paster_timein_pm}
+                                                                                     /> */}
                                                                                      <TextField
                                                                                           disabled={disabled_pm_time}
                                                                                           type="number"
@@ -2709,6 +2901,16 @@ const Dtr = (props) => {
                                                                                      />
                                                                                 </TimeContainer>
                                                                                 <TimeContainer style={{ paddingBottom: "40px" }}>
+                                                                                     {/* <TextField
+                                                                                          disabled={disabled_am_official}
+                                                                                          required
+                                                                                          fullWidth
+                                                                                          id="outlined-required"
+                                                                                          label="Paster"
+                                                                                          style={{ paddingBottom: "20px" }}
+                                                                                          onChange={handlePasteChange_timeout_pm}
+                                                                                          value={paster_timeout_pm}
+                                                                                     /> */}
                                                                                      <TextField
                                                                                           disabled={disabled_pm_time}
                                                                                           type="number"
