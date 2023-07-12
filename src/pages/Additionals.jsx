@@ -267,7 +267,9 @@ const Additionals = (props) => {
 
 
 
-
+     const handleScroll = (event) => {
+          event.preventDefault();
+     };
 
 
 
@@ -782,7 +784,7 @@ const Additionals = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="All Employees" value="1" />
-                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary}  disabled/>
+                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -828,22 +830,22 @@ const Additionals = (props) => {
                                                                  <MenuItem value={'second'}>Second Half</MenuItem>
                                                             </TextField>
                                                             <Autocomplete
-                                                                           value={name}
-                                                                           style={{ marginRight: "10px" }}
-                                                                           onSelect={handleName}
-                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
-                                                                           renderInput={(params) => (
-                                                                                <TextField
-                                                                                     {...params}
-                                                                                     required
-                                                                                     label="Search Employee"
-                                                                                     fullWidth
-                                                                                     style={{ paddingBottom: "20px", width: "500px" }}
-                                                                                />
-                                                                           )}
+                                                                 value={name}
+                                                                 style={{ marginRight: "10px" }}
+                                                                 onSelect={handleName}
+                                                                 options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                 renderInput={(params) => (
+                                                                      <TextField
+                                                                           {...params}
+                                                                           required
+                                                                           label="Search Employee"
+                                                                           fullWidth
+                                                                           style={{ paddingBottom: "20px", width: "500px" }}
                                                                       />
+                                                                 )}
+                                                            />
                                                        </div>
-                                                       
+
                                                        <DataGrid
                                                             getRowId={(row) => row._id}
                                                             rows={additionals}
@@ -931,20 +933,20 @@ const Additionals = (props) => {
                                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                                  <Autocomplete
-                                                                           value={name}
-                                                                           style={{ marginRight: "10px" }}
-                                                                           onSelect={handleName}
-                                                                           options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
-                                                                           renderInput={(params) => (
-                                                                                <TextField
-                                                                                     {...params}
-                                                                                     required
-                                                                                     label="Search Employee"
-                                                                                     fullWidth
-                                                                                     style={{ paddingBottom: "20px", width: "500px" }}
-                                                                                />
-                                                                           )}
-                                                                      />
+                                                                      value={name}
+                                                                      style={{ marginRight: "10px" }}
+                                                                      onSelect={handleName}
+                                                                      options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                      renderInput={(params) => (
+                                                                           <TextField
+                                                                                {...params}
+                                                                                required
+                                                                                label="Search Employee"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px", width: "500px" }}
+                                                                           />
+                                                                      )}
+                                                                 />
 
                                                                  <TextField
                                                                       required
@@ -957,7 +959,7 @@ const Additionals = (props) => {
                                                                            readOnly: true,
                                                                       }}
                                                                  />
-
+sdfsdf
                                                                  <TextField
                                                                       type="number"
                                                                       required
@@ -970,7 +972,8 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
+                                                                    
                                                                  />
 
                                                                  <TextField
@@ -985,7 +988,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -999,7 +1002,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1013,7 +1016,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1027,7 +1030,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1041,7 +1044,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1055,7 +1058,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1069,7 +1072,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1083,7 +1086,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1097,7 +1100,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1111,7 +1114,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1125,7 +1128,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1139,7 +1142,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TotalsContainer>
                                                                       <TextField
@@ -1167,7 +1170,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1181,7 +1184,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TextField
                                                                       type="number"
@@ -1195,7 +1198,7 @@ const Additionals = (props) => {
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
-                                                                         }}
+                                                                      }}
                                                                  />
                                                                  <TotalsContainer>
                                                                       <TextField

@@ -251,6 +251,9 @@ const Dtr = (props) => {
 
 
 
+     const handleScroll = (event) => {
+          event.preventDefault();
+        };
 
 
      const [total_ot_hour, setTotal_ot_hour] = useState(0)
@@ -520,8 +523,9 @@ const Dtr = (props) => {
                          return date >= startDate && date <= endDate
 
                     });
+                    const sortedData = [...filteredData].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-                    setDtr(filteredData)
+                    setDtr(sortedData)
                     console.log('^^^^^^^^^^^^^^^^^^', filteredData)
 
                }
@@ -2300,6 +2304,7 @@ const Dtr = (props) => {
      }
 
      const handleAddAdditional = async (e) => {
+
           e.preventDefault()
           if (!user) {
                console.log('You must be logged in first')
@@ -2573,7 +2578,7 @@ const Dtr = (props) => {
                                                             <DialogTitle id="alert-dialog-title">
                                                                  Add Daily Time Record
                                                             </DialogTitle>
-                                                            <DialogContent style={{ height: '900px', paddingTop: '20px'}}>
+                                                            <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
                                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -3155,7 +3160,6 @@ const Dtr = (props) => {
                                                                            readOnly: true,
                                                                       }}
                                                                  />
-
                                                                  <TextField
                                                                       type="number"
                                                                       required
@@ -3165,6 +3169,7 @@ const Dtr = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlesss}
                                                                       value={sss}
+                                                                      onWheel={handleScroll}
                                                                  />
 
                                                                  <TextField

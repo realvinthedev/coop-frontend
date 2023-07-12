@@ -208,7 +208,7 @@ const Payroll = (props) => {
                setStartDate2(`01-16-2023`)
                setEndDate2(`01-31-2023`)
           }
-
+         
           if (month2 == "february" && period2 == "first") {
                setStartDate2(`02-01-2023`)
                setEndDate2(`02-15-2023`)
@@ -217,7 +217,7 @@ const Payroll = (props) => {
                setStartDate2(`02-16-2023`)
                setEndDate2(`02-29-2023`)
           }
-
+         
           if (month2 == "march" && period2 == "first") {
                setStartDate2(`03-01-2023`)
                setEndDate2(`03-15-2023`)
@@ -226,6 +226,7 @@ const Payroll = (props) => {
                setStartDate2(`03-16-2023`)
                setEndDate2(`03-31-2023`)
           }
+        
 
           if (month2 == "april" && period2 == "first") {
                setStartDate2(`04-01-2023`)
@@ -235,6 +236,7 @@ const Payroll = (props) => {
                setStartDate2(`04-16-2023`)
                setEndDate2(`04-30-2023`)
           }
+        
 
           if (month2 == "may" && period2 == "first") {
                setStartDate2(`05-01-2023`)
@@ -244,6 +246,7 @@ const Payroll = (props) => {
                setStartDate2(`05-16-2023`)
                setEndDate2(`05-31-2023`)
           }
+        
 
           if (month2 == "june" && period2 == "first") {
                setStartDate2(`06-01-2023`)
@@ -253,6 +256,7 @@ const Payroll = (props) => {
                setStartDate2(`06-16-2023`)
                setEndDate2(`06-30-2023`)
           }
+        
 
           if (month2 == "july" && period2 == "first") {
                setStartDate2(`07-01-2023`)
@@ -262,6 +266,7 @@ const Payroll = (props) => {
                setStartDate2(`07-16-2023`)
                setEndDate2(`07-31-2023`)
           }
+        
 
           if (month2 == "august" && period2 == "first") {
                setStartDate2(`08-01-2023`)
@@ -271,6 +276,7 @@ const Payroll = (props) => {
                setStartDate2(`08-16-2023`)
                setEndDate2(`08-31-2023`)
           }
+         
 
           if (month2 == "september" && period2 == "first") {
                setStartDate2(`09-01-2023`)
@@ -280,6 +286,7 @@ const Payroll = (props) => {
                setStartDate2(`09-16-2023`)
                setEndDate2(`09-30-2023`)
           }
+        
 
           if (month2 == "october" && period2 == "first") {
                setStartDate2(`10-01-2023`)
@@ -289,7 +296,7 @@ const Payroll = (props) => {
                setStartDate2(`10-16-2023`)
                setEndDate2(`10-31-2023`)
           }
-
+       
           if (month2 == "november" && period2 == "first") {
                setStartDate2(`11-01-2023`)
                setEndDate2(`11-15-2023`)
@@ -298,7 +305,7 @@ const Payroll = (props) => {
                setStartDate2(`11-16-2023`)
                setEndDate2(`11-30-2023`)
           }
-
+        
           if (month2 == "december" && period2 == "first") {
                setStartDate2(`12-01-2023`)
                setEndDate2(`12-15-2023`)
@@ -307,6 +314,7 @@ const Payroll = (props) => {
                setStartDate2(`12-16-2023`)
                setEndDate2(`12-31-2023`)
           }
+         
      }
      const appRef = useRef(null);
      const captureScreenshot = () => {
@@ -569,7 +577,7 @@ const Payroll = (props) => {
                     const filteredData = json.filter(item => {
                          const month = item.month
                          const period = item.period
-                         return month == month && period == period
+                         return month == month2 && period == period2
                     });
                     setSumm(filteredData)
                     console.log(filteredData)
@@ -578,6 +586,7 @@ const Payroll = (props) => {
           if (user) {
                fetchEmp();
           }
+          console.log("*******************")
          
      }, [start_date2, end_date2, period2])
 
@@ -1982,7 +1991,6 @@ const Payroll = (props) => {
                                                                            >
                                                                                 <MenuItem value={'first'}>First Half</MenuItem>
                                                                                 <MenuItem value={'second'}>Second Half</MenuItem>
-                                                                                <MenuItem value={'whole_month'}>Whole Month</MenuItem>
                                                                            </TextField>
                                                                       </DateContainer>
                                                                  </LocalizationProvider>
