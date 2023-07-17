@@ -396,7 +396,7 @@ const Member = (props) => {
                          debitTotal_loans += parseFloat(saving.amount)
                     }
                }
-               else if (saving.particulars === "KAYA SAVINGS") {
+               else if (saving.particulars === "SPECIAL SAVINGS") {
                     if (saving.type === "CREDIT") {
                          creditTotal_kaya += parseFloat(saving.amount)
                     }
@@ -494,7 +494,7 @@ const Member = (props) => {
                          debitTotal_loans += parseFloat(saving.amount)
                     }
                }
-               else if (saving.particulars === "KAYA SAVINGS") {
+               else if (saving.particulars === "SPECIAL SAVINGS") {
                     if (saving.type === "CREDIT") {
                          creditTotal_kaya += parseFloat(saving.amount)
                     }
@@ -1382,7 +1382,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="KAYA ATM Card Number"
+                                                                      label="Special Savings Card Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
                                                                       value={kaya_atm_card_number}
@@ -1390,7 +1390,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="KAYA ATM Savings Account Number"
+                                                                      label="Special Savings Account Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
                                                                       value={kaya_atm_savings_account_number}
@@ -1597,7 +1597,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="KAYA ATM Card Number"
+                                                                      label="Special Savings Card Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
                                                                       value={kaya_atm_card_number}
@@ -1605,7 +1605,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="KAYA ATM Savings Account Number"
+                                                                      label="Special Savings Account Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
                                                                       value={kaya_atm_savings_account_number}
@@ -1989,7 +1989,7 @@ const Member = (props) => {
                                                                       <MenuItem value={'CAPITAL'}>Capital</MenuItem>
                                                                       <MenuItem value={'SAVINGS'}>Savings</MenuItem>
                                                                       <MenuItem value={'LOANS'}>Loans</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
                                                                  </TextField>
 
