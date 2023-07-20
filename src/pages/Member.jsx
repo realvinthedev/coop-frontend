@@ -34,6 +34,9 @@ import { toast } from 'react-toastify';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SavingsReceiptPrinter from '../components/SavingsReceiptPrinter';
 import ImageUploader from '../components/ImageUploader';
+import { saveAs } from 'file-saver-es';
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
 
 
 const theme = createTheme({
@@ -114,7 +117,7 @@ const Cards = styled.div`
     display: flex;
     padding: 30px;
     justify-content: left;
-    margin-right: 10px;
+    
    
 `
 const Cardslist = styled.div`
@@ -131,7 +134,7 @@ const CardContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 20px;
+    
 `
 
 /**GET REQUESTS */
@@ -145,15 +148,9 @@ const columns = [
      { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 200 },
      { field: 'bod_res', headerName: 'BOD Res', width: 150 },
      { field: 'coop_savings_account_number', headerName: 'Coop Savings Accnt Number', width: 200 },
-     { field: 'kaya_atm_card_number', headerName: 'Kaya ATM Card Number', width: 200 },
-     { field: 'kaya_atm_savings_account_number', headerName: 'Kaya ATM Savings Account Number', width: 200 },
-     { field: 'membership_fee', headerName: 'Membership Fee', width: 150 },
-     { field: 'share_capital', headerName: 'Share Capital', width: 150 },
-     { field: 'coop_savings', headerName: 'Coop Savings', width: 150 },
-     { field: 'loan_balance', headerName: 'Loan Balance', width: 150 },
+     { field: 'kaya_atm_card_number', headerName: 'Special Savings Card Number', width: 200 },
+     { field: 'kaya_atm_savings_account_number', headerName: 'Special Savings Account Number', width: 200 },
      { field: 'mbh', headerName: 'MBH', width: 150 },
-     { field: 'housing_equity', headerName: 'Housing Equity', width: 150 },
-     { field: 'kaya_savings', headerName: 'Kaya Savings', width: 150 },
      { field: 'atm_passbook_fee', headerName: 'ATM Book Fee', width: 150 },
      { field: 'atm_status', headerName: 'ATM Status', width: 150 },
      { field: 'pb_account_number', headerName: 'PB Account Number', width: 150 },
@@ -270,6 +267,7 @@ const Member = (props) => {
      const [credit_part_savings, setcredit_part_savings] = useState(0);
      const [credit_part_loans, setcredit_part_loans] = useState(0);
      const [credit_part_kayasavings, setcredit_part_kayasavings] = useState(0);
+     const [credit_part_housingeuity, setcredit_part_housingeuity] = useState(0);
      const [credit_part_others, setcredit_part_others] = useState(0);
 
      const [total_membershipfee, settotal_membershipfee] = useState(0);
@@ -277,6 +275,7 @@ const Member = (props) => {
      const [total_savings, settotal_savings] = useState(0);
      const [total_loans, settotal_loans] = useState(0);
      const [total_kayasavings, settotal_kayasavings] = useState(0);
+     const [total_housingequity, settotal_housingequity] = useState(0);
      const [total_others, settotal_others] = useState(0);
 
      const handleSuccessToast = (success) => {
@@ -284,6 +283,16 @@ const Member = (props) => {
      };
      const handleErrorToast = (error) => {
           toast.error(error);
+     };
+
+     const appRef = useRef(null);
+     const captureScreenshot = () => {
+          const element = appRef.current;
+          html2canvas(element).then((canvas) => {
+               canvas.toBlob((blob) => {
+                    saveAs(blob, `savings_` + firstname + "_" + lastname);
+               });
+          });
      };
 
 
@@ -341,10 +350,10 @@ const Member = (props) => {
           }
      }, [user, refresher2])
 
-    
+
 
      useEffect(() => {
-          console.log('**********', savings)
+
           let creditTotal_membershipfee = 0;
           let debitTotal_membershipfee = 0;
 
@@ -359,6 +368,9 @@ const Member = (props) => {
 
           let creditTotal_kaya = 0;
           let debitTotal_kaya = 0;
+
+          let creditTotal_housingequity = 0;
+          let debitTotal_housingequity = 0;
 
           let creditTotal_others = 0;
           let debitTotal_others = 0;
@@ -402,6 +414,14 @@ const Member = (props) => {
                     }
                     else {
                          debitTotal_kaya += parseFloat(saving.amount)
+                    }
+               }
+               else if (saving.particulars === "HOUSING EQUITY") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_housingequity += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_housingequity += parseFloat(saving.amount)
                     }
                }
                else if (saving.particulars === "OTHERS") {
@@ -435,6 +455,9 @@ const Member = (props) => {
           setcredit_part_loans(totalloans)
           //setdebit_part_loans(debitTotal_loans)
 
+          let totalhousing = creditTotal_housingequity - debitTotal_housingequity
+          setcredit_part_housingeuity(totalhousing)
+
           let totalothers = creditTotal_others - debitTotal_others
           setcredit_part_others(totalothers)
           //setdebit_part_others(debitTotal_others)
@@ -457,6 +480,9 @@ const Member = (props) => {
 
           let creditTotal_kaya = 0;
           let debitTotal_kaya = 0;
+
+          let creditTotal_housingequity = 0;
+          let debitTotal_housingequity = 0;
 
           let creditTotal_others = 0;
           let debitTotal_others = 0;
@@ -502,6 +528,15 @@ const Member = (props) => {
                          debitTotal_kaya += parseFloat(saving.amount)
                     }
                }
+               else if (saving.particulars === "HOUSING EQUITY") {
+                    if (saving.type === "CREDIT") {
+                         creditTotal_housingequity += parseFloat(saving.amount)
+                    }
+                    else {
+                         debitTotal_housingequity += parseFloat(saving.amount)
+                    }
+               }
+
                else if (saving.particulars === "OTHERS") {
                     if (saving.type === "CREDIT") {
                          creditTotal_others += parseFloat(saving.amount)
@@ -532,6 +567,9 @@ const Member = (props) => {
           let totalloans = debitTotal_loans - creditTotal_loans
           settotal_loans(totalloans)
           //setdebit_part_loans(debitTotal_loans)
+
+          let totalhousing = creditTotal_housingequity - debitTotal_housingequity
+          settotal_housingequity(totalhousing)
 
           let totalothers = creditTotal_others - debitTotal_others
           settotal_others(totalothers)
@@ -726,7 +764,6 @@ const Member = (props) => {
                kaya_atm_card_number: kaya_atm_card_number,
                kaya_atm_savings_account_number: kaya_atm_savings_account_number,
                mbh: mbh,
-               housing_equity: housing_equity,
                atm_passbook_fee: atm_passbook_fee,
                atm_status: atm_status,
                pb_account_number: pb_account_number,
@@ -749,7 +786,7 @@ const Member = (props) => {
           ) {
                handleErrorToast('Fill up the required fields completely ')
           }
-         
+
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
                     method: 'POST',
@@ -760,11 +797,11 @@ const Member = (props) => {
                     }
 
                })
-               
+
                if (!response.ok) {
                     const errorResponse = await response.json();
                     console.error('Error response:', errorResponse);
-                 
+
                }
                else {
                     await signup(member_id, member_id)
@@ -779,7 +816,6 @@ const Member = (props) => {
                     setkaya_atm_card_number("")
                     setkaya_atm_savings_account_number("")
                     setmbh("")
-                    sethousing_equity("")
                     setatm_passbook_fee("")
                     setatm_status("")
                     setpb_account_number("")
@@ -792,10 +828,10 @@ const Member = (props) => {
                     setPassword("")
 
                     handleSuccessToast('Member Added Successfully')
-                    setTimeout(() => {
-                         setOpenAdd(false)
-                         handleRefresher()
-                    }, 1500);
+
+                    setOpenAdd(false)
+                    handleRefresher()
+
                }
           }
      }
@@ -816,7 +852,6 @@ const Member = (props) => {
                kaya_atm_card_number: kaya_atm_card_number,
                kaya_atm_savings_account_number: kaya_atm_savings_account_number,
                mbh: mbh,
-               housing_equity: housing_equity,
                atm_passbook_fee: atm_passbook_fee,
                atm_status: atm_status,
                pb_account_number: pb_account_number,
@@ -863,7 +898,6 @@ const Member = (props) => {
                     setkaya_atm_card_number("")
                     setkaya_atm_savings_account_number("")
                     setmbh("")
-                    sethousing_equity("")
                     setatm_passbook_fee("")
                     setatm_status("")
                     setpb_account_number("")
@@ -875,10 +909,8 @@ const Member = (props) => {
                     setnotes("")
 
                     handleSuccessToast('Updated Successfully')
-                    setTimeout(() => {
-                         setOpenUpdate(false)
-                         handleRefresher()
-                    }, 1500);
+                    setOpenUpdate(false)
+                    handleRefresher()
                }
           }
      }
@@ -900,10 +932,10 @@ const Member = (props) => {
                }
                else {
                     handleSuccessToast('Deleted Successfully')
-                    setTimeout(() => {
-                         handleRefresher()
-                         handleCancel();
-                    }, 1500);
+
+                    handleRefresher()
+                    handleCancel();
+
                }
           }
      }
@@ -955,10 +987,10 @@ const Member = (props) => {
                     setremarks2('')
 
                     handleSuccessToast('Added Successfully')
-                    setTimeout(() => {
-                         setopenAddSavings(false)
-                         handleRefresher()
-                    }, 1500);
+
+                    setopenAddSavings(false)
+                    handleRefresher()
+
                }
           }
      }
@@ -982,10 +1014,10 @@ const Member = (props) => {
                else {
                     handleSuccessToast('Deleted Successfully')
 
-                    setTimeout(() => {
-                         handleRefresher()
-                         handleCancel();
-                    }, 1500);
+
+                    handleRefresher()
+                    handleCancel();
+
                }
           }
      }
@@ -1034,10 +1066,10 @@ const Member = (props) => {
                     setremarks2('')
 
                     handleSuccessToast('Updated Successfully')
-                    setTimeout(() => {
-                         setopenUpdateSavings(false)
-                         handleRefresher()
-                    }, 1500);
+
+                    setopenUpdateSavings(false)
+                    handleRefresher()
+
                }
           }
      }
@@ -1095,7 +1127,7 @@ const Member = (props) => {
                                              <TabPanel value="1">
                                                   {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Success</Alert> : ""}
                                                   <div>
-                                                       <Cards style={{ backgroundColor: "#e6881d", color: "white", width: "100%", marginBottom: "50px" }}>
+                                                       <Cards style={{ backgroundColor: "#e6881d", color: "white", width: "100%", marginBottom: "50px", height: "450px" }}>
                                                             <div style={{ paddingRight: "200px", display: "flex", flexDirection: "column" }}>
                                                                  <div style={{ marginBottom: "20px", fontSize: "30px" }}>
                                                                       SAVINGS SUMMARY REPORT
@@ -1110,6 +1142,7 @@ const Member = (props) => {
                                                                                      total_captial={total_captial}
                                                                                      total_others={total_others}
                                                                                      total_savings={total_savings}
+                                                                                     total_housing={total_housingequity}
                                                                                 />} >
                                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
                                                                            </PDFDownloadLink>
@@ -1119,30 +1152,55 @@ const Member = (props) => {
                                                             </div>
                                                             <div style={{ paddingRight: "200px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_membershipfee}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_membershipfee && total_membershipfee.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_captial}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_captial && total_captial.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_savings}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_savings && total_savings.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_loans && total_loans.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
                                                                  </div>
                                                             </div>
                                                             <div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_loans}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
-                                                                 </div>
-                                                                 <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_kayasavings}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_kayasavings && total_kayasavings.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_others}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_others && total_others.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
+                                                                 </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_housingequity && total_housingequity.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL HOUSING EQUITY</p>
                                                                  </div>
                                                             </div>
                                                        </Cards>
@@ -1404,15 +1462,7 @@ const Member = (props) => {
                                                                       onChange={(e) => setmbh(e.target.value)}
                                                                       value={mbh}
                                                                  />
-                                                                 <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Housing Equity"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => sethousing_equity(e.target.value)}
-                                                                      value={housing_equity}
-                                                                 />
+
                                                                  <TextField
                                                                       type="number"
                                                                       fullWidth
@@ -1619,15 +1669,7 @@ const Member = (props) => {
                                                                       onChange={(e) => setmbh(e.target.value)}
                                                                       value={mbh}
                                                                  />
-                                                                 <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Housing Equity"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => sethousing_equity(e.target.value)}
-                                                                      value={housing_equity}
-                                                                 />
+
                                                                  <TextField
                                                                       type="number"
                                                                       fullWidth
@@ -1738,7 +1780,14 @@ const Member = (props) => {
                                                   </Dialog>
                                              </TabPanel>
                                              <TabPanel value="2">
-                                                  <CardContainer>
+                                                  <div style={{ display: "flex", justifyContent: "right" }}>
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button style={{ width: "200px", padding: "10px", borderRadius: "20px", marginBottom: "10px" }} variant="contained" color="blue" onClick={captureScreenshot}>
+                                                                 Download Summary
+                                                            </Button>
+                                                       </ThemeProvider>
+                                                  </div>
+                                                  <CardContainer ref={appRef}>
                                                        <Cards style={{ backgroundColor: "#5D35B2", color: "white", width: "500px" }}>
                                                             <div style={{ marginBottom: "20px" }}>
                                                                  <p style={{ fontSize: "40px", margin: 0 }}>{firstname}</p>
@@ -1747,56 +1796,72 @@ const Member = (props) => {
                                                                  <p style={{ color: "#a7a7a7" }}>Lastname</p>
                                                             </div>
                                                        </Cards>
+                                                       <div style={{ marginRight: "10px" }}></div>
                                                        <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%" }}>
                                                             <div style={{ paddingRight: "200px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_membershipfee}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_membershipfee && credit_part_membershipfee.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_captial}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_captial && credit_part_captial.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_savings}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_savings && credit_part_savings.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
                                                                  </div>
                                                             </div>
                                                             <div style={{ marginRight: "50px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_loans}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_loans && credit_part_loans.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings && credit_part_kayasavings.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others}</p>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others && credit_part_others.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
                                                                  </div>
                                                             </div>
-                                                            <div style={{ display: "flex", alignItems: "end", justifyContent: "right" }}>
-                                                                 <ThemeProvider theme={theme}>
-                                                                      <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="blue">
-                                                                           <PDFDownloadLink fileName="savings_summary" document={
-                                                                                < SavingsPrinter
-                                                                                     total_membershipfee={total_membershipfee}
-                                                                                     total_kayasavings={total_kayasavings}
-                                                                                     total_loans={total_loans}
-                                                                                     total_captial={total_captial}
-                                                                                     total_others={total_others}
-                                                                                     total_savings={total_savings}
-                                                                                />} >
-                                                                                {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
-                                                                           </PDFDownloadLink>
-                                                                      </Button>
-                                                                 </ThemeProvider>
+                                                            <div style={{ marginRight: "50px" }}>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_housingeuity && credit_part_housingeuity.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>HOUSING EQUITY</p>
+                                                                 </div>
+
+
                                                             </div>
+
                                                        </Cards>
+
                                                   </CardContainer>
+
                                                   <CardContainer>
-                                                       <div style={{ height: 600, width: '100%' }} >
+                                                       <div style={{ height: 600, width: '100%', marginTop: "20px" }} >
                                                             <DataGrid
                                                                  getRowId={(row) => row._id}
                                                                  rows={savings}
@@ -1896,7 +1961,8 @@ const Member = (props) => {
                                                                       <MenuItem value={'CAPITAL'}>Capital</MenuItem>
                                                                       <MenuItem value={'SAVINGS'}>Savings</MenuItem>
                                                                       <MenuItem value={'LOANS'}>Loans</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>Special Savings</MenuItem>
+                                                                      <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
+                                                                      <MenuItem value={'HOUSING EQUITY'}>Housing Equity</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
                                                                  </TextField>
 
@@ -1990,6 +2056,7 @@ const Member = (props) => {
                                                                       <MenuItem value={'SAVINGS'}>Savings</MenuItem>
                                                                       <MenuItem value={'LOANS'}>Loans</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
+                                                                      <MenuItem value={'HOUSING EQUITY'}>Housing Equity</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
                                                                  </TextField>
 

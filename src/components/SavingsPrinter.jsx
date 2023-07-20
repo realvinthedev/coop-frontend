@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 });
 
 
-const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, total_captial, total_others, total_savings }) => {
+const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, total_captial, total_others, total_savings, total_housing}) => {
 
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
@@ -71,8 +71,10 @@ const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, t
                               <Text style={styles.data}>Capital</Text>
                               <Text style={styles.data}>Savings</Text>
                               <Text style={styles.data}>Loans</Text>
-                              <Text style={styles.data}>Kaya Savings</Text>
+                              <Text style={styles.data}>Special Savings</Text>
+                              <Text style={styles.data}>Housing Equity</Text>
                               <Text style={styles.data}>Others</Text>
+                              
                          </View>
                          <View style={styles.row}>
                               <Text style={styles.item}>{ total_membershipfee}</Text>
@@ -80,6 +82,7 @@ const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, t
                               <Text style={styles.data}>{ total_savings}</Text>
                               <Text style={styles.data}>{ total_loans}</Text>
                               <Text style={styles.data}>{ total_kayasavings}</Text>
+                              <Text style={styles.data}>{ total_housing}</Text>
                               <Text style={styles.data}>{ total_others}</Text>
                              
                          </View>
