@@ -21,6 +21,7 @@ import Sales from './Sales'
 import Additionals from './Additionals'
 import Member from './Member'
 import MemberIndividual from './MemberIndividual'
+import Reports from './Reports'
 
 
 /**Styled Components */
@@ -112,6 +113,10 @@ const Home = () => {
                     <Route
                         path="/mysavings"
                         element={user ? <MemberIndividual title="My Savings" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                    <Route
+                        path="/reports"
+                        element={user ? <Reports title="Reports" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
                 </Routes>
 

@@ -289,14 +289,7 @@ const Dashboard = (props) => {
                                    </UpdateContainer>
 
                               </div>}
-
-
-
                     </Wrapper>
-                    {user && currentUser != "happy_admin" &&
-                         <MemberCardContainer>
-                              <p>Hi there, see "My Savings" for your savings</p>
-                         </MemberCardContainer>}
                </Container>
           </div>
      )

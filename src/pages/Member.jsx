@@ -1788,7 +1788,7 @@ const Member = (props) => {
                                                        </ThemeProvider>
                                                   </div>
                                                   <CardContainer ref={appRef}>
-                                                       <Cards style={{ backgroundColor: "#5D35B2", color: "white", width: "500px" }}>
+                                                       <Cards style={{ backgroundColor: "#5D35B2", color: "white", width: "500px", height: "400px" }}>
                                                             <div style={{ marginBottom: "20px" }}>
                                                                  <p style={{ fontSize: "40px", margin: 0 }}>{firstname}</p>
                                                                  <p style={{ color: "#a7a7a7" }}>Firstname</p>
@@ -1797,7 +1797,7 @@ const Member = (props) => {
                                                             </div>
                                                        </Cards>
                                                        <div style={{ marginRight: "10px" }}></div>
-                                                       <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%" }}>
+                                                       <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%" , height: "400px" }}>
                                                             <div style={{ paddingRight: "200px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_membershipfee && credit_part_membershipfee.toLocaleString(undefined, {

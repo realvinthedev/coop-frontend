@@ -21,7 +21,11 @@ import { Alert } from '@mui/material';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { PaddingRounded } from '@mui/icons-material';
 import SalesPrinter from '../components/SalesPrinter';
-
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 const theme = createTheme({
@@ -87,8 +91,9 @@ const SearchContainer = styled.div`
      padding-bottom: 30px;
 `
 
-const Sales = (props) => {
 
+const Sales = (props) => {
+     const [tabvalue, settabvalue] = React.useState('1');
      const { user } = useAuthContext()
      const [date_from, setdate_from] = useState(() => {
           const date = new Date();
@@ -134,25 +139,6 @@ const Sales = (props) => {
 
      }, [date_to, date_from])
 
-     //const [individual_sales, setindividual_sales] = useState([])
-     
-     // useEffect(() => {
-     //      const fetchSales = async () => {
-     //           const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/transaction/' + transactionid, {
-     //                headers: {
-     //                     'Authorization': `Bearer ${user.token}`
-     //                }
-     //           })
-     //           const json = await response.json()
-
-     //           if (response.ok) {
-     //                setindividual_sales(json)
-     //           }
-     //      }
-     //      if (user) {
-     //           fetchSales();
-     //      }
-     // }, [user])
 
      const [gross, setGross] = useState(0);
      const [net, setNet] = useState(0);
@@ -165,14 +151,14 @@ const Sales = (props) => {
           });
           setGross(pos_total);
      }, [sales])
-    
+
      useEffect(() => {
           let pos_cost_total = 0;
           let total = 0;
           sales.forEach((item) => {
                pos_cost_total += item.pos_cost_total
           });
-          total = gross-pos_cost_total
+          total = gross - pos_cost_total
           setNet(total)
      }, [gross])
 
@@ -188,13 +174,13 @@ const Sales = (props) => {
           const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
           const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
           setdate_from(dateString)
-          console.log('#######################',sales)
+          console.log('#######################', sales)
      };
      const convertDateToStringTo = (date) => {
           const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
           const dateString = new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '-');
           setdate_to(dateString)
-          console.log('#######################',sales)
+          console.log('#######################', sales)
      };
 
      function getRowHeight(params) {
@@ -247,7 +233,18 @@ const Sales = (props) => {
           },
      ];
 
-
+     const handleGoToDailySales = () => {
+          settabvalue('1')
+     }
+     const handleGoToByProduct = () => {
+          settabvalue('2')
+     }
+     const handleGoToMonthlySales = () => {
+          settabvalue('3')
+     }
+     const handleChange = (event, newValue) => {
+          settabvalue(newValue);
+     };
 
      return (
           <div style={{ display: "flex" }}>
@@ -257,61 +254,80 @@ const Sales = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
-                                   <div style={{ display: "flex" }}>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                             <DatePicker
-                                                  label="Date From"
-                                                  value={date_from}
-                                                  inputFormat="MM-DD-YYYY"
-                                                  onChange={convertDateToStringFrom}
-                                                  renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginRight: "20px" }}{...params} error={false} />}
-                                             />
-                                             <DatePicker
-                                                  label="Date To"
-                                                  value={date_to}
-                                                  inputFormat="MM-DD-YYYY"
-                                                  onChange={convertDateToStringTo}
-                                                  renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
-                                             />
+                                   <Box>
+                                        <TabContext value={tabvalue}>
+                                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                                       <Tab label="Daily" value="1"/>
+                                                       <Tab label="By Product" value="2" onClick={handleGoToByProduct} />
+                                                       <Tab label="Monthly Sales" value="3" onClick={handleGoToMonthlySales} />
+                                                  </TabList>
+                                             </Box>
+                                             <TabPanel value="1">
+                                                  <div style={{ display: "flex" }}>
+                                                       <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                 label="Date From"
+                                                                 value={date_from}
+                                                                 inputFormat="MM-DD-YYYY"
+                                                                 onChange={convertDateToStringFrom}
+                                                                 renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginRight: "20px" }}{...params} error={false} />}
+                                                            />
+                                                            <DatePicker
+                                                                 label="Date To"
+                                                                 value={date_to}
+                                                                 inputFormat="MM-DD-YYYY"
+                                                                 onChange={convertDateToStringTo}
+                                                                 renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                            />
 
-                                        </LocalizationProvider>
+                                                       </LocalizationProvider>
 
-                                   </div>
-                                   <div style={{ height: 475, width: '100%' }}>
-                                        <DataGrid
-                                             getRowId={(row) => row._id}
-                                             rows={sales}
-                                             columns={columns}
-                                             pageSize={7}
-                                             rowsPerPageOptions={[5]}
-                                             getRowHeight={getRowHeight}
-                                             onRowClick={handleRowClick}
-                                        />
-                                   </div>
-                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "20px" }} >
-                                        <div>
-                                             <ThemeProvider theme={theme}>
-                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} >
-                                                       <Button style={{ width: "100%", padding: "10px", marginRight: "10px", height: "50px" }} variant="outlined" color="blue">
-                                                            <PDFDownloadLink fileName="selected_sales" document={<SalesPrinter data={sales} cost={cost} gross={gross} profit={net}/>} >
-                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Selected Range ')}
-                                                            </PDFDownloadLink>
-                                                       </Button>
-                                                       {/* <Button style={{ width: "100%", padding: "10px", height: "50px" }} variant="outlined" color="red">
+                                                  </div>
+                                                  <div style={{ height: 475, width: '100%' }}>
+                                                       <DataGrid
+                                                            getRowId={(row) => row._id}
+                                                            rows={sales}
+                                                            columns={columns}
+                                                            pageSize={7}
+                                                            rowsPerPageOptions={[5]}
+                                                            getRowHeight={getRowHeight}
+                                                            onRowClick={handleRowClick}
+                                                       />
+                                                  </div>
+                                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "20px" }} >
+                                                       <div>
+                                                            <ThemeProvider theme={theme}>
+                                                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} >
+                                                                      <Button style={{ width: "100%", padding: "10px", marginRight: "10px", height: "50px" }} variant="outlined" color="blue">
+                                                                           <PDFDownloadLink fileName="selected_sales" document={<SalesPrinter data={sales} cost={cost} gross={gross} profit={net} />} >
+                                                                                {({ loading }) => (loading ? 'Loading document...' : 'Download Selected Range ')}
+                                                                           </PDFDownloadLink>
+                                                                      </Button>
+                                                                      {/* <Button style={{ width: "100%", padding: "10px", height: "50px" }} variant="outlined" color="red">
                                                             <PDFDownloadLink fileName="all_products" document={<SalesPrinter data={individual_sales} />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : 'Download all Sales')}
                                                             </PDFDownloadLink>
                                                        </Button> */}
-                                                  </div>
-                                             </ThemeProvider>
-                                        </div>
+                                                                 </div>
+                                                            </ThemeProvider>
+                                                       </div>
 
-                                        {<div style={{ display: "flex", justifyContent: "right" }}>
-                                             <label style={{ marginRight: "30px" }}>Total Gross: {gross ? gross.toLocaleString() : 0}</label>
-                                             <label style={{ marginRight: "30px" }}>Total Actual Cost: {cost ? cost.toLocaleString() : 0}</label>
-                                             <label>Total Net: {net ? net.toLocaleString() : 0}</label>
-                                        </div>}
-                                   </div>
+                                                       {<div style={{ display: "flex", justifyContent: "right" }}>
+                                                            <label style={{ marginRight: "30px" }}>Total Gross: {gross ? gross.toLocaleString() : 0}</label>
+                                                            <label style={{ marginRight: "30px" }}>Total Actual Cost: {cost ? cost.toLocaleString() : 0}</label>
+                                                            <label>Total Net: {net ? net.toLocaleString() : 0}</label>
+                                                       </div>}
+                                                  </div>
+                                             </TabPanel>
+                                             <TabPanel value="2">
+
+                                             </TabPanel>
+                                             <TabPanel value="3">
+
+                                             </TabPanel>
+                                        </TabContext>
+                                   </Box>
 
                               </Card>
                          </Main>

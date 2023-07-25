@@ -21,6 +21,7 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoneyIcon from '@mui/icons-material/Money';
 import SavingsIcon from '@mui/icons-material/Savings';
+
 const Container = styled.div`
      background-color: white;
      height: 100vh;
@@ -125,8 +126,8 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>} */}
 
-                    
-                        {/* {user && currentUser == "happy_admin" &&
+
+                    {/* {user && currentUser == "happy_admin" &&
                     <Link to="/credentials">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -138,8 +139,8 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>} */}
 
-
-                    {/* {user && currentUser == "happy_admin" &&
+{/* 
+                    {user && currentUser == "happy_admin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -186,7 +187,7 @@ const Navbar = () => {
 
                     {user && currentUser == "happy_admin" &&
                          <div style={{ marginBottom: "70px" }}>
-                           
+
                          </div>}
 
                     {/* {user && currentUser != "happy_admin" &&
@@ -230,7 +231,7 @@ const Navbar = () => {
                                    <ListItemText primary="Sales & Transaction" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "happy_admin" || currentUser == "cashier1") &&
                          <Link to="/pos">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -252,17 +253,18 @@ const Navbar = () => {
                                    <ListItemText primary="Savings" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser != "happy_admin" && //change
-                         <Link to="/mysavings">
+                    {user && currentUser == "happy_admin" && //change
+                         <Link to="/reports">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
                                         <ListItemIcon>
-                                             <SavingsIcon />
+                                             <PointOfSaleIcon />
                                         </ListItemIcon>
                                    </div>
-                                   <ListItemText primary="My Savings" />
+                                   <ListItemText primary="Reports" />
                               </ListItemButton>
                          </Link>}
+
                </List>
           </Container>
 

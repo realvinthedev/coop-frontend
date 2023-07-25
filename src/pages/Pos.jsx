@@ -23,7 +23,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PosPrinter from '../components/PosPrinter';
+import { toast } from 'react-toastify';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import drawer_image from '../images/drawer.png';
+import { Audio } from 'react-loader-spinner';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -86,6 +90,9 @@ const SearchContainer = styled.div`
      display: flex;
      padding-bottom: 30px;
 `
+const ImageContainer = styled.img`
+     width: 350px;
+`
 
 /**GET REQUESTS */
 const columns = [
@@ -138,13 +145,22 @@ const Pos = (props) => {
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
 
-          let day = date.getDate().toString().padStart(2, '0');;
-          let month = (date.getMonth() + 1).toString().padStart(2, '0');;
+          let day = date.getDate().toString().padStart(2, '0');
+          let month = (date.getMonth() + 1).toString().padStart(2, '0');
           let year = date.getFullYear();
 
-          let currentDate = `${month}-${day}-${year}`;
-          return currentDate
+          let hours = date.getHours().toString().padStart(2, '0');
+          let minutes = date.getMinutes().toString().padStart(2, '0');
+
+          let currentDateTime = `${month}-${day}-${year} ${hours}:${minutes}`;
+          return currentDateTime;
      })
+     const successToast = (success) => {
+          toast.success(success);
+     };
+     const errorToast = (error) => {
+          toast.error(error);
+     };
 
 
      useEffect(() => {
@@ -162,7 +178,7 @@ const Pos = (props) => {
 
 
 
-     
+
 
      useEffect(() => {
           let product_cost_total = 0;
@@ -174,8 +190,36 @@ const Pos = (props) => {
           console.log(costtotal)
      }, [gridTrigger]);
 
+     // Fetch drawer status
+     const [drawers, setdrawers] = useState([]);
+     const [loading, setLoading] = useState(true)
+     const [drawer_id, setdrawer_id] = useState("")
+     const [isclosed, setisclosed] = useState(false)
 
+     useEffect(() => {
+          const fetchDrawerStatus = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/drawer/', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               if (response.ok) {
+                    if (json[0].drawer_status === "OPENED") {
+                         setLoading(false);
+                    }
+                    else { //if closed
+                         setLoading(false);
+                         setisclosed(true)
+                    }
 
+                    setdrawer_id(json[0]._id)
+               }
+          }
+          if (user) {
+               fetchDrawerStatus();
+          }
+     }, [user, refresher])
 
 
 
@@ -380,6 +424,8 @@ const Pos = (props) => {
                pos_items: arr,
                pos_cost_total: costtotal2,
                pos_total: total,
+               pos_drawer_id: drawer_id,
+               pos_user: user.username
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -584,283 +630,303 @@ const Pos = (props) => {
                          <Main>
                               <Header title={props.title} user={props.user} />
                               <Card>
+                                   {loading ? (
+                                        <div style={{ display: "flex", justifyContent: "center", marginTop: "300px" }}>
+                                             <Audio
+                                                  height="100"
+                                                  width="100"
+                                                  color="#f08b06"
+                                                  ariaLabel="audio-loading"
+                                                  wrapperStyle={{}}
+                                                  wrapperClass="wrapper-class"
+                                                  visible={true}
+                                             />
+                                        </div>
 
-                                   <div
-                                        style={{
-                                             display: "flex",
-                                             justifyContent: "space-between",
-                                        }}
-                                   >
+                                   ) : (
 
-
-                                        <div style={{
-                                             marginRight: "30px",
-                                             width: "80%"
-                                        }}>
-                                             <SearchContainer>
-                                                  <TextField
-                                                       required
-                                                       id="search"
-                                                       label="Search Item"
-                                                       fullWidth
-                                                       onChange={(e) => setQuery(e.target.value)}
-                                                       value={query}
-                                                  />
-
-                                             </SearchContainer>
-                                             <div style={{ height: 300, width: '100%' }}>
-                                                  <DataGrid
-                                                       getRowId={(row) => row._id}
-                                                       rows={product}
-                                                       columns={columns}
-                                                       pageSize={7}
-                                                       rowsPerPageOptions={[5]}
-                                                       onRowClick={handleRowClick}
-                                                       filterModel={{
-                                                            items: [
-                                                                 {
-                                                                      columnField: 'product_name',
-                                                                      operatorValue: 'contains',
-                                                                      value: query,
-                                                                 },
-                                                            ],
-                                                       }}
-
-                                                  />
+                                        isclosed ? (
+                                             <div>
+                                                  <div style={{ display: "flex", justifyContent: "center", marginTop: "100px" }}>
+                                                       <ImageContainer src={drawer_image}></ImageContainer>
+                                                  </div>
+                                                  <p style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>Drawer is CLOSED. Ask admin to open the drawer.</p>
                                              </div>
+                                        ) : (
+                                             <div
+                                                  style={{
+                                                       display: "flex",
+                                                       justifyContent: "space-between",
+                                                  }}
+                                             >
 
-                                             <div style={{
-                                                  display: "flex",
-                                                  justifyContent: "space-between",
 
-                                             }}>
+                                                  <div style={{
+                                                       marginRight: "30px",
+                                                       width: "80%"
+                                                  }}>
+                                                       <SearchContainer>
+                                                            <TextField
+                                                                 required
+                                                                 id="search"
+                                                                 label="Search Item"
+                                                                 fullWidth
+                                                                 onChange={(e) => setQuery(e.target.value)}
+                                                                 value={query}
+                                                            />
 
-                                             </div>
-                                             <div >
+                                                       </SearchContainer>
+                                                       <div style={{ height: 300, width: '100%' }}>
+                                                            <DataGrid
+                                                                 getRowId={(row) => row._id}
+                                                                 rows={product}
+                                                                 columns={columns}
+                                                                 onRowClick={handleRowClick}
+                                                                 filterModel={{
+                                                                      items: [
+                                                                           {
+                                                                                columnField: 'product_name',
+                                                                                operatorValue: 'contains',
+                                                                                value: query,
+                                                                           },
+                                                                      ],
+                                                                 }}
 
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Product Code"
-                                                       style={{ paddingBottom: "20px", marginTop: "10px" }}
-                                                       onChange={(e) => setproduct_code(e.target.value)}
-                                                       value={product_code}
-                                                       InputProps={{
-                                                            readOnly: true,
-                                                       }}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Product Name"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={(e) => setproduct_name(e.target.value)}
-                                                       value={product_name}
-                                                       InputProps={{
-                                                            readOnly: true,
-                                                       }}
-                                                  />
+                                                            />
+                                                       </div>
 
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Selling Price"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={(e) => setproduct_selling_price(e.target.value)}
-                                                       value={product_selling_price}
-                                                       InputProps={{
-                                                            readOnly: true,
-                                                       }}
-                                                  />
-                                                  <TextField
-                                                       required
-                                                       fullWidth
-                                                       id="outlined-required"
-                                                       label="Stocks"
-                                                       style={{ paddingBottom: "20px" }}
-                                                       onChange={(e) => setproduct_stock(e.target.value)}
-                                                       value={product_stock}
-                                                       InputProps={{
-                                                            readOnly: true,
-                                                       }}
-                                                  />
-                                                  {openStockError ? <Alert onClose={handleStockErrorOff} variant="filled" severity="error">Not enough stocks</Alert> : ""}
-                                                  {openErrorDuplicate ? <Alert onClose={handleOffErrorDuplicate} variant="filled" severity="error">Item already added. If you want to update the quantity, remove and update it.</Alert> : ""}
-                                                  <ThemeProvider theme={theme}>
                                                        <div style={{
                                                             display: "flex",
-                                                            justifyContent: "space-between"
+                                                            justifyContent: "space-between",
+
                                                        }}>
+
+                                                       </div>
+                                                       <div >
+
                                                             <TextField
                                                                  required
                                                                  fullWidth
                                                                  id="outlined-required"
-                                                                 label="Quantity"
-                                                                 style={{ marginRight: "10px" }}
-                                                                 onChange={(e) => setquantity_left(e.target.value)}
-                                                                 value={quantity_left}
+                                                                 label="Product Code"
+                                                                 style={{ paddingBottom: "20px", marginTop: "10px" }}
+                                                                 onChange={(e) => setproduct_code(e.target.value)}
+                                                                 value={product_code}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
                                                             />
-                                                            <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleAddItem}>
-                                                                 Add to cart
-                                                            </Button>
+                                                            <TextField
+                                                                 required
+                                                                 fullWidth
+                                                                 id="outlined-required"
+                                                                 label="Product Name"
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setproduct_name(e.target.value)}
+                                                                 value={product_name}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+
+                                                            <TextField
+                                                                 required
+                                                                 fullWidth
+                                                                 id="outlined-required"
+                                                                 label="Selling Price"
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setproduct_selling_price(e.target.value)}
+                                                                 value={product_selling_price}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            <TextField
+                                                                 required
+                                                                 fullWidth
+                                                                 id="outlined-required"
+                                                                 label="Stocks"
+                                                                 style={{ paddingBottom: "20px" }}
+                                                                 onChange={(e) => setproduct_stock(e.target.value)}
+                                                                 value={product_stock}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            {openStockError ? <Alert onClose={handleStockErrorOff} variant="filled" severity="error">Not enough stocks</Alert> : ""}
+                                                            {openErrorDuplicate ? <Alert onClose={handleOffErrorDuplicate} variant="filled" severity="error">Item already added. If you want to update the quantity, remove and update it.</Alert> : ""}
+                                                            <ThemeProvider theme={theme}>
+                                                                 <div style={{
+                                                                      display: "flex",
+                                                                      justifyContent: "space-between"
+                                                                 }}>
+                                                                      <TextField
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Quantity"
+                                                                           style={{ marginRight: "10px" }}
+                                                                           onChange={(e) => setquantity_left(e.target.value)}
+                                                                           value={quantity_left}
+                                                                      />
+                                                                      <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleAddItem}>
+                                                                           Add to cart
+                                                                      </Button>
+                                                                 </div>
+                                                            </ThemeProvider>
+                                                            <Dialog
+                                                                 open={openDelete}
+                                                                 onClose={handleCloseDelete}
+                                                                 aria-labelledby="alert-dialog-title"
+                                                                 aria-describedby="alert-dialog-description"
+                                                            >
+                                                                 <DialogTitle id="alert-dialog-title">
+                                                                      <h2>{"Are you sure to delete selected item?"}</h2>
+                                                                 </DialogTitle>
+                                                                 <DialogContent>
+                                                                      <DialogContentText id="alert-dialog-description">
+                                                                           Deleted item can't be undone. Confirm by clicking "Delete"
+                                                                      </DialogContentText>
+                                                                 </DialogContent>
+                                                                 <DialogActions>
+                                                                      <Button onClick={handleDelete}>Delete</Button>
+                                                                      <Button onClick={handleCloseDelete} autoFocus>
+                                                                           Cancel
+                                                                      </Button>
+                                                                 </DialogActions>
+                                                            </Dialog>
+
                                                        </div>
-                                                  </ThemeProvider>
-                                                  <Dialog
-                                                       open={openDelete}
-                                                       onClose={handleCloseDelete}
-                                                       aria-labelledby="alert-dialog-title"
-                                                       aria-describedby="alert-dialog-description"
-                                                  >
-                                                       <DialogTitle id="alert-dialog-title">
-                                                            <h2>{"Are you sure to delete selected item?"}</h2>
-                                                       </DialogTitle>
-                                                       <DialogContent>
-                                                            <DialogContentText id="alert-dialog-description">
-                                                                 Deleted item can't be undone. Confirm by clicking "Delete"
-                                                            </DialogContentText>
-                                                       </DialogContent>
-                                                       <DialogActions>
-                                                            <Button onClick={handleDelete}>Delete</Button>
-                                                            <Button onClick={handleCloseDelete} autoFocus>
-                                                                 Cancel
-                                                            </Button>
-                                                       </DialogActions>
-                                                  </Dialog>
-
-                                             </div>
-                                        </div>
-
-                                        <div style={{
-                                             marginLeft: "30px",
-                                             width: "120%"
-                                        }}>
-
-                                             <div style={{ height: 475, width: '100%' }}
-                                             >
-
-                                                  <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                                                       <label style={{ marginBottom: "20px" }}>Date: {currentDate}</label>
-                                                       <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
                                                   </div>
 
-                                                  <DataGrid
-                                                       getRowId={getRowId}
-                                                       rows={arr}
-                                                       columns={columns_receipt}
-                                                       pageSize={7}
-                                                       rowsPerPageOptions={[5]}
-                                                       onRowClick={(params) => handleRowClickReceipt(params)}
-                                                  />
-
-                                             </div>
-                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Successfully Saved. Please download receipt if necessary</Alert> : ""}
-                                             {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely</Alert> : ""}
-
-                                             <div style={{
-                                                  display: "flex",
-                                                  justifyContent: "space-between",
-
-                                             }}>
-
-                                             </div>
-                                             <div style={{
-                                                  display: "flex",
-                                                  justifyContent: "space-between",
-                                                  marginTop: "100px"
-
-                                             }}>
                                                   <div style={{
-                                                       display: "flex",
-                                                       justifyContent: "space-between",
-                                                       marginRight: "10px",
-                                                       width: "50%",
-
+                                                       marginLeft: "30px",
+                                                       width: "120%"
                                                   }}>
 
-                                                       <ThemeProvider theme={theme}>
+                                                       <div style={{ height: 475, width: '100%' }}
+                                                       >
+
+                                                            <div style={{ display: 'flex', justifyContent: "space-between" }}>
+                                                                 <label style={{ marginBottom: "20px" }}>Date: {currentDate}</label>
+                                                                 <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
+                                                            </div>
+
+                                                            <DataGrid
+                                                                 getRowId={getRowId}
+                                                                 rows={arr}
+                                                                 columns={columns_receipt}
+                                                                 pageSize={7}
+                                                                 rowsPerPageOptions={[5]}
+                                                                 onRowClick={(params) => handleRowClickReceipt(params)}
+                                                            />
+
+                                                       </div>
+                                                       {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Successfully Saved. Please download receipt if necessary</Alert> : ""}
+                                                       {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely</Alert> : ""}
+
+                                                       <div style={{
+                                                            display: "flex",
+                                                            justifyContent: "space-between",
+
+                                                       }}>
+
+                                                       </div>
+                                                       <div style={{
+                                                            display: "flex",
+                                                            justifyContent: "space-between",
+                                                            marginTop: "100px"
+
+                                                       }}>
                                                             <div style={{
                                                                  display: "flex",
-                                                                 flexDirection: "column",
+                                                                 justifyContent: "space-between",
+                                                                 marginRight: "10px",
+                                                                 width: "50%",
 
                                                             }}>
 
-                                                                 <Button disabled={isButtonAddtoCartDisabled} style={{ marginBottom: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleRemoveItem}>
-                                                                      Remove from cart
-                                                                 </Button>
-                                                                 <Button disabled={isButtonNewTransactionDisabled} style={{ marginRight: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleNewTransaction}>
-                                                                      New Transaction
-                                                                 </Button>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <div style={{
+                                                                           display: "flex",
+                                                                           flexDirection: "column",
 
+                                                                      }}>
+
+                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ marginBottom: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleRemoveItem}>
+                                                                                Remove from cart
+                                                                           </Button>
+                                                                           <Button disabled={isButtonNewTransactionDisabled} style={{ marginRight: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleNewTransaction}>
+                                                                                New Transaction
+                                                                           </Button>
+
+                                                                      </div>
+
+                                                                 </ThemeProvider>
                                                             </div>
 
-                                                       </ThemeProvider>
-                                                  </div>
 
-
-                                                  <div style={{
-                                                       width: "30%"
-                                                  }}>
-                                                       <TextField
-                                                            fullWidth
-                                                            id="outlined-required"
-                                                            label="Amount Due"
-                                                            style={{ paddingBottom: "20px", fontSize: "40px" }}
-                                                            onChange={(e) => settotal(e.target.value)}
-                                                            value={total}
-                                                            InputProps={{
-                                                                 readOnly: true,
-                                                            }}
-                                                       />
-
-                                                       <ThemeProvider theme={theme}>
                                                             <div style={{
-                                                                 display: "flex",
-                                                                 justifyContent: "space-between"
+                                                                 width: "30%"
                                                             }}>
-                                                                 <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue" onClick={
-                                                                      handleSaveTransaction}>
-                                                                      Save Transaction
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Amount Due"
+                                                                      style={{ paddingBottom: "20px", fontSize: "40px" }}
+                                                                      onChange={(e) => settotal(e.target.value)}
+                                                                      value={total}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
 
-                                                                 </Button>
+                                                                 <ThemeProvider theme={theme}>
+                                                                      <div style={{
+                                                                           display: "flex",
+                                                                           justifyContent: "space-between"
+                                                                      }}>
+                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue" onClick={
+                                                                                handleSaveTransaction}>
+                                                                                Save Transaction
 
-                                                            </div>
-                                                            <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue">
-                                                                 <PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} >
-                                                                      {({ loading }) => (loading ? 'Loading document...' : 'Download Receipt')}
-                                                                 </PDFDownloadLink>
-                                                            </Button>
-                                                            {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
+                                                                           </Button>
+
+                                                                      </div>
+                                                                      <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue">
+                                                                           <PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} >
+                                                                                {({ loading }) => (loading ? 'Loading document...' : 'Download Receipt')}
+                                                                           </PDFDownloadLink>
+                                                                      </Button>
+                                                                      {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
                                                                 
                                                             </Button> */}
-                                                       </ThemeProvider>
-                                                       <Dialog
-                                                            open={openDelete}
-                                                            onClose={handleCloseDelete}
-                                                            aria-labelledby="alert-dialog-title"
-                                                            aria-describedby="alert-dialog-description"
-                                                       >
-                                                            <DialogTitle id="alert-dialog-title">
-                                                                 <h2>{"Are you sure to delete selected item?"}</h2>
-                                                            </DialogTitle>
-                                                            <DialogContent>
-                                                                 <DialogContentText id="alert-dialog-description">
-                                                                      Deleted item can't be undone. Confirm by clicking "Delete"
-                                                                 </DialogContentText>
-                                                            </DialogContent>
-                                                            <DialogActions>
-                                                                 <Button onClick={handleDelete}>Delete</Button>
-                                                                 <Button onClick={handleCloseDelete} autoFocus>
-                                                                      Cancel
-                                                                 </Button>
-                                                            </DialogActions>
-                                                       </Dialog>
+                                                                 </ThemeProvider>
+                                                                 <Dialog
+                                                                      open={openDelete}
+                                                                      onClose={handleCloseDelete}
+                                                                      aria-labelledby="alert-dialog-title"
+                                                                      aria-describedby="alert-dialog-description"
+                                                                 >
+                                                                      <DialogTitle id="alert-dialog-title">
+                                                                           <h2>{"Are you sure to delete selected item?"}</h2>
+                                                                      </DialogTitle>
+                                                                      <DialogContent>
+                                                                           <DialogContentText id="alert-dialog-description">
+                                                                                Deleted item can't be undone. Confirm by clicking "Delete"
+                                                                           </DialogContentText>
+                                                                      </DialogContent>
+                                                                      <DialogActions>
+                                                                           <Button onClick={handleDelete}>Delete</Button>
+                                                                           <Button onClick={handleCloseDelete} autoFocus>
+                                                                                Cancel
+                                                                           </Button>
+                                                                      </DialogActions>
+                                                                 </Dialog>
+                                                            </div>
+                                                       </div>
                                                   </div>
-                                             </div>
-                                        </div>
-                                   </div>
+                                             </div>))}
                               </Card>
                          </Main>
                     </Wrapper>
