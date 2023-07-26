@@ -1934,7 +1934,7 @@ const Payroll = (props) => {
                                                                  Save to Database
                                                             </Button>
                                                             <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
-                                                                 Print
+                                                                 Download
                                                             </Button>
                                                        </div>
 

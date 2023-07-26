@@ -325,7 +325,7 @@ const Pos = (props) => {
 
      const handleTransactionId = () => {
           let num = Math.floor(Math.random() * 90000) + 10000;
-          const value = "TRANS" + num
+          const value = "S-" + num
           setTransactionnumber(value)
      }
      /**Handle Delete */
