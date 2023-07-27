@@ -78,6 +78,15 @@ const TotalsContainer = styled.div`
      align-items: center;
      justify-content: space-between;
 `
+const SalesList = styled.div`
+     width: 100%;
+     padding: 10px 20px 10px 20px;
+     border: 1px solid #dbdbdb;
+     border-radius: 20px;
+     background-color: white;
+     font-size: 14px;
+     margin-bottom: 10px;
+`
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -208,7 +217,7 @@ const Payroll = (props) => {
                setStartDate2(`01-16-2023`)
                setEndDate2(`01-31-2023`)
           }
-         
+
           if (month2 == "february" && period2 == "first") {
                setStartDate2(`02-01-2023`)
                setEndDate2(`02-15-2023`)
@@ -217,7 +226,7 @@ const Payroll = (props) => {
                setStartDate2(`02-16-2023`)
                setEndDate2(`02-29-2023`)
           }
-         
+
           if (month2 == "march" && period2 == "first") {
                setStartDate2(`03-01-2023`)
                setEndDate2(`03-15-2023`)
@@ -226,7 +235,7 @@ const Payroll = (props) => {
                setStartDate2(`03-16-2023`)
                setEndDate2(`03-31-2023`)
           }
-        
+
 
           if (month2 == "april" && period2 == "first") {
                setStartDate2(`04-01-2023`)
@@ -236,7 +245,7 @@ const Payroll = (props) => {
                setStartDate2(`04-16-2023`)
                setEndDate2(`04-30-2023`)
           }
-        
+
 
           if (month2 == "may" && period2 == "first") {
                setStartDate2(`05-01-2023`)
@@ -246,7 +255,7 @@ const Payroll = (props) => {
                setStartDate2(`05-16-2023`)
                setEndDate2(`05-31-2023`)
           }
-        
+
 
           if (month2 == "june" && period2 == "first") {
                setStartDate2(`06-01-2023`)
@@ -256,7 +265,7 @@ const Payroll = (props) => {
                setStartDate2(`06-16-2023`)
                setEndDate2(`06-30-2023`)
           }
-        
+
 
           if (month2 == "july" && period2 == "first") {
                setStartDate2(`07-01-2023`)
@@ -266,7 +275,7 @@ const Payroll = (props) => {
                setStartDate2(`07-16-2023`)
                setEndDate2(`07-31-2023`)
           }
-        
+
 
           if (month2 == "august" && period2 == "first") {
                setStartDate2(`08-01-2023`)
@@ -276,7 +285,7 @@ const Payroll = (props) => {
                setStartDate2(`08-16-2023`)
                setEndDate2(`08-31-2023`)
           }
-         
+
 
           if (month2 == "september" && period2 == "first") {
                setStartDate2(`09-01-2023`)
@@ -286,7 +295,7 @@ const Payroll = (props) => {
                setStartDate2(`09-16-2023`)
                setEndDate2(`09-30-2023`)
           }
-        
+
 
           if (month2 == "october" && period2 == "first") {
                setStartDate2(`10-01-2023`)
@@ -296,7 +305,7 @@ const Payroll = (props) => {
                setStartDate2(`10-16-2023`)
                setEndDate2(`10-31-2023`)
           }
-       
+
           if (month2 == "november" && period2 == "first") {
                setStartDate2(`11-01-2023`)
                setEndDate2(`11-15-2023`)
@@ -305,7 +314,7 @@ const Payroll = (props) => {
                setStartDate2(`11-16-2023`)
                setEndDate2(`11-30-2023`)
           }
-        
+
           if (month2 == "december" && period2 == "first") {
                setStartDate2(`12-01-2023`)
                setEndDate2(`12-15-2023`)
@@ -314,7 +323,7 @@ const Payroll = (props) => {
                setStartDate2(`12-16-2023`)
                setEndDate2(`12-31-2023`)
           }
-         
+
      }
      const appRef = useRef(null);
      const captureScreenshot = () => {
@@ -322,6 +331,15 @@ const Payroll = (props) => {
           html2canvas(element).then((canvas) => {
                canvas.toBlob((blob) => {
                     saveAs(blob, `payslip_` + month + `_` + period + `_period` + `_` + new_name);
+               });
+          });
+     };
+     const appRefSummary = useRef(null);
+     const captureScreenshotSummary = () => {
+          const element = appRefSummary.current;
+          html2canvas(element).then((canvas) => {
+               canvas.toBlob((blob) => {
+                    saveAs(blob, `summary` + month + `_` + period + `_period`);
                });
           });
      };
@@ -561,7 +579,7 @@ const Payroll = (props) => {
           if (user) {
                fetchEmp();
           }
-         
+
      }, [randomNum])
 
      const [summ, setSumm] = useState([])
@@ -587,7 +605,7 @@ const Payroll = (props) => {
                fetchEmp();
           }
           console.log("*******************")
-         
+
      }, [start_date2, end_date2, period2])
 
 
@@ -755,7 +773,7 @@ const Payroll = (props) => {
 
 
 
-
+     const [db_department, setdb_department] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee/' + employeeId, {
@@ -776,6 +794,7 @@ const Payroll = (props) => {
                     setdefault_special_ot(json.special_ot ? json.special_ot : 0)
                     setdefault_legal_ot(json.legal_ot ? json.legal_ot : 0)
                     setemploymentStatus(json.employment_status ? json.employment_status : "regular")
+                    setdb_department(json.department)
 
 
                     setdefault_first_eight_restday_ot(json.restday_first_eight_ot ? json.special_first_eight_ot : 0)
@@ -845,7 +864,8 @@ const Payroll = (props) => {
      const [temp_absent, setTemp_absent] = useState(0);
 
 
-
+     const columnWidth = 100;
+     const columnWidthNumber = 40;
      useEffect(() => {
 
           /**GOAL: KUHAON NKO ANG 
@@ -1016,7 +1036,7 @@ const Payroll = (props) => {
      const [summary_grosspay, setsummary_grosspay] = useState(0);
      const [summary_net, setsummary_net] = useState(0);
      const [summary_deductions, setsummary_deductions] = useState(0);
-
+     let rowNumber = 0;
      const calculateGrossPay = () => {
           random();
           //NEW
@@ -1243,7 +1263,7 @@ const Payroll = (props) => {
 
 
 
-          
+
 
 
           //      console.log(additional_earnings, "additional_earnings")
@@ -1274,7 +1294,7 @@ const Payroll = (props) => {
      }
 
 
-     
+
 
      const calculateFinalDeduction = () => {
           return filtered_additional && filtered_additional[0]?.total_deduction
@@ -1290,7 +1310,7 @@ const Payroll = (props) => {
      const handleGenerateSummary = () => {
 
      }
-    
+
 
 
      const handleAdd = async (e) => {
@@ -1301,7 +1321,7 @@ const Payroll = (props) => {
           }
           else {
                const isDuplicate = arr.find(item => item.employee_id === employeeId);
-               if(!isDuplicate){
+               if (!isDuplicate) {
                     if (!user) {
                          console.log('You must be logged in first')
                          return
@@ -1312,6 +1332,8 @@ const Payroll = (props) => {
                               period: db_period,
                               employee_id: db_employeeid,
                               net: db_net_pay,
+                              department: db_department,
+                              name: new_name,
                          }
                          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/payslip', {
                               method: 'POST',
@@ -1322,14 +1344,19 @@ const Payroll = (props) => {
                               }
                          })
                          const json = await response.json()
-     
+
                          successToast('Added Successfully')
-     
+
                     }
                }
-               else{
+               else {
                     const payslip = {
-                        net: db_net_pay
+                         month: db_month,
+                         period: db_period,
+                         employee_id: db_employeeid,
+                         net: db_net_pay,
+                         department: db_department,
+                         name: new_name,
                     }
                     if (!user) {
                          console.log('You must be logged in first')
@@ -1361,7 +1388,7 @@ const Payroll = (props) => {
           }
           setTimeout(() => {
                random()
-             }, 1000)
+          }, 1000)
 
      }
      return (
@@ -1948,7 +1975,7 @@ const Payroll = (props) => {
                                                   </ButtonContainer>
                                              </TabPanel>
                                              <TabPanel value="2">
-                                                  <div style={{ width: "100%" }}>
+                                                  <div ref={appRefSummary} style={{ width: "100%", padding: "20px" }}>
                                                        <div style={{ display: "flex", paddingRight: "20px" }}>
                                                             <div>
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2002,23 +2029,139 @@ const Payroll = (props) => {
                                                             </div>
 
                                                        </div>
-                                                       <div>
-                                                            <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
-                                                                 <h3>Total</h3>
-                                                            </div>
-                                                            <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
-                                                                 <Table aria-label="simple table">
-                                                                      <TableBody>
-                                                                           <TableRow><TableCell sx={{ width: 300 }}>Grand Total Net Pay</TableCell><TableCell>{summ_net && summ_net.toLocaleString(undefined, {
-                                                                                minimumFractionDigits: 2,
-                                                                                maximumFractionDigits: 2
-                                                                           })}</TableCell></TableRow>
+                                                       <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <div style={{ width: "100%", marginRight: "20px" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Confirmation</h3>
+                                                                 </div>
+                                                                 {/* {summ && summ.length > 0 ? (
+                                                                      <TableContainer style={{ width: "100%" }}>
+                                                                           <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                <TableHead>
+                                                                                     <TableRow>
+                                                                                          <TableCell>#</TableCell>
+                                                                                          <TableCell>Name</TableCell>
+                                                                                          <TableCell>Department</TableCell>
+                                                                                          <TableCell>Net Pay</TableCell>
+                                                                                     </TableRow>
+                                                                                </TableHead>
+                                                                                <TableBody>
+                                                                                     {summ
+                                                                                          .sort((a, b) => (a.department || '').localeCompare(b.department || '')) // Sort transactions by department (handling undefined/null)
+                                                                                          .map((transaction, index) => (
+                                                                                               <TableRow key={index}>
+                                                                                                    <TableCell>{index + 1}</TableCell>
+                                                                                                    <TableCell>{transaction.name}</TableCell>
+                                                                                                    <TableCell>{transaction.department}</TableCell>
+                                                                                                    <TableCell>{transaction.net}</TableCell>
+                                                                                               </TableRow>
+                                                                                          ))}
+                                                                                </TableBody>
+                                                                           </Table>
+                                                                      </TableContainer>
+                                                                 ) : (
+                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "180px", alignItems: "center", flexDirection: "column" }}>
+                                                                           <p>No transaction on selected date</p>
+                                                                      </div>
+                                                                 )} */}
 
-                                                                      </TableBody>
-                                                                 </Table>
-                                                            </TableContainer>
+
+                                                                 {summ && summ.length > 0 ? (
+
+                                                                      <TableContainer style={{ width: "100%" }}>
+                                                                           {summ
+                                                                                .sort((a, b) => (a.department || '').localeCompare(b.department || ''))
+                                                                                .map((transaction, index) => {
+                                                                                     const prevDepartment = index > 0 ? summ[index - 1].department : null;
+                                                                                     const currentDepartment = transaction.department;
+
+                                                                                     if (prevDepartment !== currentDepartment) {
+                                                                                          rowNumber = 1; // Reset the row number for a new department
+                                                                                          return (
+                                                                                               <div key={index}>
+                                                                                                    <h2 style={{ backgroundColor: '#f0f0f0', padding: '5px', marginBottom: '10px' }}>
+                                                                                                         {currentDepartment}
+                                                                                                    </h2>
+                                                                                                    <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                         <TableHead>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>#</TableCell>
+                                                                                                                   <TableCell style={{ width: 250 }}>Name</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>Department</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100 }}>Net Pay</TableCell>
+                                                                                                              </TableRow>
+                                                                                                         </TableHead>
+                                                                                                         <TableBody>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                                   <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                        minimumFractionDigits: 2,
+                                                                                                                        maximumFractionDigits: 2
+                                                                                                                   })}</TableCell>
+                                                                                                              </TableRow>
+                                                                                                         </TableBody>
+                                                                                                    </Table>
+                                                                                               </div>
+                                                                                          );
+                                                                                     } else {
+                                                                                          rowNumber++; // Increment row number for subsequent rows within the same department
+                                                                                          return (
+                                                                                               <Table key={index} sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                    <TableBody>
+                                                                                                         <TableRow>
+                                                                                                              <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                              <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
+                                                                                                              <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
+                                                                                                              <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                   minimumFractionDigits: 2,
+                                                                                                                   maximumFractionDigits: 2
+                                                                                                              })}</TableCell>
+                                                                                                         </TableRow>
+                                                                                                    </TableBody>
+                                                                                               </Table>
+                                                                                          );
+                                                                                     }
+                                                                                })}
+                                                                      </TableContainer>
+
+                                                                 ) : (
+                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", alignItems: "center", flexDirection: "column" }}>
+                                                                           <p>Select a month and period to display the data</p>
+                                                                      </div>
+                                                                 )}
+
+                                                            </div>
+                                                            <div style={{ width: "100%" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Total</h3>
+                                                                 </div>
+                                                                 <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                                      <Table aria-label="simple table">
+                                                                           <TableBody>
+                                                                                <TableRow><TableCell sx={{ width: 300 }}>Grand Total Net Pay</TableCell><TableCell>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                     minimumFractionDigits: 2,
+                                                                                     maximumFractionDigits: 2
+                                                                                })}</TableCell></TableRow>
+
+                                                                           </TableBody>
+                                                                      </Table>
+                                                                 </TableContainer>
+                                                            </div>
+
                                                        </div>
+
                                                   </div>
+                                                  <ThemeProvider theme={theme}>
+
+                                                       <div style={{ display: "flex", justifyContent: "left", marginTop: "20px", width: "100%" }}>
+                                                            <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshotSummary}>
+                                                                 Download
+                                                            </Button>
+                                                       </div>
+
+                                                  </ThemeProvider>
                                              </TabPanel>
                                         </TabContext>
                                    </Box>

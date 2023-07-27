@@ -1950,7 +1950,7 @@ const Member = (props) => {
                                                                  </LocalizationProvider>
                                                                  <TextField
                                                                       id="outlined-required"
-                                                                      label="Search category"
+                                                                      label="Select Particulars"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
@@ -1968,7 +1968,7 @@ const Member = (props) => {
 
                                                                  <TextField
                                                                       id="outlined-required"
-                                                                      label="Search category"
+                                                                      label="Select Type"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
@@ -2044,7 +2044,7 @@ const Member = (props) => {
                                                                  </LocalizationProvider>
                                                                  <TextField
                                                                       id="outlined-required"
-                                                                      label="Search category"
+                                                                      label="Select Particulars"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
@@ -2062,7 +2062,7 @@ const Member = (props) => {
 
                                                                  <TextField
                                                                       id="outlined-required"
-                                                                      label="Search category"
+                                                                      label="Select Type"
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
