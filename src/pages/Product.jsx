@@ -407,7 +407,7 @@ const Product = (props) => {
                                                   required
                                                   fullWidth
                                                   id="outlined-required"
-                                                  label="Product Code"
+                                                  label="Product Code (Code should be unique)"
                                                   style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                   onChange={(e) => setproduct_code(e.target.value)}
                                                   value={product_code}

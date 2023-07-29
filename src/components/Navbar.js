@@ -21,6 +21,7 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoneyIcon from '@mui/icons-material/Money';
 import SavingsIcon from '@mui/icons-material/Savings';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const Container = styled.div`
      background-color: white;
@@ -206,6 +207,18 @@ const Navbar = () => {
                     <div style={{ paddingLeft: "30px" }}>
                          <p style={{ color: "orange" }}>COOPERATIVE SYSTEM</p>
                     </div>
+
+                    {user && currentUser == "happy_admin" &&
+                         <Link to="/customer">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <GroupsIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Customers" />
+                              </ListItemButton>
+                         </Link>}
 
                     {user && currentUser == "happy_admin" &&
                          <Link to="/product">

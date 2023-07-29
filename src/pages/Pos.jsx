@@ -28,17 +28,18 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import drawer_image from '../images/drawer.png';
 import { Audio } from 'react-loader-spinner';
+import Autocomplete from '@mui/material/Autocomplete';
 const theme = createTheme({
      palette: {
           neutral: {
-               main: '#61c668',
+               main: '#c68961',
                contrastText: '#fff',
           },
           red: {
                main: '#d13f3f',
                contrastText: '#fff',
           },
-          blue: {
+          purple: {
                main: '#9306f1',
                contrastText: '#fff',
           },
@@ -130,6 +131,7 @@ const Pos = (props) => {
      const [error, setError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
      const [openDelete, setOpenDelete] = useState(false)
+     const [openSave, setopenSave] = useState(false);
      const [quantity_left, setquantity_left] = useState(1)
      const [quantity_right, setquantity_right] = useState(0)
      const [row_total, setrow_total] = useState(0)
@@ -141,6 +143,11 @@ const Pos = (props) => {
      const [refresher, setRefresher] = useState(0)
      const [gridTrigger, setGridTrigger] = useState(false);
      const [prms, setprms] = useState("");
+     const [customer_name, setcustomer_name] = useState("");
+     const [cash, setcash] = useState(0);
+     const [change, setchange] = useState(0);
+     const [customer_nameonly, setcustomer_nameonly] = useState("");
+     const [customer_id, setcustomer_id] = useState("");
      const [transactionnumber, setTransactionnumber] = useState("");
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
@@ -162,7 +169,14 @@ const Pos = (props) => {
           toast.error(error);
      };
 
-
+     const handleName = (event) => {
+          const name = event.target.value;
+          const id = name.split(" ")[0];
+          const nameonly = name.split(" ")[2];
+          setcustomer_name(name)
+          setcustomer_id(id)
+          setcustomer_nameonly(nameonly)
+     }
      useEffect(() => {
           handleTransactionId();
      }, []);
@@ -176,7 +190,25 @@ const Pos = (props) => {
           console.log(total)
      }, [gridTrigger]);
 
+     const [customers, setcustomers] = useState([])
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/customer', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
 
+               if (response.ok) {
+                    setcustomers(json)
+               }
+          }
+          if (user) {
+
+               fetchEmp();
+          }
+     }, [user])
 
 
 
@@ -276,6 +308,11 @@ const Pos = (props) => {
           setButtonDisabled(true)
           handleTransactionId();
           settotal(0)
+          setcash(0)
+          setchange(0)
+          setcustomer_id("")
+          setcustomer_name("")
+          setcustomer_nameonly("")
 
      }
 
@@ -335,6 +372,12 @@ const Pos = (props) => {
      const handleOpenDelete = () => {
           setOpenDelete(true);
      };
+     const handlecash = (event) => {
+          const cash = event.target.value
+          let change = cash - total 
+          setchange(change);
+          setcash(cash)
+     };
 
      const handleAddItem = () => {
           const isDuplicate = arr.find(item => item.product_code === product_code);
@@ -375,6 +418,18 @@ const Pos = (props) => {
           return arr.product_code
      }
 
+     const handleOpenSave = () => {
+          if(customer_name === ""){
+               errorToast("Select a customer first")
+          }
+          else{
+               setopenSave(true);
+          }
+          
+     };
+     const handleCloseSave = () => {
+          setopenSave(false);
+     };
 
 
      /**Handle datagrid row click */
@@ -411,8 +466,6 @@ const Pos = (props) => {
                     setError(json.error)
                }
           }
-
-
      }
 
      const handleSaveTransaction = async (e) => {
@@ -425,7 +478,10 @@ const Pos = (props) => {
                pos_cost_total: costtotal2,
                pos_total: total,
                pos_drawer_id: drawer_id,
-               pos_user: user.username
+               pos_user: user.username,
+               pos_customer_name: customer_name,
+               pos_cash: cash,
+               pos_change: change
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -434,10 +490,7 @@ const Pos = (props) => {
           if (
                arr.length == 0
           ) {
-               handleOnError()
-               setTimeout(() => {
-                    handleOffError();
-               }, 4000);
+               errorToast("Please add an item before saving a transaction")
           }
           else {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/', {
@@ -453,17 +506,18 @@ const Pos = (props) => {
                     setError(json.error)
                }
                else {
-
+                    successToast("Transaction completed. Download the receipt if needed.")
                     //setArr([])
-                    handleOnSuccess();
+                    //handleOnSuccess();
                     setButtonDisabled(false);
                     setButtonAddtoCartDisabled(true)
+                    handleCloseSave()
                     setButtonNewTransactionDisabled(false)
                     handleRefresher()
-                    setTimeout(() => {
-                         //handleRefresher()
-                         handleOffSuccess();
-                    }, 4000);
+                    setcash(0)
+                    setchange(0)
+                    setcustomer_name("")
+                    
                }
 
 
@@ -769,7 +823,7 @@ const Pos = (props) => {
                                                                            onChange={(e) => setquantity_left(e.target.value)}
                                                                            value={quantity_left}
                                                                       />
-                                                                      <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleAddItem}>
+                                                                      <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="purple" onClick={handleAddItem}>
                                                                            Add to cart
                                                                       </Button>
                                                                  </div>
@@ -853,12 +907,24 @@ const Pos = (props) => {
 
                                                                       }}>
 
-                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ marginBottom: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleRemoveItem}>
-                                                                                Remove from cart
-                                                                           </Button>
-                                                                           <Button disabled={isButtonNewTransactionDisabled} style={{ marginRight: "5px", width: "100%", height: "55px" }} variant="outlined" color="blue" onClick={handleNewTransaction}>
-                                                                                New Transaction
-                                                                           </Button>
+                                                                           <Autocomplete
+                                                                                value={customer_name}
+                                                                                style={{ marginRight: "10px" }}
+                                                                                onSelect={handleName}
+                                                                                options={customers.map((data) => data.customer_id + " - " + data.customer_name)}
+                                                                                renderInput={(params) => (
+                                                                                     <TextField
+                                                                                          {...params}
+                                                                                          required
+                                                                                          label="Search Customer"
+                                                                                          fullWidth
+                                                                                          style={{ paddingBottom: "20px", width: "500px" }}
+                                                                                     />
+                                                                                )}
+                                                                           />
+
+                                                                           <div>Customer Name: {customer_nameonly}</div>
+                                                                           <div>Customer ID: {customer_id}</div>
 
                                                                       </div>
 
@@ -882,18 +948,21 @@ const Pos = (props) => {
                                                                  />
 
                                                                  <ThemeProvider theme={theme}>
-                                                                      <div style={{
-                                                                           display: "flex",
-                                                                           justifyContent: "space-between"
-                                                                      }}>
-                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue" onClick={
-                                                                                handleSaveTransaction}>
+                                                                      <div>
+                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green" onClick={
+                                                                                handleOpenSave}>
                                                                                 Save Transaction
 
                                                                            </Button>
+                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="red" onClick={handleRemoveItem}>
+                                                                                Remove from cart
+                                                                           </Button>
+                                                                           <Button disabled={isButtonNewTransactionDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="purple" onClick={handleNewTransaction}>
+                                                                                New Transaction
+                                                                           </Button>
 
                                                                       </div>
-                                                                      <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="blue">
+                                                                      <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green">
                                                                            <PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} >
                                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Receipt')}
                                                                            </PDFDownloadLink>
@@ -919,6 +988,57 @@ const Pos = (props) => {
                                                                       <DialogActions>
                                                                            <Button onClick={handleDelete}>Delete</Button>
                                                                            <Button onClick={handleCloseDelete} autoFocus>
+                                                                                Cancel
+                                                                           </Button>
+                                                                      </DialogActions>
+                                                                 </Dialog>
+
+                                                                 <Dialog
+                                                                      open={openSave}
+                                                                      onClose={handleCloseSave}
+                                                                      aria-labelledby="alert-dialog-title"
+                                                                      aria-describedby="alert-dialog-description"
+                                                                 >
+                                                                      <DialogTitle id="alert-dialog-title">
+                                                                           <h2>{"Finalizing Transaction"}</h2>
+                                                                      </DialogTitle>
+                                                                      <DialogContent>
+                                                                           <TextField
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Amount Due"
+                                                                                style={{ paddingBottom: "20px", fontSize: "40px", marginTop: "20px"}}
+                                                                                onChange={(e) => settotal(e.target.value)}
+                                                                                value={total}
+                                                                                InputProps={{
+                                                                                     readOnly: true,
+                                                                                }}
+                                                                           />
+                                                                            <TextField
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Cash"
+                                                                                style={{ paddingBottom: "20px", fontSize: "40px" }}
+                                                                                onChange={handlecash}
+                                                                                value={cash}
+                                                                             
+                                                                           />
+                                                                             <TextField
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Change"
+                                                                                style={{ paddingBottom: "20px", fontSize: "40px", color: "#991f1f"}}
+                                                                                onChange={(e) => setchange(e.target.value)}
+                                                                                value={change}
+                                                                                InputProps={{
+                                                                                     readOnly: true,
+                                                                                }}
+                                                                           />
+
+                                                                      </DialogContent>
+                                                                      <DialogActions>
+                                                                           <Button onClick={handleSaveTransaction}>Save</Button>
+                                                                           <Button onClick={handleCloseSave} autoFocus>
                                                                                 Cancel
                                                                            </Button>
                                                                       </DialogActions>

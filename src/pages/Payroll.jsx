@@ -1037,6 +1037,7 @@ const Payroll = (props) => {
      const [summary_net, setsummary_net] = useState(0);
      const [summary_deductions, setsummary_deductions] = useState(0);
      let rowNumber = 0;
+
      const calculateGrossPay = () => {
           random();
           //NEW
@@ -1391,6 +1392,23 @@ const Payroll = (props) => {
           }, 1000)
 
      }
+     const [departmentTotals, setDepartmentTotals] = useState({});
+     useEffect(() => {
+          // Calculate the total net pay for each department
+          const calculatedDepartmentTotals = summ.reduce((totals, transaction) => {
+               const department = transaction.department || 'No Department';
+               const netPay = transaction.net || 0;
+               totals[department] = (totals[department] || 0) + netPay;
+               return totals;
+          }, {});
+          setDepartmentTotals(calculatedDepartmentTotals);
+
+          // // Calculate the grand total net pay for all departments
+          // const calculatedGrandTotalNetPay = Object.values(calculatedDepartmentTotals).reduce((total, netPay) => total + netPay, 0);
+          // setGrandTotalNetPay(calculatedGrandTotalNetPay);
+     }, [summ]);
+
+
      return (
 
           <div style={{ display: "flex" }}>
@@ -2034,38 +2052,6 @@ const Payroll = (props) => {
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Confirmation</h3>
                                                                  </div>
-                                                                 {/* {summ && summ.length > 0 ? (
-                                                                      <TableContainer style={{ width: "100%" }}>
-                                                                           <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
-                                                                                <TableHead>
-                                                                                     <TableRow>
-                                                                                          <TableCell>#</TableCell>
-                                                                                          <TableCell>Name</TableCell>
-                                                                                          <TableCell>Department</TableCell>
-                                                                                          <TableCell>Net Pay</TableCell>
-                                                                                     </TableRow>
-                                                                                </TableHead>
-                                                                                <TableBody>
-                                                                                     {summ
-                                                                                          .sort((a, b) => (a.department || '').localeCompare(b.department || '')) // Sort transactions by department (handling undefined/null)
-                                                                                          .map((transaction, index) => (
-                                                                                               <TableRow key={index}>
-                                                                                                    <TableCell>{index + 1}</TableCell>
-                                                                                                    <TableCell>{transaction.name}</TableCell>
-                                                                                                    <TableCell>{transaction.department}</TableCell>
-                                                                                                    <TableCell>{transaction.net}</TableCell>
-                                                                                               </TableRow>
-                                                                                          ))}
-                                                                                </TableBody>
-                                                                           </Table>
-                                                                      </TableContainer>
-                                                                 ) : (
-                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "180px", alignItems: "center", flexDirection: "column" }}>
-                                                                           <p>No transaction on selected date</p>
-                                                                      </div>
-                                                                 )} */}
-
-
                                                                  {summ && summ.length > 0 ? (
 
                                                                       <TableContainer style={{ width: "100%" }}>
@@ -2132,8 +2118,10 @@ const Payroll = (props) => {
                                                                       </div>
                                                                  )}
 
+
                                                             </div>
-                                                            <div style={{ width: "100%" }}>
+
+                                                            {/* <div style={{ width: "100%" }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Total</h3>
                                                                  </div>
@@ -2145,6 +2133,35 @@ const Payroll = (props) => {
                                                                                      maximumFractionDigits: 2
                                                                                 })}</TableCell></TableRow>
 
+                                                                           </TableBody>
+                                                                      </Table>
+                                                                 </TableContainer>
+                                                            </div> */}
+                                                            <div style={{ width: "100%" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Total</h3>
+                                                                 </div>
+                                                                 <TableContainer style={{ marginBottom: "20px" }}>
+                                                                      <Table aria-label="simple table">
+                                                                           <TableBody>
+                                                                                {Object.entries(departmentTotals).map(([department, total]) => (
+                                                                                     <TableRow key={department}>
+                                                                                          <TableCell sx={{ width: 300 }}>{department} Total Net Pay</TableCell>
+                                                                                          <TableCell align='right'>
+                                                                                               {total.toLocaleString(undefined, {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2
+                                                                                               })}
+                                                                                          </TableCell>
+                                                                                     </TableRow>
+                                                                                ))}
+                                                                                <TableRow>
+                                                                                     <TableCell sx={{ width: 300 }} style={{fontWeight: "600"}}>Grand Total Net Pay</TableCell>
+                                                                                     <TableCell align='right' style={{fontWeight: "600"}}>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                          minimumFractionDigits: 2,
+                                                                                          maximumFractionDigits: 2
+                                                                                     })}</TableCell>
+                                                                                </TableRow>
                                                                            </TableBody>
                                                                       </Table>
                                                                  </TableContainer>

@@ -22,6 +22,7 @@ import Additionals from './Additionals'
 import Member from './Member'
 import MemberIndividual from './MemberIndividual'
 import Reports from './Reports'
+import Customer from './Customer'
 
 
 /**Styled Components */
@@ -33,7 +34,7 @@ const Container = styled.div`
 
 const Home = () => {
     const { user } = useAuthContext()
-    
+
 
     return (
 
@@ -93,6 +94,10 @@ const Home = () => {
                     <Route
                         path="/employee/salary"
                         element={user ? <MySalary title="My Salary" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
+                    />
+                    <Route
+                        path="/customer"
+                        element={user ? <Customer title="Customers" user="User" /> : <Navigate to="/" title="Dashboard" user="User" />}
                     />
                     <Route
                         path="/product"
