@@ -113,7 +113,7 @@ const Customer = (props) => {
 
      /**DIALOG */
      const handleOpenAdd = () => {
-          handleCustomerId()
+
           setOpenAdd(true);
           setcustomer_id('');
           setcustomer_name('')
@@ -300,6 +300,7 @@ const Customer = (props) => {
      //
      const handleRowClick = (params) => {
           setId(params.row._id);
+          setcustomer_id(params.row.customer_i)
           setcustomer_name(params.row.customer_name);
           setcustomer_address(params.row.customer_address);
           setcustomer_contact(params.row.customer_contact);
@@ -418,7 +419,7 @@ const Customer = (props) => {
                                              </DialogTitle>
                                              <DialogContent style={{ height: '600px', paddingTop: '20px' }}>
                                                   <FormContainer>
-                                                  <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Customer ID"
@@ -438,7 +439,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_name(e.target.value)}
                                                             value={customer_name}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Address"
@@ -447,7 +448,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_address(e.target.value)}
                                                             value={customer_address}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Contact Number"
@@ -456,7 +457,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_contact(e.target.value)}
                                                             value={customer_contact}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Email Address"
@@ -487,15 +488,24 @@ const Customer = (props) => {
                                              </DialogTitle>
                                              <DialogContent style={{ height: '600px', paddingTop: '20px' }}>
                                                   <FormContainer>
-                                                       <TextField
-                                                            required
-                                                            id="outlined-required"
-                                                            label="Customer ID"
-                                                            style={{ marginBottom: "20px" }}
-                                                            fullWidth
-                                                            onChange={(e) => setcustomer_id(e.target.value)}
-                                                            value={customer_id}
-                                                       />
+                                                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Customer ID"
+                                                                 style={{ marginRight: "10px" }}
+                                                                 fullWidth
+                                                                 value={customer_id}
+                                                                 InputProps={{
+                                                                      readOnly: true,
+                                                                 }}
+                                                            />
+                                                            <ThemeProvider theme={theme}>
+                                                                 <Button style={{ padding: "15px" }} variant="contained" color="green" onClick={handleCustomerId}>
+                                                                      Generate
+                                                                 </Button>
+                                                            </ThemeProvider>
+                                                       </div>
                                                        <TextField
                                                             required
                                                             id="outlined-required"
@@ -505,7 +515,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_name(e.target.value)}
                                                             value={customer_name}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Address"
@@ -514,7 +524,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_address(e.target.value)}
                                                             value={customer_address}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Contact Number"
@@ -523,7 +533,7 @@ const Customer = (props) => {
                                                             onChange={(e) => setcustomer_contact(e.target.value)}
                                                             value={customer_contact}
                                                        />
-                                                           <TextField
+                                                       <TextField
                                                             required
                                                             id="outlined-required"
                                                             label="Email Address"
