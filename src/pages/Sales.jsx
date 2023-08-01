@@ -17,7 +17,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAuthContext } from '../hooks/useAuthContext'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Alert } from '@mui/material';
+import { Alert, TableSortLabel } from '@mui/material';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { PaddingRounded } from '@mui/icons-material';
 import SalesPrinter from '../components/SalesPrinter';
@@ -37,6 +37,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -92,7 +93,6 @@ const Card = styled.div`
     border-radius: 20px;
     padding: 30px;
     justify-content: space-between;
-    overflow: scroll;
 `
 const FormContainer = styled.div`
      display: flex;
@@ -114,6 +114,14 @@ const SearchContainer = styled.div`
 
 
 const Sales = (props) => {
+
+
+
+
+
+
+
+
      const [tabvalue, settabvalue] = React.useState('1');
      const { user } = useAuthContext()
      const [daily_date, setdaily_date] = useState(() => {
@@ -155,6 +163,7 @@ const Sales = (props) => {
      const handleYearChange = (e) => {
           setselectedyear(e.target.value)
      }
+
 
      const appRef = useRef(null);
      const captureScreenshot = async () => {
@@ -200,8 +209,8 @@ const Sales = (props) => {
      //           });
      //      });
      // };
-
      const [transactionid, settransactionid] = useState("")
+     const [customername, setcustomername] = useState("");
      const [sales, setsales] = useState([])
      useEffect(() => {
           const fetchSales = async () => {
@@ -215,8 +224,17 @@ const Sales = (props) => {
                if (response.ok) {
                     const filteredData = json.filter(item => {
                          const datetime = item.pos_date
+                         const customer = item.pos_customer_name
                          const date = datetime.split(' ')[0];
-                         return date == daily_date
+
+                         //in sql this is like WHERE
+                         if (customername == "") {
+                              return date === daily_date
+                         }
+                         else {
+                              return date === daily_date && customer === customername
+                         }
+
                     });
 
                     setsales(filteredData)
@@ -224,9 +242,36 @@ const Sales = (props) => {
           }
           if (user) {
                fetchSales();
+               logger()
           }
 
-     }, [user, daily_date])
+
+     }, [user, daily_date, customername])
+
+     //alltime
+     const [allsales, setallsales] = useState([])
+     useEffect(() => {
+          const fetchSales = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+               {
+                    setallsales(json)
+               }
+          }
+          if (user) {
+               fetchSales();
+          }
+
+
+     }, [user])
+
+     const logger = () => {
+          console.log("****************", sales)
+     }
 
      const [monthlysales, setmonthlysales] = useState([])
 
@@ -242,12 +287,19 @@ const Sales = (props) => {
                if (response.ok) {
 
                     const filteredData = json.filter(item => {
+
                          const datetime = item.pos_date //1-1-2023 09:30
                          const date = datetime.split(' ')[0]; //1-1-2023
                          const month = date.slice(0, 2) //01
                          const year = date.slice(6, 10) //2023
+                         const customer = item.pos_customer_name
+                         if (customername === "") {
+                              return month === selectedmonth && year === selectedyear
+                         }
+                         else {
+                              return month === selectedmonth && year === selectedyear && customer === customername
+                         }
 
-                         return month === selectedmonth && year === selectedyear;
 
                     });
                     setmonthlysales(filteredData) //confirmed that has a value
@@ -257,7 +309,7 @@ const Sales = (props) => {
                fetchSales();
           }
 
-     }, [user, selectedmonth, selectedyear])
+     }, [user, selectedmonth, selectedyear, customername])
 
 
      // const handleSelectedMonthData = () => {
@@ -318,9 +370,27 @@ const Sales = (props) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
      const [monthlygross, setmonthlygross] = useState(0);
      const [monthlynet, setmonthlynet] = useState(0);
      const [monthlycost, setmonthlycost] = useState(0);
+     const [productname, setproductname] = useState("");
 
      useEffect(() => {
           let pos_total = 0;
@@ -441,6 +511,98 @@ const Sales = (props) => {
           settabvalue(newValue);
      };
 
+     const [customers, setcustomers] = useState([])
+     useEffect(() => {
+          const fetchEmp = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/customer', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+
+               if (response.ok) {
+                    setcustomers(json)
+               }
+          }
+          if (user) {
+
+               fetchEmp();
+          }
+     }, [user])
+
+
+     const itemPurchaseMap = {};
+
+     // Loop through the data and populate the itemPurchaseMap
+     // allsales.forEach((sale) => {
+     //      sale.pos_items.forEach((item) => {
+     //           if (item.product_name in itemPurchaseMap) {
+     //                itemPurchaseMap[item.product_name]++;
+     //           } else {
+     //                itemPurchaseMap[item.product_name] = 1;
+     //           }
+     //      });
+     // });
+
+     allsales.forEach((sale) => {
+          sale.pos_items.forEach((item) => {
+               if (item.product_name in itemPurchaseMap) {
+                    itemPurchaseMap[item.product_name]++;
+               } else {
+                    itemPurchaseMap[item.product_name] = 1;
+               }
+          });
+     });
+
+     const sortedItemPurchaseMap = Object.entries(itemPurchaseMap).sort((a, b) => a[0].localeCompare(b[0]));
+
+
+     const [products, setproducts] = useState([]);
+     useEffect(() => {
+          const fetchProduct = async () => {
+               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+
+               if (response.ok) {
+                    setproducts(json)
+               }
+          }
+          if (user) {
+               fetchProduct();
+          }
+
+     }, [user])
+
+
+
+
+
+
+     const [customernameonly, setcustomernameonly] = useState("");
+     const [customerid, setcustomerid] = useState("");
+     const handleName = (event) => {
+          const name = event.target.value;
+          const id = name.split(" ")[0];
+          const nameonly = name.split(" ")[2];
+          setcustomername(name)
+          setcustomernameonly(nameonly)
+          setcustomerid(id)
+     }
+     const handleProduct = (event) => {
+          const product = event.target.value;
+          setproductname(product)
+
+     }
+
+
+
+
+
      return (
           <div style={{ display: "flex" }}>
                <Navbar></Navbar>
@@ -454,22 +616,40 @@ const Sales = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Daily" value="1" />
-                                                       <Tab label="By Product" value="2" onClick={handleGoToByProduct} />
                                                        <Tab label="Monthly Sales" value="3" onClick={handleGoToMonthlySales} />
+                                                       <Tab label="By Product" value="2" onClick={handleGoToByProduct} />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
                                                   <div>
-                                                       <div style={{ display: "flex", width: "200px" }}>
-                                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                                 <DatePicker
-                                                                      label="Choose a day"
-                                                                      value={daily_date}
-                                                                      inputFormat="MM-DD-YYYY"
-                                                                      onChange={convertDateToStringDailyDate}
-                                                                      renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginRight: "20px" }}{...params} error={false} />}
-                                                                 />
-                                                            </LocalizationProvider>
+                                                       <div style={{ display: "flex", width: "100%" }}>
+                                                            <div style={{ marginRight: "10px" }}>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Choose a day"
+                                                                           value={daily_date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToStringDailyDate}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px", marginRight: "20px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                            </div>
+
+                                                            <Autocomplete
+                                                                 value={customername}
+                                                                 style={{ marginRight: "10px" }}
+                                                                 onSelect={handleName}
+                                                                 options={customers.map((data) => data.customer_id + " - " + data.customer_name)}
+                                                                 renderInput={(params) => (
+                                                                      <TextField
+                                                                           {...params}
+                                                                           required
+                                                                           label="Search Customer"
+                                                                           fullWidth
+                                                                           style={{ paddingBottom: "20px", width: "500px" }}
+                                                                      />
+                                                                 )}
+                                                            />
 
                                                        </div>
                                                        {/* <div style={{ height: 475, width: '100%', borderRight: '1px solid #ccc' }}>
@@ -483,8 +663,8 @@ const Sales = (props) => {
                                                                  onRowClick={handleRowClick}
                                                             />
                                                        </div> */}
-                                                       <div style={{ backgroundColor: "white", padding: "0 30px 30px 0px", width: "100%", height: "500px", overflow: "scroll" }}>
-                                                            <div>
+                                                       <div style={{ backgroundColor: "white", padding: "0 30px 30px 0px", width: "1300px", height: "500px", overflow: "scroll" }}>
+                                                            <div style={{ width: "1500px" }}>
                                                                  {sales && sales.length > 0 ? (
                                                                       sales.map((sales, index) => (
                                                                            <SalesList key={index}>
@@ -494,7 +674,8 @@ const Sales = (props) => {
                                                                                      <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
                                                                                           <TableHead>
                                                                                                <TableCell >Datetime</TableCell>
-                                                                                               <TableCell >TRANS ID</TableCell>
+                                                                                               <TableCell >Trans ID</TableCell>
+                                                                                               <TableCell >Customer</TableCell>
                                                                                                <TableCell >Cashier</TableCell>
                                                                                                <TableCell >Total</TableCell>
                                                                                                <TableCell >Items</TableCell>
@@ -503,6 +684,7 @@ const Sales = (props) => {
                                                                                                <TableRow>
                                                                                                     <TableCell >{sales.pos_date}</TableCell>
                                                                                                     <TableCell >{sales.pos_transaction_id}</TableCell>
+                                                                                                    <TableCell >{sales.pos_customer_name}</TableCell>
                                                                                                     <TableCell >{sales.pos_user}</TableCell>
                                                                                                     <TableCell >{sales.pos_total}</TableCell>
                                                                                                     <TableCell>
@@ -547,8 +729,8 @@ const Sales = (props) => {
 
 
                                                                  {<div style={{ display: "flex", justifyContent: "right" }}>
-                                                                      <label style={{ marginRight: "30px" }}>Total Actual Cost: {cost ? cost.toLocaleString() : 0}</label>
                                                                       <label style={{ marginRight: "30px" }}>Total Sales: {gross ? gross.toLocaleString() : 0}</label>
+                                                                      <label style={{ marginRight: "30px" }}>Total Actual Cost: {cost ? cost.toLocaleString() : 0}</label>
                                                                       <label>Profit: {net ? net.toLocaleString() : 0}</label>
                                                                  </div>}
                                                             </div>
@@ -565,11 +747,99 @@ const Sales = (props) => {
                                                   </div>
                                              </TabPanel>
                                              <TabPanel value="2">
+                                                  {/* <Autocomplete
+                                                       value={productname}
+                                                       style={{ marginRight: "10px" }}
+                                                       onSelect={handleProduct}
+                                                       options={products.map((data) => data.product_name)}
+                                                       renderInput={(params) => (
+                                                            <TextField
+                                                                 {...params}
+                                                                 required
+                                                                 label="Search Product"
+                                                                 fullWidth
+                                                                 style={{ paddingBottom: "20px", width: "400px" }}
+                                                            />
+                                                       )}
+                                                  /> */}
+                                                  {/* <div>
+                                                       <TableContainer>
+                                                            <Table>
+                                                                 <TableHead>
+                                                                      <TableRow>
+                                                                           <TableCell>Purchase times</TableCell>
+                                                                           <TableCell>Item</TableCell>
+                                                                           <TableCell>Total</TableCell>
+                                                                      </TableRow>
+                                                                 </TableHead>
+                                                                 <TableBody>
+                                                                      {Object.entries(itemPurchaseMap).map(([itemName, purchaseTimes]) => (
+                                                                           <TableRow key={itemName}>
+                                                                                <TableCell>{purchaseTimes}</TableCell>
+                                                                                <TableCell>{itemName}</TableCell>
+                                                                                <TableCell>
+                                                                                     {
+                                                                                          // Calculate the total amount for the specific item
+                                                                                          allsales.reduce((acc, sale) => {
+                                                                                               return (
+                                                                                                    acc +
+                                                                                                    sale.pos_items
+                                                                                                         .filter((item) => item.product_name === itemName)
+                                                                                                         .reduce((itemAcc, item) => itemAcc + item.product_total, 0)
+                                                                                               );
+                                                                                          }, 0)
+                                                                                     }
+                                                                                </TableCell>
+                                                                           </TableRow>
+                                                                      ))}
+                                                                 </TableBody>
+                                                            </Table>
+                                                       </TableContainer>
+                                                  </div> */}
+
+                                                  <div>
+                                                       <TableContainer>
+                                                            <Table>
+                                                                 <TableHead>
+                                                                      <TableRow>
+                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Product</TableCell>
+                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Purchase times</TableCell>
+                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
+                                                                      </TableRow>
+                                                                 </TableHead>
+                                                                 <TableBody>
+                                                                      {sortedItemPurchaseMap.map(([itemName, purchaseTimes]) => (
+                                                                           <TableRow key={itemName}>
+                                                                                <TableCell>{itemName}</TableCell>
+                                                                                <TableCell>{purchaseTimes}</TableCell>
+                                                                                <TableCell>
+                                                                                     {
+                                                                                          // Calculate the total amount for the specific item
+                                                                                          allsales.reduce((acc, sale) => {
+                                                                                               return (
+                                                                                                    acc +
+                                                                                                    sale.pos_items
+                                                                                                         .filter((item) => item.product_name === itemName)
+                                                                                                         .reduce((itemAcc, item) => itemAcc + item.product_total, 0)
+                                                                                               );
+                                                                                          }, 0)
+                                                                                     }
+                                                                                </TableCell>
+                                                                           </TableRow>
+                                                                      ))}
+                                                                 </TableBody>
+                                                            </Table>
+                                                       </TableContainer>
+                                                  </div>
+
+
+
 
                                              </TabPanel>
                                              <TabPanel value="3">
                                                   <div>
-                                                       <div style={{ display: "flex", width: "400px" }}>
+                                                       <div style={{ display: "flex", width: "100%" }}>
+
                                                             <TextField
                                                                  required
                                                                  id="outlined-required"
@@ -615,10 +885,26 @@ const Sales = (props) => {
                                                                  <MenuItem value={'2032'}>2032</MenuItem>
                                                             </TextField>
 
+                                                            <Autocomplete
+                                                                 value={customername}
+                                                                 style={{ marginRight: "10px" }}
+                                                                 onSelect={handleName}
+                                                                 options={customers.map((data) => data.customer_id + " - " + data.customer_name)}
+                                                                 renderInput={(params) => (
+                                                                      <TextField
+                                                                           {...params}
+                                                                           required
+                                                                           label="Search Customer"
+                                                                           fullWidth
+                                                                           style={{ paddingBottom: "20px", width: "400px" }}
+                                                                      />
+                                                                 )}
+                                                            />
+
                                                        </div>
 
-                                                       <div ref={appRef} style={{ backgroundColor: "white", padding: "0 30px 30px 0px", width: "100%", height: "500px", overflow: "scroll" }}>
-                                                            <div>
+                                                       <div ref={appRef} style={{ backgroundColor: "white", padding: "0 30px 30px 0px", width: "1300px", height: "500px", overflow: "scroll" }}>
+                                                            <div style={{ width: "1500px" }}>
                                                                  {/* {monthlysales && monthlysales.length > 0 ? (
                                                                       monthlysales && monthlysales.map((item, index) => (
                                                                            <SalesList key={index}>
@@ -653,7 +939,7 @@ const Sales = (props) => {
                                                                                                               </thead>
                                                                                                               <tbody>
                                                                                                                    {monthlysales && Array.isArray(monthlysales.pos_items) && monthlysales.pos_items.map((item, index) => (
-                                                                                                                        
+
                                                                                                                         <tr key={index}>
                                                                                                                              <td>{item.product_name}</td>
                                                                                                                              <td>{item.product_quantity}</td>
@@ -684,7 +970,8 @@ const Sales = (props) => {
                                                                                      <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
                                                                                           <TableHead>
                                                                                                <TableCell>Datetime</TableCell>
-                                                                                               <TableCell>TRANS ID</TableCell>
+                                                                                               <TableCell>Trans ID</TableCell>
+                                                                                               <TableCell>Customer</TableCell>
                                                                                                <TableCell>Cashier</TableCell>
                                                                                                <TableCell>Total</TableCell>
                                                                                                <TableCell>Items</TableCell>
@@ -693,6 +980,7 @@ const Sales = (props) => {
                                                                                                <TableRow key={transaction._id}>
                                                                                                     <TableCell>{transaction.pos_date}</TableCell>
                                                                                                     <TableCell>{transaction.pos_transaction_id}</TableCell>
+                                                                                                    <TableCell>{transaction.pos_customer_name}</TableCell>
                                                                                                     <TableCell>{transaction.pos_user}</TableCell>
                                                                                                     <TableCell>{transaction.pos_total}</TableCell>
                                                                                                     <TableCell>
@@ -735,8 +1023,8 @@ const Sales = (props) => {
 
 
                                                                  {<div style={{ display: "flex", justifyContent: "right" }}>
-                                                                      <label style={{ marginRight: "30px" }}>Total Actual Cost: {monthlycost ? monthlycost.toLocaleString() : 0}</label>
                                                                       <label style={{ marginRight: "30px" }}>Total Sales: {monthlygross ? monthlygross.toLocaleString() : 0}</label>
+                                                                      <label style={{ marginRight: "30px" }}>Total Actual Cost: {monthlycost ? monthlycost.toLocaleString() : 0}</label>
                                                                       <label>Profit: {monthlynet ? monthlynet.toLocaleString() : 0}</label>
                                                                  </div>}
                                                             </div>
