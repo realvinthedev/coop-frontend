@@ -39,6 +39,7 @@ import html2canvas from 'html2canvas';
 import { useRef } from 'react';
 
 
+
 const theme = createTheme({
      palette: {
           neutral: {
@@ -91,7 +92,8 @@ const Card = styled.div`
     border-radius: 20px;
     padding: 30px;
     justify-content: space-between;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
 `
 const FormContainer = styled.div`
      display: flex;
@@ -166,11 +168,39 @@ const columns = [
 const savings_columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'particulars', headerName: 'Particulars', width: 300 },
-     { field: 'type', headerName: 'Type', width: 200 },
-     { field: 'amount', headerName: 'Amount', width: 200 },
+     { field: 'membership_fee', headerName: 'Membership Fee', width: 120, valueFormatter: zeroValueFormatter, align: "right"},
+     { field: 'share_capital_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right" },
+     { field: 'share_capital_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'share_capital_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+
+     { field: 'coop_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'coop_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'coop_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+
+     { field: 'special_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'special_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'special_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+
+     { field: 'kaya_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'kaya_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'kaya_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+
+     { field: 'karamay_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'karamay_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'karamay_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+
+     { field: 'others_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'others_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'others_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+
      { field: 'reference_document', headerName: 'Reference Document', width: 200 },
      { field: 'remarks', headerName: 'Remarks', width: 300 },
 ];
+
+function zeroValueFormatter(params) {
+     const value = params.value;
+     return value === 0 ? "" : value;
+}
 
 
 
@@ -180,6 +210,13 @@ const savings_columns = [
 
 
 const Member = (props) => {
+
+     const CustomCell = ({ value }) => (
+          <div style={{ border: '1px solid #ccc', padding: '4px' }}>{value}</div>
+        );
+   
+     
+
 
      /**POST REQUESTS */
 
@@ -212,7 +249,7 @@ const Member = (props) => {
      const [coop_savings_account_number, setcoop_savings_account_number] = useState('')
      const [kaya_atm_card_number, setkaya_atm_card_number] = useState('')
      const [kaya_atm_savings_account_number, setkaya_atm_savings_account_number] = useState('')
-     const [membership_fee, setmembership_fee] = useState('')
+
      const [share_capital, setshare_capital] = useState('')
      const [coop_savings, setcoop_savings] = useState('')
      const [loan_balance, setloan_balance] = useState('')
@@ -236,13 +273,52 @@ const Member = (props) => {
      const [openUpdate, setOpenUpdate] = useState(false);
      const [searchcolumn, setsearchcolumn] = useState('member_id')
 
+
+
+
+
      const [savingsid, setsavingsid] = useState('')
      const [date, setdate] = useState('')
-     const [type, settype] = useState('')
      const [particulars, setparticulars] = useState('')
-     const [amount, setamount] = useState(0)
+
+     const [membership_fee, setmembership_fee] = useState(0)
+     const [share_capital_debit, setshare_capital_debit] = useState(0)
+     const [share_capital_credit, setshare_capital_credit] = useState(0)
+     const [share_capital_balance, setshare_capital_balance] = useState(0)
+
+     const [coop_savings_debit, setcoop_savings_debit] = useState(0)
+     const [coop_savings_credit, setcoop_savings_credit] = useState(0)
+     const [coop_savings_balance, setcoop_savings_balance] = useState(0)
+
+     const [special_savings_debit, setspecial_savings_debit] = useState(0)
+     const [special_savings_credit, setspecial_savings_credit] = useState(0)
+     const [special_savings_balance, setspecial_savings_balance] = useState(0)
+
+
+     const [kaya_savings_debit, setkaya_savings_debit] = useState(0)
+     const [kaya_savings_credit, setkaya_savings_credit] = useState(0)
+     const [kaya_savings_balance, setkaya_savings_balance] = useState(0)
+
+
+     const [karamay_savings_debit, setkaramay_savings_debit] = useState(0)
+     const [karamay_savings_credit, setkaramay_savings_credit] = useState(0)
+     const [karamay_savings_balance, setkaramay_savings_balance] = useState(0)
+
+     const [others_debit, setothers_debit] = useState(0)
+     const [others_credit, setothers_credit] = useState(0)
+     const [others_balance, setothers_balance] = useState(0)
+
      const [reference_document, setreference_document] = useState('')
      const [remarks2, setremarks2] = useState('')
+
+
+
+
+
+
+
+
+
      const [openAddSavings, setopenAddSavings] = useState(false);
      const [openUpdateSavings, setopenUpdateSavings] = useState(false);
      const [openDeleteSavings, setopenDeleteSavings] = useState(false);
@@ -326,6 +402,29 @@ const Member = (props) => {
                const json = await response.json()
                if (response.ok) {
                     setsavings(json)
+                    const share_balance = json.reduce((acc, entry) => acc + entry.share_capital_credit, 0);
+                    const share_less = json.reduce((acc, entry) => acc + entry.share_capital_debit, 0);
+                    setshare_capital_balance(parseFloat(share_balance) - parseFloat(share_less))
+
+                    const coop_balance = json.reduce((acc, entry) => acc + entry.coop_savings_credit, 0);
+                    const coop_less = json.reduce((acc, entry) => acc + entry.coop_savings_debit, 0);
+                    setcoop_savings_balance(parseFloat(coop_balance) - parseFloat(coop_less))
+
+                    const special_balance = json.reduce((acc, entry) => acc + entry.special_savings_credit, 0);
+                    const special_less = json.reduce((acc, entry) => acc + entry.special_savings_debit, 0);
+                    setspecial_savings_balance(parseFloat(special_balance) - parseFloat(special_less))
+
+                    const kaya_balance = json.reduce((acc, entry) => acc + entry.kaya_savings_credit, 0);
+                    const kaya_less = json.reduce((acc, entry) => acc + entry.kaya_savings_debit, 0);
+                    setkaya_savings_balance(parseFloat(kaya_balance) - parseFloat(kaya_less))
+
+                    const karamay_balance = json.reduce((acc, entry) => acc + entry.karamay_savings_credit, 0);
+                    const karamay_less = json.reduce((acc, entry) => acc + entry.karamay_savings_debit, 0);
+                    setkaramay_savings_balance(parseFloat(karamay_balance) - parseFloat(karamay_less))
+
+                    const others_balance = json.reduce((acc, entry) => acc + entry.others_credit, 0);
+                    const others_less = json.reduce((acc, entry) => acc + entry.others_debit, 0);
+                    setothers_balance(parseFloat(others_balance) - parseFloat(others_less))
                }
           }
           if (user) {
@@ -333,6 +432,13 @@ const Member = (props) => {
           }
      }, [user, refresher])
 
+     const [master_membership, setmaster_membership] = useState(0)
+     const [master_share, setmaster_share] = useState(0)
+     const [master_coop, setmaster_coop] = useState(0)
+     const [master_special, setmaster_special] = useState(0)
+     const [master_kaya, setmaster_kaya] = useState(0)
+     const [master_karamay, setmaster_karamay] = useState(0)
+     const [master_others, setmaster_others] = useState(0)
      useEffect(() => {
           const fetchSavings = async () => {
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
@@ -342,7 +448,37 @@ const Member = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
+
                     setsavings(json)
+
+                    const membership = json.reduce((acc, entry) => acc + entry.membership_fee, 0);
+                    setmaster_membership(parseFloat(membership))
+
+
+                    const share_balance = json.reduce((acc, entry) => acc + entry.share_capital_credit, 0);
+                    const share_less = json.reduce((acc, entry) => acc + entry.share_capital_debit, 0);
+                    setmaster_share(parseFloat(share_balance) - parseFloat(share_less))
+
+                    const coop_balance = json.reduce((acc, entry) => acc + entry.coop_savings_credit, 0);
+                    const coop_less = json.reduce((acc, entry) => acc + entry.coop_savings_debit, 0);
+                    setmaster_coop(parseFloat(coop_balance) - parseFloat(coop_less))
+
+                    const special_balance = json.reduce((acc, entry) => acc + entry.special_savings_credit, 0);
+                    const special_less = json.reduce((acc, entry) => acc + entry.special_savings_debit, 0);
+                    setmaster_special(parseFloat(special_balance) - parseFloat(special_less))
+
+                    const kaya_balance = json.reduce((acc, entry) => acc + entry.kaya_savings_credit, 0);
+                    const kaya_less = json.reduce((acc, entry) => acc + entry.kaya_savings_debit, 0);
+                    setmaster_kaya(parseFloat(kaya_balance) - parseFloat(kaya_less))
+
+                    const karamay_balance = json.reduce((acc, entry) => acc + entry.karamay_savings_credit, 0);
+                    const karamay_less = json.reduce((acc, entry) => acc + entry.karamay_savings_debit, 0);
+                    setmaster_karamay(parseFloat(karamay_balance) - parseFloat(karamay_less))
+
+                    const others_balance = json.reduce((acc, entry) => acc + entry.others_credit, 0);
+                    const others_less = json.reduce((acc, entry) => acc + entry.others_debit, 0);
+                    setmaster_others(parseFloat(others_balance) - parseFloat(others_less))
+
                }
           }
           if (user) {
@@ -352,240 +488,290 @@ const Member = (props) => {
 
 
 
-     useEffect(() => {
 
-          let creditTotal_membershipfee = 0;
-          let debitTotal_membershipfee = 0;
+     // useEffect(() => {
 
-          let creditTotal_capital = 0;
-          let debitTotal_capital = 0;
+     //      let creditTotal_membershipfee = 0;
+     //      let debitTotal_membershipfee = 0;
 
-          let creditTotal_savings = 0;
-          let debitTotal_savings = 0;
+     //      let creditTotal_capital = 0;
+     //      let debitTotal_capital = 0;
 
-          let creditTotal_loans = 0;
-          let debitTotal_loans = 0;
+     //      let creditTotal_savings = 0;
+     //      let debitTotal_savings = 0;
 
-          let creditTotal_kaya = 0;
-          let debitTotal_kaya = 0;
+     //      let creditTotal_loans = 0;
+     //      let debitTotal_loans = 0;
 
-          let creditTotal_housingequity = 0;
-          let debitTotal_housingequity = 0;
+     //      let creditTotal_kaya = 0;
+     //      let debitTotal_kaya = 0;
 
-          let creditTotal_others = 0;
-          let debitTotal_others = 0;
+     //      let creditTotal_housingequity = 0;
+     //      let debitTotal_housingequity = 0;
 
-          savings.forEach(saving => {
-               if (saving.particulars === "MEMBERSHIP FEE") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_membershipfee += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_membershipfee += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "CAPITAL") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_capital += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_capital += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "SAVINGS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_savings += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_savings += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "LOANS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_loans += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_loans += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "SPECIAL SAVINGS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_kaya += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_kaya += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "HOUSING EQUITY") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_housingequity += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_housingequity += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "OTHERS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_others += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_others += parseFloat(saving.amount)
-                    }
-               }
-          })
+     //      let creditTotal_others = 0;
+     //      let debitTotal_others = 0;
 
-          let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
+     //      savings.forEach(saving => {
+     //           if (saving.particulars === "MEMBERSHIP FEE") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_membershipfee += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_membershipfee += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "CAPITAL") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_capital += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_capital += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "SAVINGS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_savings += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_savings += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "LOANS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_loans += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_loans += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "SPECIAL SAVINGS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_kaya += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_kaya += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "HOUSING EQUITY") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_housingequity += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_housingequity += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "OTHERS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_others += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_others += parseFloat(saving.amount)
+     //                }
+     //           }
+     //      })
 
-          setcredit_part_membershipfee(totalmembership)
-          //setdebit_part_membershipfee(totalmembership)
+     //      let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
 
-          let totalcaptial = creditTotal_capital - debitTotal_capital
-          setcredit_part_captial(totalcaptial)
-          //setdebit_part_captial(debitTotal_capital)
+     //      setcredit_part_membershipfee(totalmembership)
+     //      //setdebit_part_membershipfee(totalmembership)
 
-          let totalsavings = creditTotal_savings - debitTotal_savings
-          setcredit_part_savings(totalsavings)
-          //setdebit_part_savings(debitTotal_savings)
+     //      let totalcaptial = creditTotal_capital - debitTotal_capital
+     //      setcredit_part_captial(totalcaptial)
+     //      //setdebit_part_captial(debitTotal_capital)
 
-          let totalkaya = creditTotal_kaya - debitTotal_kaya
-          setcredit_part_kayasavings(totalkaya)
-          //setdebit_part_kayasavings(debitTotal_kaya)
+     //      let totalsavings = creditTotal_savings - debitTotal_savings
+     //      setcredit_part_savings(totalsavings)
+     //      //setdebit_part_savings(debitTotal_savings)
 
-          let totalloans = debitTotal_loans - creditTotal_loans
-          setcredit_part_loans(totalloans)
-          //setdebit_part_loans(debitTotal_loans)
+     //      let totalkaya = creditTotal_kaya - debitTotal_kaya
+     //      setcredit_part_kayasavings(totalkaya)
+     //      //setdebit_part_kayasavings(debitTotal_kaya)
 
-          let totalhousing = creditTotal_housingequity - debitTotal_housingequity
-          setcredit_part_housingeuity(totalhousing)
+     //      let totalloans = debitTotal_loans - creditTotal_loans
+     //      setcredit_part_loans(totalloans)
+     //      //setdebit_part_loans(debitTotal_loans)
 
-          let totalothers = creditTotal_others - debitTotal_others
-          setcredit_part_others(totalothers)
-          //setdebit_part_others(debitTotal_others)
+     //      let totalhousing = creditTotal_housingequity - debitTotal_housingequity
+     //      setcredit_part_housingeuity(totalhousing)
 
-     }, [member_id, savings])
+     //      let totalothers = creditTotal_others - debitTotal_others
+     //      setcredit_part_others(totalothers)
+     //      //setdebit_part_others(debitTotal_others)
 
-     useEffect(() => {
+     // }, [member_id, savings])
 
-          let creditTotal_membershipfee = 0;
-          let debitTotal_membershipfee = 0;
+     // useEffect(() => {
 
-          let creditTotal_capital = 0;
-          let debitTotal_capital = 0;
+     //      let creditTotal_membershipfee = 0;
+     //      let debitTotal_membershipfee = 0;
 
-          let creditTotal_savings = 0;
-          let debitTotal_savings = 0;
+     //      let creditTotal_capital = 0;
+     //      let debitTotal_capital = 0;
 
-          let creditTotal_loans = 0;
-          let debitTotal_loans = 0;
+     //      let creditTotal_savings = 0;
+     //      let debitTotal_savings = 0;
 
-          let creditTotal_kaya = 0;
-          let debitTotal_kaya = 0;
+     //      let creditTotal_loans = 0;
+     //      let debitTotal_loans = 0;
 
-          let creditTotal_housingequity = 0;
-          let debitTotal_housingequity = 0;
+     //      let creditTotal_kaya = 0;
+     //      let debitTotal_kaya = 0;
 
-          let creditTotal_others = 0;
-          let debitTotal_others = 0;
+     //      let creditTotal_housingequity = 0;
+     //      let debitTotal_housingequity = 0;
 
-          savings.forEach(saving => {
-               if (saving.particulars === "MEMBERSHIP FEE") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_membershipfee += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_membershipfee += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "CAPITAL") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_capital += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_capital += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "SAVINGS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_savings += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_savings += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "LOANS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_loans += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_loans += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "SPECIAL SAVINGS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_kaya += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_kaya += parseFloat(saving.amount)
-                    }
-               }
-               else if (saving.particulars === "HOUSING EQUITY") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_housingequity += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_housingequity += parseFloat(saving.amount)
-                    }
-               }
+     //      let creditTotal_others = 0;
+     //      let debitTotal_others = 0;
 
-               else if (saving.particulars === "OTHERS") {
-                    if (saving.type === "CREDIT") {
-                         creditTotal_others += parseFloat(saving.amount)
-                    }
-                    else {
-                         debitTotal_others += parseFloat(saving.amount)
-                    }
-               }
-          })
+     //      savings.forEach(saving => {
+     //           if (saving.particulars === "MEMBERSHIP FEE") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_membershipfee += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_membershipfee += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "CAPITAL") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_capital += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_capital += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "SAVINGS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_savings += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_savings += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "LOANS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_loans += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_loans += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "SPECIAL SAVINGS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_kaya += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_kaya += parseFloat(saving.amount)
+     //                }
+     //           }
+     //           else if (saving.particulars === "HOUSING EQUITY") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_housingequity += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_housingequity += parseFloat(saving.amount)
+     //                }
+     //           }
 
-          let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
+     //           else if (saving.particulars === "OTHERS") {
+     //                if (saving.type === "CREDIT") {
+     //                     creditTotal_others += parseFloat(saving.amount)
+     //                }
+     //                else {
+     //                     debitTotal_others += parseFloat(saving.amount)
+     //                }
+     //           }
+     //      })
 
-          settotal_membershipfee(totalmembership)
-          //setdebit_part_membershipfee(totalmembership)
+     //      let totalmembership = creditTotal_membershipfee - debitTotal_membershipfee
 
-          let totalcaptial = creditTotal_capital - debitTotal_capital
-          settotal_captial(totalcaptial)
-          //setdebit_part_captial(debitTotal_capital)
+     //      settotal_membershipfee(totalmembership)
+     //      //setdebit_part_membershipfee(totalmembership)
 
-          let totalsavings = creditTotal_savings - debitTotal_savings
-          settotal_savings(totalsavings)
-          //setdebit_part_savings(debitTotal_savings)
+     //      let totalcaptial = creditTotal_capital - debitTotal_capital
+     //      settotal_captial(totalcaptial)
+     //      //setdebit_part_captial(debitTotal_capital)
 
-          let totalkaya = creditTotal_kaya - debitTotal_kaya
-          settotal_kayasavings(totalkaya)
-          //setdebit_part_kayasavings(debitTotal_kaya)
+     //      let totalsavings = creditTotal_savings - debitTotal_savings
+     //      settotal_savings(totalsavings)
+     //      //setdebit_part_savings(debitTotal_savings)
 
-          let totalloans = debitTotal_loans - creditTotal_loans
-          settotal_loans(totalloans)
-          //setdebit_part_loans(debitTotal_loans)
+     //      let totalkaya = creditTotal_kaya - debitTotal_kaya
+     //      settotal_kayasavings(totalkaya)
+     //      //setdebit_part_kayasavings(debitTotal_kaya)
 
-          let totalhousing = creditTotal_housingequity - debitTotal_housingequity
-          settotal_housingequity(totalhousing)
+     //      let totalloans = debitTotal_loans - creditTotal_loans
+     //      settotal_loans(totalloans)
+     //      //setdebit_part_loans(debitTotal_loans)
 
-          let totalothers = creditTotal_others - debitTotal_others
-          settotal_others(totalothers)
-          //setdebit_part_others(debitTotal_others)
+     //      let totalhousing = creditTotal_housingequity - debitTotal_housingequity
+     //      settotal_housingequity(totalhousing)
 
-     }, [savings, refresher])
+     //      let totalothers = creditTotal_others - debitTotal_others
+     //      settotal_others(totalothers)
+     //      //setdebit_part_others(debitTotal_others)
+
+     // }, [savings, refresher])
 
 
 
      const handleClearSavings = () => {
           setdate('')
           setparticulars('')
-          settype('')
-          setamount('')
+
+
+          setmembership_fee(0)
+          setshare_capital_debit(0)
+          setshare_capital_credit(0)
+          setshare_capital_balance(0)
+
+          setcoop_savings_debit(0)
+          setcoop_savings_credit(0)
+          setcoop_savings_balance(0)
+
+
+          setspecial_savings_debit(0)
+          setspecial_savings_credit(0)
+          setspecial_savings_balance(0)
+
+
+          setkaya_savings_debit(0)
+          setkaya_savings_credit(0)
+          setkaya_savings_balance(0)
+
+
+
+          setkaramay_savings_debit(0)
+          setkaramay_savings_credit(0)
+          setkaramay_savings_balance(0)
+
+
+          setothers_debit(0)
+          setothers_credit(0)
+          setothers_balance(0)
+
+
+
+
+
+
+
+
+
+
           setreference_document('')
           setremarks2('')
+     }
+     const handlelogger = () => {
+          let totalshare_capital_balance = share_capital_balance + parseFloat(share_capital_credit) - parseFloat(share_capital_debit)
+
+          handleSuccessToast(share_capital_balance)
+          handleSuccessToast(share_capital_debit)
+          handleSuccessToast(share_capital_credit)
+          handleSuccessToast(totalshare_capital_balance)
+          handleSuccessToast(totalshare_capital_balance)
+
      }
      const handleClearTextFields = () => {
           setfirstname("")
@@ -609,6 +795,14 @@ const Member = (props) => {
           setpassbook_printed("")
           setremarks("")
           setnotes("")
+     }
+     const handleZeroOnBlur = () => {
+          if (share_capital_debit === "") {
+               setshare_capital_debit(0)
+          }
+          else if (share_capital_credit === "") {
+               setshare_capital_credit(0)
+          }
      }
 
      const convertDateToString = (date) => {
@@ -679,6 +873,8 @@ const Member = (props) => {
      const handleAddSavingsButton = () => {
           handleClearSavings()
           setopenAddSavings(true)
+
+
      }
      const handleUpdateSavingsButton = () => {
           setopenUpdateSavings(true)
@@ -738,13 +934,39 @@ const Member = (props) => {
           setsavingsid(params.row._id);
           setdate(params.row.date);
           setparticulars(params.row.particulars);
-          settype(params.row.type);
-          setamount(params.row.amount);
+          setmembership_fee(params.row.membership_fee)
+          setshare_capital_debit(params.row.share_capital_debit)
+          setshare_capital_credit(params.row.share_capital_credit)
+
+          setcoop_savings_debit(params.row.coop_savings_debit)
+          setcoop_savings_credit(params.row.coop_savings_credit)
+
+
+          setspecial_savings_debit(params.row.special_savings_debit)
+          setspecial_savings_credit(params.row.special_savings_credit)
+
+
+
+          setkaya_savings_debit(params.row.kaya_savings_debit)
+          setkaya_savings_credit(params.row.kaya_savings_credit)
+
+
+          setkaramay_savings_debit(params.row.karamay_savings_debit)
+          setkaramay_savings_credit(params.row.karamay_savings_credit)
+
+
+
+          setothers_debit(params.row.others_debit)
+          setothers_credit(params.row.others_credit)
+          setothers_balance(params.row.others_balance)
+
+
           setreference_document(params.row.reference_document);
           setremarks2(params.row.remarks);
 
 
      }
+
 
      const handleAddMember = async (e) => {
           e.preventDefault()
@@ -943,12 +1165,44 @@ const Member = (props) => {
 
      const handleAddSavings = async (e) => {
           e.preventDefault()
+          const totalshare_capital_balance = share_capital_balance + parseFloat(share_capital_credit) - parseFloat(share_capital_debit)
+          const totalcoop_savings_balance = coop_savings_balance + parseFloat(coop_savings_credit) - parseFloat(coop_savings_debit)
+          const totalspecial_savings_balance = special_savings_balance + parseFloat(special_savings_credit) - parseFloat(special_savings_debit)
+          const totalkaya_savings_balance = kaya_savings_balance + parseFloat(kaya_savings_credit) - parseFloat(kaya_savings_debit)
+          const totalkaramay_savings_debit = karamay_savings_balance + parseFloat(karamay_savings_credit) - parseFloat(karamay_savings_debit)
+          const totalothers_debit = others_balance + parseFloat(others_credit) - parseFloat(others_debit)
+
           const savings = {
                member_id: member_id,
                date: date,
                particulars: particulars,
-               type: type,
-               amount: amount,
+               membership_fee: membership_fee,
+               share_capital_debit: share_capital_debit,
+               share_capital_credit: share_capital_credit,
+               share_capital_balance: share_capital_debit === 0 && share_capital_credit === 0 ? 0 : totalshare_capital_balance,
+
+               coop_savings_debit: coop_savings_debit,
+               coop_savings_credit: coop_savings_credit,
+               coop_savings_balance: coop_savings_credit === 0 && coop_savings_debit === 0 ? 0 : totalcoop_savings_balance,
+
+               special_savings_debit: special_savings_debit,
+               special_savings_credit: special_savings_credit,
+               special_savings_balance: special_savings_credit === 0 && special_savings_debit === 0 ? 0 : totalspecial_savings_balance,
+
+               kaya_savings_debit: kaya_savings_debit,
+               kaya_savings_credit: kaya_savings_credit,
+               kaya_savings_balance: kaya_savings_credit === 0 && kaya_savings_debit === 0 ? 0 : totalkaya_savings_balance,
+
+
+               karamay_savings_debit: karamay_savings_debit,
+               karamay_savings_credit: karamay_savings_credit,
+               karamay_savings_balance: karamay_savings_credit === 0 && karamay_savings_debit === 0 ? 0 : totalkaramay_savings_debit,
+
+               others_debit: others_debit,
+               others_credit: others_credit,
+               others_balance: others_credit === 0 && others_debit === 0 ? 0 : totalothers_debit,
+
+
                reference_document: reference_document,
                remarks: remarks2,
 
@@ -959,8 +1213,7 @@ const Member = (props) => {
           }
           if (
                date === "" ||
-               particulars === "" ||
-               amount === 0
+               particulars === ""
 
           ) {
                handleErrorToast('Fill up the required fields completely ')
@@ -979,21 +1232,14 @@ const Member = (props) => {
                     setError(json.error)
                }
                else {
-                    setdate('')
-                    setparticulars('')
-                    settype('')
-                    setamount('')
-                    setreference_document('')
-                    setremarks2('')
-
+                    handleClearSavings()
                     handleSuccessToast('Added Successfully')
-
                     setopenAddSavings(false)
                     handleRefresher()
-
                }
           }
      }
+
 
      const handleDeleteSavings = async (e) => {
 
@@ -1027,10 +1273,38 @@ const Member = (props) => {
                member_id: member_id,
                date: date,
                particulars: particulars,
-               type: type,
-               amount: amount,
+               membership_fee: membership_fee,
+               share_capital_debit: share_capital_debit,
+               share_capital_credit: share_capital_credit,
+               share_capital_balance: share_capital_balance + share_capital_credit - share_capital_debit,
+
+               coop_savings_debit: coop_savings_debit,
+               coop_savings_credit: coop_savings_credit,
+               coop_savings_balance: coop_savings_balance,
+
+               special_savings_debit: special_savings_debit,
+               special_savings_credit: special_savings_credit,
+               special_savings_balance: special_savings_balance,
+
+               kaya_savings_debit: kaya_savings_debit,
+               kaya_savings_credit: kaya_savings_credit,
+               kaya_savings_balance: kaya_savings_balance,
+
+
+               karamay_savings_debit: karamay_savings_debit,
+               karamay_savings_credit: karamay_savings_credit,
+               karamay_savings_balance: karamay_savings_balance,
+
+               others_debit: others_debit,
+               others_credit: others_credit,
+               others_balance: others_balance,
+
+
+
+
                reference_document: reference_document,
                remarks: remarks2,
+
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -1038,8 +1312,7 @@ const Member = (props) => {
           }
           if (
                date === "" ||
-               particulars === "" ||
-               amount === 0
+               particulars === ""
 
           ) {
                handleErrorToast('Fill up the required fields completely')
@@ -1058,12 +1331,7 @@ const Member = (props) => {
                     setError(json.error)
                }
                else {
-                    setdate('')
-                    setparticulars('')
-                    settype('')
-                    setamount('')
-                    setreference_document('')
-                    setremarks2('')
+                    handleClearSavings();
 
                     handleSuccessToast('Updated Successfully')
 
@@ -1075,7 +1343,75 @@ const Member = (props) => {
      }
 
 
+     // <MenuItem value={'MEMBERSHIP FEE'}>Membership Fee</MenuItem>
+     // <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
+     // <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
+     // <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
+     // <MenuItem value={'KAYA SAVINGS'}>KAYA Savings</MenuItem>
+     // <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
+     // <MenuItem value={'OTHERS'}>Others</MenuItem>
 
+     const handleParticulars = (e) => {
+          setparticulars(e.target.value)
+          handleRefresher();
+          if (particulars === "SHARE CAPITAL") {
+               //setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+          else if (particulars === "COOP SAVINGS") {
+               setshare_capital_balance(0)
+               //setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+          else if (particulars === "SPECIAL SAVINGS") {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               //setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+          else if (particulars === "KAYA SAVINGS") {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               //setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+          else if (particulars === "KARAMAY SAVINGS") {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               //setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+          else if (particulars === "OTHERS") {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               //setothers_balance(0)
+          }
+          else {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               setothers_balance(0)
+          }
+
+     }
 
      const [membershiptotal, setmembershiptotal] = useState(0);
      // useEffect(() => {
@@ -1136,13 +1472,13 @@ const Member = (props) => {
                                                                       <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
                                                                            <PDFDownloadLink fileName="savings_summary" document={
                                                                                 < SavingsPrinter
-                                                                                     total_membershipfee={total_membershipfee}
-                                                                                     total_kayasavings={total_kayasavings}
-                                                                                     total_loans={total_loans}
-                                                                                     total_captial={total_captial}
-                                                                                     total_others={total_others}
-                                                                                     total_savings={total_savings}
-                                                                                     total_housing={total_housingequity}
+                                                                                     total_membershipfee={master_membership}
+                                                                                     total_share={master_share}
+                                                                                     total_coop={master_coop}
+                                                                                     total_special={master_special}
+                                                                                     total_kaya={master_kaya}
+                                                                                     total_karamay={master_karamay}
+                                                                                     total_others={master_others}
                                                                                 />} >
                                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
                                                                            </PDFDownloadLink>
@@ -1152,56 +1488,50 @@ const Member = (props) => {
                                                             </div>
                                                             <div style={{ paddingRight: "200px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_membershipfee && total_membershipfee.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_share && master_share.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Share Capital</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_captial && total_captial.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_coop && master_coop.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Coop Savings</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_savings && total_savings.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_special && master_special.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Special Savings</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_loans && total_loans.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_kaya && master_kaya.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
                                                                  </div>
                                                             </div>
                                                             <div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_kayasavings && total_kayasavings.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_karamay && master_karamay.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Karamay Savings</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_others && total_others.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_others && master_others.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
                                                                  </div>
-                                                                 <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{total_housingequity && total_housingequity.toLocaleString(undefined, {
-                                                                           minimumFractionDigits: 2,
-                                                                           maximumFractionDigits: 2
-                                                                      })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL HOUSING EQUITY</p>
-                                                                 </div>
+                                                                
                                                             </div>
                                                        </Cards>
                                                   </div>
@@ -1797,54 +2127,54 @@ const Member = (props) => {
                                                             </div>
                                                        </Cards>
                                                        <div style={{ marginRight: "10px" }}></div>
-                                                       <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%" , height: "400px" }}>
+                                                       <Cards style={{ backgroundColor: "#1D88E6", color: "white", width: "100%", height: "400px" }}>
                                                             <div style={{ paddingRight: "200px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_membershipfee && credit_part_membershipfee.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{share_capital_balance && share_capital_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>MEMBERSHIP FEE</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Share Capital</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_captial && credit_part_captial.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{coop_savings_balance && coop_savings_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL CAPITAL</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Coop Savings</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_savings && credit_part_savings.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{special_savings_balance && special_savings_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Special Savings</p>
                                                                  </div>
                                                             </div>
                                                             <div style={{ marginRight: "50px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_loans && credit_part_loans.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{kaya_savings_balance && kaya_savings_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>LOAN BALANCE</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_kayasavings && credit_part_kayasavings.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{karamay_savings_balance && karamay_savings_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>TOTAL SPECIAL SAVINGS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Karamay Savings</p>
                                                                  </div>
                                                                  <div>
-                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_others && credit_part_others.toLocaleString(undefined, {
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{others_balance && others_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>OTHERS</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Others</p>
                                                                  </div>
                                                             </div>
-                                                            <div style={{ marginRight: "50px" }}>
+                                                            {/* <div style={{ marginRight: "50px" }}>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{credit_part_housingeuity && credit_part_housingeuity.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
@@ -1854,20 +2184,29 @@ const Member = (props) => {
                                                                  </div>
 
 
-                                                            </div>
+                                                            </div> */}
 
                                                        </Cards>
 
                                                   </CardContainer>
 
-                                                  <CardContainer>
-                                                       <div style={{ height: 600, width: '100%', marginTop: "20px" }} >
+                                                  <div style={{ paddingBottom: "20px", overflowX: "auto" }}>
+
+                                                       <div style={{ marginTop: "30px", display: 'flex', justifyContent: 'flex-start' }}>
+                                                            <div style={{ marginLeft: 520, textAlign: "left", backgroundColor: "#49bcff", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Share Capital</div><div>{share_capital_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#45ace7", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#3795cc", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#ff8df0", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Kaya Savings</div><div>{kaya_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#d376c7", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#aa5fa0", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Others</div><div>{others_balance}</div></div></div>
+                                                       </div>
+                                                       <div style={{ height: 600, width: '5000px', paddingBottom: "20px", }} >
+
                                                             <DataGrid
+                                                                 bord
                                                                  getRowId={(row) => row._id}
                                                                  rows={savings}
                                                                  columns={savings_columns}
-                                                                 pageSize={7}
-                                                                 rowsPerPageOptions={[5]}
                                                                  onRowClick={handleSavingsRowClick}
                                                                  filterModel={{
                                                                       items: [
@@ -1878,17 +2217,18 @@ const Member = (props) => {
                                                                            },
                                                                       ],
                                                                  }}
+                                                                 showCellRightBorder={true} 
                                                             />
                                                        </div>
 
-                                                  </CardContainer>
-                                                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                  </div>
+                                                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px"}}>
                                                        <div style={{ display: "flex" }}>
                                                             <ThemeProvider theme={theme}>
                                                                  <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
                                                                       Go back to Masterlist
                                                                  </Button>
-                                                                 <Button disabled={buttonReceiptDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
+                                                                 {/* <Button disabled={buttonReceiptDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
                                                                       <PDFDownloadLink fileName="savings_summary" document={
                                                                            < SavingsReceiptPrinter
                                                                                 date={date}
@@ -1908,7 +2248,7 @@ const Member = (props) => {
                                                                            />} >
                                                                            {({ loading }) => (loading ? 'Loading document...' : 'Download Selected')}
                                                                       </PDFDownloadLink>
-                                                                 </Button>
+                                                                 </Button> */}
                                                             </ThemeProvider>
                                                        </div>
                                                        <div style={{ display: "flex" }}><ThemeProvider theme={theme}>
@@ -1954,41 +2294,173 @@ const Member = (props) => {
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
-                                                                      onChange={(e) => setparticulars(e.target.value)}
+                                                                      onChange={handleParticulars}
                                                                       value={particulars}
                                                                  >
                                                                       <MenuItem value={'MEMBERSHIP FEE'}>Membership Fee</MenuItem>
-                                                                      <MenuItem value={'CAPITAL'}>Capital</MenuItem>
-                                                                      <MenuItem value={'SAVINGS'}>Savings</MenuItem>
-                                                                      <MenuItem value={'LOANS'}>Loans</MenuItem>
+                                                                      <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
+                                                                      <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
-                                                                      <MenuItem value={'HOUSING EQUITY'}>Housing Equity</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>KAYA Savings</MenuItem>
+                                                                      <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
-                                                                 </TextField>
-
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Select Type"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      select
-                                                                      onChange={(e) => settype(e.target.value)}
-                                                                      value={type}
-                                                                 >
-                                                                      <MenuItem value={'CREDIT'}>Credit</MenuItem>
-                                                                      <MenuItem value={'DEBIT'}>Debit</MenuItem>
 
                                                                  </TextField>
-                                                                 <TextField
-                                                                      type='number'
-                                                                      required
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Amount"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setamount(e.target.value)}
-                                                                      value={amount}
-                                                                 />
+                                                                 {particulars === "SHARE CAPITAL" &&
+                                                                      <div>
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Debit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setshare_capital_debit(e.target.value)}
+                                                                                value={share_capital_debit}
+                                                                                onBlur={handleZeroOnBlur}
+                                                                           />
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Credit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setshare_capital_credit(e.target.value)}
+                                                                                value={share_capital_credit}
+                                                                                onBlur={handleZeroOnBlur}
+                                                                           />
+                                                                      </div>}
+                                                                 {particulars === "SPECIAL SAVINGS" &&
+                                                                      <div>
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Debit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setspecial_savings_debit(e.target.value)}
+                                                                                value={special_savings_debit}
+                                                                           />
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Credit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setspecial_savings_credit(e.target.value)}
+                                                                                value={special_savings_credit}
+                                                                           />
+                                                                          
+                                                                      </div>}
+                                                                 {particulars === "COOP SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setcoop_savings_debit(e.target.value)}
+                                                                           value={coop_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setcoop_savings_credit(e.target.value)}
+                                                                           value={coop_savings_credit}
+                                                                      />
+                                                                      
+                                                                 </div>}
+                                                                 {particulars === "KAYA SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaya_savings_debit(e.target.value)}
+                                                                           value={kaya_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaya_savings_credit(e.target.value)}
+                                                                           value={kaya_savings_credit}
+                                                                      />
+                                                                   
+                                                                 </div>}
+                                                                 {particulars === "KARAMAY SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaramay_savings_debit(e.target.value)}
+                                                                           value={karamay_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaramay_savings_credit(e.target.value)}
+                                                                           value={karamay_savings_credit}
+                                                                      />
+                                                                    
+                                                                 </div>}
+                                                                 {particulars === "OTHERS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setothers_debit(e.target.value)}
+                                                                           value={others_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setothers_credit(e.target.value)}
+                                                                           value={others_credit}
+                                                                      />
+                                                                  
+                                                                 </div>}
+                                                                 {particulars === "MEMBERSHIP FEE" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Amount"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setmembership_fee(e.target.value)}
+                                                                           value={membership_fee}
+                                                                      />
+
+                                                                 </div>}
+
                                                                  <TextField
                                                                       required
                                                                       fullWidth
@@ -2015,6 +2487,7 @@ const Member = (props) => {
                                                             <ThemeProvider theme={theme}>
                                                                  <Button variant="outlined" color="blue" onClick={handleAddSavings}>Save</Button>
                                                                  <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
+                                                                 {/* <Button variant="outlined" color="red" onClick={handlelogger} autoFocus>Cancel</Button> */}
                                                                  <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
                                                             </ThemeProvider>
                                                        </DialogActions>
@@ -2048,41 +2521,172 @@ const Member = (props) => {
                                                                       fullWidth
                                                                       style={{ paddingBottom: "10px" }}
                                                                       select
-                                                                      onChange={(e) => setparticulars(e.target.value)}
+                                                                      onChange={handleParticulars}
                                                                       value={particulars}
                                                                  >
                                                                       <MenuItem value={'MEMBERSHIP FEE'}>Membership Fee</MenuItem>
-                                                                      <MenuItem value={'CAPITAL'}>Capital</MenuItem>
-                                                                      <MenuItem value={'SAVINGS'}>Savings</MenuItem>
-                                                                      <MenuItem value={'LOANS'}>Loans</MenuItem>
+                                                                      <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
+                                                                      <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
-                                                                      <MenuItem value={'HOUSING EQUITY'}>Housing Equity</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>KAYA Savings</MenuItem>
+                                                                      <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
-                                                                 </TextField>
-
-                                                                 <TextField
-                                                                      id="outlined-required"
-                                                                      label="Select Type"
-                                                                      fullWidth
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      select
-                                                                      onChange={(e) => settype(e.target.value)}
-                                                                      value={type}
-                                                                 >
-                                                                      <MenuItem value={'CREDIT'}>Credit</MenuItem>
-                                                                      <MenuItem value={'DEBIT'}>Debit</MenuItem>
 
                                                                  </TextField>
-                                                                 <TextField
-                                                                      type='number'
-                                                                      required
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Amount"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setamount(e.target.value)}
-                                                                      value={amount}
-                                                                 />
+                                                                 {particulars === "SHARE CAPITAL" &&
+                                                                      <div>
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Debit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setshare_capital_debit(e.target.value)}
+                                                                                value={share_capital_debit}
+                                                                           />
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Credit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setshare_capital_credit(e.target.value)}
+                                                                                value={share_capital_credit}
+                                                                           />
+
+                                                                      </div>}
+                                                                 {particulars === "SPECIAL SAVINGS" &&
+                                                                      <div>
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Debit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setspecial_savings_debit(e.target.value)}
+                                                                                value={special_savings_debit}
+                                                                           />
+                                                                           <TextField
+                                                                                type='number'
+                                                                                required
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Credit"
+                                                                                style={{ paddingBottom: "10px" }}
+                                                                                onChange={(e) => setspecial_savings_credit(e.target.value)}
+                                                                                value={special_savings_credit}
+                                                                           />
+                                                                        
+                                                                      </div>}
+                                                                 {particulars === "COOP SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setcoop_savings_debit(e.target.value)}
+                                                                           value={coop_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setcoop_savings_credit(e.target.value)}
+                                                                           value={coop_savings_credit}
+                                                                      />
+                                                                      
+                                                                 </div>}
+                                                                 {particulars === "KAYA SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaya_savings_debit(e.target.value)}
+                                                                           value={kaya_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaya_savings_credit(e.target.value)}
+                                                                           value={kaya_savings_credit}
+                                                                      />
+                                                                      
+                                                                 </div>}
+                                                                 {particulars === "KARAMAY SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaramay_savings_debit(e.target.value)}
+                                                                           value={karamay_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setkaramay_savings_credit(e.target.value)}
+                                                                           value={karamay_savings_credit}
+                                                                      />
+                                                                     
+                                                                 </div>}
+                                                                 {particulars === "OTHERS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setothers_debit(e.target.value)}
+                                                                           value={others_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setothers_credit(e.target.value)}
+                                                                           value={others_credit}
+                                                                      />
+                                                                    
+                                                                 </div>}
+                                                                 {particulars === "MEMBERSHIP FEE" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Amount"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => setmembership_fee(e.target.value)}
+                                                                           value={membership_fee}
+                                                                      />
+
+                                                                 </div>}
+
                                                                  <TextField
                                                                       required
                                                                       fullWidth

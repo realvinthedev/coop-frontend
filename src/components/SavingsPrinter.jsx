@@ -45,8 +45,7 @@ const styles = StyleSheet.create({
      }
 });
 
-
-const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, total_captial, total_others, total_savings, total_housing}) => {
+const SavingsPrinter = ({ total_membershipfee, total_share, total_coop, total_special, total_kaya, total_karamay, total_others}) => {
 
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
@@ -68,21 +67,21 @@ const SavingsPrinter = ({ total_membershipfee, total_kayasavings, total_loans, t
                          <Text style={styles.margin}></Text>
                          <View style={styles.header}>
                               <Text style={styles.item}>Membership Fee</Text>
-                              <Text style={styles.data}>Capital</Text>
-                              <Text style={styles.data}>Savings</Text>
-                              <Text style={styles.data}>Loans</Text>
+                              <Text style={styles.data}>Share Capital</Text>
+                              <Text style={styles.data}>Coop Savings</Text>
                               <Text style={styles.data}>Special Savings</Text>
-                              <Text style={styles.data}>Housing Equity</Text>
+                              <Text style={styles.data}>Kaya Savings</Text>
+                              <Text style={styles.data}>Karamay Savings</Text>
                               <Text style={styles.data}>Others</Text>
                               
                          </View>
                          <View style={styles.row}>
                               <Text style={styles.item}>{ total_membershipfee}</Text>
-                              <Text style={styles.data}>{ total_captial}</Text>
-                              <Text style={styles.data}>{ total_savings}</Text>
-                              <Text style={styles.data}>{ total_loans}</Text>
-                              <Text style={styles.data}>{ total_kayasavings}</Text>
-                              <Text style={styles.data}>{ total_housing}</Text>
+                              <Text style={styles.data}>{ total_share}</Text>
+                              <Text style={styles.data}>{ total_coop}</Text>
+                              <Text style={styles.data}>{ total_special}</Text>
+                              <Text style={styles.data}>{ total_kaya}</Text>
+                              <Text style={styles.data}>{ total_karamay}</Text>
                               <Text style={styles.data}>{ total_others}</Text>
                              
                          </View>
