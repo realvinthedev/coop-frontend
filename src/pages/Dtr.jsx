@@ -167,11 +167,11 @@ const columns = [
      { field: 'absent_day', headerName: 'Absent', width: 140 },
      { field: 'vl_day', headerName: 'VL - Paid', width: 140 },
      { field: 'sl_day', headerName: 'SL - Paid', width: 140 },
-     { field: 'el_day', headerName: 'EL - Paid', width: 140 },
+     { field: 'el_day', headerName: 'SIL - Paid', width: 140 },
 
      { field: 'vl_nopay_day', headerName: 'VL - No Pay', width: 140 },
      { field: 'sl_nopay_day', headerName: 'SL - No Pay', width: 140 },
-     { field: 'el_nopay_day', headerName: 'EL - No Pay', width: 140 },
+     { field: 'el_nopay_day', headerName: 'SIL - No Pay', width: 140 },
      { field: 'restday_nopay_day', headerName: 'Restday - No Pay', width: 140 },
 
 
@@ -2680,12 +2680,12 @@ const Dtr = (props) => {
                                                                            <MenuItem style={{ color: '#d17a40' }} value={'sl_nopay_halfday_afternoon'}>SL No Pay Halfday - Afternoon Work</MenuItem>
 
 
-                                                                           <MenuItem style={{ color: 'red', marginTop: "30px" }} value={'el_wholeday'}>EL With Pay Wholeday</MenuItem>
-                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_morning'}>EL With Pay Halfday - Morning Work</MenuItem>
-                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_afternoon'}>EL With Pay Halfday - Afternoon Work</MenuItem>
-                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_wholeday'}>EL No Pay Wholeday</MenuItem>
-                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_morning'}>EL No Pay Halfday - Morning Work</MenuItem>
-                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_afternoon'}>EL No Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: 'red', marginTop: "30px" }} value={'el_wholeday'}>SIL With Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_morning'}>SIL With Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: 'red' }} value={'el_halfday_afternoon'}>SIL With Pay Halfday - Afternoon Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_wholeday'}>SIL No Pay Wholeday</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_morning'}>SIL No Pay Halfday - Morning Work</MenuItem>
+                                                                           <MenuItem style={{ color: '#d63e3e' }} value={'el_nopay_halfday_afternoon'}>SIL No Pay Halfday - Afternoon Work</MenuItem>
 
                                                                       </TextField>
                                                                       <TextField
@@ -3050,7 +3050,7 @@ const Dtr = (props) => {
                                                                                 <TextField
 
                                                                                      id="outlined-required"
-                                                                                     label="EL with pay"
+                                                                                     label="SIL with pay"
                                                                                      fullWidth
                                                                                      style={{ paddingBottom: "20px" }}
                                                                                      onChange={(e) => setel_day(e.target.value)}
@@ -3086,7 +3086,7 @@ const Dtr = (props) => {
                                                                                 <TextField
 
                                                                                      id="outlined-required"
-                                                                                     label="EL no pay"
+                                                                                     label="SIL no pay"
                                                                                      fullWidth
                                                                                      style={{ paddingBottom: "20px" }}
                                                                                      onChange={(e) => setel_nopay_day(e.target.value)}

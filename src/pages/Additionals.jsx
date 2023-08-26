@@ -831,7 +831,7 @@ const Additionals = (props) => {
                                                             </TextField>
                                                             <Autocomplete
                                                                  value={name}
-                                                                 style={{ marginRight: "10px" }}
+                                                                
                                                                  onSelect={handleName}
                                                                  options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
                                                                  renderInput={(params) => (
@@ -934,7 +934,7 @@ const Additionals = (props) => {
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                                  <Autocomplete
                                                                       value={name}
-                                                                      style={{ marginRight: "10px" }}
+                                                                      
                                                                       onSelect={handleName}
                                                                       options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
                                                                       renderInput={(params) => (
@@ -943,7 +943,7 @@ const Additionals = (props) => {
                                                                                 required
                                                                                 label="Search Employee"
                                                                                 fullWidth
-                                                                                style={{ paddingBottom: "20px", width: "500px" }}
+                                                                                style={{ paddingBottom: "20px" }}
                                                                            />
                                                                       )}
                                                                  />
@@ -959,7 +959,7 @@ const Additionals = (props) => {
                                                                            readOnly: true,
                                                                       }}
                                                                  />
-sdfsdf
+
                                                                  <TextField
                                                                       type="number"
                                                                       required

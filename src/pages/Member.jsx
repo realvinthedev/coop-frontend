@@ -150,13 +150,13 @@ const columns = [
      { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 200 },
      { field: 'bod_res', headerName: 'BOD Res', width: 150 },
      { field: 'coop_savings_account_number', headerName: 'Coop Savings Accnt Number', width: 200 },
-     { field: 'kaya_atm_card_number', headerName: 'Special Savings Card Number', width: 200 },
+     { field: 'kaya_atm_card_number', headerName: 'Special Savings Passbook Number', width: 200 },
      { field: 'kaya_atm_savings_account_number', headerName: 'Special Savings Account Number', width: 200 },
-     { field: 'mbh', headerName: 'MBH', width: 150 },
-     { field: 'atm_passbook_fee', headerName: 'ATM Book Fee', width: 150 },
-     { field: 'atm_status', headerName: 'ATM Status', width: 150 },
-     { field: 'pb_account_number', headerName: 'PB Account Number', width: 150 },
-     { field: 'pb_account_number_series', headerName: 'PB Account Number Series', width: 150 },
+     // { field: 'mbh', headerName: 'MBH', width: 150 },
+     // { field: 'atm_passbook_fee', headerName: 'ATM Book Fee', width: 150 },
+     // { field: 'atm_status', headerName: 'ATM Status', width: 150 },
+     // { field: 'pb_account_number', headerName: 'PB Account Number', width: 150 },
+     // { field: 'pb_account_number_series', headerName: 'PB Account Number Series', width: 150 },
      { field: 'passbook_series_number', headerName: 'Passbook Series number', width: 150 },
      { field: 'affiliation_org', headerName: 'Affiliation Org', width: 150 },
      { field: 'passbook_printed', headerName: 'Passbook Printed', width: 150 },
@@ -914,12 +914,12 @@ const Member = (props) => {
           setcoop_savings_account_number(params.row.coop_savings_account_number);
           setkaya_atm_card_number(params.row.kaya_atm_card_number);
           setkaya_atm_savings_account_number(params.row.kaya_atm_savings_account_number);
-          setmbh(params.row.mbh);
+          // setmbh(params.row.mbh);
           sethousing_equity(params.row.housing_equity);
-          setatm_passbook_fee(params.row.atm_passbook_fee);
-          setatm_status(params.row.atm_status);
-          setpb_account_number(params.row.pb_account_number);
-          setpb_account_number_series(params.row.pb_account_number_series);
+          // setatm_passbook_fee(params.row.atm_passbook_fee);
+          // setatm_status(params.row.atm_status);
+          // setpb_account_number(params.row.pb_account_number);
+          // setpb_account_number_series(params.row.pb_account_number_series);
           setpassbook_series_number(params.row.passbook_series_number);
           setaffiliation_org(params.row.affiliation_org);
           setpassbook_printed(params.row.passbook_printed);
@@ -985,11 +985,11 @@ const Member = (props) => {
                coop_savings_account_number: coop_savings_account_number,
                kaya_atm_card_number: kaya_atm_card_number,
                kaya_atm_savings_account_number: kaya_atm_savings_account_number,
-               mbh: mbh,
-               atm_passbook_fee: atm_passbook_fee,
-               atm_status: atm_status,
-               pb_account_number: pb_account_number,
-               pb_account_number_series: pb_account_number_series,
+               // mbh: mbh,
+               // atm_passbook_fee: atm_passbook_fee,
+               // atm_status: atm_status,
+               // pb_account_number: pb_account_number,
+               // pb_account_number_series: pb_account_number_series,
                passbook_series_number: passbook_series_number,
                affiliation_org: affiliation_org,
                passbook_printed: passbook_printed,
@@ -1073,11 +1073,11 @@ const Member = (props) => {
                coop_savings_account_number: coop_savings_account_number,
                kaya_atm_card_number: kaya_atm_card_number,
                kaya_atm_savings_account_number: kaya_atm_savings_account_number,
-               mbh: mbh,
-               atm_passbook_fee: atm_passbook_fee,
-               atm_status: atm_status,
-               pb_account_number: pb_account_number,
-               pb_account_number_series: pb_account_number_series,
+               // mbh: mbh,
+               // atm_passbook_fee: atm_passbook_fee,
+               // atm_status: atm_status,
+               // pb_account_number: pb_account_number,
+               // pb_account_number_series: pb_account_number_series,
                passbook_series_number: passbook_series_number,
                affiliation_org: affiliation_org,
                passbook_printed: passbook_printed,
@@ -1770,7 +1770,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Special Savings Card Number"
+                                                                      label="Special Savings Passbook Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
                                                                       value={kaya_atm_card_number}
@@ -1783,7 +1783,7 @@ const Member = (props) => {
                                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
                                                                       value={kaya_atm_savings_account_number}
                                                                  />
-                                                                 <TextField
+                                                                 {/* <TextField
                                                                       type="number"
                                                                       fullWidth
                                                                       id="outlined-required"
@@ -1825,7 +1825,7 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpb_account_number_series(e.target.value)}
                                                                       value={pb_account_number_series}
-                                                                 />
+                                                                 /> */}
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
@@ -1985,12 +1985,12 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Special Savings Account Number"
+                                                                      label="Special Savings Passbook Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
                                                                       value={kaya_atm_savings_account_number}
                                                                  />
-                                                                 <TextField
+                                                                 {/* <TextField
                                                                       type="number"
                                                                       fullWidth
                                                                       id="outlined-required"
@@ -2032,7 +2032,7 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpb_account_number_series(e.target.value)}
                                                                       value={pb_account_number_series}
-                                                                 />
+                                                                 /> */}
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
