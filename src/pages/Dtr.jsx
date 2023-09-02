@@ -188,6 +188,7 @@ const Dtr = (props) => {
      const [query, setQuery] = useState('')
      const { user } = useAuthContext()
      const [dtr, setDtr] = useState([])
+     const [year, setyear] = useState('')
      const dialogRef = useRef(null);
 
 
@@ -204,7 +205,14 @@ const Dtr = (props) => {
           return currentDate
      })
 
+     const handleMonthChange = (e) => {
+          setMonth(e.target.value)
+     }
+
+
      const [currentmonth, setcurrentmonth] = useState('')
+
+     // Auto set the month when opening the system. Example today is July. When opening the system, it will not display January. Instead, July
      useEffect(() => {
           const month = date;
           const currentmonth = month.split('-')[0]
@@ -253,7 +261,7 @@ const Dtr = (props) => {
 
      const handleScroll = (event) => {
           event.preventDefault();
-        };
+     };
 
 
      const [total_ot_hour, setTotal_ot_hour] = useState(0)
@@ -448,6 +456,8 @@ const Dtr = (props) => {
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
      const [overtime, setovertime] = useState("not_approved")
+     const [undertime, setundertime] = useState("approved")
+     const [tardiness, settardiness] = useState("approved")
      const [working_day_counter, setworking_day_counter] = useState(0)
      const [restday_counter, setrestday_counter] = useState(0)
      const [disabled_day_type, setdisabled_day_type] = useState(false)
@@ -482,7 +492,20 @@ const Dtr = (props) => {
           else {
                setdisabled_overtime(true)
           }
-     }, [total_ot_hour])
+
+          if (total_tardiness_min > 0) {
+               setdisabled_tardiness(false)
+          }
+          else {
+               setdisabled_tardiness(true)
+          }
+          if (total_undertime_min > 0) {
+               setdisabled_undertime(false)
+          }
+          else {
+               setdisabled_undertime(true)
+          }
+     }, [total_ot_hour, total_tardiness_min, total_undertime_min])
 
 
      const [dept, setDept] = useState([])
@@ -507,8 +530,6 @@ const Dtr = (props) => {
      }, [user])
 
      useEffect(() => {
-
-
           const fetchDtr = async () => {
                const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/dtr/employee/${employeeId}`, {
                     headers: {
@@ -518,22 +539,45 @@ const Dtr = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    const filteredData = json.filter(item => {
-                         const date = item.date
-                         return date >= startDate && date <= endDate
+                    const startDateObj = new Date(startDate);
+                    const endDateObj = new Date(endDate);
 
+                    const filteredData = json.filter(item => {
+                         const date = new Date(item.date);
+                         return date >= startDateObj && date <= endDateObj;
                     });
+                    // const filteredData = json.filter(item => {
+
+                    //      const date = item.date
+                    //     // successToast(date + " | " + startDate + " | " + endDate)
+                    //      return date >= startDate && date <= endDate
+
+                    // });
                     const sortedData = [...filteredData].sort((a, b) => new Date(a.date) - new Date(b.date));
 
                     setDtr(sortedData)
-                    console.log('^^^^^^^^^^^^^^^^^^', filteredData)
 
                }
           }
           if (user) {
                fetchDtr();
           }
-     }, [employeeId, refresher, startDate])
+     }, [employeeId, refresher, startDate, endDate])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
      const [official_am_in_hour, setofficial_am_in_hour] = useState(0);
      const [official_am_in_min, setofficial_am_in_min] = useState(0);
 
@@ -554,7 +598,7 @@ const Dtr = (props) => {
           handleCalculateUndertime();
           handleCalculateOvertime();
           handleOTType()
-          console.log(')))))))))))))))))))))))))))))))))))))))))))))))))))', regular_ot_hours)
+        
      }, [
           overtime,
           leave_type,
@@ -637,10 +681,14 @@ const Dtr = (props) => {
                setovertime('not_approved')
                setdisabled_overtime(true)
                setdisabled_day_type(true)
+               setdisabled_tardiness(true)
+               setdisabled_undertime(true)
           }
           if (status == "vl_wholeday" || status == "vl_nopay_wholeday" || status == "sl_wholeday" || status == "sl_nopay_wholeday" || status == "el_wholeday" || status == "el_nopay_wholeday") {
                setovertime('not_approved')
                setdisabled_overtime(true)
+               setdisabled_tardiness(true)
+               setdisabled_undertime(true)
                setdisabled_day_type(true)
           }
 
@@ -1856,6 +1904,20 @@ const Dtr = (props) => {
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
      }
+
+
+
+     const handleApproveUndertime = (e) => {
+          setundertime(e.target.value)
+     }
+
+     const handleApproveTardiness = (e) => {
+          settardiness(e.target.value)
+     }
+
+     
+
+     
      const [disabled, setDisabled] = useState(true);
      const [regular_ot_hours, setRegular_ot_hours] = useState(0);
      const [restday_ot_hours, setRestday_ot_hours] = useState(0);
@@ -1869,6 +1931,8 @@ const Dtr = (props) => {
      const [disabled_pm_time, setdisabled_pm_time] = useState(false);
      const [disabled_am_time, setdisabled_am_time] = useState(false);
      const [disabled_overtime, setdisabled_overtime] = useState(false);
+     const [disabled_undertime, setdisabled_undertime] = useState(false);
+     const [disabled_tardiness, setdisabled_tardiness] = useState(false);
 
 
      const [emp, setEmp] = useState([])
@@ -1901,6 +1965,7 @@ const Dtr = (props) => {
                fetchEmp();
           }
      }, [user, departmentfilter])
+  
 
      const time = [
           { id: '1', time: '' },
@@ -2354,73 +2419,74 @@ const Dtr = (props) => {
      }
 
 
-     const handleMonthChange = (e) => {
-          setMonth(e.target.value)
+     const handleYearChange = (e) => {
+          setyear(e.target.value)
 
      }
      useEffect(() => {
           handleDates();
-     }, [month])
+          //successToast(startDate + " " + endDate)
+     }, [month, year])
 
      const handleDates = () => {
           if (month == "january") {
-               setStartDate(`01-01-2023`)
-               setEndDate(`01-31-2023`)
+               setStartDate(`01-01-${year}`)
+               setEndDate(`01-31-${year}`)
           }
 
           if (month == "february") {
-               setStartDate(`02-01-2023`)
-               setEndDate(`02-28-2023`)
+               setStartDate(`02-01-${year}`)
+               setEndDate(`02-29-${year}`)
           }
 
           if (month == "march") {
-               setStartDate(`03-01-2023`)
-               setEndDate(`03-31-2023`)
+               setStartDate(`03-01-${year}`)
+               setEndDate(`03-31-${year}`)
           }
 
           if (month == "april") {
-               setStartDate(`04-01-2023`)
-               setEndDate(`04-30-2023`)
+               setStartDate(`04-01-${year}`)
+               setEndDate(`04-30-${year}`)
           }
 
           if (month == "may") {
-               setStartDate(`05-01-2023`)
-               setEndDate(`05-31-2023`)
+               setStartDate(`05-01-${year}`)
+               setEndDate(`05-31-${year}`)
           }
 
           if (month == "june") {
-               setStartDate(`06-01-2023`)
-               setEndDate(`06-30-2023`)
+               setStartDate(`06-01-${year}`)
+               setEndDate(`06-30-${year}`)
           }
 
           if (month == "july") {
-               setStartDate(`07-01-2023`)
-               setEndDate(`07-31-2023`)
+               setStartDate(`07-01-${year}`)
+               setEndDate(`07-31-${year}`)
           }
 
           if (month == "august") {
-               setStartDate(`08-01-2023`)
-               setEndDate(`08-31-2023`)
+               setStartDate(`08-01-${year}`)
+               setEndDate(`08-31-${year}`)
           }
 
           if (month == "september") {
-               setStartDate(`09-01-2023`)
-               setEndDate(`09-30-2023`)
+               setStartDate(`09-01-${year}`)
+               setEndDate(`09-30-${year}`)
           }
 
           if (month == "october") {
-               setStartDate(`10-01-2023`)
-               setEndDate(`10-31-2023`)
+               setStartDate(`10-01-${year}`)
+               setEndDate(`10-31-${year}`)
           }
 
           if (month == "november") {
-               setStartDate(`11-01-2023`)
-               setEndDate(`11-30-2023`)
+               setStartDate(`11-01-${year}`)
+               setEndDate(`11-30-${year}`)
           }
 
           if (month == "december") {
-               setStartDate(`12-01-2023`)
-               setEndDate(`12-31-2023`)
+               setStartDate(`12-01-${year}`)
+               setEndDate(`12-31-${year}`)
           }
      }
 
@@ -2432,7 +2498,15 @@ const Dtr = (props) => {
           // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
+     useEffect(() => {
+          if(tardiness === "not_approved"){
+               setTotal_tardiness_min(0)
+          }
 
+          if(undertime === "not_approved"){
+               settotal_undertime_min(0)
+          }
+     },[tardiness, undertime])
      return (
 
           <div style={{ display: "flex" }}>
@@ -2503,22 +2577,54 @@ const Dtr = (props) => {
                                                             label="Month"
                                                             fullWidth
                                                             select
-                                                            style={{ paddingBottom: "20px" }}
-                                                            onChange={(e) => setMonth(e.target.value)}
+                                                            style={{ paddingBottom: "20px", marginRight: "10px" }}
+                                                            onChange={handleMonthChange}
                                                             value={month}
                                                        >
-                                                            <MenuItem value={'january'}>January 2023</MenuItem>
-                                                            <MenuItem value={'february'}>February 2023</MenuItem>
-                                                            <MenuItem value={'march'}>March 2023</MenuItem>
-                                                            <MenuItem value={'april'}>April 2023</MenuItem>
-                                                            <MenuItem value={'may'}>May 2023</MenuItem>
-                                                            <MenuItem value={'june'}>June 2023</MenuItem>
-                                                            <MenuItem value={'july'}>July 2023</MenuItem>
-                                                            <MenuItem value={'august'}>August 2023</MenuItem>
-                                                            <MenuItem value={'september'}>September 2023</MenuItem>
-                                                            <MenuItem value={'october'}>October 2023</MenuItem>
-                                                            <MenuItem value={'november'}>November 2023</MenuItem>
-                                                            <MenuItem value={'december'}>December 2023</MenuItem>
+                                                            <MenuItem value={'january'}>January</MenuItem>
+                                                            <MenuItem value={'february'}>February</MenuItem>
+                                                            <MenuItem value={'march'}>March</MenuItem>
+                                                            <MenuItem value={'april'}>April</MenuItem>
+                                                            <MenuItem value={'may'}>May</MenuItem>
+                                                            <MenuItem value={'june'}>June</MenuItem>
+                                                            <MenuItem value={'july'}>July</MenuItem>
+                                                            <MenuItem value={'august'}>August</MenuItem>
+                                                            <MenuItem value={'september'}>September</MenuItem>
+                                                            <MenuItem value={'october'}>October</MenuItem>
+                                                            <MenuItem value={'november'}>November</MenuItem>
+                                                            <MenuItem value={'december'}>December</MenuItem>
+
+                                                       </TextField>
+                                                       <TextField
+                                                            required
+                                                            id="outlined-required"
+                                                            label="Year"
+                                                            fullWidth
+                                                            select
+                                                            style={{ paddingBottom: "20px" }}
+                                                            onChange={handleYearChange}
+                                                            value={year}
+                                                       >
+                                                            <MenuItem value={'2023'}>2023</MenuItem>
+                                                            <MenuItem value={'2024'}>2024</MenuItem>
+                                                            <MenuItem value={'2025'}>2025</MenuItem>
+                                                            <MenuItem value={'2026'}>2026</MenuItem>
+                                                            <MenuItem value={'2027'}>2027</MenuItem>
+                                                            <MenuItem value={'2028'}>2028</MenuItem>
+                                                            <MenuItem value={'2029'}>2029</MenuItem>
+                                                            <MenuItem value={'2030'}>2030</MenuItem>
+                                                            <MenuItem value={'2031'}>2031</MenuItem>
+                                                            <MenuItem value={'2032'}>2032</MenuItem>
+                                                            <MenuItem value={'2033'}>2033</MenuItem>
+                                                            <MenuItem value={'2034'}>2034</MenuItem>
+                                                            <MenuItem value={'2035'}>2035</MenuItem>
+                                                            <MenuItem value={'2036'}>2036</MenuItem>
+                                                            <MenuItem value={'2037'}>2037</MenuItem>
+                                                            <MenuItem value={'2038'}>2038</MenuItem>
+                                                            <MenuItem value={'2039'}>2039</MenuItem>
+                                                            <MenuItem value={'2040'}>2040</MenuItem>
+                                                            <MenuItem value={'2041'}>2041</MenuItem>
+                                                            <MenuItem value={'2042'}>2042</MenuItem>
 
                                                        </TextField>
                                                        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2993,6 +3099,22 @@ const Dtr = (props) => {
                                                                                           readOnly: true,
                                                                                      }}
                                                                                 />
+                                                                                <TextField
+                                                                                     required
+                                                                                     id="outlined-required"
+                                                                                     label="Approve undertime?"
+                                                                                     fullWidth
+                                                                                     select
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={handleApproveUndertime}
+                                                                                     value={undertime}
+                                                                                     disabled={disabled_undertime}
+                                                                                >
+                                                                                  
+                                                                                     <MenuItem value={'approved'}>Yes, Include undertime</MenuItem>
+                                                                                     <MenuItem value={'not_approved'}>No, disregard undertime</MenuItem>
+
+                                                                                </TextField>
 
                                                                                 <TextField
                                                                                      type="number"
@@ -3007,6 +3129,22 @@ const Dtr = (props) => {
                                                                                           readOnly: true,
                                                                                      }}
                                                                                 />
+                                                                                 <TextField
+                                                                                     required
+                                                                                     id="outlined-required"
+                                                                                     label="Approve tardiness?"
+                                                                                     fullWidth
+                                                                                     select
+                                                                                     style={{ paddingBottom: "20px" }}
+                                                                                     onChange={handleApproveTardiness}
+                                                                                     value={tardiness}
+                                                                                     disabled={disabled_tardiness}
+                                                                                >
+                                                                                   
+                                                                                     <MenuItem value={'approved'}>Yes, include tardiness</MenuItem>
+                                                                                     <MenuItem value={'not_approved'}>No, disregard tardiness</MenuItem>
+
+                                                                                </TextField>
                                                                                 <TextField
 
                                                                                      id="outlined-required"

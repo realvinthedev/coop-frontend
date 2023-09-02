@@ -171,6 +171,7 @@ const Additionals = (props) => {
 
      const [employeeId, setEmployeeId] = useState('')
      const [name, setName] = useState('all')
+     const [year, setyear] = useState('')
      // const [date, setDate] = useState(() => {
      //      const date = new Date();
 
@@ -188,12 +189,18 @@ const Additionals = (props) => {
      const [period, setPeriod] = useState('first');
      const handleMonthChange = (e) => {
           setMonth(e.target.value)
-
-
-
      }
+
+     const handleYearChange = (e) => {
+          setyear(e.target.value)
+     }
+
+
      const handlePeriodChange = (e) => {
           setPeriod(e.target.value)
+     }
+     const handleBulkChange = (e) => {
+          setbulk(e.target.value)
      }
 
 
@@ -206,6 +213,7 @@ const Additionals = (props) => {
 
 
      const [openAdd, setOpenAdd] = useState(false);
+     const [bulk, setbulk] = useState('no');
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
      const [id, setId] = useState('')
      const [openDelete, setOpenDelete] = useState(false);
@@ -344,140 +352,140 @@ const Additionals = (props) => {
 
      useEffect(() => {
           handleDates();
-     }, [month, name, end_date, start_date, period])
+     }, [month, year, period])
 
 
      const handleDates = () => {
           if (month == "january" && period == "first") {
-               setStartDate(`01-01-2023`)
-               setEndDate(`01-15-2023`)
-               setDate(`01-01-2023`)
+               setStartDate(`01-01-${year}`)
+               setEndDate(`01-15-${year}`)
+               setDate(`01-01-${year}`)
           }
           if (month == "january" && period == "second") {
-               setStartDate(`01-16-2023`)
-               setEndDate(`01-31-2023`)
-               setDate(`01-16-2023`)
+               setStartDate(`01-16-${year}`)
+               setEndDate(`01-31-${year}`)
+               setDate(`01-16-${year}`)
           }
 
           if (month == "february" && period == "first") {
-               setStartDate(`02-01-2023`)
-               setEndDate(`02-15-2023`)
-               setDate(`02-01-2023`)
+               setStartDate(`02-01-${year}`)
+               setEndDate(`02-15-${year}`)
+               setDate(`02-01-${year}`)
           }
           if (month == "february" && period == "second") {
-               setStartDate(`02-16-2023`)
-               setEndDate(`02-29-2023`)
-               setDate(`02-16-2023`)
+               setStartDate(`02-16-${year}`)
+               setEndDate(`02-29-${year}`)
+               setDate(`02-16-${year}`)
           }
 
           if (month == "march" && period == "first") {
-               setStartDate(`03-01-2023`)
-               setEndDate(`03-15-2023`)
-               setDate(`03-01-2023`)
+               setStartDate(`03-01-${year}`)
+               setEndDate(`03-15-${year}`)
+               setDate(`03-01-${year}`)
           }
           if (month == "march" && period == "second") {
-               setStartDate(`03-16-2023`)
-               setEndDate(`03-31-2023`)
-               setDate(`03-16-2023`)
+               setStartDate(`03-16-${year}`)
+               setEndDate(`03-31-${year}`)
+               setDate(`03-16-${year}`)
           }
 
           if (month == "april" && period == "first") {
-               setStartDate(`04-01-2023`)
-               setEndDate(`04-15-2023`)
-               setDate(`04-01-2023`)
+               setStartDate(`04-01-${year}`)
+               setEndDate(`04-15-${year}`)
+               setDate(`04-01-${year}`)
           }
           if (month == "april" && period == "second") {
-               setStartDate(`04-16-2023`)
-               setEndDate(`04-30-2023`)
-               setDate(`04-16-2023`)
+               setStartDate(`04-16-${year}`)
+               setEndDate(`04-30-${year}`)
+               setDate(`04-16-${year}`)
           }
 
           if (month == "may" && period == "first") {
-               setStartDate(`05-01-2023`)
-               setEndDate(`05-15-2023`)
-               setDate(`05-01-2023`)
+               setStartDate(`05-01-${year}`)
+               setEndDate(`05-15-${year}`)
+               setDate(`05-01-${year}`)
           }
           if (month == "may" && period == "second") {
-               setStartDate(`05-16-2023`)
-               setEndDate(`05-31-2023`)
-               setDate(`05-16-2023`)
+               setStartDate(`05-16-${year}`)
+               setEndDate(`05-31-${year}`)
+               setDate(`05-16-${year}`)
           }
 
           if (month == "june" && period == "first") {
-               setStartDate(`06-01-2023`)
-               setEndDate(`06-15-2023`)
-               setDate(`06-01-2023`)
+               setStartDate(`06-01-${year}`)
+               setEndDate(`06-15-${year}`)
+               setDate(`06-01-${year}`)
           }
           if (month == "june" && period == "second") {
-               setStartDate(`06-16-2023`)
-               setEndDate(`06-30-2023`)
-               setDate(`06-16-2023`)
+               setStartDate(`06-16-${year}`)
+               setEndDate(`06-30-${year}`)
+               setDate(`06-16-${year}`)
           }
 
           if (month == "july" && period == "first") {
-               setStartDate(`07-01-2023`)
-               setEndDate(`07-15-2023`)
-               setDate(`07-01-2023`)
+               setStartDate(`07-01-${year}`)
+               setEndDate(`07-15-${year}`)
+               setDate(`07-01-${year}`)
           }
           if (month == "july" && period == "second") {
-               setStartDate(`07-16-2023`)
-               setEndDate(`07-31-2023`)
-               setDate(`07-16-2023`)
+               setStartDate(`07-16-${year}`)
+               setEndDate(`07-31-${year}`)
+               setDate(`07-16-${year}`)
           }
 
           if (month == "august" && period == "first") {
-               setStartDate(`08-01-2023`)
-               setEndDate(`08-15-2023`)
-               setDate(`08-01-2023`)
+               setStartDate(`08-01-${year}`)
+               setEndDate(`08-15-${year}`)
+               setDate(`08-01-${year}`)
           }
           if (month == "august" && period == "second") {
-               setStartDate(`08-16-2023`)
-               setEndDate(`08-31-2023`)
-               setDate(`08-16-2023`)
+               setStartDate(`08-16-${year}`)
+               setEndDate(`08-31-${year}`)
+               setDate(`08-16-${year}`)
           }
 
           if (month == "september" && period == "first") {
-               setStartDate(`09-01-2023`)
-               setEndDate(`09-15-2023`)
-               setDate(`09-01-2023`)
+               setStartDate(`09-01-${year}`)
+               setEndDate(`09-15-${year}`)
+               setDate(`09-01-${year}`)
           }
           if (month == "september" && period == "second") {
-               setStartDate(`09-16-2023`)
-               setEndDate(`09-30-2023`)
-               setDate(`09-16-2023`)
+               setStartDate(`09-16-${year}`)
+               setEndDate(`09-30-${year}`)
+               setDate(`09-16-${year}`)
           }
 
           if (month == "october" && period == "first") {
-               setStartDate(`10-01-2023`)
-               setEndDate(`10-15-2023`)
-               setDate(`10-01-2023`)
+               setStartDate(`10-01-${year}`)
+               setEndDate(`10-15-${year}`)
+               setDate(`10-01-${year}`)
           }
           if (month == "october" && period == "second") {
-               setStartDate(`10-16-2023`)
-               setEndDate(`10-31-2023`)
-               setDate(`10-16-2023`)
+               setStartDate(`10-16-${year}`)
+               setEndDate(`10-31-${year}`)
+               setDate(`10-16-${year}`)
           }
 
           if (month == "november" && period == "first") {
-               setStartDate(`11-01-2023`)
-               setEndDate(`11-15-2023`)
-               setDate(`11-01-2023`)
+               setStartDate(`11-01-${year}`)
+               setEndDate(`11-15-${year}`)
+               setDate(`11-01-${year}`)
           }
           if (month == "november" && period == "second") {
-               setStartDate(`11-16-2023`)
-               setEndDate(`11-30-2023`)
-               setDate(`11-16-2023`)
+               setStartDate(`11-16-${year}`)
+               setEndDate(`11-30-${year}`)
+               setDate(`11-16-${year}`)
           }
 
           if (month == "december" && period == "first") {
-               setStartDate(`12-01-2023`)
-               setEndDate(`12-15-2023`)
-               setDate(`12-01-2023`)
+               setStartDate(`12-01-${year}`)
+               setEndDate(`12-15-${year}`)
+               setDate(`12-01-${year}`)
           }
           if (month == "december" && period == "second") {
-               setStartDate(`12-16-2023`)
-               setEndDate(`12-31-2023`)
-               setDate(`12-16-2023`)
+               setStartDate(`12-16-${year}`)
+               setEndDate(`12-31-${year}`)
+               setDate(`12-16-${year}`)
           }
      }
 
@@ -492,14 +500,19 @@ const Additionals = (props) => {
                const json = await response.json()
 
                if (response.ok) {
+                    const startDateObj = new Date(start_date);
+                    const endDateObj = new Date(end_date);
+
                     const filteredData = json.filter(item => {
-                         const date = item.date_covered
+                       
+                         const date = new Date(item.date_covered)
                          const employee_id = item.employee_id
                          if (name == "all") {
-                              return date >= start_date && date <= end_date
+                          
+                              return date >= startDateObj && date <= endDateObj;
                          }
                          else {
-                              return date >= start_date && date <= end_date && employee_id == employeeId
+                              return date >= startDateObj && date <= endDateObj && employee_id == employeeId
                          }
                     });
                     setAdditionals(filteredData)
@@ -563,6 +576,18 @@ const Additionals = (props) => {
      };
      const successToast = (success) => {
           toast.success(success);
+     };
+     const warningToast = (success) => {
+          toast.warn(success, {
+               position: "top-right",
+               autoClose: 5000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: "dark",
+               });
      };
      const errorToast = (error) => {
           toast.error(error);
@@ -688,49 +713,117 @@ const Additionals = (props) => {
                     return
                }
                else {
-                    const additional = {
-                         date_covered: date,
-                         employee_id: employeeId,
-                         name: name,
-                         sss: sss,
-                         wtax: wtax,
-                         philhealth: philhealth,
-                         pagibig: pagibig,
-                         lodging: lodging,
-                         water_electricity: water_electricity,
-                         hmo: hmo,
-                         share_capital: share_capital,
-                         hhhc_savings: hhhc_savings,
-                         hhhc_membership_fee: hhhc_membership_fee,
-                         cash_advances: cash_advances,
-                         pay_adjustment_deduction: pay_adjustment_deduction,
-                         other_deduction: other_deduction,
-                         total_deduction: total_deduction,
-                         allowance: allowance,
-                         pay_adjustment_earnings: pay_adjustment_earnings,
-                         other_earnings: other_earnings,
-                         total_earnings: total_earnings
-                    }
-                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
-                         method: 'POST',
-                         body: JSON.stringify(additional),
-                         headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization': `Bearer ${user.token}`
+                    if (bulk === "no") {
+                         const additional = {
+                              date_covered: date,
+                              employee_id: employeeId,
+                              name: name,
+                              sss: sss,
+                              wtax: wtax,
+                              philhealth: philhealth,
+                              pagibig: pagibig,
+                              lodging: lodging,
+                              water_electricity: water_electricity,
+                              hmo: hmo,
+                              share_capital: share_capital,
+                              hhhc_savings: hhhc_savings,
+                              hhhc_membership_fee: hhhc_membership_fee,
+                              cash_advances: cash_advances,
+                              pay_adjustment_deduction: pay_adjustment_deduction,
+                              other_deduction: other_deduction,
+                              total_deduction: total_deduction,
+                              allowance: allowance,
+                              pay_adjustment_earnings: pay_adjustment_earnings,
+                              other_earnings: other_earnings,
+                              total_earnings: total_earnings
                          }
-                    })
-                    const json = await response.json()
-                    if (!response.ok) {
-                         setError(json.error)
-                         console.log(json.error)
-                         console.log(error)
+                         const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
+                              method: 'POST',
+                              body: JSON.stringify(additional),
+                              headers: {
+                                   'Content-Type': 'application/json',
+                                   'Authorization': `Bearer ${user.token}`
+                              }
+                         })
+                         const json = await response.json()
+                         if (!response.ok) {
+                              setError(json.error)
+                              console.log(json.error)
+                              console.log(error)
+                         }
+                         else {
+                              console.log(error)
+                         }
+                         successToast('Added Successfully')
+                         handleCloseAddAdditionals();
+                         handleRefresher()
                     }
                     else {
-                         console.log(error)
+                         //LOOP HERE
+                         const startDateString = date;
+
+                         const startDateArray = startDateString.split('-');
+                         const startDate = new Date(`${startDateArray[2]}-${startDateArray[0]}-${startDateArray[1]}`);
+                         const numberOfMonths = 6; // Generate dates for 6 months
+                         const currentDate = new Date(startDate);
+
+                         for (let i = 0; i < numberOfMonths; i++) {
+                              const year = currentDate.getFullYear();
+                              const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                              const day = currentDate.getDate().toString().padStart(2, '0');
+                              const dateString = `${month}-${day}-${year}`;
+
+                              const additional = {
+                                   date_covered: dateString,
+                                   employee_id: employeeId,
+                                   name: name,
+                                   sss: sss,
+                                   wtax: wtax,
+                                   philhealth: philhealth,
+                                   pagibig: pagibig,
+                                   lodging: lodging,
+                                   water_electricity: water_electricity,
+                                   hmo: hmo,
+                                   share_capital: share_capital,
+                                   hhhc_savings: hhhc_savings,
+                                   hhhc_membership_fee: hhhc_membership_fee,
+                                   cash_advances: cash_advances,
+                                   pay_adjustment_deduction: pay_adjustment_deduction,
+                                   other_deduction: other_deduction,
+                                   total_deduction: total_deduction,
+                                   allowance: allowance,
+                                   pay_adjustment_earnings: pay_adjustment_earnings,
+                                   other_earnings: other_earnings,
+                                   total_earnings: total_earnings
+                              }
+
+                              const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional', {
+                                   method: 'POST',
+                                   body: JSON.stringify(additional),
+                                   headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${user.token}`
+                                   }
+                              })
+                              const json = await response.json()
+                              if (!response.ok) {
+                                   setError(json.error)
+                                   console.log(json.error)
+                                   console.log(error)
+                              }
+                              else {
+                                   console.log(error)
+                              }
+                              currentDate.setMonth(currentDate.getMonth() + 1);
+
+                         }
+                         successToast('Added Successfully')
+                         
+                         warningToast('Bulk data are added for the next 6 months. Update the data later on if needed.')
+                         handleCloseAddAdditionals();
+                         handleRefresher()
                     }
-                    successToast('Added Successfully')
-                    handleCloseAddAdditionals();
-                    handleRefresher()
+
                }
 
 
@@ -802,18 +895,50 @@ const Additionals = (props) => {
                                                                  onChange={handleMonthChange}
                                                                  value={month}
                                                             >
-                                                                 <MenuItem value={'january'}>January 2023</MenuItem>
-                                                                 <MenuItem value={'february'}>February 2023</MenuItem>
-                                                                 <MenuItem value={'march'}>March 2023</MenuItem>
-                                                                 <MenuItem value={'april'}>April 2023</MenuItem>
-                                                                 <MenuItem value={'may'}>May 2023</MenuItem>
-                                                                 <MenuItem value={'june'}>June 2023</MenuItem>
-                                                                 <MenuItem value={'july'}>July 2023</MenuItem>
-                                                                 <MenuItem value={'august'}>August 2023</MenuItem>
-                                                                 <MenuItem value={'september'}>September 2023</MenuItem>
-                                                                 <MenuItem value={'october'}>October 2023</MenuItem>
-                                                                 <MenuItem value={'november'}>November 2023</MenuItem>
-                                                                 <MenuItem value={'december'}>December 2023</MenuItem>
+                                                                 <MenuItem value={'january'}>January</MenuItem>
+                                                                 <MenuItem value={'february'}>February</MenuItem>
+                                                                 <MenuItem value={'march'}>March</MenuItem>
+                                                                 <MenuItem value={'april'}>April</MenuItem>
+                                                                 <MenuItem value={'may'}>May</MenuItem>
+                                                                 <MenuItem value={'june'}>June</MenuItem>
+                                                                 <MenuItem value={'july'}>July</MenuItem>
+                                                                 <MenuItem value={'august'}>August</MenuItem>
+                                                                 <MenuItem value={'september'}>September</MenuItem>
+                                                                 <MenuItem value={'october'}>October</MenuItem>
+                                                                 <MenuItem value={'november'}>November</MenuItem>
+                                                                 <MenuItem value={'december'}>December</MenuItem>
+
+                                                            </TextField>
+                                                            <TextField
+                                                                 required
+                                                                 id="outlined-required"
+                                                                 label="Year"
+                                                                 fullWidth
+                                                                 select
+                                                                 style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                                 onChange={handleYearChange}
+                                                                 value={year}
+                                                            >
+                                                                 <MenuItem value={'2023'}>2023</MenuItem>
+                                                                 <MenuItem value={'2024'}>2024</MenuItem>
+                                                                 <MenuItem value={'2025'}>2025</MenuItem>
+                                                                 <MenuItem value={'2026'}>2026</MenuItem>
+                                                                 <MenuItem value={'2027'}>2027</MenuItem>
+                                                                 <MenuItem value={'2028'}>2028</MenuItem>
+                                                                 <MenuItem value={'2029'}>2029</MenuItem>
+                                                                 <MenuItem value={'2030'}>2030</MenuItem>
+                                                                 <MenuItem value={'2031'}>2031</MenuItem>
+                                                                 <MenuItem value={'2032'}>2032</MenuItem>
+                                                                 <MenuItem value={'2033'}>2033</MenuItem>
+                                                                 <MenuItem value={'2034'}>2034</MenuItem>
+                                                                 <MenuItem value={'2035'}>2035</MenuItem>
+                                                                 <MenuItem value={'2036'}>2036</MenuItem>
+                                                                 <MenuItem value={'2037'}>2037</MenuItem>
+                                                                 <MenuItem value={'2038'}>2038</MenuItem>
+                                                                 <MenuItem value={'2039'}>2039</MenuItem>
+                                                                 <MenuItem value={'2040'}>2040</MenuItem>
+                                                                 <MenuItem value={'2041'}>2041</MenuItem>
+                                                                 <MenuItem value={'2042'}>2042</MenuItem>
 
                                                             </TextField>
                                                             <TextField
@@ -831,7 +956,7 @@ const Additionals = (props) => {
                                                             </TextField>
                                                             <Autocomplete
                                                                  value={name}
-                                                                
+
                                                                  onSelect={handleName}
                                                                  options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
                                                                  renderInput={(params) => (
@@ -902,18 +1027,50 @@ const Additionals = (props) => {
                                                                            onChange={handleMonthChange}
                                                                            value={month}
                                                                       >
-                                                                           <MenuItem value={'january'}>January 2023</MenuItem>
-                                                                           <MenuItem value={'february'}>February 2023</MenuItem>
-                                                                           <MenuItem value={'march'}>March 2023</MenuItem>
-                                                                           <MenuItem value={'april'}>April 2023</MenuItem>
-                                                                           <MenuItem value={'may'}>May 2023</MenuItem>
-                                                                           <MenuItem value={'june'}>June 2023</MenuItem>
-                                                                           <MenuItem value={'july'}>July 2023</MenuItem>
-                                                                           <MenuItem value={'august'}>August 2023</MenuItem>
-                                                                           <MenuItem value={'september'}>September 2023</MenuItem>
-                                                                           <MenuItem value={'october'}>October 2023</MenuItem>
-                                                                           <MenuItem value={'november'}>November 2023</MenuItem>
-                                                                           <MenuItem value={'december'}>December 2023</MenuItem>
+                                                                           <MenuItem value={'january'}>January</MenuItem>
+                                                                           <MenuItem value={'february'}>February</MenuItem>
+                                                                           <MenuItem value={'march'}>March</MenuItem>
+                                                                           <MenuItem value={'april'}>April</MenuItem>
+                                                                           <MenuItem value={'may'}>May</MenuItem>
+                                                                           <MenuItem value={'june'}>June</MenuItem>
+                                                                           <MenuItem value={'july'}>July</MenuItem>
+                                                                           <MenuItem value={'august'}>August</MenuItem>
+                                                                           <MenuItem value={'september'}>September</MenuItem>
+                                                                           <MenuItem value={'october'}>October</MenuItem>
+                                                                           <MenuItem value={'november'}>November</MenuItem>
+                                                                           <MenuItem value={'december'}>December</MenuItem>
+
+                                                                      </TextField>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Year"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                                           onChange={handleYearChange}
+                                                                           value={year}
+                                                                      >
+                                                                           <MenuItem value={'2023'}>2023</MenuItem>
+                                                                           <MenuItem value={'2024'}>2024</MenuItem>
+                                                                           <MenuItem value={'2025'}>2025</MenuItem>
+                                                                           <MenuItem value={'2026'}>2026</MenuItem>
+                                                                           <MenuItem value={'2027'}>2027</MenuItem>
+                                                                           <MenuItem value={'2028'}>2028</MenuItem>
+                                                                           <MenuItem value={'2029'}>2029</MenuItem>
+                                                                           <MenuItem value={'2030'}>2030</MenuItem>
+                                                                           <MenuItem value={'2031'}>2031</MenuItem>
+                                                                           <MenuItem value={'2032'}>2032</MenuItem>
+                                                                           <MenuItem value={'2033'}>2033</MenuItem>
+                                                                           <MenuItem value={'2034'}>2034</MenuItem>
+                                                                           <MenuItem value={'2035'}>2035</MenuItem>
+                                                                           <MenuItem value={'2036'}>2036</MenuItem>
+                                                                           <MenuItem value={'2037'}>2037</MenuItem>
+                                                                           <MenuItem value={'2038'}>2038</MenuItem>
+                                                                           <MenuItem value={'2039'}>2039</MenuItem>
+                                                                           <MenuItem value={'2040'}>2040</MenuItem>
+                                                                           <MenuItem value={'2041'}>2041</MenuItem>
+                                                                           <MenuItem value={'2042'}>2042</MenuItem>
 
                                                                       </TextField>
                                                                       <TextField
@@ -922,19 +1079,33 @@ const Additionals = (props) => {
                                                                            label="Period"
                                                                            fullWidth
                                                                            select
-                                                                           style={{ paddingBottom: "20px" }}
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px" }}
                                                                            onChange={handlePeriodChange}
                                                                            value={period}
                                                                       >
                                                                            <MenuItem value={'first'}>First Half</MenuItem>
                                                                            <MenuItem value={'second'}>Second Half</MenuItem>
                                                                       </TextField>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Bulk Add"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           onChange={handleBulkChange}
+                                                                           value={bulk}
+                                                                      >
+                                                                           <MenuItem value={'no'}>No</MenuItem>
+                                                                           <MenuItem value={'yes'}>Yes</MenuItem>
+                                                                      </TextField>
+
                                                                  </div>
                                                                  {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
                                                                  {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
                                                                  <Autocomplete
                                                                       value={name}
-                                                                      
+
                                                                       onSelect={handleName}
                                                                       options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
                                                                       renderInput={(params) => (
@@ -973,7 +1144,7 @@ const Additionals = (props) => {
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
                                                                       }}
-                                                                    
+
                                                                  />
 
                                                                  <TextField
