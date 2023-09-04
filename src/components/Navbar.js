@@ -138,10 +138,10 @@ const Navbar = () => {
                               </div>
                               <ListItemText primary="Credentials" />
                          </ListItemButton>
-                    </Link>} */}
+                    </Link>}  */}
 
-{/* 
-                    {user && currentUser == "happy_admin" &&
+
+                    {/* {user && currentUser == "happy_admin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -152,7 +152,7 @@ const Navbar = () => {
                               <ListItemText primary="Signup a user" />
                          </ListItemButton>
                     </Link>} */}
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "happy_admin" || currentUser == "approver1" || currentUser == "maker1") &&
                          <Link to="/dtr">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -163,7 +163,7 @@ const Navbar = () => {
                                    <ListItemText primary="DTR" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "happy_admin" || currentUser == "approver1" || currentUser == "maker1") &&
                          <Link to="/additionals">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -174,7 +174,7 @@ const Navbar = () => {
                                    <ListItemText primary="Additional Earnings & Deductions" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "happy_admin" || currentUser == "approver1" || currentUser == "maker1") && 
                          <Link to="/payroll">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>

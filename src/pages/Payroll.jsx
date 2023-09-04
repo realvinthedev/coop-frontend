@@ -153,9 +153,17 @@ function createData(name, calories, fat, carbs, protein) {
 
 
 const Payroll = (props) => {
+
+   
+    
+
+
+
+
      const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
      const [query, setQuery] = useState('')
      const { user } = useAuthContext()
+     const currentUser = user.username;
      const [openAdd, setOpenAdd] = useState(false);
      const [id, setId] = useState('')
      const [openDelete, setOpenDelete] = useState(false);
@@ -598,15 +606,14 @@ const Payroll = (props) => {
                          return month == month2 && period == period2
                     });
                     setSumm(filteredData)
-                    console.log(filteredData)
                }
           }
           if (user) {
                fetchEmp();
           }
-          console.log("*******************")
 
-     }, [start_date2, end_date2, period2])
+
+     }, [start_date2, end_date2, period2, randomNum])
 
 
      useEffect(() => {
@@ -1003,7 +1010,6 @@ const Payroll = (props) => {
      }, [total]);
 
 
-
      const [final_gross_pay, setfinal_gross_pay] = useState(0);
      const [final_deduction, setfinal_deduction] = useState(0);
      const [final_earnings, setfinal_earnings] = useState(0);
@@ -1291,6 +1297,11 @@ const Payroll = (props) => {
      const [tabvalue, settabvalue] = React.useState('1');
      const handleGoToSummary = () => {
           // setbuttonReceiptDisabled(true)
+          settabvalue('3')
+     }
+
+     const handleGoToApprovals = () => {
+          // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
 
@@ -1329,6 +1340,7 @@ const Payroll = (props) => {
                     }
                     else {
                          const payslip = {
+                              approval_status: 'PENDING', //need to update to "APPROVED"
                               month: db_month,
                               period: db_period,
                               employee_id: db_employeeid,
@@ -1352,12 +1364,14 @@ const Payroll = (props) => {
                }
                else {
                     const payslip = {
+                         approval_status: 'PENDING',
                          month: db_month,
                          period: db_period,
                          employee_id: db_employeeid,
                          net: db_net_pay,
                          department: db_department,
                          name: new_name,
+
                     }
                     if (!user) {
                          console.log('You must be logged in first')
@@ -1409,6 +1423,51 @@ const Payroll = (props) => {
      }, [summ]);
 
 
+     const handleApproval = async (transaction) => {
+
+          // Make the API request to update the approval_status to 'APPROVED'
+
+          if (transaction.approval_status === 'PENDING' || transaction.approval_status === 'REJECTED') {
+               const approved = {
+                    approval_status: 'APPROVED', // Update to 'PENDING'
+               };
+               const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/${transaction.employee_id}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify(approved),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`,
+                    },
+               });
+               const json = await response.json()
+
+               random();
+          }
+
+
+     }
+
+     const handleRejection = async (transaction) => {
+
+          const rejected = {
+               approval_status: 'REJECTED', // Update to 'PENDING'
+          };
+
+          const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/${transaction.employee_id}`, {
+               method: 'PATCH',
+               body: JSON.stringify(rejected),
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`,
+               },
+          });
+          const json = await response.json()
+
+          random();
+     }
+
+
+
      return (
 
           <div style={{ display: "flex" }}>
@@ -1423,7 +1482,8 @@ const Payroll = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Payslip" value="1" />
-                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} />
+                                                       <Tab label="Approvals" value="2" onClick={handleGoToApprovals} />
+                                                       <Tab label="Summary" value="3" onClick={handleGoToSummary} />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -1534,7 +1594,11 @@ const Payroll = (props) => {
                                                                  <p>HAPPY HOMES HOUSING COOPERATIVE</p>
                                                                  <p>FOR THE CUT-OFF PERIOD {start_date + " - " + end_date}</p>
                                                             </div>
-                                                            <div style={{ paddingLeft: "50px" }}>Name: {new_name}</div>
+                                                            <div>
+                                                                 <div style={{ paddingLeft: "50px" }}>Name: {new_name}</div>
+
+                                                            </div>
+
                                                        </div>
                                                        <TablesContainer >
                                                             <TableContainer
@@ -1992,7 +2056,332 @@ const Payroll = (props) => {
                                                        </EditDeleteContainer>
                                                   </ButtonContainer>
                                              </TabPanel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                             {/* 9/4/2023 */}
+
                                              <TabPanel value="2">
+                                                  <div ref={appRefSummary} style={{ width: "100%", padding: "20px" }}>
+                                                       <div style={{ display: "flex", paddingRight: "20px" }}>
+                                                            <div>
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DateContainer>
+
+                                                                           <TextField
+                                                                                required
+                                                                                id="outlined-required"
+                                                                                label="Month"
+                                                                                fullWidth
+                                                                                select
+                                                                                style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                onChange={handleMonthChange2}
+                                                                                value={month2}
+                                                                           >
+                                                                                <MenuItem value={'january'}>January 2023</MenuItem>
+                                                                                <MenuItem value={'february'}>February 2023</MenuItem>
+                                                                                <MenuItem value={'march'}>March 2023</MenuItem>
+                                                                                <MenuItem value={'april'}>April 2023</MenuItem>
+                                                                                <MenuItem value={'may'}>May 2023</MenuItem>
+                                                                                <MenuItem value={'june'}>June 2023</MenuItem>
+                                                                                <MenuItem value={'july'}>July 2023</MenuItem>
+                                                                                <MenuItem value={'august'}>August 2023</MenuItem>
+                                                                                <MenuItem value={'september'}>September 2023</MenuItem>
+                                                                                <MenuItem value={'october'}>October 2023</MenuItem>
+                                                                                <MenuItem value={'november'}>November 2023</MenuItem>
+                                                                                <MenuItem value={'december'}>December 2023</MenuItem>
+
+                                                                           </TextField>
+
+                                                                           <TextField
+                                                                                required
+                                                                                id="outlined-required"
+                                                                                label="Period"
+                                                                                fullWidth
+                                                                                select
+                                                                                style={{ paddingBottom: "20px", paddingRight: "10px", width: "300px" }}
+                                                                                onChange={handlePeriodChange2}
+                                                                                value={period2}
+                                                                           >
+                                                                                <MenuItem value={'first'}>First Half</MenuItem>
+                                                                                <MenuItem value={'second'}>Second Half</MenuItem>
+                                                                           </TextField>
+                                                                      </DateContainer>
+                                                                 </LocalizationProvider>
+                                                            </div>
+
+                                                       </div>
+                                                       <div>
+                                                            {/* <div style={{ width: "100%", marginRight: "20px" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Confirmation</h3>
+                                                                 </div>
+                                                                 {summ && summ.length > 0 ? (
+
+                                                                      <TableContainer style={{ width: "100%" }}>
+                                                                           {summ
+                                                                                .sort((a, b) => (a.department || '').localeCompare(b.department || ''))
+                                                                                .map((transaction, index) => {
+                                                                                     const prevDepartment = index > 0 ? summ[index - 1].department : null;
+                                                                                     const currentDepartment = transaction.department;
+
+                                                                                     if (prevDepartment !== currentDepartment) {
+                                                                                          rowNumber = 1; // Reset the row number for a new department
+                                                                                          return (
+                                                                                               <div key={index}>
+                                                                                                    <h2 style={{ backgroundColor: '#f0f0f0', padding: '5px', marginBottom: '10px' }}>
+                                                                                                         {currentDepartment}
+                                                                                                    </h2>
+                                                                                                    <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                         <TableHead>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>#</TableCell>
+                                                                                                                   <TableCell style={{ width: 250 }}>Name</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>Department</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100 }}>Net Pay</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>Status</TableCell>
+                                                                                                              </TableRow>
+                                                                                                         </TableHead>
+                                                                                                         <TableBody>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                                   <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                        minimumFractionDigits: 2,
+                                                                                                                        maximumFractionDigits: 2
+                                                                                                                   })}</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>{transaction.status}</TableCell>
+                                                                                                              </TableRow>
+                                                                                                         </TableBody>
+                                                                                                    </Table>
+                                                                                               </div>
+                                                                                          );
+                                                                                     } else {
+                                                                                          rowNumber++; // Increment row number for subsequent rows within the same department
+                                                                                          return (
+                                                                                               <Table key={index} sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                    <TableBody>
+                                                                                                         <TableRow>
+                                                                                                              <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                              <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
+                                                                                                              <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
+                                                                                                              <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                   minimumFractionDigits: 2,
+                                                                                                                   maximumFractionDigits: 2
+                                                                                                              })}</TableCell>
+                                                                                                              <TableCell style={{ width: 120 }}>{transaction.status}</TableCell>
+                                                                                                         </TableRow>
+                                                                                                    </TableBody>
+                                                                                               </Table>
+                                                                                          );
+                                                                                     }
+                                                                                })}
+                                                                      </TableContainer>
+
+                                                                 ) : (
+                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", alignItems: "center", flexDirection: "column" }}>
+                                                                           <p>Select a month and period to display the data</p>
+                                                                      </div>
+                                                                 )}
+
+
+                                                            </div> */}
+
+
+                                                            <div style={{ width: "100%", marginRight: "20px" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Approvals</h3>
+                                                                 </div>
+                                                                 {summ && summ.length > 0 ? (
+
+                                                                      <TableContainer style={{ width: "100%" }}>
+                                                                           {summ
+                                                                                .sort((a, b) => (a.department || '').localeCompare(b.department || ''))
+                                                                                .map((transaction, index) => {
+                                                                                     const prevDepartment = index > 0 ? summ[index - 1].department : null;
+                                                                                     const currentDepartment = transaction.department;
+
+                                                                                     const isPending = transaction.approval_status === 'PENDING';
+                                                                                     // const buttonText = isPending ? 'Approve' : 'Disapprove';
+                                                                                     const textBackground = (() => {
+                                                                                          if (transaction.approval_status === 'PENDING') {
+                                                                                               return '#ffb453'
+                                                                                          }
+                                                                                          else if (transaction.approval_status === 'APPROVED') {
+                                                                                               return '#448d42'
+                                                                                          }
+                                                                                          else {
+                                                                                               return '#b43f3b'
+                                                                                          }
+                                                                                     })();
+
+
+
+                                                                                     if (prevDepartment !== currentDepartment) {
+                                                                                          rowNumber = 1; // Reset the row number for a new department
+                                                                                          return (
+                                                                                               <div key={index}>
+                                                                                                    <h2 style={{ backgroundColor: '#f0f0f0', padding: '5px', marginBottom: '10px' }}>
+                                                                                                         {currentDepartment}
+                                                                                                    </h2>
+                                                                                                    <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                         <TableHead>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>#</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>Name</TableCell>
+                                                                                                                   <TableCell style={{ width: 40 }}>Departments</TableCell>
+                                                                                                                   <TableCell align='left' style={{ width: 50 }}>Net Pay</TableCell>
+                                                                                                                   <TableCell style={{ width: 60 }}>Status</TableCell>
+                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "approver1") && <TableCell style={{ width: 80 }}>Action</TableCell>}
+                                                                                                              </TableRow>
+                                                                                                         </TableHead>
+                                                                                                         <TableBody>
+                                                                                                              <TableRow>
+                                                                                                                   <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                                   <TableCell style={{ width: 120 }}>{transaction.name}</TableCell>
+                                                                                                                   <TableCell style={{ width: 40 }}>{transaction.department}</TableCell>
+                                                                                                                   <TableCell align='left' style={{ width: 50 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                        minimumFractionDigits: 2,
+                                                                                                                        maximumFractionDigits: 2
+                                                                                                                   })}</TableCell>
+                                                                                                                   <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
+                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "approver1") && <TableCell style={{ width: 80 }}>
+
+                                                                                                                        <ThemeProvider theme={theme}>
+                                                                                                                             <div>
+                                                                                                                                  <Button style={{ marginRight: "5px" }} variant="outlined" color="green" onClick={() => handleApproval(transaction)}>
+                                                                                                                                       Approve
+                                                                                                                                  </Button>
+                                                                                                                                  <Button variant="outlined" color="red" onClick={() => handleRejection(transaction)}>
+                                                                                                                                       Reject
+                                                                                                                                  </Button>
+                                                                                                                             </div>
+                                                                                                                        </ThemeProvider>
+
+                                                                                                                   </TableCell>}
+                                                                                                              </TableRow>
+                                                                                                         </TableBody>
+                                                                                                    </Table>
+                                                                                               </div>
+                                                                                          );
+                                                                                     } else {
+                                                                                          rowNumber++; // Increment row number for subsequent rows within the same department
+                                                                                          return (
+                                                                                               <Table key={index} sx={{ width: "100%" }} size="small" aria-label="a dense table">
+                                                                                                    <TableBody>
+                                                                                                         <TableRow>
+                                                                                                              <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
+                                                                                                              <TableCell style={{ width: 120 }}>{transaction.name}</TableCell>
+                                                                                                              <TableCell style={{ width: 40 }}>{transaction.department}</TableCell>
+                                                                                                              <TableCell align='left' style={{ width: 50 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                   minimumFractionDigits: 2,
+                                                                                                                   maximumFractionDigits: 2
+                                                                                                              })}</TableCell>
+                                                                                                              <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
+                                                                                                              {(user && currentUser == "happy_admin" || currentUser == "approver1") &&  <TableCell style={{ width: 80 }}>
+
+                                                                                                                   <ThemeProvider theme={theme}>
+                                                                                                                        <div>
+                                                                                                                             <Button style={{ marginRight: "5px" }} variant="outlined" color="green" onClick={() => handleApproval(transaction)}>
+                                                                                                                                  Approve
+                                                                                                                             </Button>
+                                                                                                                             <Button variant="outlined" color="red" onClick={() => handleRejection(transaction)}>
+                                                                                                                                  Reject
+                                                                                                                             </Button>
+                                                                                                                        </div>
+                                                                                                                   </ThemeProvider>
+
+                                                                                                              </TableCell>}
+                                                                                                         </TableRow>
+                                                                                                    </TableBody>
+                                                                                               </Table>
+                                                                                          );
+                                                                                     }
+                                                                                })}
+                                                                      </TableContainer>
+
+                                                                 ) : (
+                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", alignItems: "center", flexDirection: "column" }}>
+                                                                           <p>Select a month and period to display the data</p>
+                                                                      </div>
+                                                                 )}
+
+
+                                                            </div>
+
+
+                                                            <div style={{ width: "100%", marginTop: "100px" }}>
+                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
+                                                                      <h3>Total</h3>
+                                                                 </div>
+                                                                 <TableContainer style={{ marginBottom: "20px" }}>
+                                                                      <Table aria-label="simple table">
+                                                                           <TableBody>
+                                                                                {Object.entries(departmentTotals).map(([department, total]) => (
+                                                                                     <TableRow key={department}>
+                                                                                          <TableCell sx={{ width: 300 }}>{department} Total Net Pay</TableCell>
+                                                                                          <TableCell align='right'>
+                                                                                               {total.toLocaleString(undefined, {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2
+                                                                                               })}
+                                                                                          </TableCell>
+                                                                                     </TableRow>
+                                                                                ))}
+                                                                                <TableRow>
+                                                                                     <TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>Grand Total Net Pay</TableCell>
+                                                                                     <TableCell align='right' style={{ fontWeight: "600" }}>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                          minimumFractionDigits: 2,
+                                                                                          maximumFractionDigits: 2
+                                                                                     })}</TableCell>
+                                                                                </TableRow>
+                                                                           </TableBody>
+                                                                      </Table>
+                                                                 </TableContainer>
+                                                            </div>
+
+                                                       </div>
+
+                                                  </div>
+                                                  <ThemeProvider theme={theme}>
+
+                                                       <div style={{ display: "flex", justifyContent: "left", marginTop: "20px", width: "100%" }}>
+                                                            <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshotSummary}>
+                                                                 Download
+                                                            </Button>
+                                                       </div>
+
+                                                  </ThemeProvider>
+                                             </TabPanel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                             <TabPanel value="3">
                                                   <div ref={appRefSummary} style={{ width: "100%", padding: "20px" }}>
                                                        <div style={{ display: "flex", paddingRight: "20px" }}>
                                                             <div>
@@ -2047,8 +2436,8 @@ const Payroll = (props) => {
                                                             </div>
 
                                                        </div>
-                                                       <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                            <div style={{ width: "100%", marginRight: "20px" }}>
+                                                       <div style={{ display: "flex", justifyContent: "space-between", }}>
+                                                            <div style={{ width: "100%", marginRight: "20px", }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Confirmation</h3>
                                                                  </div>
@@ -2137,7 +2526,7 @@ const Payroll = (props) => {
                                                                       </Table>
                                                                  </TableContainer>
                                                             </div> */}
-                                                            <div style={{ width: "100%" }}>
+                                                            <div style={{ width: "100%", }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Total</h3>
                                                                  </div>
@@ -2156,8 +2545,8 @@ const Payroll = (props) => {
                                                                                      </TableRow>
                                                                                 ))}
                                                                                 <TableRow>
-                                                                                     <TableCell sx={{ width: 300 }} style={{fontWeight: "600"}}>Grand Total Net Pay</TableCell>
-                                                                                     <TableCell align='right' style={{fontWeight: "600"}}>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                     <TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>Grand Total Net Pay</TableCell>
+                                                                                     <TableCell align='right' style={{ fontWeight: "600" }}>{summ_net && summ_net.toLocaleString(undefined, {
                                                                                           minimumFractionDigits: 2,
                                                                                           maximumFractionDigits: 2
                                                                                      })}</TableCell>
