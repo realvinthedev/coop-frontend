@@ -2260,10 +2260,10 @@ const Payroll = (props) => {
 
                                                                                                                         <ThemeProvider theme={theme}>
                                                                                                                              <div>
-                                                                                                                                  <Button style={{ marginRight: "5px" }} variant="outlined" color="green" onClick={() => handleApproval(transaction)}>
+                                                                                                                                  <Button style={{ marginRight: "5px" }} variant="contained" color="green" onClick={() => handleApproval(transaction)}>
                                                                                                                                        Approve
                                                                                                                                   </Button>
-                                                                                                                                  <Button variant="outlined" color="red" onClick={() => handleRejection(transaction)}>
+                                                                                                                                  <Button variant="contained" color="red" onClick={() => handleRejection(transaction)}>
                                                                                                                                        Reject
                                                                                                                                   </Button>
                                                                                                                              </div>
@@ -2293,10 +2293,10 @@ const Payroll = (props) => {
 
                                                                                                                    <ThemeProvider theme={theme}>
                                                                                                                         <div>
-                                                                                                                             <Button style={{ marginRight: "5px" }} variant="outlined" color="green" onClick={() => handleApproval(transaction)}>
+                                                                                                                             <Button style={{ marginRight: "5px" }} variant="contained" color="green" onClick={() => handleApproval(transaction)}>
                                                                                                                                   Approve
                                                                                                                              </Button>
-                                                                                                                             <Button variant="outlined" color="red" onClick={() => handleRejection(transaction)}>
+                                                                                                                             <Button variant="contained" color="red" onClick={() => handleRejection(transaction)}>
                                                                                                                                   Reject
                                                                                                                              </Button>
                                                                                                                         </div>
