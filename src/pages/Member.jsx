@@ -168,33 +168,33 @@ const columns = [
 const savings_columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'particulars', headerName: 'Particulars', width: 300 },
-     { field: 'membership_fee', headerName: 'Membership Fee', width: 120, valueFormatter: zeroValueFormatter, align: "right"},
-     { field: 'share_capital_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right" },
+     { field: 'membership_fee', headerName: 'Membership Fee', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'share_capital_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
      { field: 'share_capital_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
      { field: 'share_capital_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
      { field: 'coop_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'coop_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'coop_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
      { field: 'coop_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
-     { field: 'special_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
-     { field: 'special_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
-     { field: 'special_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'special_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'special_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'special_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
-     { field: 'kaya_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'kaya_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
      { field: 'kaya_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'kaya_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'kaya_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
-     { field: 'karamay_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'karamay_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
      { field: 'karamay_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'karamay_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'karamay_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
-     { field: 'others_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
-     { field: 'others_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
-     { field: 'others_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter , align: "right"},
+     { field: 'others_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'others_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'others_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
 
      { field: 'reference_document', headerName: 'Reference Document', width: 200 },
-     { field: 'remarks', headerName: 'Remarks', width: 300 },
+     { field: 'remarks', headerName: 'Remarks', width: 800 },
 ];
 
 function zeroValueFormatter(params) {
@@ -213,9 +213,9 @@ const Member = (props) => {
 
      const CustomCell = ({ value }) => (
           <div style={{ border: '1px solid #ccc', padding: '4px' }}>{value}</div>
-        );
-   
-     
+     );
+
+
 
 
      /**POST REQUESTS */
@@ -831,18 +831,26 @@ const Member = (props) => {
           setOpenAdd(true)
      }
      const handleUpdateButton = () => {
+
           setOpenUpdate(true)
      }
      const handleDeleteButton = () => {
           setOpenDelete(true)
      }
      const handleCancel = () => {
+
           setOpenAdd(false)
           setOpenUpdate(false)
           setOpenDelete(false)
           setopenAddSavings(false)
           setopenUpdateSavings(false)
           setopenDeleteSavings(false)
+     }
+
+
+     const handleLogger = () => {
+
+          handleSuccessToast(coop_savings_balance)
      }
 
      const handleGoToSavings = () => {
@@ -877,10 +885,21 @@ const Member = (props) => {
 
      }
      const handleUpdateSavingsButton = () => {
+          handleSuccessToast(coop_savings_credit)
+          handleSuccessToast(coop_savings_debit)
           setopenUpdateSavings(true)
      }
      const handleDeleteSavingsButton = () => {
-          setopenDeleteSavings(true)
+          const latestEntry = savings[savings.length - 1];
+
+          if (savingsid !== latestEntry._id) {
+               handleErrorToast("Previous data can't be deleted. Please add another particulars for adjustments")
+               return;   
+          }
+          else{
+               setopenDeleteSavings(true)
+          }
+          
      }
 
      const handleOnError = () => {
@@ -1165,6 +1184,7 @@ const Member = (props) => {
 
      const handleAddSavings = async (e) => {
           e.preventDefault()
+          //total balance(already calculated) 
           const totalshare_capital_balance = share_capital_balance + parseFloat(share_capital_credit) - parseFloat(share_capital_debit)
           const totalcoop_savings_balance = coop_savings_balance + parseFloat(coop_savings_credit) - parseFloat(coop_savings_debit)
           const totalspecial_savings_balance = special_savings_balance + parseFloat(special_savings_credit) - parseFloat(special_savings_debit)
@@ -1247,6 +1267,9 @@ const Member = (props) => {
                console.log('You must be logged in first')
                return
           } else {
+
+              
+
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
                     method: 'DELETE',
                     headers: {
@@ -1269,6 +1292,10 @@ const Member = (props) => {
      }
      const handleUpdateSavings = async (e) => {
           e.preventDefault()
+
+          const totalcoop_savings_balance = parseFloat(coop_savings_credit) + parseFloat(-coop_savings_debit)
+
+
           const savings = {
                member_id: member_id,
                date: date,
@@ -1531,7 +1558,7 @@ const Member = (props) => {
                                                                       })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
                                                                  </div>
-                                                                
+
                                                             </div>
                                                        </Cards>
                                                   </div>
@@ -2193,12 +2220,12 @@ const Member = (props) => {
                                                   <div style={{ paddingBottom: "20px", overflowX: "auto" }}>
 
                                                        <div style={{ marginTop: "30px", display: 'flex', justifyContent: 'flex-start' }}>
-                                                            <div style={{ marginLeft: 520, textAlign: "left", backgroundColor: "#49bcff", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Share Capital</div><div>{share_capital_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#45ace7", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#3795cc", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#ff8df0", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Kaya Savings</div><div>{kaya_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#d376c7", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#aa5fa0", flex: '0 0 360px', padding: "10px" }}><div style={{display: "flex", justifyContent: "space-between"}}><div>Others</div><div>{others_balance}</div></div></div>
+                                                            <div style={{ marginLeft: 520, textAlign: "left", backgroundColor: "#49bcff", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Share Capital</div><div>{share_capital_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#45ace7", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#3795cc", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#ff8df0", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Kaya Savings</div><div>{kaya_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#d376c7", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#aa5fa0", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Others</div><div>{others_balance}</div></div></div>
                                                        </div>
                                                        <div style={{ height: 600, width: '5000px', paddingBottom: "20px", }} >
 
@@ -2217,12 +2244,12 @@ const Member = (props) => {
                                                                            },
                                                                       ],
                                                                  }}
-                                                                 showCellRightBorder={true} 
+                                                                 showCellRightBorder={true}
                                                             />
                                                        </div>
 
                                                   </div>
-                                                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px"}}>
+                                                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                                                        <div style={{ display: "flex" }}>
                                                             <ThemeProvider theme={theme}>
                                                                  <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
@@ -2256,9 +2283,9 @@ const Member = (props) => {
                                                             <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddSavingsButton}>
                                                                  New
                                                             </Button>
-                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateSavingsButton}>
+                                                            {/* <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateSavingsButton}>
                                                                  Update
-                                                            </Button>
+                                                            </Button> */}
                                                             <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteSavingsButton}>
                                                                  Delete
                                                             </Button>
@@ -2353,7 +2380,7 @@ const Member = (props) => {
                                                                                 onChange={(e) => setspecial_savings_credit(e.target.value)}
                                                                                 value={special_savings_credit}
                                                                            />
-                                                                          
+
                                                                       </div>}
                                                                  {particulars === "COOP SAVINGS" && <div>
                                                                       <TextField
@@ -2376,7 +2403,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setcoop_savings_credit(e.target.value)}
                                                                            value={coop_savings_credit}
                                                                       />
-                                                                      
+
                                                                  </div>}
                                                                  {particulars === "KAYA SAVINGS" && <div>
                                                                       <TextField
@@ -2399,7 +2426,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setkaya_savings_credit(e.target.value)}
                                                                            value={kaya_savings_credit}
                                                                       />
-                                                                   
+
                                                                  </div>}
                                                                  {particulars === "KARAMAY SAVINGS" && <div>
                                                                       <TextField
@@ -2422,7 +2449,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setkaramay_savings_credit(e.target.value)}
                                                                            value={karamay_savings_credit}
                                                                       />
-                                                                    
+
                                                                  </div>}
                                                                  {particulars === "OTHERS" && <div>
                                                                       <TextField
@@ -2445,7 +2472,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setothers_credit(e.target.value)}
                                                                            value={others_credit}
                                                                       />
-                                                                  
+
                                                                  </div>}
                                                                  {particulars === "MEMBERSHIP FEE" && <div>
                                                                       <TextField
@@ -2579,7 +2606,7 @@ const Member = (props) => {
                                                                                 onChange={(e) => setspecial_savings_credit(e.target.value)}
                                                                                 value={special_savings_credit}
                                                                            />
-                                                                        
+
                                                                       </div>}
                                                                  {particulars === "COOP SAVINGS" && <div>
                                                                       <TextField
@@ -2602,7 +2629,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setcoop_savings_credit(e.target.value)}
                                                                            value={coop_savings_credit}
                                                                       />
-                                                                      
+
                                                                  </div>}
                                                                  {particulars === "KAYA SAVINGS" && <div>
                                                                       <TextField
@@ -2625,7 +2652,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setkaya_savings_credit(e.target.value)}
                                                                            value={kaya_savings_credit}
                                                                       />
-                                                                      
+
                                                                  </div>}
                                                                  {particulars === "KARAMAY SAVINGS" && <div>
                                                                       <TextField
@@ -2648,7 +2675,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setkaramay_savings_credit(e.target.value)}
                                                                            value={karamay_savings_credit}
                                                                       />
-                                                                     
+
                                                                  </div>}
                                                                  {particulars === "OTHERS" && <div>
                                                                       <TextField
@@ -2671,7 +2698,7 @@ const Member = (props) => {
                                                                            onChange={(e) => setothers_credit(e.target.value)}
                                                                            value={others_credit}
                                                                       />
-                                                                    
+
                                                                  </div>}
                                                                  {particulars === "MEMBERSHIP FEE" && <div>
                                                                       <TextField
@@ -2714,6 +2741,7 @@ const Member = (props) => {
                                                                  <Button variant="outlined" color="blue" onClick={handleUpdateSavings}>Update</Button>
                                                                  <Button variant="outlined" color="green" onClick={handleClearTextFields} autoFocus>Clear</Button>
                                                                  <Button variant="outlined" color="red" onClick={handleCancel} autoFocus>Cancel</Button>
+                                                                 <Button variant="outlined" color="red" onClick={handleLogger} autoFocus>Log</Button>
                                                             </ThemeProvider>
                                                        </DialogActions>
                                                   </Dialog>
