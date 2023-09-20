@@ -1540,7 +1540,7 @@ const Member = (props) => {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
                                                                  </div>
                                                             </div>
                                                             <div>
@@ -2184,7 +2184,7 @@ const Member = (props) => {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{karamay_savings_balance && karamay_savings_balance.toLocaleString(undefined, {
