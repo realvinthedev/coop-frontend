@@ -37,6 +37,7 @@ import ImageUploader from '../components/ImageUploader';
 import { saveAs } from 'file-saver-es';
 import html2canvas from 'html2canvas';
 import { useRef } from 'react';
+import SavingsMasterlistPrinter from '../components/SavingsMasterlistPrinter';
 
 
 
@@ -160,8 +161,8 @@ const columns = [
      { field: 'passbook_series_number', headerName: 'Passbook Series number', width: 150 },
      { field: 'affiliation_org', headerName: 'Affiliation Org', width: 150 },
      { field: 'passbook_printed', headerName: 'Passbook Printed', width: 150 },
-     { field: 'remarks', headerName: 'Remarks', width: 150 },
-     { field: 'notes', headerName: 'Notes', width: 150 },
+     { field: 'remarks', headerName: 'Remarks', width: 400 },
+     { field: 'notes', headerName: 'Notes', width: 600 },
 
 ];
 
@@ -894,12 +895,12 @@ const Member = (props) => {
 
           if (savingsid !== latestEntry._id) {
                handleErrorToast("Previous data can't be deleted. Please add another particulars for adjustments")
-               return;   
+               return;
           }
-          else{
+          else {
                setopenDeleteSavings(true)
           }
-          
+
      }
 
      const handleOnError = () => {
@@ -1014,6 +1015,10 @@ const Member = (props) => {
                passbook_printed: passbook_printed,
                remarks: remarks,
                notes: notes
+
+
+
+
           }
 
           if (!user) {
@@ -1268,7 +1273,7 @@ const Member = (props) => {
                return
           } else {
 
-              
+
 
                const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
                     method: 'DELETE',
@@ -1622,6 +1627,32 @@ const Member = (props) => {
                                                             <ThemeProvider theme={theme}>
                                                                  <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
                                                                       View Savings
+                                                                 </Button>
+                                                                 <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
+                                                                      <PDFDownloadLink fileName="all_products" document={< SavingsMasterlistPrinter data={members} />} >
+                                                                           {({ loading }) => (loading ? 'Loading document...' : 'Download Masterlist Summary (legal size)')}
+                                                                      </PDFDownloadLink>
+                                                                      {/* <PDFDownloadLink fileName="employee_profile" document={
+                                                                           < SavingsMasterlistPrinter
+                                                                                member_id={member_id}
+                                                                                firstname={firstname}
+                                                                                middlename={middlename}
+                                                                                lastname={lastname}
+                                                                                membership_date={membership_date}
+                                                                                status={status}
+                                                                                hhhc_membership_number={hhhc_membership_number}
+                                                                                bod_res={bod_res}
+                                                                                coop_savings_account_number={coop_savings_account_number}
+                                                                                kaya_atm_card_number={kaya_atm_card_number}
+                                                                                kaya_atm_savings_account_number={kaya_atm_savings_account_number}
+                                                                                passbook_series_number={passbook_series_number}
+                                                                                affiliation_org={affiliation_org}
+                                                                                passbook_printed={passbook_printed}
+                                                                                remarks={remarks}
+                                                                                notes={notes}
+                                                                           />} >
+                                                                           {({ loading }) => (loading ? 'Loading document...' : 'Download Masterlist Summary')}
+                                                                      </PDFDownloadLink> */}
                                                                  </Button>
 
                                                             </ThemeProvider>
@@ -2328,7 +2359,7 @@ const Member = (props) => {
                                                                       <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
                                                                       <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>KAYA Savings</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Housing Equity Savings</MenuItem>
                                                                       <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
 

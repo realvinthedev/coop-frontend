@@ -1811,7 +1811,7 @@ const Employees = (props) => {
                                                                       special_first_eight_ot={special_first_eight_ot}
                                                                       legal_first_eight_ot={legal_first_eight_ot}
                                                                  />} >
-                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Savings Summary')}
+                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Employee Summary')}
                                                             </PDFDownloadLink>
                                                        </Button>
 
