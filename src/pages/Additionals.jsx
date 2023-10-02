@@ -594,7 +594,7 @@ const Additionals = (props) => {
                draggable: true,
                progress: undefined,
                theme: "dark",
-               });
+          });
      };
      const errorToast = (error) => {
           toast.error(error);
@@ -876,49 +876,49 @@ const Additionals = (props) => {
                     return
                }
                else {
-                         const additional = {
-                              date_covered: date,
-                              employee_id: employeeId,
-                              name: name,
-                              sss: sss,
-                              wtax: wtax,
-                              philhealth: philhealth,
-                              pagibig: pagibig,
-                              lodging: lodging,
-                              water_electricity: water_electricity,
-                              hmo: hmo,
-                              share_capital: share_capital,
-                              hhhc_savings: hhhc_savings,
-                              hhhc_membership_fee: hhhc_membership_fee,
-                              cash_advances: cash_advances,
-                              pay_adjustment_deduction: pay_adjustment_deduction,
-                              other_deduction: other_deduction,
-                              total_deduction: total_deduction,
-                              allowance: allowance,
-                              pay_adjustment_earnings: pay_adjustment_earnings,
-                              other_earnings: other_earnings,
-                              total_earnings: total_earnings
+                    const additional = {
+                         date_covered: date,
+                         employee_id: employeeId,
+                         name: name,
+                         sss: sss,
+                         wtax: wtax,
+                         philhealth: philhealth,
+                         pagibig: pagibig,
+                         lodging: lodging,
+                         water_electricity: water_electricity,
+                         hmo: hmo,
+                         share_capital: share_capital,
+                         hhhc_savings: hhhc_savings,
+                         hhhc_membership_fee: hhhc_membership_fee,
+                         cash_advances: cash_advances,
+                         pay_adjustment_deduction: pay_adjustment_deduction,
+                         other_deduction: other_deduction,
+                         total_deduction: total_deduction,
+                         allowance: allowance,
+                         pay_adjustment_earnings: pay_adjustment_earnings,
+                         other_earnings: other_earnings,
+                         total_earnings: total_earnings
+                    }
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional/' + id, {
+                         method: 'PATCH',
+                         body: JSON.stringify(additional),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
                          }
-                         const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional/' + id, {
-                              method: 'PATCH',
-                              body: JSON.stringify(additional),
-                              headers: {
-                                   'Content-Type': 'application/json',
-                                   'Authorization': `Bearer ${user.token}`
-                              }
-                         })
-                         const json = await response.json()
-                         if (!response.ok) {
-                              setError(json.error)
-                              console.log(json.error)
-                              console.log(error)
-                         }
-                         else {
-                              console.log(error)
-                         }
-                         successToast('Updated Successfully')
-                         handleCloseUpdateAdditionals();
-                         handleRefresher()
+                    })
+                    const json = await response.json()
+                    if (!response.ok) {
+                         setError(json.error)
+                         console.log(json.error)
+                         console.log(error)
+                    }
+                    else {
+                         console.log(error)
+                    }
+                    successToast('Updated Successfully')
+                    handleCloseUpdateAdditionals();
+                    handleRefresher()
 
                }
 
@@ -1408,9 +1408,10 @@ const Additionals = (props) => {
                                                                            label="Total Deduction"
                                                                            fullWidth
                                                                            style={{ marginBottom: "20px" }}
-                                                                           value={total_deduction}
+                                                                           value={total_deduction.toFixed(2)}
                                                                            InputProps={{
                                                                                 readOnly: true,
+                                                                                inputMode: 'decimal',
                                                                            }}
                                                                       />
 
@@ -1802,9 +1803,11 @@ const Additionals = (props) => {
                                                                            label="Total Deduction"
                                                                            fullWidth
                                                                            style={{ marginBottom: "20px" }}
-                                                                           value={total_deduction}
+                                                                           value={total_deduction.toFixed(2)}
                                                                            InputProps={{
                                                                                 readOnly: true,
+                                                                                inputMode: 'decimal',
+                                                                         
                                                                            }}
                                                                       />
 
