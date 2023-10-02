@@ -72,20 +72,20 @@ const Wrapper = styled.div`
 const Main = styled.div`
     width: 1400px;
     height: 750px;
-    
+
 `
 const Others = styled.div`
-    
+
 `
 
 const OthersWithPayLeaves = styled.div`
-     
+
 `
 const OthersNoPayLeaves = styled.div`
-     
+
 `
 const OthersOT = styled.div`
-     
+
 `
 const TotalsContainer = styled.div`
      display: flex;
@@ -220,7 +220,7 @@ const Additionals = (props) => {
 
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
-
+     const [openUpdateAdditionals, setopenUpdateAdditionals] = useState(false)
 
 
 
@@ -235,6 +235,13 @@ const Additionals = (props) => {
      };
 
 
+     const handleOpenUpdateAdditionals = () => {
+          setopenUpdateAdditionals(true);
+     };
+
+     const handleCloseUpdateAdditionals = () => {
+          setopenUpdateAdditionals(false);
+     };
 
 
 
@@ -504,11 +511,11 @@ const Additionals = (props) => {
                     const endDateObj = new Date(end_date);
 
                     const filteredData = json.filter(item => {
-                       
+
                          const date = new Date(item.date_covered)
                          const employee_id = item.employee_id
                          if (name == "all") {
-                          
+
                               return date >= startDateObj && date <= endDateObj;
                          }
                          else {
@@ -622,8 +629,34 @@ const Additionals = (props) => {
      const [tferror, setTferror] = useState(false)
 
 
+
      const handleRowClick = (params) => {
+          // const allmonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+          // const returnedMonth = params.row.date_covered
+          // const splitMonth = returnedMonth.split('-')
+          // const finalMonth = splitMonth[0]
+          // const  finalYear = splitMonth[2]
           setId(params.row._id);
+          setsss(params.row.sss)
+          setphilhealth(params.row.philhealth)
+          setwtax(params.row.wtax)
+          setpagibig(params.row.pagibig)
+          setlodging(params.row.lodging)
+          setwater_electricity(params.row.water_electricity)
+          sethmo(params.row.hmo)
+          setshare_capital(params.row.share_capital)
+          sethhhc_savings(params.row.hhhc_savings)
+          sethhhc_membership_fee(params.row.hhhc_membership_fee)
+          setcash_advances(params.row.cash_advances)
+          setpay_adjustment_deduction(params.row.pay_adjustment_deduction)
+          setother_deduction(params.row.other_deduction)
+          settotal_deduction(params.row.total_deduction)
+          setallowance(params.row.allowance)
+          setpay_adjustment_earnings(params.row.pay_adjustment_earnings)
+          setother_earnings(params.row.other_earnings)
+          settotal_earnings(params.row.total_earnings)
+
+
      };
 
      const handlesss = (event) => {
@@ -818,11 +851,74 @@ const Additionals = (props) => {
 
                          }
                          successToast('Added Successfully')
-                         
+
                          warningToast('Bulk data are added for the next 6 months. Update the data later on if needed.')
                          handleCloseAddAdditionals();
                          handleRefresher()
                     }
+
+               }
+
+
+
+          }
+
+     }
+
+     const handleUpdateAdditional = async (e) => {
+          e.preventDefault()
+          if (name === "" || employeeId === "") {
+               errorToast('Fill up the required fields completely')
+          }
+          else {
+               if (!user) {
+                    errorToast('You must log in again first.')
+                    return
+               }
+               else {
+                         const additional = {
+                              date_covered: date,
+                              employee_id: employeeId,
+                              name: name,
+                              sss: sss,
+                              wtax: wtax,
+                              philhealth: philhealth,
+                              pagibig: pagibig,
+                              lodging: lodging,
+                              water_electricity: water_electricity,
+                              hmo: hmo,
+                              share_capital: share_capital,
+                              hhhc_savings: hhhc_savings,
+                              hhhc_membership_fee: hhhc_membership_fee,
+                              cash_advances: cash_advances,
+                              pay_adjustment_deduction: pay_adjustment_deduction,
+                              other_deduction: other_deduction,
+                              total_deduction: total_deduction,
+                              allowance: allowance,
+                              pay_adjustment_earnings: pay_adjustment_earnings,
+                              other_earnings: other_earnings,
+                              total_earnings: total_earnings
+                         }
+                         const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/additional/' + id, {
+                              method: 'PATCH',
+                              body: JSON.stringify(additional),
+                              headers: {
+                                   'Content-Type': 'application/json',
+                                   'Authorization': `Bearer ${user.token}`
+                              }
+                         })
+                         const json = await response.json()
+                         if (!response.ok) {
+                              setError(json.error)
+                              console.log(json.error)
+                              console.log(error)
+                         }
+                         else {
+                              console.log(error)
+                         }
+                         successToast('Updated Successfully')
+                         handleCloseUpdateAdditionals();
+                         handleRefresher()
 
                }
 
@@ -877,7 +973,7 @@ const Additionals = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="All Employees" value="1" />
-                                                       <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled />
+                                                       {/* <Tab label="Summary" value="2" onClick={handleGoToSummary} disabled /> */}
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -979,6 +1075,7 @@ const Additionals = (props) => {
                                                             rowsPerPageOptions={[10]}
                                                             style={{ marginBottom: "20px" }}
                                                             onRowClick={handleRowClick}
+
                                                        />
 
 
@@ -986,8 +1083,11 @@ const Additionals = (props) => {
                                                        <ButtonContainer>
                                                             <div>
                                                                  <ThemeProvider theme={theme}>
-                                                                      <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="green" onClick={handleOpenAddAdditionals}>
+                                                                      <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="contained" color="green" onClick={handleOpenAddAdditionals}>
                                                                            Add New Deduction / Earnings
+                                                                      </Button>
+                                                                      <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="contained" color="blue" onClick={handleOpenUpdateAdditionals}>
+                                                                           Update
                                                                       </Button>
                                                                  </ThemeProvider>
                                                             </div>
@@ -997,13 +1097,393 @@ const Additionals = (props) => {
                                                                       {/* <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleOpenEdit}>
                                                             Edit
                                                        </Button> */}
-                                                                      <Button style={{ marginTop: "20px" }} variant="outlined" color="red" onClick={handleOpenDelete}>
+                                                                      <Button style={{ marginTop: "20px" }} variant="contained" color="red" onClick={handleOpenDelete}>
                                                                            Delete
                                                                       </Button>
                                                                  </ThemeProvider>
                                                             </EditDeleteContainer>
                                                        </ButtonContainer>
 
+                                                       <Dialog
+                                                            fullScreen={fullScreen}
+                                                            open={openUpdateAdditionals}
+                                                            onClose={handleCloseUpdateAdditionals}
+                                                            aria-labelledby="alert-dialog-title"
+                                                            aria-describedby="alert-dialog-description"
+                                                       >
+                                                            <DialogTitle id="alert-dialog-title">
+                                                                 Update Earnings / Deductions
+                                                            </DialogTitle>
+                                                            <DialogContent style={{ height: '900px', paddingTop: '20px' }}>
+
+                                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Month"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                                           onChange={handleMonthChange}
+                                                                           value={month}
+                                                                      >
+                                                                           <MenuItem value={'january'}>January</MenuItem>
+                                                                           <MenuItem value={'february'}>February</MenuItem>
+                                                                           <MenuItem value={'march'}>March</MenuItem>
+                                                                           <MenuItem value={'april'}>April</MenuItem>
+                                                                           <MenuItem value={'may'}>May</MenuItem>
+                                                                           <MenuItem value={'june'}>June</MenuItem>
+                                                                           <MenuItem value={'july'}>July</MenuItem>
+                                                                           <MenuItem value={'august'}>August</MenuItem>
+                                                                           <MenuItem value={'september'}>September</MenuItem>
+                                                                           <MenuItem value={'october'}>October</MenuItem>
+                                                                           <MenuItem value={'november'}>November</MenuItem>
+                                                                           <MenuItem value={'december'}>December</MenuItem>
+
+                                                                      </TextField>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Year"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                                           onChange={handleYearChange}
+                                                                           value={year}
+                                                                      >
+                                                                           <MenuItem value={'2023'}>2023</MenuItem>
+                                                                           <MenuItem value={'2024'}>2024</MenuItem>
+                                                                           <MenuItem value={'2025'}>2025</MenuItem>
+                                                                           <MenuItem value={'2026'}>2026</MenuItem>
+                                                                           <MenuItem value={'2027'}>2027</MenuItem>
+                                                                           <MenuItem value={'2028'}>2028</MenuItem>
+                                                                           <MenuItem value={'2029'}>2029</MenuItem>
+                                                                           <MenuItem value={'2030'}>2030</MenuItem>
+                                                                           <MenuItem value={'2031'}>2031</MenuItem>
+                                                                           <MenuItem value={'2032'}>2032</MenuItem>
+                                                                           <MenuItem value={'2033'}>2033</MenuItem>
+                                                                           <MenuItem value={'2034'}>2034</MenuItem>
+                                                                           <MenuItem value={'2035'}>2035</MenuItem>
+                                                                           <MenuItem value={'2036'}>2036</MenuItem>
+                                                                           <MenuItem value={'2037'}>2037</MenuItem>
+                                                                           <MenuItem value={'2038'}>2038</MenuItem>
+                                                                           <MenuItem value={'2039'}>2039</MenuItem>
+                                                                           <MenuItem value={'2040'}>2040</MenuItem>
+                                                                           <MenuItem value={'2041'}>2041</MenuItem>
+                                                                           <MenuItem value={'2042'}>2042</MenuItem>
+
+                                                                      </TextField>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Period"
+                                                                           fullWidth
+                                                                           select
+                                                                           style={{ paddingBottom: "20px", paddingRight: "10px" }}
+                                                                           onChange={handlePeriodChange}
+                                                                           value={period}
+                                                                      >
+                                                                           <MenuItem value={'first'}>First Half</MenuItem>
+                                                                           <MenuItem value={'second'}>Second Half</MenuItem>
+                                                                      </TextField>
+                                                                 </div>
+                                                                 {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                                 {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
+                                                                 <Autocomplete
+                                                                      value={name}
+
+                                                                      onSelect={handleName}
+                                                                      options={emp.map((data) => data.employee_id + " - " + data.firstname + " " + data.lastname)}
+                                                                      renderInput={(params) => (
+                                                                           <TextField
+                                                                                {...params}
+                                                                                required
+                                                                                label="Search Employee"
+                                                                                fullWidth
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                           />
+                                                                      )}
+                                                                 />
+
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Employee_id"
+                                                                      fullWidth
+                                                                      style={{ paddingBottom: "80px" }}
+                                                                      value={employeeId}
+                                                                      InputProps={{
+                                                                           readOnly: true,
+                                                                      }}
+                                                                 />
+
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="SSS"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlesss}
+                                                                      value={sss}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+
+                                                                 />
+
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Philhealth"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlephilhealth}
+                                                                      value={philhealth}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="WTAX"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlewtax}
+                                                                      value={wtax}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pagibig"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlepagibig}
+                                                                      value={pagibig}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Lodging"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlelodging}
+                                                                      value={lodging}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Water and Electricity"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlewater_electricity}
+                                                                      value={water_electricity}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HMO"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlehmo}
+                                                                      value={hmo}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Share Capital"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleshare_capital}
+                                                                      value={share_capital}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Savings"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlehhhc_savings}
+                                                                      value={hhhc_savings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Fee"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlehhhc_membership_fee}
+                                                                      value={hhhc_membership_fee}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Cash Advances"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlecash_advances}
+                                                                      value={cash_advances}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pay Adjustment - (Deduction)"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      o onChange={handlepay_adjustment_deduction}
+                                                                      value={pay_adjustment_deduction}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Other Deduction"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleother_deduction}
+                                                                      value={other_deduction}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TotalsContainer>
+                                                                      <TextField
+                                                                           required
+                                                                           id="outlined-required"
+                                                                           label="Total Deduction"
+                                                                           fullWidth
+                                                                           style={{ marginBottom: "20px" }}
+                                                                           value={total_deduction}
+                                                                           InputProps={{
+                                                                                readOnly: true,
+                                                                           }}
+                                                                      />
+
+                                                                 </TotalsContainer>
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Allowance"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleallowance}
+                                                                      value={allowance}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Pay Adjustment - (Earnings)"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handlepay_adjustment_earnings}
+                                                                      value={pay_adjustment_earnings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TextField
+                                                                      type="number"
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Other Earnings"
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      onChange={handleother_earnings}
+                                                                      value={other_earnings}
+                                                                      inputProps={{
+                                                                           inputMode: 'decimal',
+                                                                           step: '0.01',
+                                                                      }}
+                                                                 />
+                                                                 <TotalsContainer>
+                                                                      <TextField
+                                                                           type="number"
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Total Earnings"
+                                                                           style={{ paddingBottom: "20px" }}
+                                                                           value={total_earnings}
+                                                                      />
+
+                                                                      {openError ? <Alert onClose={handleOffError} variant="filled" severity="error">Please fill up the form completely. Remember that, unused fields should be "0"</Alert> : ""}
+                                                                      {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Successfully Saved</Alert> : ""}
+                                                                 </TotalsContainer>
+
+
+
+
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                 {/* <Button onClick={handleAdd}>Add</Button> */}
+                                                                 <Button onClick={handleCloseUpdateAdditionals} autoFocus>
+                                                                      Cancel
+                                                                 </Button>
+                                                                 <Button onClick={handleUpdateAdditional}>Update</Button>
+                                                            </DialogActions>
+                                                       </Dialog>
                                                        <Dialog
                                                             fullScreen={fullScreen}
                                                             open={openAddAdditionals}
