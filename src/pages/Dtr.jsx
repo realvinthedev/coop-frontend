@@ -136,49 +136,117 @@ const Warnings = styled.h1`
 `
 const columns = [
      { field: 'date', headerName: 'Date', width: 100 },
-     { field: 'employee_id', headerName: 'Employee ID', width: 100 },
+     { field: 'employee_id', headerName: 'Employee ID', width: 180 },
      { field: 'name', headerName: 'Fullname', width: 200 },
 
 
-     { field: 'official_am_in_hour', headerName: 'Official AM IN', width: 80 },
-     { field: 'official_am_in_min', headerName: '', width: 80 },
-     { field: 'am_in_hour', headerName: 'AM IN', width: 80 },
-     { field: 'am_in_min', headerName: '', width: 80 },
-     { field: 'am_out_hour', headerName: 'AM OUT', width: 80 },
-     { field: 'am_out_min', headerName: '', width: 80 },
+     { field: 'official_am_in_hour', headerName: 'Official AM IN', width: 180 },
+     { field: 'official_am_in_min', headerName: '', width: 180 },
+     { field: 'am_in_hour', headerName: 'AM IN', width: 180 },
+     { field: 'am_in_min', headerName: '', width: 180 },
+     { field: 'am_out_hour', headerName: 'AM OUT', width: 180 },
+     { field: 'am_out_min', headerName: '', width: 180 },
 
 
 
-     { field: 'official_pm_in_hour', headerName: 'Official PM IN', width: 80 },
-     { field: 'official_pm_in_min', headerName: '', width: 80 },
-     { field: 'pm_in_hour', headerName: 'PM IN', width: 80 },
-     { field: 'pm_in_min', headerName: '', width: 80 },
-     { field: 'pm_out_hour', headerName: 'PM OUT', width: 80 },
-     { field: 'pm_out_min', headerName: '', width: 80 },
+     { field: 'official_pm_in_hour', headerName: 'Official PM IN', width: 180 },
+     { field: 'official_pm_in_min', headerName: '', width: 180 },
+     { field: 'pm_in_hour', headerName: 'PM IN', width: 180 },
+     { field: 'pm_in_min', headerName: '', width: 180 },
+     { field: 'pm_out_hour', headerName: 'PM OUT', width: 180 },
+     { field: 'pm_out_min', headerName: '', width: 180 },
 
 
 
-     { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 140 },
-     { field: 'total_undertime_min', headerName: 'Undertime in Minutes', width: 140 },
+     {
+          field: 'approve_tardiness',
+          headerName: 'Approved Tardiness?',
+          width: 200,
+          renderCell: (params) => {
+            const cellValue = params.value;
+            const cellStyle = {
+              backgroundColor: cellValue === 'approved' ? 'green' : '',
+              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+              paddingTop: '10px' ,
+              paddingLeft: '5px',
+              paddingRight: '115px',
+              paddingBottom: '10px'
+              
+            };
+      
+            return (
+              <div style={cellStyle}>
+                {cellValue}
+              </div>
+            );
+          },
+        },
+     { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 180 },
+     {
+          field: 'approve_undertime',
+          headerName: 'Approved Undertime?',
+          width: 200,
+          renderCell: (params) => {
+            const cellValue = params.value;
+            const cellStyle = {
+              backgroundColor: cellValue === 'approved' ? 'green' : '',
+              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+              paddingTop: '10px' ,
+              paddingLeft: '5px',
+              paddingRight: '115px',
+              paddingBottom: '10px'
+              
+            };
+      
+            return (
+              <div style={cellStyle}>
+                {cellValue}
+              </div>
+            );
+          },
+        },
+     { field: 'total_undertime_min', headerName: 'Undertime in Minutes', width: 180 },
 
 
-     { field: 'leave_type', headerName: 'Leave Type', width: 140 },
-     { field: 'day_type', headerName: 'Day Type', width: 140 },
-     { field: 'absent_day', headerName: 'Absent', width: 140 },
-     { field: 'vl_day', headerName: 'VL - Paid', width: 140 },
-     { field: 'sl_day', headerName: 'SL - Paid', width: 140 },
-     { field: 'el_day', headerName: 'SIL - Paid', width: 140 },
+     { field: 'leave_type', headerName: 'Leave Type', width: 180 },
+     { field: 'day_type', headerName: 'Day Type', width: 180 },
+     { field: 'absent_day', headerName: 'Absent', width: 180 },
+     { field: 'vl_day', headerName: 'VL - Paid', width: 180 },
+     { field: 'sl_day', headerName: 'SL - Paid', width: 180 },
+     { field: 'el_day', headerName: 'SIL - Paid', width: 180 },
 
-     { field: 'vl_nopay_day', headerName: 'VL - No Pay', width: 140 },
-     { field: 'sl_nopay_day', headerName: 'SL - No Pay', width: 140 },
-     { field: 'el_nopay_day', headerName: 'SIL - No Pay', width: 140 },
-     { field: 'restday_nopay_day', headerName: 'Restday - No Pay', width: 140 },
+     { field: 'vl_nopay_day', headerName: 'VL - No Pay', width: 180 },
+     { field: 'sl_nopay_day', headerName: 'SL - No Pay', width: 180 },
+     { field: 'el_nopay_day', headerName: 'SIL - No Pay', width: 180 },
+     { field: 'restday_nopay_day', headerName: 'Restday - No Pay', width: 180 },
 
 
-     { field: 'approve_ot', headerName: 'Approved Overtime?', width: 140 },
-     { field: 'regular_ot_hours', headerName: 'Regular - OT', width: 140 },
-     { field: 'special_ot_hours', headerName: 'Spec. Non Working - OT', width: 140 },
-     { field: 'legal_ot_hours', headerName: 'Legal Holiday - OT', width: 140 },
+     {
+          field: 'approve_ot',
+          headerName: 'Approved Overtime?',
+          width: 200,
+          renderCell: (params) => {
+            const cellValue = params.value;
+            const cellStyle = {
+              backgroundColor: cellValue === 'approved' ? 'green' : '',
+              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+              paddingTop: '10px' ,
+              paddingLeft: '5px',
+              paddingRight: '115px',
+              paddingBottom: '10px'
+              
+            };
+      
+            return (
+              <div style={cellStyle}>
+                {cellValue}
+              </div>
+            );
+          },
+        },
+     { field: 'regular_ot_hours', headerName: 'Regular - OT', width: 180 },
+     { field: 'special_ot_hours', headerName: 'Spec. Non Working - OT', width: 180 },
+     { field: 'legal_ot_hours', headerName: 'Legal Holiday - OT', width: 180 },
 ];
 
 
@@ -456,8 +524,8 @@ const Dtr = (props) => {
      const [openWarning, setOpenWarning] = useState(false);
      const [openAddAdditionals, setOpenAddAdditionals] = useState(false);
      const [overtime, setovertime] = useState("not_approved")
-     const [undertime, setundertime] = useState("approved")
-     const [tardiness, settardiness] = useState("approved")
+     const [undertime, setundertime] = useState("not_approved")
+     const [tardiness, settardiness] = useState("not_approved")
      const [working_day_counter, setworking_day_counter] = useState(0)
      const [restday_counter, setrestday_counter] = useState(0)
      const [disabled_day_type, setdisabled_day_type] = useState(false)
@@ -564,20 +632,6 @@ const Dtr = (props) => {
           }
      }, [employeeId, refresher, startDate, endDate])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      const [official_am_in_hour, setofficial_am_in_hour] = useState(0);
      const [official_am_in_min, setofficial_am_in_min] = useState(0);
 
@@ -598,7 +652,7 @@ const Dtr = (props) => {
           handleCalculateUndertime();
           handleCalculateOvertime();
           handleOTType()
-        
+
      }, [
           overtime,
           leave_type,
@@ -1915,9 +1969,9 @@ const Dtr = (props) => {
           settardiness(e.target.value)
      }
 
-     
 
-     
+
+
      const [disabled, setDisabled] = useState(true);
      const [regular_ot_hours, setRegular_ot_hours] = useState(0);
      const [restday_ot_hours, setRestday_ot_hours] = useState(0);
@@ -1965,7 +2019,7 @@ const Dtr = (props) => {
                fetchEmp();
           }
      }, [user, departmentfilter])
-  
+
 
      const time = [
           { id: '1', time: '' },
@@ -2112,6 +2166,8 @@ const Dtr = (props) => {
                          legal_ot_hours: legal_ot_hours,
                          day_type: day_type,
                          approve_ot: overtime,
+                         approve_tardiness: tardiness,
+                         approve_undertime: undertime,
                          restday_counter: restday_counter,
                          working_day_counter: working_day_counter,
                          restday_overtime_counter: restday_overtime_counter
@@ -2498,15 +2554,7 @@ const Dtr = (props) => {
           // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
-     useEffect(() => {
-          if(tardiness === "not_approved"){
-               setTotal_tardiness_min(0)
-          }
-
-          if(undertime === "not_approved"){
-               settotal_undertime_min(0)
-          }
-     },[tardiness, undertime])
+    
      return (
 
           <div style={{ display: "flex" }}>
@@ -3110,9 +3158,8 @@ const Dtr = (props) => {
                                                                                      value={undertime}
                                                                                      disabled={disabled_undertime}
                                                                                 >
-                                                                                  
-                                                                                     <MenuItem value={'approved'}>Yes, Include undertime</MenuItem>
-                                                                                     <MenuItem value={'not_approved'}>No, disregard undertime</MenuItem>
+                                                                                     <MenuItem value={'not_approved'}>Don't Approve</MenuItem>
+                                                                                     <MenuItem value={'approved'}>Approved</MenuItem>
 
                                                                                 </TextField>
 
@@ -3129,7 +3176,7 @@ const Dtr = (props) => {
                                                                                           readOnly: true,
                                                                                      }}
                                                                                 />
-                                                                                 <TextField
+                                                                                <TextField
                                                                                      required
                                                                                      id="outlined-required"
                                                                                      label="Approve tardiness?"
@@ -3140,9 +3187,8 @@ const Dtr = (props) => {
                                                                                      value={tardiness}
                                                                                      disabled={disabled_tardiness}
                                                                                 >
-                                                                                   
-                                                                                     <MenuItem value={'approved'}>Yes, include tardiness</MenuItem>
-                                                                                     <MenuItem value={'not_approved'}>No, disregard tardiness</MenuItem>
+                                                                                     <MenuItem value={'not_approved'}>Don't Approve</MenuItem>
+                                                                                     <MenuItem value={'approved'}>Approved</MenuItem>
 
                                                                                 </TextField>
                                                                                 <TextField
