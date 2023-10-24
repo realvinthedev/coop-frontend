@@ -1640,7 +1640,7 @@ const Payroll = (props) => {
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
 
-                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}> {employmentStatus !== "daily" ? default_bimonthly : default_bimonthly*total.working_day_counter} </TableCell>
+                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}> {employmentStatus !== "daily" ? default_bimonthly : default_bimonthly * total.working_day_counter} </TableCell>
 
                                                                                 {/* <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>
                                                                                      {daily ? (
@@ -2472,7 +2472,7 @@ const Payroll = (props) => {
                                                             </div>
 
                                                        </div>
-                                                       <div style={{ display: "flex", justifyContent: "space-between", }}>
+                                                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", border: "1px solid grey", padding: "50px"}}>
                                                             <div style={{ width: "100%", marginRight: "20px", }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Confirmation</h3>
@@ -2496,18 +2496,18 @@ const Payroll = (props) => {
                                                                                                     <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
                                                                                                          <TableHead>
                                                                                                               <TableRow>
-                                                                                                                   <TableCell style={{ width: 20 }}>#</TableCell>
-                                                                                                                   <TableCell style={{ width: 250 }}>Name</TableCell>
-                                                                                                                   <TableCell style={{ width: 120 }}>Department</TableCell>
-                                                                                                                   <TableCell align='right' style={{ width: 100 }}>Net Pay</TableCell>
+                                                                                                                   <TableCell style={{ width: 20, fontSize: "11px", lineHeight: "1" }}>#</TableCell>
+                                                                                                                   <TableCell style={{ width: 250, fontSize: "11px", lineHeight: "1" }}>Name</TableCell>
+                                                                                                                   <TableCell style={{ width: 120, fontSize: "11px", lineHeight: "1" }}>Department</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100, fontSize: "11px", lineHeight: "1" }}>Net Pay</TableCell>
                                                                                                               </TableRow>
                                                                                                          </TableHead>
                                                                                                          <TableBody>
                                                                                                               <TableRow>
-                                                                                                                   <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
-                                                                                                                   <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
-                                                                                                                   <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
-                                                                                                                   <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                                   <TableCell style={{ width: 20, fontSize: "11px", lineHeight: "1" }}>{rowNumber}</TableCell>
+                                                                                                                   <TableCell style={{ width: 250, fontSize: "11px", lineHeight: "1" }}>{transaction.name}</TableCell>
+                                                                                                                   <TableCell style={{ width: 120, fontSize: "11px", lineHeight: "1" }}>{transaction.department}</TableCell>
+                                                                                                                   <TableCell align='right' style={{ width: 100, fontSize: "11px", lineHeight: "1" }}>{transaction.net && transaction.net.toLocaleString(undefined, {
                                                                                                                         minimumFractionDigits: 2,
                                                                                                                         maximumFractionDigits: 2
                                                                                                                    })}</TableCell>
@@ -2522,10 +2522,10 @@ const Payroll = (props) => {
                                                                                                <Table key={index} sx={{ width: "100%" }} size="small" aria-label="a dense table">
                                                                                                     <TableBody>
                                                                                                          <TableRow>
-                                                                                                              <TableCell style={{ width: 20 }}>{rowNumber}</TableCell>
-                                                                                                              <TableCell style={{ width: 250 }}>{transaction.name}</TableCell>
-                                                                                                              <TableCell style={{ width: 120 }}>{transaction.department}</TableCell>
-                                                                                                              <TableCell align='right' style={{ width: 100 }}>{transaction.net && transaction.net.toLocaleString(undefined, {
+                                                                                                              <TableCell style={{ width: 20, fontSize: "11px" }}>{rowNumber}</TableCell>
+                                                                                                              <TableCell style={{ width: 250, fontSize: "11px" }}>{transaction.name}</TableCell>
+                                                                                                              <TableCell style={{ width: 120, fontSize: "11px" }}>{transaction.department}</TableCell>
+                                                                                                              <TableCell align='right' style={{ width: 100, fontSize: "11px" }}>{transaction.net && transaction.net.toLocaleString(undefined, {
                                                                                                                    minimumFractionDigits: 2,
                                                                                                                    maximumFractionDigits: 2
                                                                                                               })}</TableCell>
@@ -2546,22 +2546,7 @@ const Payroll = (props) => {
 
                                                             </div>
 
-                                                            {/* <div style={{ width: "100%" }}>
-                                                                 <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
-                                                                      <h3>Total</h3>
-                                                                 </div>
-                                                                 <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
-                                                                      <Table aria-label="simple table">
-                                                                           <TableBody>
-                                                                                <TableRow><TableCell sx={{ width: 300 }}>Grand Total Net Pay</TableCell><TableCell>{summ_net && summ_net.toLocaleString(undefined, {
-                                                                                     minimumFractionDigits: 2,
-                                                                                     maximumFractionDigits: 2
-                                                                                })}</TableCell></TableRow>
 
-                                                                           </TableBody>
-                                                                      </Table>
-                                                                 </TableContainer>
-                                                            </div> */}
                                                             <div style={{ width: "100%", }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Total</h3>
@@ -2571,8 +2556,8 @@ const Payroll = (props) => {
                                                                            <TableBody>
                                                                                 {Object.entries(departmentTotals).map(([department, total]) => (
                                                                                      <TableRow key={department}>
-                                                                                          <TableCell sx={{ width: 300 }}>{department} Total Net Pay</TableCell>
-                                                                                          <TableCell align='right'>
+                                                                                          <TableCell sx={{ width: 300, fontSize: "11px" }}>{department} Total Net Pay</TableCell>
+                                                                                          <TableCell sx={{ fontSize: "11px" }} align='right'>
                                                                                                {total.toLocaleString(undefined, {
                                                                                                     minimumFractionDigits: 2,
                                                                                                     maximumFractionDigits: 2
@@ -2581,8 +2566,8 @@ const Payroll = (props) => {
                                                                                      </TableRow>
                                                                                 ))}
                                                                                 <TableRow>
-                                                                                     <TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>Grand Total Net Pay</TableCell>
-                                                                                     <TableCell align='right' style={{ fontWeight: "600" }}>{summ_net && summ_net.toLocaleString(undefined, {
+                                                                                     <TableCell sx={{ width: 300 }} style={{ fontWeight: "600", fontSize: "11px" }}>Grand Total Net Pay</TableCell>
+                                                                                     <TableCell align='right' style={{ fontWeight: "600", fontSize: "11px" }}>{summ_net && summ_net.toLocaleString(undefined, {
                                                                                           minimumFractionDigits: 2,
                                                                                           maximumFractionDigits: 2
                                                                                      })}</TableCell>
