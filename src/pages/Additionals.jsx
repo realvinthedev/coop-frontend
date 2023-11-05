@@ -959,6 +959,138 @@ const Additionals = (props) => {
           // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
+
+     const handleZeroOnBlur = () => {
+          if (sss === "") {
+               setsss(0)
+          }
+          else if (sss < 0) {
+               errorToast("Value should not be negative")
+               setsss(0)
+          }
+          else if (philhealth === "") {
+               setphilhealth(0)
+          }
+          else if (philhealth < 0) {
+               errorToast("Value should not be negative")
+               setphilhealth(0)
+          }
+
+          else if (pagibig === "") {
+               setpagibig(0)
+          }
+          else if (pagibig < 0) {
+               errorToast("Value should not be negative")
+               setpagibig(0)
+          }
+
+          else if (wtax === "") {
+               setwtax(0)
+          }
+          else if (wtax < 0) {
+               errorToast("Value should not be negative")
+               setwtax(0)
+          }
+
+          else if (lodging === "") {
+               setlodging(0)
+          }
+          else if (lodging < 0) {
+               errorToast("Value should not be negative")
+               setlodging(0)
+          }
+
+          else if (water_electricity === "") {
+               setwater_electricity(0)
+          }
+          else if (water_electricity < 0) {
+               errorToast("Value should not be negative")
+               setwater_electricity(0)
+          }
+
+          else if (hmo === "") {
+               sethmo(0)
+          }
+          else if (hmo < 0) {
+               errorToast("Value should not be negative")
+               sethmo(0)
+          }
+
+          else if (share_capital === "") {
+               setshare_capital(0)
+          }
+          else if (share_capital < 0) {
+               errorToast("Value should not be negative")
+               setshare_capital(0)
+          }
+
+          else if (hhhc_membership_fee === "") {
+               sethhhc_membership_fee(0)
+          }
+          else if (hhhc_membership_fee < 0) {
+               errorToast("Value should not be negative")
+               sethhhc_membership_fee(0)
+          }
+
+          else if (hhhc_savings === "") {
+               sethhhc_savings(0)
+          }
+          else if (hhhc_savings < 0) {
+               errorToast("Value should not be negative")
+               sethhhc_savings(0)
+          }
+
+          else if (cash_advances === "") {
+               setcash_advances(0)
+          }
+          else if (cash_advances < 0) {
+               errorToast("Value should not be negative")
+               setcash_advances(0)
+          }
+
+          else if (pay_adjustment_deduction === "") {
+               setpay_adjustment_deduction(0)
+          }
+          else if (pay_adjustment_deduction < 0) {
+               errorToast("Value should not be negative")
+               setpay_adjustment_deduction(0)
+          }
+
+          else if (other_deduction === "") {
+               setother_deduction(0)
+          }
+          else if (other_deduction < 0) {
+               errorToast("Value should not be negative")
+               setother_deduction(0)
+          }
+
+          else if (allowance === "") {
+               setallowance(0)
+          }
+          else if (allowance < 0) {
+               errorToast("Value should not be negative")
+               setallowance(0)
+          }
+
+          else if (pay_adjustment_earnings === "") {
+               setpay_adjustment_earnings(0)
+          }
+          else if (pay_adjustment_earnings < 0) {
+               errorToast("Value should not be negative")
+               setpay_adjustment_earnings(0)
+          }
+
+          else if (other_earnings === "") {
+               setother_earnings(0)
+          }
+          else if (other_earnings < 0) {
+               errorToast("Value should not be negative")
+               setother_earnings(0)
+          }
+          else {
+
+          }
+     }
      return (
 
           <div style={{ display: "flex" }}>
@@ -1621,6 +1753,7 @@ const Additionals = (props) => {
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlesss}
                                                                       value={sss}
+                                                                      onBlur={handleZeroOnBlur}
                                                                       inputProps={{
                                                                            inputMode: 'decimal',
                                                                            step: '0.01',
@@ -1634,6 +1767,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Philhealth"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlephilhealth}
                                                                       value={philhealth}
@@ -1648,6 +1782,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="WTAX"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlewtax}
                                                                       value={wtax}
@@ -1662,6 +1797,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Pagibig"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlepagibig}
                                                                       value={pagibig}
@@ -1674,6 +1810,7 @@ const Additionals = (props) => {
                                                                       type="number"
                                                                       required
                                                                       fullWidth
+                                                                      onBlur={handleZeroOnBlur}
                                                                       id="outlined-required"
                                                                       label="Lodging"
                                                                       style={{ paddingBottom: "20px" }}
@@ -1687,6 +1824,7 @@ const Additionals = (props) => {
                                                                  <TextField
                                                                       type="number"
                                                                       required
+                                                                      onBlur={handleZeroOnBlur}
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Water and Electricity"
@@ -1704,6 +1842,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="HMO"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehmo}
                                                                       value={hmo}
@@ -1718,6 +1857,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Share Capital"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleshare_capital}
                                                                       value={share_capital}
@@ -1732,6 +1872,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="HHHC Savings"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehhhc_savings}
                                                                       value={hhhc_savings}
@@ -1746,6 +1887,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="HHHC Membership Fee"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlehhhc_membership_fee}
                                                                       value={hhhc_membership_fee}
@@ -1760,6 +1902,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Cash Advances"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlecash_advances}
                                                                       value={cash_advances}
@@ -1775,6 +1918,7 @@ const Additionals = (props) => {
                                                                       id="outlined-required"
                                                                       label="Pay Adjustment - (Deduction)"
                                                                       style={{ paddingBottom: "20px" }}
+                                                                      onBlur={handleZeroOnBlur}
                                                                       o onChange={handlepay_adjustment_deduction}
                                                                       value={pay_adjustment_deduction}
                                                                       inputProps={{
@@ -1788,6 +1932,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Other Deduction"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleother_deduction}
                                                                       value={other_deduction}
@@ -1818,6 +1963,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Allowance"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleallowance}
                                                                       value={allowance}
@@ -1831,6 +1977,7 @@ const Additionals = (props) => {
                                                                       required
                                                                       fullWidth
                                                                       id="outlined-required"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       label="Pay Adjustment - (Earnings)"
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handlepay_adjustment_earnings}
@@ -1846,6 +1993,7 @@ const Additionals = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Other Earnings"
+                                                                      onBlur={handleZeroOnBlur}
                                                                       style={{ paddingBottom: "20px" }}
                                                                       onChange={handleother_earnings}
                                                                       value={other_earnings}

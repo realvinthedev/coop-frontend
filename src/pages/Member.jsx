@@ -142,27 +142,43 @@ const CardContainer = styled.div`
 
 /**GET REQUESTS */
 const columns = [
-     { field: 'member_id', headerName: 'Member ID', width: 100, filter: 'text' },
-     { field: 'firstname', headerName: 'Firstname', width: 150, filter: 'text' },
-     { field: 'middlename', headerName: 'Middlename', width: 150, filter: 'text' },
-     { field: 'lastname', headerName: 'Lastname', width: 150, filter: 'text' },
-     { field: 'membership_date', headerName: 'Membership Date', width: 150 },
-     { field: 'status', headerName: 'Status', width: 150 },
-     { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 200 },
-     { field: 'bod_res', headerName: 'BOD Res', width: 150 },
-     { field: 'coop_savings_account_number', headerName: 'Coop Savings Accnt Number', width: 200 },
-     { field: 'kaya_atm_card_number', headerName: 'Special Savings Passbook Number', width: 200 },
-     { field: 'kaya_atm_savings_account_number', headerName: 'Special Savings Account Number', width: 200 },
+     { field: 'member_id', headerName: 'Member ID', width: 200, filter: 'text' },
+     { field: 'firstname', headerName: 'Firstname', width: 250, filter: 'text' },
+     { field: 'middlename', headerName: 'Middlename', width: 250, filter: 'text' },
+     { field: 'lastname', headerName: 'Lastname', width: 250, filter: 'text' },
+     { field: 'tin', headerName: 'TIN', width: 250, filter: 'text' },
+     { field: 'contact_number', headerName: 'Contact Number', width: 250, filter: 'text' },
+     { field: 'email', headerName: 'Email', width: 250, filter: 'text' },
+
+     { field: 'address', headerName: 'Address', width: 250, filter: 'text' },
+     { field: 'dob', headerName: 'Date of Birth', width: 250, filter: 'text' },
+     { field: 'age', headerName: 'Age', width: 250, filter: 'text' },
+     { field: 'gender', headerName: 'Gender', width: 250, filter: 'text' },
+     { field: 'civil_status', headerName: 'Civil Status', width: 250, filter: 'text' },
+     { field: 'highest_educational_attainment', headerName: 'Highest Ed. Att.', width: 250, filter: 'text' },
+     { field: 'occupation', headerName: 'Occupation', width: 250, filter: 'text' },
+     { field: 'religion', headerName: 'Religion', width: 250, filter: 'text' },
+     { field: 'annual_income', headerName: 'Annual Income', width: 250, filter: 'text' },
+
+     { field: 'membership_date', headerName: 'Membership Date', width: 250 },
+     { field: 'status', headerName: 'Status', width: 250 },
+     { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 250 },
+     { field: 'bod_res', headerName: 'BOD Res', width: 250 },
+     { field: 'coop_savings_account_number', headerName: 'Coop Savings Accnt Number', width: 250 },
+     { field: 'coop_savings_passbook_number', headerName: 'Coop Savings Passbook Number', width: 250 },
+     { field: 'kaya_atm_card_number', headerName: 'Special Savings Passbook Number', width: 250 },
+     { field: 'kaya_atm_savings_account_number', headerName: 'Special Savings Account Number', width: 250 },
      // { field: 'mbh', headerName: 'MBH', width: 150 },
      // { field: 'atm_passbook_fee', headerName: 'ATM Book Fee', width: 150 },
      // { field: 'atm_status', headerName: 'ATM Status', width: 150 },
      // { field: 'pb_account_number', headerName: 'PB Account Number', width: 150 },
      // { field: 'pb_account_number_series', headerName: 'PB Account Number Series', width: 150 },
-     { field: 'passbook_series_number', headerName: 'Passbook Series number', width: 150 },
-     { field: 'affiliation_org', headerName: 'Affiliation Org', width: 150 },
-     { field: 'passbook_printed', headerName: 'Passbook Printed', width: 150 },
+     { field: 'passbook_series_number', headerName: 'Passbook Series number', width: 250 },
+     { field: 'affiliation_org', headerName: 'Affiliation Org', width: 250 },
+     { field: 'passbook_printed', headerName: 'Passbook Printed', width: 250 },
      { field: 'remarks', headerName: 'Remarks', width: 400 },
      { field: 'notes', headerName: 'Notes', width: 600 },
+
 
 ];
 
@@ -268,6 +284,18 @@ const Member = (props) => {
      const [notes, setnotes] = useState('')
      const [tabvalue, settabvalue] = React.useState('1');
      const [buttonReceiptDisabled, setbuttonReceiptDisabled] = useState(true)
+     //new
+     const [tin, settin] = useState('')
+     const [coop_savings_passbook_number, setcoop_savings_passbook_number] = useState('')
+     const [address, setaddress,] = useState('')
+     const [dob, setdob] = useState('')
+     const [age, setage,] = useState('')
+     const [gender, setgender] = useState('')
+     const [civil_status, setcivil_status] = useState('')
+     const [highest_educational_attainment, sethighest_educational_attainment] = useState('')
+     const [occupation, setoccupation] = useState('')
+     const [religion, setreligion] = useState('')
+     const [annual_income, setannual_income] = useState('')
 
      const [openAdd, setOpenAdd] = useState(false);
      const [openDelete, setOpenDelete] = useState(false);
@@ -795,7 +823,20 @@ const Member = (props) => {
           setaffiliation_org("")
           setpassbook_printed("")
           setremarks("")
+          setemail("")
+          setcontact_number("")
           setnotes("")
+          settin("")
+          setcoop_savings_passbook_number("")
+          setaddress("")
+          setdob("")
+          setage("")
+          setgender("")
+          setcivil_status("")
+          sethighest_educational_attainment("")
+          setoccupation("")
+          setreligion("")
+          setannual_income("")
      }
      const handleZeroOnBlur = () => {
           if (share_capital_debit === "") {
@@ -945,6 +986,22 @@ const Member = (props) => {
           setpassbook_printed(params.row.passbook_printed);
           setremarks(params.row.remarks);
           setnotes(params.row.notes);
+
+
+
+          settin(params.row.tin);
+          setcoop_savings_passbook_number(params.row.coop_savings_passbook_number);
+          setaddress(params.row.address);
+          setdob(params.row.dob);
+          setage(params.row.age);
+          setgender(params.row.gender);
+          setcivil_status(params.row.civil_status);
+          sethighest_educational_attainment(params.row.highest_educational_attainment);
+          setoccupation(params.row.occupation);
+          setreligion(params.row.religion);
+          setannual_income(params.row.annual_income);
+
+
      };
 
 
@@ -1014,7 +1071,18 @@ const Member = (props) => {
                affiliation_org: affiliation_org,
                passbook_printed: passbook_printed,
                remarks: remarks,
-               notes: notes
+               notes: notes,
+               tin: tin,
+               coop_savings_passbook_number: coop_savings_passbook_number,
+               address: address,
+               dob: dob,
+               age: age,
+               gender: gender,
+               civil_status: civil_status,
+               highest_educational_attainment: highest_educational_attainment,
+               occupation: occupation,
+               religion: religion,
+               annual_income: annual_income,
 
 
 
@@ -1071,8 +1139,20 @@ const Member = (props) => {
                     setpassbook_printed("")
                     setremarks("")
                     setnotes("")
+                    setemail("")
+                    setcontact_number("")
                     setPassword("")
-
+                    settin("")
+                    setcoop_savings_passbook_number("")
+                    setaddress("")
+                    setdob("")
+                    setage("")
+                    setgender("")
+                    setcivil_status("")
+                    sethighest_educational_attainment("")
+                    setoccupation("")
+                    setreligion("")
+                    setannual_income("")
                     handleSuccessToast('Member Added Successfully')
 
                     setOpenAdd(false)
@@ -1106,7 +1186,18 @@ const Member = (props) => {
                affiliation_org: affiliation_org,
                passbook_printed: passbook_printed,
                remarks: remarks,
-               notes: notes
+               notes: notes,
+               tin: tin,
+               coop_savings_passbook_number: coop_savings_passbook_number,
+               address: address,
+               dob: dob,
+               age: age,
+               gender: gender,
+               civil_status: civil_status,
+               highest_educational_attainment: highest_educational_attainment,
+               occupation: occupation,
+               religion: religion,
+               annual_income: annual_income,
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -1153,6 +1244,19 @@ const Member = (props) => {
                     setpassbook_printed("")
                     setremarks("")
                     setnotes("")
+                    setemail("")
+                    setcontact_number("")
+                    settin("")
+                    setcoop_savings_passbook_number("")
+                    setaddress("")
+                    setdob("")
+                    setage("")
+                    setgender("")
+                    setcivil_status("")
+                    sethighest_educational_attainment("")
+                    setoccupation("")
+                    setreligion("")
+                    setannual_income("")
 
                     handleSuccessToast('Updated Successfully')
                     setOpenUpdate(false)
@@ -1763,6 +1867,16 @@ const Member = (props) => {
                                                                       value={lastname}
                                                                  />
                                                                  <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="TIN"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => settin(e.target.value)}
+                                                                      value={tin}
+                                                                 />
+
+                                                                 <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Contact Number"
@@ -1777,6 +1891,90 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setemail(e.target.value)}
                                                                       value={email}
+                                                                 />
+
+
+
+
+
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaddress(e.target.value)}
+                                                                      value={address}
+                                                                 />
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Date of Birth"
+                                                                           value={dob}
+                                                                           onChange={(newValue) => { setdob(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Age"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setage(e.target.value)}
+                                                                      value={age}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Gender"
+                                                                      select
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      fullWidth
+                                                                      onChange={(e) => setgender(e.target.value)}
+                                                                      value={gender}
+                                                                 >
+                                                                      <MenuItem value={"Male"}>Male</MenuItem>
+                                                                      <MenuItem value={"Female"}>Female</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Civil Status"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcivil_status(e.target.value)}
+                                                                      value={civil_status}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Highest Educational Att."
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethighest_educational_attainment(e.target.value)}
+                                                                      value={highest_educational_attainment}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Occupation"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setoccupation(e.target.value)}
+                                                                      value={occupation}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Religion"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setreligion(e.target.value)}
+                                                                      value={religion}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Annual Income"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setannual_income(e.target.value)}
+                                                                      value={annual_income}
                                                                  />
                                                             </div>
                                                             <div>
@@ -1824,6 +2022,14 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcoop_savings_account_number(e.target.value)}
                                                                       value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="COOP Savings Passbook Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_passbook_number(e.target.value)}
+                                                                      value={coop_savings_passbook_number}
                                                                  />
                                                                  <TextField
                                                                       fullWidth
@@ -1985,6 +2191,117 @@ const Member = (props) => {
                                                                       onChange={(e) => setlastname(e.target.value)}
                                                                       value={lastname}
                                                                  />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="TIN"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => settin(e.target.value)}
+                                                                      value={tin}
+                                                                 />
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Contact Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcontact_number(e.target.value)}
+                                                                      value={contact_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Email"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setemail(e.target.value)}
+                                                                      value={email}
+                                                                 />
+
+
+
+
+
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaddress(e.target.value)}
+                                                                      value={address}
+                                                                 />
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Date of Birth"
+                                                                           value={dob}
+                                                                           onChange={(newValue) => { setdob(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Age"
+
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setage(e.target.value)}
+                                                                      value={age}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      id="outlined-required"
+                                                                      label="Gender"
+                                                                      select
+                                                                      style={{ paddingBottom: "20px" }}
+                                                                      fullWidth
+                                                                      onChange={(e) => setgender(e.target.value)}
+                                                                      value={gender}
+                                                                 >
+                                                                      <MenuItem value={"Male"}>Male</MenuItem>
+                                                                      <MenuItem value={"Female"}>Female</MenuItem>
+                                                                 </TextField>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Civil Status"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcivil_status(e.target.value)}
+                                                                      value={civil_status}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Highest Educational Att."
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethighest_educational_attainment(e.target.value)}
+                                                                      value={highest_educational_attainment}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Occupation"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setoccupation(e.target.value)}
+                                                                      value={occupation}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Religion"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setreligion(e.target.value)}
+                                                                      value={religion}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Annual Income"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setannual_income(e.target.value)}
+                                                                      value={annual_income}
+                                                                 />
                                                             </div>
                                                             <div>
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2031,6 +2348,14 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcoop_savings_account_number(e.target.value)}
                                                                       value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="COOP Savings Passbook Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_passbook_number(e.target.value)}
+                                                                      value={coop_savings_passbook_number}
                                                                  />
                                                                  <TextField
                                                                       fullWidth

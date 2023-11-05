@@ -1640,7 +1640,32 @@ const Payroll = (props) => {
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
 
-                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}> {employmentStatus !== "daily" ? default_bimonthly : default_bimonthly * total.working_day_counter} </TableCell>
+                                                                                {/* working */}
+                                                                                {/* <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}> {employmentStatus !== "daily" ? default_bimonthly : default_bimonthly * total.working_day_counter} </TableCell> */}
+
+                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>
+                                                                                     {employmentStatus !== "daily"
+                                                                                          ? default_bimonthly !== null && default_bimonthly !== undefined
+                                                                                               ? `P${default_bimonthly.toLocaleString("en-PH", {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2,
+                                                                                               })}`
+                                                                                               : 'N/A'
+                                                                                          : default_bimonthly !== null && default_bimonthly !== undefined && total.working_day_counter !== null && total.working_day_counter !== undefined
+                                                                                               ? `P${(default_bimonthly * total.working_day_counter).toLocaleString("en-PH", {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2,
+                                                                                               })}`
+                                                                                               : 'N/A'
+                                                                                     }
+                                                                                </TableCell>
+
+
+
+
+
+
+
 
                                                                                 {/* <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>
                                                                                      {daily ? (
@@ -1773,7 +1798,7 @@ const Payroll = (props) => {
                                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: '#b1b1b1' }}></TableCell>
-                                                                                <TableCell style={{ backgroundColor: '#b1b1b1', textAlign: "right", fontWeight: "600", fontSize: "16px" }}>{new_earnings_total.toLocaleString(undefined, {
+                                                                                <TableCell style={{ backgroundColor: '#b1b1b1', textAlign: "right", fontWeight: "600", fontSize: "16px" }}>P{new_earnings_total.toLocaleString(undefined, {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</TableCell>
@@ -1870,7 +1895,7 @@ const Payroll = (props) => {
                                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: 'orange' }}></TableCell>
-                                                                                <TableCell style={{ backgroundColor: 'orange', textAlign: "right", fontWeight: "600", fontSize: "16px" }}><strong>{grosspay.toLocaleString(undefined, {
+                                                                                <TableCell style={{ backgroundColor: 'orange', textAlign: "right", fontWeight: "600", fontSize: "16px" }}><strong>P{grosspay.toLocaleString(undefined, {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</strong></TableCell>
@@ -2002,6 +2027,15 @@ const Payroll = (props) => {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</TableCell>
+                                                                                {/* <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>
+                                                                                     {filtered_additional && filtered_additional[0] && filtered_additional[0].lodging !== null
+                                                                                          ? `P${filtered_additional[0].lodging.toLocaleString(undefined, {
+                                                                                               minimumFractionDigits: 2,
+                                                                                               maximumFractionDigits: 2,
+                                                                                          })}`
+                                                                                          : 'N/A' // Replace with your desired fallback value
+                                                                                     }
+                                                                                </TableCell> */}
 
                                                                            </TableRow>
                                                                            <TableRow >
@@ -2009,10 +2043,13 @@ const Payroll = (props) => {
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
                                                                                 <TableCell></TableCell>
-                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>P{filtered_additional && filtered_additional[0]?.water_electricity.toLocaleString(undefined, {
-                                                                                     minimumFractionDigits: 2,
-                                                                                     maximumFractionDigits: 2
-                                                                                })}</TableCell>
+                                                                                <TableCell style={{ textAlign: "right", fontWeight: "600", fontSize: "16px" }}>
+                                                                                     P{filtered_additional && filtered_additional[0]?.water_electricity.toLocaleString(undefined, {
+                                                                                          minimumFractionDigits: 2,
+                                                                                          maximumFractionDigits: 2
+                                                                                     })}
+
+                                                                                </TableCell>
                                                                            </TableRow>
                                                                            <TableRow >
                                                                                 <TableCell style={{ fontWeight: "600", fontSize: "16px" }}>Pay Adjustment - Deduction</TableCell>
@@ -2060,7 +2097,7 @@ const Payroll = (props) => {
                                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
                                                                                 <TableCell style={{ backgroundColor: 'darkorange' }}></TableCell>
-                                                                                <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right", fontWeight: "600", fontSize: "16px" }}><strong>{new_net_total.toLocaleString(undefined, {
+                                                                                <TableCell style={{ backgroundColor: 'darkorange', textAlign: "right", fontWeight: "600", fontSize: "16px" }}><strong>P{new_net_total.toLocaleString(undefined, {
                                                                                      minimumFractionDigits: 2,
                                                                                      maximumFractionDigits: 2
                                                                                 })}</strong></TableCell>
@@ -2472,7 +2509,7 @@ const Payroll = (props) => {
                                                             </div>
 
                                                        </div>
-                                                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", border: "1px solid grey", padding: "50px"}}>
+                                                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", border: "1px solid grey", padding: "50px" }}>
                                                             <div style={{ width: "100%", marginRight: "20px", }}>
                                                                  <div style={{ width: "100%", backgroundColor: "orange", color: "white", padding: "20px", borderRadius: "10px 10px 0 0" }}>
                                                                       <h3>Confirmation</h3>
