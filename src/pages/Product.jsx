@@ -22,6 +22,12 @@ import { toast } from 'react-toastify';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import 'react-toastify/dist/ReactToastify.css';
 import ProductPrinter from '../components/ProductPrinter';
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
+import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 const theme = createTheme({
      palette: {
           neutral: {
@@ -326,6 +332,49 @@ const Product = (props) => {
      const filteredZero = product.filter(obj => obj.product_stock == 0).sort();
      const filteredLow = product.filter(obj => obj.product_stock <= 3 && obj.product_stock != 0).sort();
 
+     const downloadAsPDF = () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 500], // Adjust the dimensions as needed
+          });
+
+          pdf.autoTable({
+               head: [columns.map((column) => column.headerName)],
+               body: product.map((row) => columns.map((column) => row[column.field])),
+          });
+
+          pdf.save('product_data.pdf');
+     };
+
+     const downloadAsPDFLow = () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 500], // Adjust the dimensions as needed
+          });
+
+          pdf.autoTable({
+               head: [columns.map((column) => column.headerName)],
+               body: filteredLow.map((row) => columns.map((column) => row[column.field])),
+          });
+
+          pdf.save('product_data.pdf');
+     };
+     const downloadAsPDFLowZero= () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 500], // Adjust the dimensions as needed
+          });
+
+          pdf.autoTable({
+               head: [columns.map((column) => column.headerName)],
+               body: filteredZero.map((row) => columns.map((column) => row[column.field])),
+          });
+
+          pdf.save('product_data.pdf');
+     };
      return (
           <div style={{ display: "flex" }}>
                <Navbar></Navbar>
@@ -371,12 +420,50 @@ const Product = (props) => {
                                         <ThemeProvider theme={theme}>
                                              <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }} >
                                                   <div style={{ display: "flex" }} >
-                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
+                                                       {/* <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
                                                             <PDFDownloadLink fileName="all_products" document={< ProductPrinter data={product} />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : 'All Products')}
                                                             </PDFDownloadLink>
+                                                       </Button> */}
+                                                       <Button
+                                                            style={{
+                                                                 width: '100%',
+                                                                 padding: '10px',
+                                                                 marginRight: '10px'
+                                                            }}
+                                                            variant="contained"
+                                                            color="blue"
+                                                            onClick={downloadAsPDF}
+                                                       >
+                                                            Download All Products
                                                        </Button>
-                                                       <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
+                                                       <Button
+                                                            style={{
+                                                                 width: '100%',
+                                                                 padding: '10px',
+                                                                 marginRight: '10px'
+                                                            }}
+                                                            variant="contained"
+                                                            color="blue"
+                                                            onClick={downloadAsPDFLow}
+                                                       >
+                                                            
+                                                            Download Low Qty Products
+                                                       </Button>
+                                                       <Button
+                                                            style={{
+                                                                 width: '100%',
+                                                                 padding: '10px',
+                                                                 marginRight: '10px'
+                                                            }}
+                                                            variant="contained"
+                                                            color="blue"
+                                                            onClick={downloadAsPDFLowZero}
+                                                            
+                                                       >
+                                                              Download 0 Qty Products
+                                                       </Button>
+                                                       {/* <Button style={{ width: "100%", padding: "10px", marginBottom: "5px", marginRight: "5px" }} variant="outlined" color="blue">
                                                             <PDFDownloadLink fileName="low_stocks" document={< ProductPrinter data={filteredLow} />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : 'Low Stocks')}
                                                             </PDFDownloadLink>
@@ -385,7 +472,7 @@ const Product = (props) => {
                                                             <PDFDownloadLink fileName="zero_stocks" document={< ProductPrinter data={filteredZero} />} >
                                                                  {({ loading }) => (loading ? 'Loading document...' : ' 0 Stocks')}
                                                             </PDFDownloadLink>
-                                                       </Button>
+                                                       </Button> */}
                                                   </div>
                                                   <div>
                                                        <Button style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="outlined" color="red" onClick={handleOpenDelete}>

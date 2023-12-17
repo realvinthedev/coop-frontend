@@ -25,9 +25,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver-es';
-import { useRef } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -38,6 +36,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import Autocomplete from '@mui/material/Autocomplete';
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
+import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import axios from 'axios';
 
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -599,9 +603,91 @@ const Sales = (props) => {
 
      }
 
+     const downloadAsPDFMonthly = () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 500], // Adjust the dimensions as needed
+          });
+
+          monthlysales.forEach((transaction) => {
+               // Create an array to hold the transaction details
+               const transactionDetails = [
+                    transaction.pos_date,
+                    transaction.pos_transaction_id,
+                    transaction.pos_customer_name,
+                    transaction.pos_user,
+                    transaction.pos_total,
+                    "", // Leave this empty for items; it will be filled below
+               ];
+
+               // Add a nested table for items
+               const itemsData = transaction.pos_items.map((item) => [
+                    item.product_name,
+                    item.product_quantity,
+                    item.product_cost_price,
+                    item.product_selling_price,
+                    `PHP ${item.product_total}`,
+               ]);
+
+               // If there are items, fill the "Items" column with the nested table
+               if (itemsData.length > 0) {
+                    transactionDetails[5] = { table: itemsData, startY: pdf.autoTable.previous.finalY };
+               }
+
+               pdf.autoTable({
+                    head: [
+                         ["Datetime", "Trans ID", "Customer", "Cashier", "Total", "Items"],
+                    ],
+                    body: [transactionDetails],
+               });
+          });
+
+          pdf.save('monthly_sales_data.pdf');
+     };
 
 
+     //      const element = appRefMonthly.current;
 
+     //      html2pdf(element, {
+     //           margin: 10,
+     //           filename: `monthly_sales.pdf`,
+     //           image: { type: 'jpeg', quality: 0.98, scale: 0.5 },
+     //           html2canvas: { scale: 2, scrollY: 0, scrollX: 0 },
+     //           jsPDF: { unit: 'mm', format: [508, element.scrollHeight], orientation: 'portrait' }, // 508 mm = 20 inches
+     //      });
+     // };
+
+
+     const downloadAsPDF = () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 500], // Adjust the dimensions as needed
+          });
+
+          const headers = ['Product', 'Purchase times', 'Total'];
+
+          const data = sortedItemPurchaseMap.map(([itemName, purchaseTimes]) => {
+               const total = allsales.reduce((acc, sale) => {
+                    return (
+                         acc +
+                         sale.pos_items
+                              .filter((item) => item.product_name === itemName)
+                              .reduce((itemAcc, item) => itemAcc + item.product_total, 0)
+                    );
+               }, 0);
+
+               return [itemName, purchaseTimes, total];
+          });
+
+          pdf.autoTable({
+               head: [headers],
+               body: data,
+          });
+
+          pdf.save('product_data.pdf');
+     };
 
      return (
           <div style={{ display: "flex" }}>
@@ -692,7 +778,7 @@ const Sales = (props) => {
                                                                                                          <table>
                                                                                                               <thead>
                                                                                                                    <tr>
-                                                                                                                        <th style={{ paddingRight: "200px" }}>Item/s</th>
+                                                                                                                        <th style={{ paddingRight: "100px" }}>Item/s</th>
                                                                                                                         <th style={{ paddingRight: "40px" }}>Quantity</th>
                                                                                                                         <th style={{ paddingRight: "40px" }}>Cost Price</th>
                                                                                                                         <th style={{ paddingRight: "40px" }}>Selling Price</th>
@@ -798,13 +884,13 @@ const Sales = (props) => {
                                                   </div> */}
 
                                                   <div>
-                                                       <TableContainer>
+                                                       <TableContainer style={{ overflow: 'scroll', height: '500px' }}>
                                                             <Table>
                                                                  <TableHead>
                                                                       <TableRow>
-                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Product</TableCell>
-                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Purchase times</TableCell>
-                                                                      <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Product</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Purchase times</TableCell>
+                                                                           <TableCell style={{ backgroundColor: 'orange' }}>Total</TableCell>
                                                                       </TableRow>
                                                                  </TableHead>
                                                                  <TableBody>
@@ -830,6 +916,22 @@ const Sales = (props) => {
                                                                  </TableBody>
                                                             </Table>
                                                        </TableContainer>
+                                                       <ThemeProvider theme={theme}>
+                                                            <Button
+
+                                                                 style={{
+                                                                      width: '100%',
+                                                                      padding: '10px',
+                                                                      marginTop: '20px'
+
+                                                                 }}
+                                                                 variant="contained"
+                                                                 color='blue'
+                                                                 onClick={downloadAsPDF}
+                                                            >
+                                                                 Download Products
+                                                            </Button>
+                                                       </ThemeProvider>
                                                   </div>
 
 
@@ -903,66 +1005,8 @@ const Sales = (props) => {
 
                                                        </div>
 
-                                                       <div ref={appRef} style={{ backgroundColor: "white", padding: "0 30px 30px 0px", width: "1300px", height: "500px", overflow: "scroll" }}>
-                                                            <div style={{ width: "1500px" }}>
-                                                                 {/* {monthlysales && monthlysales.length > 0 ? (
-                                                                      monthlysales && monthlysales.map((item, index) => (
-                                                                           <SalesList key={index}>
-
-                                                                                <TableContainer
-                                                                                     style={{ width: "100%" }} >
-                                                                                     <Table sx={{ width: "100%" }} size="small" aria-label="a dense table">
-                                                                                          <TableHead>
-                                                                                               <TableCell >Datetime</TableCell>
-                                                                                               <TableCell >TRANS ID</TableCell>
-                                                                                               <TableCell >Cashier</TableCell>
-                                                                                               <TableCell >Total</TableCell>
-                                                                                               <TableCell >Items</TableCell>
-                                                                                          </TableHead>
-                                                                                          <TableBody>
-                                                                                               <TableRow>
-                                                                                                    <TableCell >{item.pos_date}</TableCell>
-                                                                                                    <TableCell >{item.pos_transaction_id}</TableCell>
-                                                                                                    <TableCell >{item.pos_user}</TableCell>
-                                                                                                    <TableCell >{item.pos_total}</TableCell>
-                                                                                                    <TableCell>
-
-                                                                                                         <table>
-                                                                                                              <thead>
-                                                                                                                   <tr>
-                                                                                                                        <th style={{ paddingRight: "200px" }}>Item/s</th>
-                                                                                                                        <th style={{ paddingRight: "40px" }}>Quantity</th>
-                                                                                                                        <th style={{ paddingRight: "40px" }}>Cost Price</th>
-                                                                                                                        <th style={{ paddingRight: "40px" }}>Selling Price</th>
-                                                                                                                        <th style={{ paddingRight: "40px" }}>Sub Total</th>
-                                                                                                                   </tr>
-                                                                                                              </thead>
-                                                                                                              <tbody>
-                                                                                                                   {monthlysales && Array.isArray(monthlysales.pos_items) && monthlysales.pos_items.map((item, index) => (
-
-                                                                                                                        <tr key={index}>
-                                                                                                                             <td>{item.product_name}</td>
-                                                                                                                             <td>{item.product_quantity}</td>
-                                                                                                                             <td>{item.product_cost_price}</td>
-                                                                                                                             <td>{item.product_selling_price}</td>
-                                                                                                                             <td>PHP {item.product_total}</td>
-                                                                                                                        </tr>
-                                                                                                                   ))}
-                                                                                                              </tbody>
-                                                                                                         </table>
-                                                                                                    </TableCell>
-                                                                                               </TableRow>
-                                                                                          </TableBody>
-                                                                                     </Table>
-                                                                                </TableContainer>
-                                                                           </SalesList>
-                                                                      ))
-                                                                 ) : (
-                                                                      <div style={{ display: "flex", justifyContent: "center", marginTop: "180px", alignItems: "center", flexDirection: "column" }}>
-                                                                           <p>No transaction on selected date</p>
-                                                                      </div>
-                                                                 )
-                                                                 } */}
+                                                       <div style={{ border: "solid red 1px", backgroundColor: "white", padding: "0 30px 30px 0px", width: "1300px", height: "500px", overflow: "scroll" }}>
+                                                            <div style={{ width: "1250px" }}>
                                                                  {monthlysales && monthlysales.length > 0 ? (
                                                                       monthlysales.map((transaction, index) => (
                                                                            <SalesList key={index}>
@@ -1033,9 +1077,7 @@ const Sales = (props) => {
 
                                                             <div style={{ display: "flex", justifyContent: "left", marginTop: "20px", width: "100%" }}>
 
-                                                                 {/* <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={captureScreenshot}>
-                                                                      Download
-                                                                 </Button> */}
+
                                                             </div>
 
                                                        </ThemeProvider>

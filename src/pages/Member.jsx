@@ -38,6 +38,10 @@ import { saveAs } from 'file-saver-es';
 import html2canvas from 'html2canvas';
 import { useRef } from 'react';
 import SavingsMasterlistPrinter from '../components/SavingsMasterlistPrinter';
+import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 
 
@@ -186,29 +190,29 @@ const savings_columns = [
      { field: 'date', headerName: 'Date', width: 100 },
      { field: 'particulars', headerName: 'Particulars', width: 300 },
      { field: 'membership_fee', headerName: 'Membership Fee', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'share_capital_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'share_capital_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'share_capital_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'share_capital_debit', headerName: 'SC-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header1', cellClassName: 'super-app-theme--header1cell' },
+     { field: 'share_capital_credit', headerName: 'SC-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header1', cellClassName: 'super-app-theme--header1cell' },
+     { field: 'share_capital_balance', headerName: 'SC-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header1', cellClassName: 'super-app-theme--header1cell' },
 
-     { field: 'coop_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'coop_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'coop_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'coop_savings_debit', headerName: 'CS-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header2', cellClassName: 'super-app-theme--header2cell' },
+     { field: 'coop_savings_credit', headerName: 'CS-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header2', cellClassName: 'super-app-theme--header2cell' },
+     { field: 'coop_savings_balance', headerName: 'CS-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header2', cellClassName: 'super-app-theme--header2cell' },
 
-     { field: 'special_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'special_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'special_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'special_savings_debit', headerName: 'SS-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header3', cellClassName: 'super-app-theme--header3cell' },
+     { field: 'special_savings_credit', headerName: 'SS-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header3', cellClassName: 'super-app-theme--header3cell' },
+     { field: 'special_savings_balance', headerName: 'SS-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header3', cellClassName: 'super-app-theme--header3cell' },
 
-     { field: 'kaya_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'kaya_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'kaya_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'kaya_savings_debit', headerName: 'Kaya-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header4', cellClassName: 'super-app-theme--header4cell' },
+     { field: 'kaya_savings_credit', headerName: 'Kaya-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header4', cellClassName: 'super-app-theme--header4cell' },
+     { field: 'kaya_savings_balance', headerName: 'Kaya-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header4', cellClassName: 'super-app-theme--header4cell' },
 
-     { field: 'karamay_savings_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'karamay_savings_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'karamay_savings_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'karamay_savings_debit', headerName: 'KS-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
+     { field: 'karamay_savings_credit', headerName: 'KS-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
+     { field: 'karamay_savings_balance', headerName: 'KS-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
 
-     { field: 'others_debit', headerName: 'Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'others_credit', headerName: 'Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
-     { field: 'others_balance', headerName: 'Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right" },
+     { field: 'others_debit', headerName: 'O-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+     { field: 'others_credit', headerName: 'O-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+     { field: 'others_balance', headerName: 'O-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
 
      { field: 'reference_document', headerName: 'Reference Document', width: 200 },
      { field: 'remarks', headerName: 'Remarks', width: 800 },
@@ -399,6 +403,7 @@ const Member = (props) => {
                });
           });
      };
+
 
 
      /**useEffects */
@@ -1550,31 +1555,24 @@ const Member = (props) => {
      }
 
      const [membershiptotal, setmembershiptotal] = useState(0);
-     // useEffect(() => {
-     //      const fetchEmp = async () => {
-     //           const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/savings/${savingsid}`, {
-     //                headers: {
-     //                     'Authorization': `Bearer ${user.token}`
-     //                }
-     //           })
-     //           const json = await response.json()
-     //           if (response.ok) {
-     //                const filteredData = json.filter(item => {
-     //                     const membership_fee = item.membership_fee
-     //                     return membership_fee == "membership_fee"
-     //                });
-     //                filteredData.forEach((item) => {
-     //                     amount += item.amount
-     //                });
-     //                setmembershiptotal(amount);
 
-     //           }
-     //      }
-     //      if (user) {
-     //           fetchEmp();
-     //      }
-     // }, [])
+     //WORKING TABLE
+     const downloadAsPDF = () => {
+          const customWidth = 200; // Specify your custom width here
+          const pdf = new jsPDF({
+               orientation: 'landscape',
+               format: [customWidth, 600], // Adjust the dimensions as needed
+          });
 
+          pdf.autoTable({
+               head: [savings_columns.map((column) => column.headerName)],
+               body: savings.map((row) => savings_columns.map((column) => row[column.field])),
+          });
+
+          pdf.save('savings_data.pdf');
+     };
+
+     
 
 
 
@@ -2573,35 +2571,78 @@ const Member = (props) => {
 
                                                   </CardContainer>
 
-                                                  <div style={{ paddingBottom: "20px", overflowX: "auto" }}>
+                                                  <div style={{ paddingBottom: "20px", overflowX: "auto" }} >
 
                                                        <div style={{ marginTop: "30px", display: 'flex', justifyContent: 'flex-start' }}>
                                                             <div style={{ marginLeft: 520, textAlign: "left", backgroundColor: "#49bcff", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Share Capital</div><div>{share_capital_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#45ace7", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#3795cc", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#45e7b6", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#375fcc", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
                                                             <div style={{ textAlign: "left", backgroundColor: "#ff8df0", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Kaya Savings</div><div>{kaya_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#d376c7", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
-                                                            <div style={{ textAlign: "left", backgroundColor: "#aa5fa0", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Others</div><div>{others_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#d3cd76", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#aa5f5f", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Others</div><div>{others_balance}</div></div></div>
                                                        </div>
                                                        <div style={{ height: 600, width: '5000px', paddingBottom: "20px", }} >
 
-                                                            <DataGrid
-                                                                 bord
-                                                                 getRowId={(row) => row._id}
-                                                                 rows={savings}
-                                                                 columns={savings_columns}
-                                                                 onRowClick={handleSavingsRowClick}
-                                                                 filterModel={{
-                                                                      items: [
-                                                                           {
-                                                                                columnField: searchcolumn,
-                                                                                operatorValue: 'contains',
-                                                                                value: query,
-                                                                           },
-                                                                      ],
-                                                                 }}
-                                                                 showCellRightBorder={true}
-                                                            />
+                                                            <Box
+                                                                 sx={{
+                                                                      height: 600,
+                                                                      width: '100%',
+                                                                      '& .super-app-theme--header1': {
+                                                                           backgroundColor: '#49bcff',
+                                                                      },
+                                                                      '& .super-app-theme--header1cell': {
+                                                                           backgroundColor: '#c3e2f3',
+                                                                      },
+                                                                      '& .super-app-theme--header2': {
+                                                                           backgroundColor: '#45e7b6',
+                                                                      },
+                                                                      '& .super-app-theme--header2cell': {
+                                                                           backgroundColor: '#e3fff7',
+                                                                      },
+                                                                      '& .super-app-theme--header3': {
+                                                                           backgroundColor: '#375fcc',
+                                                                      },
+                                                                      '& .super-app-theme--header3cell': {
+                                                                           backgroundColor: '#9baad3',
+                                                                      },
+                                                                      '& .super-app-theme--header4': {
+                                                                           backgroundColor: '#ff8df0',
+                                                                      },
+                                                                      '& .super-app-theme--header4cell': {
+                                                                           backgroundColor: '#ffdafa',
+                                                                      },
+                                                                      '& .super-app-theme--header5': {
+                                                                           backgroundColor: '#d3cd76',
+                                                                      },
+                                                                      '& .super-app-theme--header5cell': {
+                                                                           backgroundColor: '#fffcd9',
+                                                                      },
+                                                                      '& .super-app-theme--header6': {
+                                                                           backgroundColor: '#aa5f5f',
+                                                                      },
+                                                                      '& .super-app-theme--header6cell': {
+                                                                           backgroundColor: '#ffd4d4',
+                                                                      },
+                                                                 }}>
+                                                                 <DataGrid
+                                                                      bord
+                                                                      getRowId={(row) => row._id}
+                                                                      rows={savings}
+                                                                      columns={savings_columns}
+                                                                      onRowClick={handleSavingsRowClick}
+                                                                      filterModel={{
+                                                                           items: [
+                                                                                {
+                                                                                     columnField: searchcolumn,
+                                                                                     operatorValue: 'contains',
+                                                                                     value: query,
+                                                                                },
+                                                                           ],
+                                                                      }}
+                                                                      showCellRightBorder={true}
+                                                                      rowHeight={50}
+                                                                 />
+                                                            </Box>
                                                        </div>
 
                                                   </div>
@@ -2610,6 +2651,17 @@ const Member = (props) => {
                                                             <ThemeProvider theme={theme}>
                                                                  <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
                                                                       Go back to Masterlist
+                                                                 </Button>
+                                                                 <Button
+                                                                      style={{
+                                                                           width: '100%',
+                                                                           padding: '10px',
+                                                                      }}
+                                                                      variant="contained"
+                                                                      color="blue"
+                                                                      onClick={downloadAsPDF}
+                                                                 >
+                                                                      Download Ledger
                                                                  </Button>
                                                                  {/* <Button disabled={buttonReceiptDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
                                                                       <PDFDownloadLink fileName="savings_summary" document={
