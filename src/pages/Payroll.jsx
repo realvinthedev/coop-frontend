@@ -1398,43 +1398,51 @@ const Payroll = (props) => {
                     }
                }
                else {
-                    const payslip = {
-                         approval_status: 'PENDING',
-                         month: db_month,
-                         period: db_period,
-                         employee_id: db_employeeid,
-                         net: db_net_pay,
-                         department: db_department,
-                         name: new_name,
-                         year: db_year
-
-                    }
-                    if (!user) {
-                         console.log('You must be logged in first')
-                         return
-                    }
-                    if (
-                         db_net_pay === ""
-                    ) {
-                         errorToast('Finalize this payroll first before saving')
+                    const isAlreadyApproved = arr.find(item => item.employee_id === employeeId && item.approval_status === 'APPROVED');
+                    if (isAlreadyApproved) {
+                         errorToast('This payslip is already approved. Editing is not allowed anymore.')
                     }
                     else {
-                         const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/${employeeId}`, {
-                              method: 'PATCH',
-                              body: JSON.stringify(payslip),
-                              headers: {
-                                   'Content-Type': 'application/json',
-                                   'Authorization': `Bearer ${user.token}`
-                              }
-                         })
-                         const json = await response.json()
-                         if (!response.ok) {
-                              errorToast('Network Error')
+                         const payslip = {
+                              approval_status: 'PENDING',
+                              month: db_month,
+                              period: db_period,
+                              employee_id: db_employeeid,
+                              net: db_net_pay,
+                              department: db_department,
+                              name: new_name,
+                              year: db_year
+
+                         }
+                         if (!user) {
+                              console.log('You must be logged in first')
+                              return
+                         }
+                         if (
+                              db_net_pay === ""
+                         ) {
+                              errorToast('Finalize this payroll first before saving')
                          }
                          else {
-                              successToast('Item Updated Successfully')
+                              const response = await fetch(`https://inquisitive-red-sun-hat.cyclic.app/api/payslip/${employeeId}`, {
+                                   method: 'PATCH',
+                                   body: JSON.stringify(payslip),
+                                   headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${user.token}`
+                                   }
+                              })
+                              const json = await response.json()
+                              if (!response.ok) {
+                                   errorToast('Network Error')
+                              }
+                              else {
+                                   successToast('Item Updated Successfully')
+                              }
                          }
                     }
+
+
                }
           }
           setTimeout(() => {
