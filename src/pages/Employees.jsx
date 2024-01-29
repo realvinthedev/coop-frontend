@@ -141,6 +141,7 @@ const Employees = (props) => {
      const [address, setAddress] = useState('')
      const [email, setEmail] = useState('')
      const [contact_number, setContact_number] = useState('')
+     const [membership_date, setmembership_date] = useState('')
      const [incase_of_emergency, setIncase_of_emergency] = useState('')
      const [job_title, setJob_title] = useState('')
      const [tabvalue, settabvalue] = React.useState('1');
@@ -280,16 +281,15 @@ const Employees = (props) => {
      };
 
      const handleEmployeeId = () => {
-          if(firstname === "" || lastname === "")
-          {
+          if (firstname === "" || lastname === "") {
                errorToast('Please provide firstname and lastname first.')
           }
-          else{
+          else {
                let num = Math.floor(Math.random() * 90000) + 10000;
                const value = firstname.charAt(0) + lastname.charAt(0) + num
                setEmployee_id(value)
           }
-          
+
      }
 
      const successToast = (success) => {
@@ -430,6 +430,30 @@ const Employees = (props) => {
                     }
                })
 
+
+               const member = {
+                    member_id: employee_id,
+                    firstname: firstname,
+                    middlename: middlename,
+                    lastname: lastname,
+               }
+               const res = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+                    method: 'POST',
+                    body: JSON.stringify(member),
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${user.token}`
+                    }
+
+               })
+               if (!res.ok) {
+                    const errorResponse = await res.json();
+                    console.error('Error response:', errorResponse);
+
+               }
+
+
+
                const json = await response.json()
                if (!response.ok) {
                     setError(json.error)
@@ -478,6 +502,39 @@ const Employees = (props) => {
 
 
      }
+     const handleAddMember = async (e) => {
+          e.preventDefault()
+
+          const member = {
+               member_id: employee_id,
+               firstname: firstname,
+               middlename: middlename,
+               lastname: lastname,
+          }
+          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+               method: 'POST',
+               body: JSON.stringify(member),
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+               }
+
+          })
+          if (!response.ok) {
+               const errorResponse = await response.json();
+               console.error('Error response:', errorResponse);
+
+          }
+
+     }
+
+
+
+
+
+
+
+
 
      const handlePatch = async (e) => {
           e.preventDefault()
@@ -1642,7 +1699,7 @@ const Employees = (props) => {
                                                                       onChange={(e) => setEmergencty_leave(e.target.value)}
                                                                       value={emergency_leave}
                                                                  />
-                                                                 
+
 
 
 

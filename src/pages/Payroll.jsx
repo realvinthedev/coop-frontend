@@ -2395,7 +2395,7 @@ const Payroll = (props) => {
                                                                                                                    <TableCell style={{ width: 40 }}>Departments</TableCell>
                                                                                                                    <TableCell align='left' style={{ width: 50 }}>Net Pay</TableCell>
                                                                                                                    <TableCell style={{ width: 60 }}>Status</TableCell>
-                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "approver1") && <TableCell style={{ width: 80 }}>Action</TableCell>}
+                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>Action</TableCell>}
                                                                                                               </TableRow>
                                                                                                          </TableHead>
                                                                                                          <TableBody>
@@ -2408,7 +2408,7 @@ const Payroll = (props) => {
                                                                                                                         maximumFractionDigits: 2
                                                                                                                    })}</TableCell>
                                                                                                                    <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
-                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "approver1") && <TableCell style={{ width: 80 }}>
+                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>
 
                                                                                                                         <ThemeProvider theme={theme}>
                                                                                                                              <div>
@@ -2441,7 +2441,7 @@ const Payroll = (props) => {
                                                                                                                    maximumFractionDigits: 2
                                                                                                               })}</TableCell>
                                                                                                               <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
-                                                                                                              {(user && currentUser == "happy_admin" || currentUser == "approver1") && <TableCell style={{ width: 80 }}>
+                                                                                                              {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>
 
                                                                                                                    <ThemeProvider theme={theme}>
                                                                                                                         <div>
