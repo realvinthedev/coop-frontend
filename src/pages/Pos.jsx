@@ -14,6 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import MenuItem from '@mui/material/MenuItem';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAuthContext } from '../hooks/useAuthContext'
 import { Alert } from '@mui/material';
@@ -29,6 +30,7 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import drawer_image from '../images/drawer.png';
 import { Audio } from 'react-loader-spinner';
 import Autocomplete from '@mui/material/Autocomplete';
+import jsPDF from 'jspdf';
 const theme = createTheme({
      palette: {
           neutral: {
@@ -131,14 +133,21 @@ const Pos = (props) => {
      const [error, setError] = useState(false)
      const [openSuccess, setOpenSuccess] = useState(false)
      const [openDelete, setOpenDelete] = useState(false)
+     const [paymenttype, setpaymenttype] = useState('Cash')
+     const [cash_sales, setcash_sales] = useState(0)
+     const [credit_sales, setcredit_sales] = useState(0)
+     const [discount, setdiscount] = useState(0)
      const [openSave, setopenSave] = useState(false);
+     const [amoundue, setamoundue] = useState(0)
      const [quantity_left, setquantity_left] = useState(1)
      const [quantity_right, setquantity_right] = useState(0)
      const [row_total, setrow_total] = useState(0)
      const [total, settotal] = useState(0)
      const [costtotal, setcosttotal] = useState(0)
+     const [isButtonSaveTransaction, setisButtonSaveTransaction] = useState(false)
      const [costtotal2, setcosttotal2] = useState(0)
      const [arr, setArr] = useState([]);
+     const [discounted_amount, setdiscounted_amount] = useState(0)
      const { user } = useAuthContext()
      const [refresher, setRefresher] = useState(0)
      const [gridTrigger, setGridTrigger] = useState(false);
@@ -187,6 +196,7 @@ const Pos = (props) => {
                product_total += item.product_total
           });
           settotal(product_total);
+          setamoundue(product_total)
           console.log(total)
      }, [gridTrigger]);
 
@@ -372,11 +382,39 @@ const Pos = (props) => {
      const handleOpenDelete = () => {
           setOpenDelete(true);
      };
+     // const handlecash = (event) => {
+
+     //      const cash = event.target.value
+
+     //      if (paymenttype !== 'Credit') {
+     //           let change = cash - total
+     //           setchange(change);
+     //           setcash(cash)
+     //      }
+     //      else {
+     //           setcash(cash)
+     //           setchange(0);
+     //      }
+
+
+
+     // };
      const handlecash = (event) => {
-          const cash = event.target.value
-          let change = cash - total 
-          setchange(change);
-          setcash(cash)
+          const cash = event.target.value;
+
+          if (paymenttype !== 'Credit') {
+               let change;
+               if (amoundue > 0) {
+                    change = cash - amoundue; // Calculate change based on discounted amount if discount applied
+               } else {
+                    change = cash - total; // Calculate change based on total amount if no discount applied
+               }
+               setchange(change);
+               setcash(cash);
+          } else {
+               setcash(cash);
+               setchange(0);
+          }
      };
 
      const handleAddItem = () => {
@@ -417,20 +455,59 @@ const Pos = (props) => {
      const getRowId = (arr) => {
           return arr.product_code
      }
+     useEffect(() => {
+          if (arr.length === 0) {
+               setisButtonSaveTransaction(true)
+          }
+          else {
+               setisButtonSaveTransaction(false)
+          }
+     }, [arr]);
+
+
+
 
      const handleOpenSave = () => {
-          if(customer_name === ""){
+          if (customer_name === "") {
                errorToast("Select a customer first")
           }
-          else{
+          else {
                setopenSave(true);
           }
-          
      };
      const handleCloseSave = () => {
           setopenSave(false);
+
+
+     };
+     const handlePaymentTypeChange = (e) => {
+          setpaymenttype(e.target.value);
+          // if (e.target.value === 'Credit') {
+          //      // Reset cash value when Credit is selected
+
+          // }
+          setcash('');
+          setchange('')
+
      };
 
+     const handlediscount = (e) => {
+          const discountPercentage = parseInt(e.target.value); // Convert the selected discount to a number
+          const amountdue = total - (total * discountPercentage / 100); // Calculate the discounted amount
+          const discountedamount = total - amoundue
+
+          setdiscount(e.target.value);
+          setamoundue(amountdue);
+          setdiscounted_amount(discountedamount)
+          setcash(0)
+          setchange(0)
+
+
+     };
+     useEffect(() => {
+          const discountedamount = total - parseFloat(amoundue);
+          setdiscounted_amount(discountedamount);
+     }, [amoundue, total]);
 
      /**Handle datagrid row click */
      const handleRowClick = (params) => {
@@ -469,58 +546,73 @@ const Pos = (props) => {
      }
 
      const handleSaveTransaction = async (e) => {
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", cash)
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", amoundue)
           e.preventDefault()
           handleUpdateStocks()
-          const pos = {
-               pos_date: currentDate,
-               pos_transaction_id: transactionnumber,
-               pos_items: arr,
-               pos_cost_total: costtotal2,
-               pos_total: total,
-               pos_drawer_id: drawer_id,
-               pos_user: user.username,
-               pos_customer_name: customer_name,
-               pos_cash: cash,
-               pos_change: change
-          }
-          if (!user) {
-               console.log('You must be logged in first')
-               return
-          }
-          if (
-               arr.length == 0
-          ) {
-               errorToast("Please add an item before saving a transaction")
-          }
-          else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/', {
-                    method: 'POST',
-                    body: JSON.stringify(pos),
-                    headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${user.token}`
-                    }
-               })
-               const json = await response.json()
-               if (!response.ok) {
-                    setError(json.error)
+          if (cash >= amoundue) {
+               const pos = {
+                    pos_date: currentDate,
+                    pos_transaction_id: transactionnumber,
+                    pos_items: arr,
+                    pos_cost_total: costtotal2,
+                    pos_total: total,
+                    pos_drawer_id: drawer_id,
+                    pos_user: user.username,
+                    pos_customer_name: customer_name,
+                    pos_cash: cash,
+                    pos_change: change,
+                    pos_discount: discount,
+                    pos_credit_sales: credit_sales,
+                    pos_cash_sales: cash_sales
+
+               }
+               if (!user) {
+                    console.log('You must be logged in first')
+                    return
+               }
+               if (
+                    arr.length == 0
+               ) {
+                    errorToast("Please add an item before saving a transaction")
                }
                else {
-                    successToast("Transaction completed. Download the receipt if needed.")
-                    //setArr([])
-                    //handleOnSuccess();
-                    setButtonDisabled(false);
-                    setButtonAddtoCartDisabled(true)
-                    handleCloseSave()
-                    setButtonNewTransactionDisabled(false)
-                    handleRefresher()
-                    setcash(0)
-                    setchange(0)
-                    setcustomer_name("")
-                    
+                    console.log('123123123123123123', pos)
+                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/', {
+                         method: 'POST',
+                         body: JSON.stringify(pos),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+                    if (!response.ok) {
+                         setError(json.error)
+                    }
+                    else {
+                         console.log('123123123123123123', pos)
+                         successToast("Transaction completed. Download the receipt if needed.")
+                         //setArr([])
+                         //handleOnSuccess();
+                         setButtonDisabled(false);
+                         setButtonAddtoCartDisabled(true)
+                         handleCloseSave()
+                         setButtonNewTransactionDisabled(false)
+                         handleRefresher()
+                         setcash(0)
+                         setchange(0)
+                         setcustomer_name("")
+                         setdiscounted_amount(0)
+
+                    }
+
+
                }
 
-
+          }
+          else {
+               errorToast("Amount paid should be equal or greater than the total amount")
           }
 
      }
@@ -638,6 +730,134 @@ const Pos = (props) => {
           }
 
      }
+     //<PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} ></PDFDownloadLink>
+     const generatePDF = () => {
+
+          const pdf1 = new jsPDF({
+               orientation: 'portrait',
+               format: [100, 300], // Adjust the dimensions as needed
+          });
+          pdf1.setFontSize(10); // Adjust font size as needed
+          pdf1.setFont('helvetica', 'normal');
+          const styles = {
+               fontSize: 8, // Adjust font size as needed
+               font: 'helvetica', // Adjust font family as needed
+               fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
+          };
+          // Define table headers
+          const headers = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
+          pdf1.text('Transaction Receipt (CASHIER COPY)', 20, 10);
+          pdf1.text('Transaction Number: ' + transactionnumber, 15, 30);
+          pdf1.text('Date: ' + currentDate, 15, 40);
+          pdf1.text('Total: P' + total, 15, 50);
+          // Extract data for the table body
+          const body = arr.map(item => [
+               item.product_code,
+               item.product_name,
+               item.product_description,
+               item.product_quantity,
+               item.product_selling_price,
+               item.product_total
+          ]);
+
+          // Add content to the PDF using autoTable
+
+          pdf1.autoTable({
+               head: [headers],
+               body: body,
+               startY: 60, // Adjust the starting position below the header text
+               styles: styles
+          });
+          pdf1.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
+
+
+
+
+
+
+
+
+
+          const pdf2 = new jsPDF({
+               orientation: 'portrait',
+               format: [100, 300], // Adjust the dimensions as needed
+          });
+          pdf2.setFontSize(10); // Adjust font size as needed
+          pdf2.setFont('helvetica', 'normal');
+          const styles2 = {
+               fontSize: 8, // Adjust font size as needed
+               font: 'helvetica', // Adjust font family as needed
+               fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
+          };
+          // Define table headers
+          const headers2 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
+          pdf2.text('Transaction Receipt (CLIENT COPY)', 20, 10);
+          pdf2.text('Transaction Number: ' + transactionnumber, 15, 30);
+          pdf2.text('Date: ' + currentDate, 15, 40);
+          pdf2.text('Total: P' + total, 15, 50);
+          // Extract data for the table body
+          const body2 = arr.map(item => [
+               item.product_code,
+               item.product_name,
+               item.product_description,
+               item.product_quantity,
+               item.product_selling_price,
+               item.product_total
+          ]);
+
+          // Add content to the PDF using autoTable
+
+          pdf2.autoTable({
+               head: [headers2],
+               body: body2,
+               startY: 60, // Adjust the starting position below the header text
+               styles: styles2
+          });
+          pdf2.save(`CLIENT_COPY_${transactionnumber}_receipt.pdf`);
+
+
+
+
+
+
+
+          const pdf3 = new jsPDF({
+               orientation: 'portrait',
+               format: [600, 300], // Adjust the dimensions as needed
+          });
+          pdf3.setFontSize(10); // Adjust font size as needed
+          pdf3.setFont('helvetica', 'normal');
+          const styles3 = {
+               fontSize: 8, // Adjust font size as needed
+               font: 'helvetica', // Adjust font family as needed
+               fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
+          };
+          // Define table headers
+          const headers3 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
+          pdf3.text('Transaction Receipt (ADMIN COPY)', 130, 10);
+          pdf3.text('Transaction Number: ' + transactionnumber, 15, 30);
+          pdf3.text('Date: ' + currentDate, 15, 40);
+          pdf3.text('Total: P' + total, 15, 50);
+          // Extract data for the table body
+          const body3 = arr.map(item => [
+               item.product_code,
+               item.product_name,
+               item.product_description,
+               item.product_quantity,
+               item.product_selling_price,
+               item.product_total
+          ]);
+
+          // Add content to the PDF using autoTable
+
+          pdf3.autoTable({
+               head: [headers3],
+               body: body3,
+               startY: 60, // Adjust the starting position below the header text
+               styles: styles3
+          });
+          pdf3.save(`ADMIN_COPY_${transactionnumber}_receipt.pdf`);
+     };
      const handleDelete = async (e) => {
 
           if (!user) {
@@ -673,6 +893,7 @@ const Pos = (props) => {
           }
 
      }
+
 
 
 
@@ -947,9 +1168,10 @@ const Pos = (props) => {
                                                                       }}
                                                                  />
 
+
                                                                  <ThemeProvider theme={theme}>
                                                                       <div>
-                                                                           <Button disabled={isButtonAddtoCartDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green" onClick={
+                                                                           <Button disabled={isButtonSaveTransaction} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green" onClick={
                                                                                 handleOpenSave}>
                                                                                 Save Transaction
 
@@ -962,10 +1184,19 @@ const Pos = (props) => {
                                                                            </Button>
 
                                                                       </div>
-                                                                      <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green">
+
+                                                                      {/* <Button disabled={isButtonDisabled} style={{ width: "100%", padding: "10px", marginBottom: "5px" }} variant="contained" color="green">
                                                                            <PDFDownloadLink fileName={transactionnumber} document={< PosPrinter data={arr} currentdate={currentDate} total={total} transactionnumber={transactionnumber} />} >
                                                                                 {({ loading }) => (loading ? 'Loading document...' : 'Download Receipt')}
                                                                            </PDFDownloadLink>
+                                                                      </Button> */}
+                                                                      <Button
+                                                                           style={{ width: "100%", padding: "10px", marginBottom: "5px" }}
+                                                                           variant="contained"
+                                                                           color="green"
+                                                                           onClick={generatePDF}
+                                                                      >
+                                                                           Download Receipt
                                                                       </Button>
                                                                       {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
                                                                 
@@ -1003,37 +1234,83 @@ const Pos = (props) => {
                                                                            <h2>{"Finalizing Transaction"}</h2>
                                                                       </DialogTitle>
                                                                       <DialogContent>
+
                                                                            <TextField
                                                                                 fullWidth
                                                                                 id="outlined-required"
                                                                                 label="Amount Due"
-                                                                                style={{ paddingBottom: "20px", fontSize: "40px", marginTop: "20px"}}
-                                                                                onChange={(e) => settotal(e.target.value)}
-                                                                                value={total}
+                                                                                InputLabelProps={{
+                                                                                     style: { color: "red", fontWeight: "bold" }
+                                                                                }}
+                                                                                style={{ paddingBottom: "20px", fontSize: "20px", marginTop: "20px" }}
+                                                                                onChange={(e) => setamoundue(e.target.value)}
+                                                                                value={amoundue}
                                                                                 InputProps={{
                                                                                      readOnly: true,
                                                                                 }}
                                                                            />
-                                                                            <TextField
+                                                                           <TextField
+                                                                                id="outlined-required"
+                                                                                label="Discount"
+                                                                                select
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                fullWidth
+                                                                                onChange={handlediscount}
+                                                                                value={discount}
+                                                                           >
+                                                                                <MenuItem MenuItem value={"0"}>No Discount</MenuItem>
+                                                                                <MenuItem MenuItem value={"10"}>10%</MenuItem>
+                                                                                <MenuItem MenuItem value={"20"}>20%</MenuItem>
+                                                                                <MenuItem MenuItem value={"30"}>30%</MenuItem>
+                                                                                <MenuItem MenuItem value={"40"}>40%</MenuItem>
+                                                                                <MenuItem MenuItem value={"50"}>50%</MenuItem>
+                                                                           </TextField>
+                                                                           <TextField
                                                                                 fullWidth
                                                                                 id="outlined-required"
-                                                                                label="Cash"
+                                                                                label="Discounted Amount Due"
+                                                                                style={{ paddingBottom: "20px", fontSize: "40px", marginTop: "20px" }}
+                                                                                onChange={(e) => setdiscounted_amount(e.target.value)}
+                                                                                value={discounted_amount}
+                                                                                InputProps={{
+                                                                                     readOnly: true,
+                                                                                }}
+                                                                           />
+
+                                                                           <TextField
+                                                                                id="outlined-required"
+                                                                                label="Payment Type"
+                                                                                select
+                                                                                style={{ paddingBottom: "20px" }}
+                                                                                fullWidth
+                                                                                onChange={handlePaymentTypeChange}
+                                                                                value={paymenttype}
+                                                                           >
+                                                                                <MenuItem value={"Cash"}>Cash</MenuItem>
+                                                                                <MenuItem value={"Credit"}>Credit</MenuItem>
+                                                                           </TextField>
+                                                                           <TextField
+                                                                                fullWidth
+                                                                                id="outlined-required"
+                                                                                label="Enter Amount Paid"
                                                                                 style={{ paddingBottom: "20px", fontSize: "40px" }}
                                                                                 onChange={handlecash}
                                                                                 value={cash}
-                                                                             
+
                                                                            />
-                                                                             <TextField
-                                                                                fullWidth
-                                                                                id="outlined-required"
-                                                                                label="Change"
-                                                                                style={{ paddingBottom: "20px", fontSize: "40px", color: "#991f1f"}}
-                                                                                onChange={(e) => setchange(e.target.value)}
-                                                                                value={change}
-                                                                                InputProps={{
-                                                                                     readOnly: true,
-                                                                                }}
-                                                                           />
+                                                                           {paymenttype !== 'Credit' && (
+                                                                                <TextField
+                                                                                     fullWidth
+                                                                                     id="outlined-required"
+                                                                                     label="Change"
+                                                                                     style={{ paddingBottom: "20px", fontSize: "40px", color: "#991f1f" }}
+                                                                                     onChange={(e) => setchange(e.target.value)}
+                                                                                     value={change}
+                                                                                     InputProps={{
+                                                                                          readOnly: true,
+                                                                                     }}
+                                                                                />
+                                                                           )}
 
                                                                       </DialogContent>
                                                                       <DialogActions>

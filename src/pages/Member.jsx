@@ -147,41 +147,51 @@ const CardContainer = styled.div`
 /**GET REQUESTS */
 const columns = [
      { field: 'member_id', headerName: 'Member ID', width: 200, filter: 'text' },
+     { field: 'lastname', headerName: 'Lastname', width: 250, filter: 'text' },
      { field: 'firstname', headerName: 'Firstname', width: 250, filter: 'text' },
      { field: 'middlename', headerName: 'Middlename', width: 250, filter: 'text' },
-     { field: 'lastname', headerName: 'Lastname', width: 250, filter: 'text' },
-     { field: 'tin', headerName: 'TIN', width: 250, filter: 'text' },
+     { field: 'tin', headerName: 'TIN No', width: 250, filter: 'text' },
+     { field: 'membership_date', headerName: 'Membership Date Accepted', width: 250 },
+     { field: 'membership_type', headerName: 'Type / Kind of Membership', width: 250 },
+     { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 250 },
+     { field: 'bod_res', headerName: 'BOD Resolution No', width: 250 },
+     //membership fee
+     { field: 'initial_share_capital', headerName: 'Initial Share Capital', width: 250 },
+     { field: 'initial_no_share', headerName: 'Initial No. of Shares', width: 250 },
+     { field: 'passbook_series_number', headerName: 'Passbook Account Series No.', width: 250 },
+     { field: 'coop_savings_account_number', headerName: 'Savings Account No.', width: 250 },
+     //share capital amount
+     //coop savings amount
+     { field: 'housing_equity', headerName: 'Housing Equity Account No.', width: 250 },
+     { field: 'special_savings_account', headerName: 'Special Savings Account No.', width: 250 },
+     //special savings amount
+     { field: 'impukan_certificate_account', headerName: 'Impukan Certificate Account', width: 250 },
+     { field: 'kaya_atm_savings_account_number', headerName: 'Kaya Savings Account Number', width: 250 },
+     //Kaya savings amount
+     { field: 'address', headerName: 'Current Address', width: 250, filter: 'text' },
+     { field: 'email', headerName: 'Email Address', width: 250, filter: 'text' },
      { field: 'contact_number', headerName: 'Contact Number', width: 250, filter: 'text' },
-     { field: 'email', headerName: 'Email', width: 250, filter: 'text' },
-
-     { field: 'address', headerName: 'Address', width: 250, filter: 'text' },
      { field: 'dob', headerName: 'Date of Birth', width: 250, filter: 'text' },
      { field: 'age', headerName: 'Age', width: 250, filter: 'text' },
-     { field: 'gender', headerName: 'Gender', width: 250, filter: 'text' },
+     { field: 'gender', headerName: 'Sex', width: 250, filter: 'text' },
      { field: 'civil_status', headerName: 'Civil Status', width: 250, filter: 'text' },
      { field: 'highest_educational_attainment', headerName: 'Highest Ed. Att.', width: 250, filter: 'text' },
-     { field: 'occupation', headerName: 'Occupation', width: 250, filter: 'text' },
+     { field: 'occupation', headerName: 'Occupation / Income Source', width: 250, filter: 'text' },
+     { field: 'number_of_dependent', headerName: 'Number of Dependent', width: 250 },
      { field: 'religion', headerName: 'Religion', width: 250, filter: 'text' },
      { field: 'annual_income', headerName: 'Annual Income', width: 250, filter: 'text' },
-
-     { field: 'membership_date', headerName: 'Membership Date', width: 250 },
+     { field: 'pwd_type', headerName: 'PWD Type', width: 250 },
+     { field: 'termination_date', headerName: 'Termination of Membership Date', width: 300 },
+     { field: 'termination_bod', headerName: 'Termination BOD Resolution No', width: 300 },
+     { field: 'remarks', headerName: 'Remarks', width: 600 },
+     { field: 'notes', headerName: 'Notes', width: 600 },
      { field: 'status', headerName: 'Status', width: 250 },
-     { field: 'hhhc_membership_number', headerName: 'HHH Membership Number', width: 250 },
-     { field: 'bod_res', headerName: 'BOD Res', width: 250 },
-     { field: 'coop_savings_account_number', headerName: 'Coop Savings Accnt Number', width: 250 },
      { field: 'coop_savings_passbook_number', headerName: 'Coop Savings Passbook Number', width: 250 },
      { field: 'kaya_atm_card_number', headerName: 'Special Savings Passbook Number', width: 250 },
-     { field: 'kaya_atm_savings_account_number', headerName: 'Special Savings Account Number', width: 250 },
-     // { field: 'mbh', headerName: 'MBH', width: 150 },
-     // { field: 'atm_passbook_fee', headerName: 'ATM Book Fee', width: 150 },
-     // { field: 'atm_status', headerName: 'ATM Status', width: 150 },
-     // { field: 'pb_account_number', headerName: 'PB Account Number', width: 150 },
-     // { field: 'pb_account_number_series', headerName: 'PB Account Number Series', width: 150 },
-     { field: 'passbook_series_number', headerName: 'Passbook Series number', width: 250 },
      { field: 'affiliation_org', headerName: 'Affiliation Org', width: 250 },
      { field: 'passbook_printed', headerName: 'Passbook Printed', width: 250 },
-     { field: 'remarks', headerName: 'Remarks', width: 400 },
-     { field: 'notes', headerName: 'Notes', width: 600 },
+
+
 
 
 ];
@@ -206,13 +216,17 @@ const savings_columns = [
      { field: 'kaya_savings_credit', headerName: 'Kaya-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header4', cellClassName: 'super-app-theme--header4cell' },
      { field: 'kaya_savings_balance', headerName: 'Kaya-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header4', cellClassName: 'super-app-theme--header4cell' },
 
-     { field: 'karamay_savings_debit', headerName: 'KS-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
-     { field: 'karamay_savings_credit', headerName: 'KS-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
-     { field: 'karamay_savings_balance', headerName: 'KS-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
+     { field: 'housing_savings_debit', headerName: 'Housing-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
+     { field: 'housing_savings_credit', headerName: 'Housing-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
+     { field: 'housing_savings_balance', headerName: 'Housing-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header5', cellClassName: 'super-app-theme--header5cell' },
 
-     { field: 'others_debit', headerName: 'O-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
-     { field: 'others_credit', headerName: 'O-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
-     { field: 'others_balance', headerName: 'O-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+     { field: 'karamay_savings_debit', headerName: 'KS-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+     { field: 'karamay_savings_credit', headerName: 'KS-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+     { field: 'karamay_savings_balance', headerName: 'KS-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header6', cellClassName: 'super-app-theme--header6cell' },
+
+     { field: 'others_debit', headerName: 'O-Debit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header7', cellClassName: 'super-app-theme--header7cell' },
+     { field: 'others_credit', headerName: 'O-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header7', cellClassName: 'super-app-theme--header7cell' },
+     { field: 'others_balance', headerName: 'O-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header7', cellClassName: 'super-app-theme--header7cell' },
 
      { field: 'reference_document', headerName: 'Reference Document', width: 200 },
      { field: 'remarks', headerName: 'Remarks', width: 800 },
@@ -306,6 +320,16 @@ const Member = (props) => {
      const [openUpdate, setOpenUpdate] = useState(false);
      const [searchcolumn, setsearchcolumn] = useState('member_id')
 
+     const [membership_type, setmembership_type] = useState('')
+     const [initial_share_capital, setinitial_share_capital] = useState('')
+     const [initial_no_share, setinitial_no_share] = useState('')
+     const [special_savings_account, setspecial_savings_account] = useState('')
+     const [impukan_certificate_account, setimpukan_certificate_account] = useState('')
+     const [number_of_dependent, setnumber_of_dependent] = useState('')
+     const [pwd_type, setpwd_type] = useState('')
+     const [termination_date, settermination_date] = useState('')
+     const [termination_bod, settermination_bod] = useState('')
+
 
 
 
@@ -331,6 +355,11 @@ const Member = (props) => {
      const [kaya_savings_debit, setkaya_savings_debit] = useState(0)
      const [kaya_savings_credit, setkaya_savings_credit] = useState(0)
      const [kaya_savings_balance, setkaya_savings_balance] = useState(0)
+
+     const [housing_savings_debit, sethousing_savings_debit] = useState(0)
+     const [housing_savings_credit, sethousing_savings_credit] = useState(0)
+     const [housing_savings_balance, sethousing_savings_balance] = useState(0)
+
 
 
      const [karamay_savings_debit, setkaramay_savings_debit] = useState(0)
@@ -433,7 +462,9 @@ const Member = (props) => {
                          'Authorization': `Bearer ${user.token}`
                     }
                })
+
                const json = await response.json()
+               console.log("@@@@@@@@@@@@@@@@@@@@", json)
                if (response.ok) {
                     setsavings(json)
                     const share_balance = json.reduce((acc, entry) => acc + entry.share_capital_credit, 0);
@@ -451,6 +482,23 @@ const Member = (props) => {
                     const kaya_balance = json.reduce((acc, entry) => acc + entry.kaya_savings_credit, 0);
                     const kaya_less = json.reduce((acc, entry) => acc + entry.kaya_savings_debit, 0);
                     setkaya_savings_balance(parseFloat(kaya_balance) - parseFloat(kaya_less))
+
+
+                    // const housing_balance = json.reduce((acc, entry) => acc + entry.housing_savings_credit, 0);
+                    // const housing_less = json.reduce((acc, entry) => acc + entry.housing_savings_debit, 0);
+                    // sethousing_savings_balance(parseFloat(housing_balance) - parseFloat(housing_less))
+
+                    const housing_balance = json.reduce((acc, entry) => acc + (entry.housing_savings_credit || 0), 0);
+                    const housing_less = json.reduce((acc, entry) => acc + (entry.housing_savings_debit || 0), 0);
+                    const calculated_housing_savings_balance = parseFloat(housing_balance) - parseFloat(housing_less);
+
+                    if (!isNaN(calculated_housing_savings_balance)) {
+                         const final_housing_savings_balance = calculated_housing_savings_balance;
+                         sethousing_savings_balance(final_housing_savings_balance);
+                    } else {
+                         // Handle case where housing savings data is missing
+                         sethousing_savings_balance(0); // Or any other default value you prefer
+                    }
 
                     const karamay_balance = json.reduce((acc, entry) => acc + entry.karamay_savings_credit, 0);
                     const karamay_less = json.reduce((acc, entry) => acc + entry.karamay_savings_debit, 0);
@@ -471,6 +519,7 @@ const Member = (props) => {
      const [master_coop, setmaster_coop] = useState(0)
      const [master_special, setmaster_special] = useState(0)
      const [master_kaya, setmaster_kaya] = useState(0)
+     const [master_housing, setmaster_housing] = useState(0)
      const [master_karamay, setmaster_karamay] = useState(0)
      const [master_others, setmaster_others] = useState(0)
      useEffect(() => {
@@ -504,6 +553,23 @@ const Member = (props) => {
                     const kaya_balance = json.reduce((acc, entry) => acc + entry.kaya_savings_credit, 0);
                     const kaya_less = json.reduce((acc, entry) => acc + entry.kaya_savings_debit, 0);
                     setmaster_kaya(parseFloat(kaya_balance) - parseFloat(kaya_less))
+
+                    // const housing_balance = json.reduce((acc, entry) => acc + entry.housing_savings_credit, 0);
+                    // const housing_less = json.reduce((acc, entry) => acc + entry.housing_savings_debit, 0);
+                    // setmaster_housing(parseFloat(housing_balance) - parseFloat(housing_less))
+
+                    const housing_balance = json.reduce((acc, entry) => acc + (entry.housing_savings_credit || 0), 0);
+                    const housing_less = json.reduce((acc, entry) => acc + (entry.housing_savings_debit || 0), 0);
+                    const calculated_housing_savings_balance = parseFloat(housing_balance) - parseFloat(housing_less);
+
+                    if (!isNaN(calculated_housing_savings_balance)) {
+                         const final_housing_savings_balance = calculated_housing_savings_balance;
+                         setmaster_housing(final_housing_savings_balance);
+                    } else {
+                         // Handle case where housing savings data is missing
+                         setmaster_housing(0); // Or any other default value you prefer
+                    }
+
 
                     const karamay_balance = json.reduce((acc, entry) => acc + entry.karamay_savings_credit, 0);
                     const karamay_less = json.reduce((acc, entry) => acc + entry.karamay_savings_debit, 0);
@@ -774,6 +840,9 @@ const Member = (props) => {
           setkaya_savings_credit(0)
           setkaya_savings_balance(0)
 
+          sethousing_savings_debit(0)
+          sethousing_savings_credit(0)
+          sethousing_savings_balance(0)
 
 
           setkaramay_savings_debit(0)
@@ -1007,6 +1076,19 @@ const Member = (props) => {
           setannual_income(params.row.annual_income);
 
 
+          setmembership_type(params.row.membership_type);
+          setinitial_share_capital(params.row.initial_share_capital);
+          setinitial_no_share(params.row.initial_no_share);
+          setspecial_savings_account(params.row.special_savings_account);
+          setimpukan_certificate_account(params.row.impukan_certificate_account);
+          setnumber_of_dependent(params.row.number_of_dependent);
+          setpwd_type(params.row.annual_income);
+          settermination_date(params.row.termination_date);
+          settermination_bod(params.row.termination_bod);
+          setemail(params.row.email);
+          setcontact_number(params.row.contact_number);
+
+
      };
 
 
@@ -1032,6 +1114,9 @@ const Member = (props) => {
           setkaya_savings_debit(params.row.kaya_savings_debit)
           setkaya_savings_credit(params.row.kaya_savings_credit)
 
+          sethousing_savings_debit(params.row.housing_savings_debit)
+          sethousing_savings_credit(params.row.housing_savings_credit)
+
 
           setkaramay_savings_debit(params.row.karamay_savings_debit)
           setkaramay_savings_credit(params.row.karamay_savings_credit)
@@ -1055,43 +1140,44 @@ const Member = (props) => {
 
           const member = {
                member_id: member_id,
+               lastname: lastname,
                firstname: firstname,
                middlename: middlename,
-               lastname: lastname,
-               email: email,
-               contact_number: contact_number,
+               tin: tin,
                membership_date: membership_date,
-               status: status,
+               membership_type: membership_type,
                hhhc_membership_number: hhhc_membership_number,
                bod_res: bod_res,
-               coop_savings_account_number: coop_savings_account_number,
-               kaya_atm_card_number: kaya_atm_card_number,
-               kaya_atm_savings_account_number: kaya_atm_savings_account_number,
-               // mbh: mbh,
-               // atm_passbook_fee: atm_passbook_fee,
-               // atm_status: atm_status,
-               // pb_account_number: pb_account_number,
-               // pb_account_number_series: pb_account_number_series,
+               initial_share_capital: initial_share_capital,
+               initial_no_share: initial_no_share,
                passbook_series_number: passbook_series_number,
-               affiliation_org: affiliation_org,
-               passbook_printed: passbook_printed,
-               remarks: remarks,
-               notes: notes,
-               tin: tin,
-               coop_savings_passbook_number: coop_savings_passbook_number,
+               coop_savings_account_number: coop_savings_account_number,
+               housing_equity: housing_equity,
+               special_savings_account: special_savings_account,
+               impukan_certificate_account: impukan_certificate_account,
+               kaya_atm_savings_account_number: kaya_atm_savings_account_number,
                address: address,
+               email: email,
+               contact_number: contact_number,
                dob: dob,
                age: age,
                gender: gender,
                civil_status: civil_status,
                highest_educational_attainment: highest_educational_attainment,
                occupation: occupation,
+               number_of_dependent: number_of_dependent,
                religion: religion,
                annual_income: annual_income,
-
-
-
-
+               pwd_type: pwd_type,
+               termination_date: termination_date,
+               termination_bod: termination_bod,
+               remarks: remarks,
+               notes: notes,
+               status: status,
+               coop_savings_passbook_number: coop_savings_passbook_number,
+               kaya_atm_card_number: kaya_atm_card_number,
+               affiliation_org: affiliation_org,
+               passbook_printed: passbook_printed,
           }
 
           if (!user) {
@@ -1159,8 +1245,19 @@ const Member = (props) => {
                     setreligion("")
                     setannual_income("")
                     handleSuccessToast('Member Added Successfully')
-
                     setOpenAdd(false)
+
+
+
+                    setmembership_type("")
+                    setinitial_share_capital("")
+                    setinitial_no_share("")
+                    setspecial_savings_account("")
+                    setimpukan_certificate_account("")
+                    setnumber_of_dependent("")
+                    setpwd_type("")
+                    settermination_date("")
+                    settermination_bod("")
                     handleRefresher()
 
                }
@@ -1172,37 +1269,44 @@ const Member = (props) => {
           e.preventDefault()
           const member = {
                member_id: member_id,
+               lastname: lastname,
                firstname: firstname,
                middlename: middlename,
-               lastname: lastname,
+               tin: tin,
                membership_date: membership_date,
-               status: status,
+               membership_type: membership_type,
                hhhc_membership_number: hhhc_membership_number,
                bod_res: bod_res,
-               coop_savings_account_number: coop_savings_account_number,
-               kaya_atm_card_number: kaya_atm_card_number,
-               kaya_atm_savings_account_number: kaya_atm_savings_account_number,
-               // mbh: mbh,
-               // atm_passbook_fee: atm_passbook_fee,
-               // atm_status: atm_status,
-               // pb_account_number: pb_account_number,
-               // pb_account_number_series: pb_account_number_series,
+               initial_share_capital: initial_share_capital,
+               initial_no_share: initial_no_share,
                passbook_series_number: passbook_series_number,
-               affiliation_org: affiliation_org,
-               passbook_printed: passbook_printed,
-               remarks: remarks,
-               notes: notes,
-               tin: tin,
-               coop_savings_passbook_number: coop_savings_passbook_number,
+               coop_savings_account_number: coop_savings_account_number,
+               housing_equity: housing_equity,
+               special_savings_account: special_savings_account,
+               impukan_certificate_account: impukan_certificate_account,
+               kaya_atm_savings_account_number: kaya_atm_savings_account_number,
                address: address,
+               email: email,
+               contact_number: contact_number,
                dob: dob,
                age: age,
                gender: gender,
                civil_status: civil_status,
                highest_educational_attainment: highest_educational_attainment,
                occupation: occupation,
+               number_of_dependent: number_of_dependent,
                religion: religion,
                annual_income: annual_income,
+               pwd_type: pwd_type,
+               termination_date: termination_date,
+               termination_bod: termination_bod,
+               remarks: remarks,
+               notes: notes,
+               status: status,
+               coop_savings_passbook_number: coop_savings_passbook_number,
+               kaya_atm_card_number: kaya_atm_card_number,
+               affiliation_org: affiliation_org,
+               passbook_printed: passbook_printed,
           }
           if (!user) {
                console.log('You must be logged in first')
@@ -1265,6 +1369,19 @@ const Member = (props) => {
 
                     handleSuccessToast('Updated Successfully')
                     setOpenUpdate(false)
+
+
+                    setmembership_type("")
+                    setinitial_share_capital("")
+                    setinitial_no_share("")
+                    setspecial_savings_account("")
+                    setimpukan_certificate_account("")
+                    setnumber_of_dependent("")
+                    setpwd_type("")
+                    settermination_date("")
+                    settermination_bod("")
+
+
                     handleRefresher()
                }
           }
@@ -1303,6 +1420,9 @@ const Member = (props) => {
           const totalcoop_savings_balance = coop_savings_balance + parseFloat(coop_savings_credit) - parseFloat(coop_savings_debit)
           const totalspecial_savings_balance = special_savings_balance + parseFloat(special_savings_credit) - parseFloat(special_savings_debit)
           const totalkaya_savings_balance = kaya_savings_balance + parseFloat(kaya_savings_credit) - parseFloat(kaya_savings_debit)
+
+          const totalhousing_savings_balance = housing_savings_balance + parseFloat(housing_savings_credit) - parseFloat(housing_savings_debit)
+
           const totalkaramay_savings_debit = karamay_savings_balance + parseFloat(karamay_savings_credit) - parseFloat(karamay_savings_debit)
           const totalothers_debit = others_balance + parseFloat(others_credit) - parseFloat(others_debit)
 
@@ -1326,6 +1446,10 @@ const Member = (props) => {
                kaya_savings_debit: kaya_savings_debit,
                kaya_savings_credit: kaya_savings_credit,
                kaya_savings_balance: kaya_savings_credit === 0 && kaya_savings_debit === 0 ? 0 : totalkaya_savings_balance,
+
+               housing_savings_debit: housing_savings_debit,
+               housing_savings_credit: housing_savings_credit,
+               housing_savings_balance: housing_savings_credit === 0 && housing_savings_debit === 0 ? 0 : totalhousing_savings_balance,
 
 
                karamay_savings_debit: karamay_savings_debit,
@@ -1432,6 +1556,11 @@ const Member = (props) => {
                kaya_savings_balance: kaya_savings_balance,
 
 
+               housing_savings_debit: housing_savings_debit,
+               housing_savings_credit: housing_savings_credit,
+               housing_savings_balance: housing_savings_balance,
+
+
                karamay_savings_debit: karamay_savings_debit,
                karamay_savings_credit: karamay_savings_credit,
                karamay_savings_balance: karamay_savings_balance,
@@ -1502,6 +1631,8 @@ const Member = (props) => {
                setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
                setothers_balance(0)
+               sethousing_savings_balance(0)
+
           }
           else if (particulars === "COOP SAVINGS") {
                setshare_capital_balance(0)
@@ -1510,6 +1641,7 @@ const Member = (props) => {
                setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
                setothers_balance(0)
+               sethousing_savings_balance(0)
           }
           else if (particulars === "SPECIAL SAVINGS") {
                setshare_capital_balance(0)
@@ -1517,12 +1649,14 @@ const Member = (props) => {
                //setspecial_savings_balance(0)
                setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
+               sethousing_savings_balance(0)
                setothers_balance(0)
           }
           else if (particulars === "KAYA SAVINGS") {
                setshare_capital_balance(0)
                setcoop_savings_balance(0)
                setspecial_savings_balance(0)
+               sethousing_savings_balance(0)
                //setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
                setothers_balance(0)
@@ -1530,6 +1664,7 @@ const Member = (props) => {
           else if (particulars === "KARAMAY SAVINGS") {
                setshare_capital_balance(0)
                setcoop_savings_balance(0)
+               sethousing_savings_balance(0)
                setspecial_savings_balance(0)
                setkaya_savings_balance(0)
                //setkaramay_savings_balance(0)
@@ -1541,7 +1676,17 @@ const Member = (props) => {
                setspecial_savings_balance(0)
                setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
+               sethousing_savings_balance(0)
                //setothers_balance(0)
+          }
+          else if (particulars === "HOUSING SAVINGS") {
+               setshare_capital_balance(0)
+               setcoop_savings_balance(0)
+               setspecial_savings_balance(0)
+               setkaya_savings_balance(0)
+               setkaramay_savings_balance(0)
+               //sethousing_savings_balance(0)
+               setothers_balance(0)
           }
           else {
                setshare_capital_balance(0)
@@ -1550,6 +1695,7 @@ const Member = (props) => {
                setkaya_savings_balance(0)
                setkaramay_savings_balance(0)
                setothers_balance(0)
+               sethousing_savings_balance(0)
           }
 
      }
@@ -1563,7 +1709,7 @@ const Member = (props) => {
                orientation: 'landscape',
                format: [customWidth, 600], // Adjust the dimensions as needed
           });
-
+          pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
           pdf.autoTable({
                head: [savings_columns.map((column) => column.headerName)],
                body: savings.map((row) => savings_columns.map((column) => row[column.field])),
@@ -1572,7 +1718,7 @@ const Member = (props) => {
           pdf.save('savings_data.pdf');
      };
 
-     
+
 
 
 
@@ -1611,6 +1757,7 @@ const Member = (props) => {
                                                                                      total_coop={master_coop}
                                                                                      total_special={master_special}
                                                                                      total_kaya={master_kaya}
+                                                                                     total_housingequity={total_housingequity}
                                                                                      total_karamay={master_karamay}
                                                                                      total_others={master_others}
                                                                                 />} >
@@ -1647,7 +1794,7 @@ const Member = (props) => {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
                                                                  </div>
                                                             </div>
                                                             <div>
@@ -1658,6 +1805,13 @@ const Member = (props) => {
                                                                       })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>Karamay Savings</p>
                                                                  </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{master_housing && master_housing.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
+                                                                 </div>
                                                                  <div>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{master_others && master_others.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
@@ -1665,6 +1819,7 @@ const Member = (props) => {
                                                                       })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>OTHERS</p>
                                                                  </div>
+
 
                                                             </div>
                                                        </Cards>
@@ -1842,6 +1997,15 @@ const Member = (props) => {
                                                                       required
                                                                       fullWidth
                                                                       id="outlined-required"
+                                                                      label="Lastname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setlastname(e.target.value)}
+                                                                      value={lastname}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
                                                                       label="Firstname"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setfirstname(e.target.value)}
@@ -1855,23 +2019,129 @@ const Member = (props) => {
                                                                       onChange={(e) => setmiddlename(e.target.value)}
                                                                       value={middlename}
                                                                  />
+
                                                                  <TextField
-                                                                      required
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Lastname"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setlastname(e.target.value)}
-                                                                      value={lastname}
-                                                                 />
-                                                                 <TextField
-                                                                      required
+
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="TIN"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => settin(e.target.value)}
                                                                       value={tin}
+                                                                 />
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Membership Date"
+                                                                           value={membership_date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Type / Kind of Membership"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmembership_type(e.target.value)}
+                                                                      value={membership_type}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
+                                                                      value={hhhc_membership_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="BOD Resolution No"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setbod_res(e.target.value)}
+                                                                      value={bod_res}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Initial Share Capital"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setinitial_share_capital(e.target.value)}
+                                                                      value={initial_share_capital}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Initial No. of Shares"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setinitial_no_share(e.target.value)}
+                                                                      value={initial_no_share}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Account Series Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
+                                                                      value={passbook_series_number}
+                                                                 />
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
+                                                                      value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Housing Equity Account No."
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethousing_equity(e.target.value)}
+                                                                      value={housing_equity}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Special Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setspecial_savings_account(e.target.value)}
+                                                                      value={special_savings_account}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Impukan Certificate Account"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setimpukan_certificate_account(e.target.value)}
+                                                                      value={impukan_certificate_account}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Kaya Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
+                                                                      value={kaya_atm_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Current Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaddress(e.target.value)}
+                                                                      value={address}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Email Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setemail(e.target.value)}
+                                                                      value={email}
                                                                  />
 
                                                                  <TextField
@@ -1881,28 +2151,6 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcontact_number(e.target.value)}
                                                                       value={contact_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Email"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setemail(e.target.value)}
-                                                                      value={email}
-                                                                 />
-
-
-
-
-
-
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Address"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setaddress(e.target.value)}
-                                                                      value={address}
                                                                  />
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
@@ -1922,9 +2170,8 @@ const Member = (props) => {
                                                                       value={age}
                                                                  />
                                                                  <TextField
-                                                                      required
                                                                       id="outlined-required"
-                                                                      label="Gender"
+                                                                      label="Sex"
                                                                       select
                                                                       style={{ paddingBottom: "20px" }}
                                                                       fullWidth
@@ -1953,10 +2200,19 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Occupation"
+                                                                      label="Occupation / Income Source"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setoccupation(e.target.value)}
                                                                       value={occupation}
+                                                                 />
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Number of Dependent"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnumber_of_dependent(e.target.value)}
+                                                                      value={number_of_dependent}
                                                                  />
                                                                  <TextField
                                                                       fullWidth
@@ -1974,17 +2230,54 @@ const Member = (props) => {
                                                                       onChange={(e) => setannual_income(e.target.value)}
                                                                       value={annual_income}
                                                                  />
-                                                            </div>
-                                                            <div>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PWD Type"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpwd_type(e.target.value)}
+                                                                      value={pwd_type}
+                                                                 />
+
+
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
-                                                                           label="Membership Date"
-                                                                           value={membership_date}
+                                                                           label="Termination of Membership Date"
+                                                                           value={termination_date}
                                                                            inputFormat="MM-DD-YYYY"
-                                                                           onChange={convertDateToString}
-                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                           onChange={(newValue) => { settermination_date(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
+
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Termination BOD Resolution No"
+                                                                           value={termination_bod}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={(newValue) => { settermination_bod(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+
+
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks(e.target.value)}
+                                                                      value={remarks}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Notes"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnotes(e.target.value)}
+                                                                      value={notes}
+                                                                 />
                                                                  <TextField
                                                                       id="outlined-required"
                                                                       label="Status"
@@ -2000,35 +2293,12 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="HHHC Membership Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
-                                                                      value={hhhc_membership_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="BOD Res"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setbod_res(e.target.value)}
-                                                                      value={bod_res}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="COOP Savings Account Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
-                                                                      value={coop_savings_account_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
                                                                       label="COOP Savings Passbook Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcoop_savings_passbook_number(e.target.value)}
                                                                       value={coop_savings_passbook_number}
                                                                  />
+
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
@@ -2036,65 +2306,6 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setkaya_atm_card_number(e.target.value)}
                                                                       value={kaya_atm_card_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Special Savings Account Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
-                                                                      value={kaya_atm_savings_account_number}
-                                                                 />
-                                                                 {/* <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="MBH"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setmbh(e.target.value)}
-                                                                      value={mbh}
-                                                                 />
-
-                                                                 <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="ATM Passbook Fee"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setatm_passbook_fee(e.target.value)}
-                                                                      value={atm_passbook_fee}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="ATM Status"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setatm_status(e.target.value)}
-                                                                      value={atm_status}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="PB Account Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpb_account_number(e.target.value)}
-                                                                      value={pb_account_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="PB Account Number Series"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpb_account_number_series(e.target.value)}
-                                                                      value={pb_account_number_series}
-                                                                 /> */}
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Passbook Series Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
-                                                                      value={passbook_series_number}
                                                                  />
                                                                  <TextField
                                                                       fullWidth
@@ -2111,22 +2322,6 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpassbook_printed(e.target.value)}
                                                                       value={passbook_printed}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Remarks"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setremarks(e.target.value)}
-                                                                      value={remarks}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Notes"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setnotes(e.target.value)}
-                                                                      value={notes}
                                                                  />
                                                             </div>
                                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
@@ -2167,6 +2362,15 @@ const Member = (props) => {
                                                                       required
                                                                       fullWidth
                                                                       id="outlined-required"
+                                                                      label="Lastname"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setlastname(e.target.value)}
+                                                                      value={lastname}
+                                                                 />
+                                                                 <TextField
+                                                                      required
+                                                                      fullWidth
+                                                                      id="outlined-required"
                                                                       label="Firstname"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setfirstname(e.target.value)}
@@ -2180,23 +2384,128 @@ const Member = (props) => {
                                                                       onChange={(e) => setmiddlename(e.target.value)}
                                                                       value={middlename}
                                                                  />
+
                                                                  <TextField
-                                                                      required
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Lastname"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setlastname(e.target.value)}
-                                                                      value={lastname}
-                                                                 />
-                                                                 <TextField
-                                                                      required
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="TIN"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => settin(e.target.value)}
                                                                       value={tin}
+                                                                 />
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Membership Date"
+                                                                           value={membership_date}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={convertDateToString}
+                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Type / Kind of Membership"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setmembership_type(e.target.value)}
+                                                                      value={membership_type}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="HHHC Membership Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
+                                                                      value={hhhc_membership_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="BOD Resolution No"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setbod_res(e.target.value)}
+                                                                      value={bod_res}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Initial Share Capital"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setinitial_share_capital(e.target.value)}
+                                                                      value={initial_share_capital}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Initial No. of Shares"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setinitial_no_share(e.target.value)}
+                                                                      value={initial_no_share}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Passbook Account Series Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
+                                                                      value={passbook_series_number}
+                                                                 />
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
+                                                                      value={coop_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Housing Equity Account No."
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => sethousing_equity(e.target.value)}
+                                                                      value={housing_equity}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Special Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setspecial_savings_account(e.target.value)}
+                                                                      value={special_savings_account}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Impukan Certificate Account"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setimpukan_certificate_account(e.target.value)}
+                                                                      value={impukan_certificate_account}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Kaya Savings Account Number"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
+                                                                      value={kaya_atm_savings_account_number}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Current Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setaddress(e.target.value)}
+                                                                      value={address}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Email Address"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setemail(e.target.value)}
+                                                                      value={email}
                                                                  />
 
                                                                  <TextField
@@ -2206,28 +2515,6 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcontact_number(e.target.value)}
                                                                       value={contact_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Email"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setemail(e.target.value)}
-                                                                      value={email}
-                                                                 />
-
-
-
-
-
-
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Address"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setaddress(e.target.value)}
-                                                                      value={address}
                                                                  />
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
@@ -2242,15 +2529,13 @@ const Member = (props) => {
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Age"
-
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setage(e.target.value)}
                                                                       value={age}
                                                                  />
                                                                  <TextField
-                                                                      required
                                                                       id="outlined-required"
-                                                                      label="Gender"
+                                                                      label="Sex"
                                                                       select
                                                                       style={{ paddingBottom: "20px" }}
                                                                       fullWidth
@@ -2284,6 +2569,15 @@ const Member = (props) => {
                                                                       onChange={(e) => setoccupation(e.target.value)}
                                                                       value={occupation}
                                                                  />
+
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Number of Dependent"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnumber_of_dependent(e.target.value)}
+                                                                      value={number_of_dependent}
+                                                                 />
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
@@ -2300,17 +2594,50 @@ const Member = (props) => {
                                                                       onChange={(e) => setannual_income(e.target.value)}
                                                                       value={annual_income}
                                                                  />
-                                                            </div>
-                                                            <div>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="PWD Type"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setpwd_type(e.target.value)}
+                                                                      value={pwd_type}
+                                                                 />
+
                                                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                       <DatePicker
-                                                                           label="Membership Date"
-                                                                           value={membership_date}
+                                                                           label="Termination of Membership Date"
+                                                                           value={termination_date}
                                                                            inputFormat="MM-DD-YYYY"
-                                                                           onChange={convertDateToString}
-                                                                           renderInput={(params) => <TextField fullWidth required style={{ paddingBottom: "10px" }}{...params} error={false} />}
+                                                                           onChange={(newValue) => { settermination_date(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
                                                                       />
                                                                  </LocalizationProvider>
+
+                                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                      <DatePicker
+                                                                           label="Termination BOD Resolution No"
+                                                                           value={termination_bod}
+                                                                           inputFormat="MM-DD-YYYY"
+                                                                           onChange={(newValue) => { settermination_bod(newValue) }}
+                                                                           renderInput={(params) => <TextField fullWidth style={{ paddingBottom: "20px" }}{...params} error={false} />}
+                                                                      />
+                                                                 </LocalizationProvider>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Remarks"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setremarks(e.target.value)}
+                                                                      value={remarks}
+                                                                 />
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      id="outlined-required"
+                                                                      label="Notes"
+                                                                      style={{ paddingBottom: "10px" }}
+                                                                      onChange={(e) => setnotes(e.target.value)}
+                                                                      value={notes}
+                                                                 />
                                                                  <TextField
                                                                       id="outlined-required"
                                                                       label="Status"
@@ -2326,101 +2653,19 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="HHHC Membership Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => sethhhc_membership_number(e.target.value)}
-                                                                      value={hhhc_membership_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="BOD Res"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setbod_res(e.target.value)}
-                                                                      value={bod_res}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="COOP Savings Account Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setcoop_savings_account_number(e.target.value)}
-                                                                      value={coop_savings_account_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
                                                                       label="COOP Savings Passbook Number"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setcoop_savings_passbook_number(e.target.value)}
                                                                       value={coop_savings_passbook_number}
                                                                  />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Special Savings Card Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setkaya_atm_card_number(e.target.value)}
-                                                                      value={kaya_atm_card_number}
-                                                                 />
+
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
                                                                       label="Special Savings Passbook Number"
                                                                       style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setkaya_atm_savings_account_number(e.target.value)}
-                                                                      value={kaya_atm_savings_account_number}
-                                                                 />
-                                                                 {/* <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="MBH"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setmbh(e.target.value)}
-                                                                      value={mbh}
-                                                                 />
-
-                                                                 <TextField
-                                                                      type="number"
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="ATM Passbook Fee"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setatm_passbook_fee(e.target.value)}
-                                                                      value={atm_passbook_fee}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="ATM Status"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setatm_status(e.target.value)}
-                                                                      value={atm_status}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="PB Account Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpb_account_number(e.target.value)}
-                                                                      value={pb_account_number}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="PB Account Number Series"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpb_account_number_series(e.target.value)}
-                                                                      value={pb_account_number_series}
-                                                                 /> */}
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Passbook Series Number"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setpassbook_series_number(e.target.value)}
-                                                                      value={passbook_series_number}
+                                                                      onChange={(e) => setkaya_atm_card_number(e.target.value)}
+                                                                      value={kaya_atm_card_number}
                                                                  />
                                                                  <TextField
                                                                       fullWidth
@@ -2437,22 +2682,6 @@ const Member = (props) => {
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpassbook_printed(e.target.value)}
                                                                       value={passbook_printed}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Remarks"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setremarks(e.target.value)}
-                                                                      value={remarks}
-                                                                 />
-                                                                 <TextField
-                                                                      fullWidth
-                                                                      id="outlined-required"
-                                                                      label="Notes"
-                                                                      style={{ paddingBottom: "10px" }}
-                                                                      onChange={(e) => setnotes(e.target.value)}
-                                                                      value={notes}
                                                                  />
                                                             </div>
                                                             {openSuccess ? <Alert onClose={handleOffSuccess} variant="filled" severity="success">Data Success</Alert> : ""}
@@ -2538,7 +2767,7 @@ const Member = (props) => {
                                                                            minimumFractionDigits: 2,
                                                                            maximumFractionDigits: 2
                                                                       })}</p>
-                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Kaya Savings</p>
                                                                  </div>
                                                                  <div style={{ marginBottom: "20px" }}>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{karamay_savings_balance && karamay_savings_balance.toLocaleString(undefined, {
@@ -2547,6 +2776,16 @@ const Member = (props) => {
                                                                       })}</p>
                                                                       <p style={{ color: "#e0e0e0" }}>Karamay Savings</p>
                                                                  </div>
+                                                                 <div style={{ marginBottom: "20px" }}>
+                                                                      <p style={{ fontSize: "40px", margin: 0 }}>P{housing_savings_balance && housing_savings_balance.toLocaleString(undefined, {
+                                                                           minimumFractionDigits: 2,
+                                                                           maximumFractionDigits: 2
+                                                                      })}</p>
+                                                                      <p style={{ color: "#e0e0e0" }}>Housing Equity Savings</p>
+                                                                 </div>
+
+                                                            </div>
+                                                            <div style={{ marginRight: "50px" }}>
                                                                  <div>
                                                                       <p style={{ fontSize: "40px", margin: 0 }}>P{others_balance && others_balance.toLocaleString(undefined, {
                                                                            minimumFractionDigits: 2,
@@ -2578,6 +2817,7 @@ const Member = (props) => {
                                                             <div style={{ textAlign: "left", backgroundColor: "#45e7b6", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Coop Savings</div><div>{coop_savings_balance}</div></div></div>
                                                             <div style={{ textAlign: "left", backgroundColor: "#375fcc", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Special Savings</div><div>{special_savings_balance}</div></div></div>
                                                             <div style={{ textAlign: "left", backgroundColor: "#ff8df0", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Kaya Savings</div><div>{kaya_savings_balance}</div></div></div>
+                                                            <div style={{ textAlign: "left", backgroundColor: "#b575ce", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Housing Savings</div><div>{housing_savings_balance}</div></div></div>
                                                             <div style={{ textAlign: "left", backgroundColor: "#d3cd76", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Karamay Savings</div><div>{karamay_savings_balance}</div></div></div>
                                                             <div style={{ textAlign: "left", backgroundColor: "#aa5f5f", flex: '0 0 360px', padding: "10px" }}><div style={{ display: "flex", justifyContent: "space-between" }}><div>Others</div><div>{others_balance}</div></div></div>
                                                        </div>
@@ -2612,15 +2852,21 @@ const Member = (props) => {
                                                                            backgroundColor: '#ffdafa',
                                                                       },
                                                                       '& .super-app-theme--header5': {
-                                                                           backgroundColor: '#d3cd76',
+                                                                           backgroundColor: '#B575CE',
                                                                       },
                                                                       '& .super-app-theme--header5cell': {
-                                                                           backgroundColor: '#fffcd9',
+                                                                           backgroundColor: '#ddc0e7',
                                                                       },
                                                                       '& .super-app-theme--header6': {
-                                                                           backgroundColor: '#aa5f5f',
+                                                                           backgroundColor: '#d3cd76',
                                                                       },
                                                                       '& .super-app-theme--header6cell': {
+                                                                           backgroundColor: '#fffcd9',
+                                                                      },
+                                                                      '& .super-app-theme--header7': {
+                                                                           backgroundColor: '#aa5f5f',
+                                                                      },
+                                                                      '& .super-app-theme--header7cell': {
                                                                            backgroundColor: '#ffd4d4',
                                                                       },
                                                                  }}>
@@ -2736,7 +2982,8 @@ const Member = (props) => {
                                                                       <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
                                                                       <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>Housing Equity Savings</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'HOUSING SAVINGS'}>Housing Equity Savings</MenuItem>
                                                                       <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
 
@@ -2833,6 +3080,29 @@ const Member = (props) => {
                                                                            style={{ paddingBottom: "10px" }}
                                                                            onChange={(e) => setkaya_savings_credit(e.target.value)}
                                                                            value={kaya_savings_credit}
+                                                                      />
+
+                                                                 </div>}
+                                                                 {particulars === "HOUSING SAVINGS" && <div>
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Debit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => sethousing_savings_debit(e.target.value)}
+                                                                           value={housing_savings_debit}
+                                                                      />
+                                                                      <TextField
+                                                                           type='number'
+                                                                           required
+                                                                           fullWidth
+                                                                           id="outlined-required"
+                                                                           label="Credit"
+                                                                           style={{ paddingBottom: "10px" }}
+                                                                           onChange={(e) => sethousing_savings_credit(e.target.value)}
+                                                                           value={housing_savings_credit}
                                                                       />
 
                                                                  </div>}
@@ -2963,7 +3233,8 @@ const Member = (props) => {
                                                                       <MenuItem value={'SHARE CAPITAL'}>Share Capital</MenuItem>
                                                                       <MenuItem value={'COOP SAVINGS'}>Coop Savings</MenuItem>
                                                                       <MenuItem value={'SPECIAL SAVINGS'}>Special Savings</MenuItem>
-                                                                      <MenuItem value={'KAYA SAVINGS'}>KAYA Savings</MenuItem>
+                                                                      <MenuItem value={'KAYA SAVINGS'}>Kaya Savings</MenuItem>
+                                                                      <MenuItem value={'HOUSING SAVINGS'}>Housing Equity Savings</MenuItem>
                                                                       <MenuItem value={'KARAMAY SAVINGS'}>Karamay Savings</MenuItem>
                                                                       <MenuItem value={'OTHERS'}>Others</MenuItem>
 

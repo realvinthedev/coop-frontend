@@ -9,7 +9,7 @@ import { DataGrid } from '@mui/x-data-grid';
 const styles = StyleSheet.create({
      container: {
           padding: 50,
-
+        
      },
      row: {
           flexDirection: 'row',
