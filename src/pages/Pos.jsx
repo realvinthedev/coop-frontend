@@ -482,10 +482,6 @@ const Pos = (props) => {
      };
      const handlePaymentTypeChange = (e) => {
           setpaymenttype(e.target.value);
-          // if (e.target.value === 'Credit') {
-          //      // Reset cash value when Credit is selected
-
-          // }
           setcash('');
           setchange('')
 
@@ -508,6 +504,12 @@ const Pos = (props) => {
           const discountedamount = total - parseFloat(amoundue);
           setdiscounted_amount(discountedamount);
      }, [amoundue, total]);
+
+     useEffect(() => {
+          if(paymenttype == 'Credit'){
+               setcredit_sales(amoundue)
+          }
+     }, [amoundue, paymenttype]);
 
      /**Handle datagrid row click */
      const handleRowClick = (params) => {
