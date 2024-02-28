@@ -19,6 +19,7 @@ import { Alert } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import jsPDF from 'jspdf';
 import { useAuthContext } from '../hooks/useAuthContext'
 import MenuItem from '@mui/material/MenuItem';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
@@ -339,9 +340,13 @@ const Payroll = (props) => {
      const captureScreenshot = () => {
           const element = appRef.current;
           html2canvas(element).then((canvas) => {
-               canvas.toBlob((blob) => {
-                    saveAs(blob, `payslip_` + month + `_` + period + `_period` + `_` + new_name);
-               });
+               const imgData = canvas.toDataURL('image/png');
+               const pdf = new jsPDF();
+               const imgProps = pdf.getImageProperties(imgData);
+               const pdfWidth = pdf.internal.pageSize.getWidth();
+               const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+               pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+               pdf.save(`payslip_${month}_${period}_period_${new_name}.pdf`);
           });
      };
      const appRefSummary = useRef(null);

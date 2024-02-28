@@ -34,6 +34,13 @@ import { toast } from 'react-toastify';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SavingsReceiptPrinter from '../components/SavingsReceiptPrinter';
 import ImageUploader from '../components/ImageUploader';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { saveAs } from 'file-saver-es';
 import html2canvas from 'html2canvas';
 import { useRef } from 'react';
@@ -983,6 +990,21 @@ const Member = (props) => {
           }
 
      }
+     const handleGoToDetails = () => {
+          setbuttonReceiptDisabled(true)
+          if (id === "") {
+               setopen_error(true)
+               setTimeout(() => {
+                    setopen_error(false)
+               }, 2000);
+          }
+          else {
+               handleRefresher();
+               settabvalue('3')
+          }
+
+     }
+
      const handleGoToMasterlist = () => {
           handleRefresher2();
           settabvalue('1')
@@ -1737,6 +1759,7 @@ const Member = (props) => {
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Masterlist" value="1" disabled />
                                                        <Tab label="Savings" value="2" onClick={handleGoToSavings} disabled />
+                                                       <Tab label="Details" value="3" onClick={handleGoToDetails} disabled />
 
                                                   </TabList>
                                              </Box>
@@ -1882,8 +1905,11 @@ const Member = (props) => {
                                                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                        <div style={{ display: "flex", marginTop: "20px" }}>
                                                             <ThemeProvider theme={theme}>
-                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="outlined" color="blue" onClick={handleGoToSavings}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="contained" color="blue" onClick={handleGoToSavings}>
                                                                       View Savings
+                                                                 </Button>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="contained" color="green" onClick={handleGoToDetails}>
+                                                                      View Personal Details
                                                                  </Button>
                                                                  <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
                                                                       <PDFDownloadLink fileName="all_products" document={< SavingsMasterlistPrinter data={members} />} >
@@ -1917,13 +1943,13 @@ const Member = (props) => {
                                                        <div style={{ display: "flex", marginTop: "20px" }}>
                                                             <ThemeProvider theme={theme}>
 
-                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddButton}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="contained" color="blue" onClick={handleAddButton}>
                                                                       New
                                                                  </Button>
-                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateButton}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="contained" color="green" onClick={handleUpdateButton}>
                                                                       Update
                                                                  </Button>
-                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteButton}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="contained" color="red" onClick={handleDeleteButton}>
                                                                       Delete
                                                                  </Button>
                                                             </ThemeProvider>
@@ -2733,7 +2759,20 @@ const Member = (props) => {
                                                                  <p style={{ fontSize: "40px", margin: 0 }}>{firstname}</p>
                                                                  <p style={{ color: "#a7a7a7" }}>Firstname</p>
                                                                  <p style={{ fontSize: "40px", margin: 0 }}>{lastname}</p>
-                                                                 <p style={{ color: "#a7a7a7" }}>Lastname</p>
+                                                                 <p style={{ color: "#a7a7a7", paddingBottom: "12px" }}>Lastname</p>
+                                                                 <p style={{ color: "#a7a7a7", paddingBottom: "12px" }}>---------------------</p>
+                                                                 <div style={{ display: "flex" }}>
+                                                                      <p style={{ color: "#a7a7a7", marginRight: "10px" }}>TIN</p>
+                                                                      <p style={{ fontSize: "15px", margin: 0 }}>{tin}</p>
+                                                                 </div>
+                                                                 <div style={{ display: "flex" }}>
+                                                                      <p style={{ color: "#a7a7a7" , marginRight: "10px" }}>Contact No.</p>
+                                                                      <p style={{ fontSize: "15px", margin: 0 }}>{contact_number}</p>
+                                                                 </div>
+                                                                 <div style={{ display: "flex" }}>
+                                                                      <p style={{ color: "#a7a7a7", marginRight: "10px"  }}>Current Address</p>
+                                                                      <p style={{ fontSize: "15px", margin: 0 }}>{address}</p>
+                                                                 </div>
                                                             </div>
                                                        </Cards>
                                                        <div style={{ marginRight: "10px" }}></div>
@@ -2895,7 +2934,7 @@ const Member = (props) => {
                                                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                                                        <div style={{ display: "flex" }}>
                                                             <ThemeProvider theme={theme}>
-                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="outlined" color="blue" onClick={handleGoToMasterlist}>
+                                                                 <Button style={{ width: "100%", padding: "10px", marginRight: "10px" }} variant="contained" color="blue" onClick={handleGoToMasterlist}>
                                                                       Go back to Masterlist
                                                                  </Button>
                                                                  <Button
@@ -2934,13 +2973,13 @@ const Member = (props) => {
                                                        </div>
                                                        <div style={{ display: "flex" }}><ThemeProvider theme={theme}>
 
-                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="blue" onClick={handleAddSavingsButton}>
+                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="contained" color="blue" onClick={handleAddSavingsButton}>
                                                                  New
                                                             </Button>
                                                             {/* <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="green" onClick={handleUpdateSavingsButton}>
                                                                  Update
                                                             </Button> */}
-                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="outlined" color="red" onClick={handleDeleteSavingsButton}>
+                                                            <Button style={{ width: "100%", padding: "10px", marginLeft: "10px" }} variant="contained" color="red" onClick={handleDeleteSavingsButton}>
                                                                  Delete
                                                             </Button>
                                                        </ThemeProvider></div>
@@ -3447,6 +3486,57 @@ const Member = (props) => {
                                                             </Button>
                                                        </DialogActions>
                                                   </Dialog>
+                                             </TabPanel>
+                                             <TabPanel value="3">
+                                                  <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+                                                       <Table aria-label="simple table">
+                                                            <TableBody>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>LASTNAME</TableCell><TableCell>{lastname}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>FIRSTNAME</TableCell><TableCell>{firstname}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>MIDDLE INITIAL</TableCell><TableCell>{middlename}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>TIN</TableCell><TableCell>{tin}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>MEMBERSHIP DATE ACCEPTED</TableCell><TableCell>{membership_date}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>TYPE/KIND OF MEMBERSHIP</TableCell><TableCell>{membership_type}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>HHHC MEMBERSHIP NO.</TableCell><TableCell>{hhhc_membership_number}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }} >BOD RESOLUTION NO.</TableCell><TableCell>{bod_res}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>MEMBERSHIP FEE</TableCell><TableCell>{membership_fee}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>INITIAL CAPITAL</TableCell><TableCell>{initial_share_capital}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>INITIAL NO. OF SHARES</TableCell><TableCell>{initial_no_share}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>PASSBOOK ACCOUNT SERIES NO.</TableCell><TableCell>{passbook_series_number}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>SAVINGS ACCOUNT NO.</TableCell><TableCell>{coop_savings_account_number}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>SHARE CAPITAL AMOUNT</TableCell><TableCell>{share_capital_balance}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>COOP SAVINGS AMOUNT</TableCell><TableCell>{coop_savings_balance}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>HOUSING EQUITY ACCOUNT NO.</TableCell><TableCell>{housing_equity}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>HOUSING EQUITY AMOUNT</TableCell><TableCell>{housing_savings_balance}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>SPECIAL SAVINGS ACCOUNT NUMBER</TableCell><TableCell>{special_savings_account}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>SPECIAL SAVINGS AMOUNT</TableCell><TableCell>{special_savings_balance}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>IMPUKAN CERTIFICATE ACCOUNT NO.</TableCell><TableCell>{impukan_certificate_account}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>KAYA SAVINGS ACCOUNT NO.</TableCell><TableCell>{kaya_savings}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>KAYA SAVINGS AMOUNT</TableCell><TableCell>{kaya_savings_balance}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>CURRENT ADDRESS</TableCell><TableCell>{address}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>CONTACT NO.</TableCell><TableCell>{contact_number}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>DATE OF BIRTH</TableCell><TableCell>{dob}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>AGE</TableCell><TableCell>{age}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>SEX</TableCell><TableCell>{gender}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>CIVIL STATUS</TableCell><TableCell>{civil_status}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>HIGHEST EDUCATIONAL ATTAINMENT</TableCell><TableCell>{highest_educational_attainment}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>OCCUPATION/INCOME SOURCE</TableCell><TableCell>{occupation}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>NO. OF DEPENDENT</TableCell><TableCell>{number_of_dependent}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>RELIGION / SOCIAL AFFILIATION</TableCell><TableCell>{religion}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>ANNUAL INCOME</TableCell><TableCell>{annual_income}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>PWD TYPE(DISABILITY TYPE/ADVOCATE)</TableCell><TableCell>{pwd_type}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>TERMINATION OF MEMBERSHIP DATE</TableCell><TableCell>{termination_date}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>TERMINATION BOD RESOLUTION NO.</TableCell><TableCell>{termination_bod}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>REMARKS</TableCell><TableCell>{remarks}</TableCell></TableRow>
+
+                                                            </TableBody>
+                                                       </Table>
+                                                  </TableContainer>
+                                                  <ThemeProvider theme={theme}>
+                                                       <Button style={{ width: "auto", padding: "10px", marginRight: "10px" }} variant="contained" color="green" onClick={handleGoToMasterlist}>
+                                                            Go back to Masterlist
+                                                       </Button>
+                                                  </ThemeProvider>
                                              </TabPanel>
                                         </TabContext>
                                    </Box>

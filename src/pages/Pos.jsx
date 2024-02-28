@@ -750,7 +750,7 @@ const Pos = (props) => {
           const headers = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
           pdf1.text('Transaction Receipt (CASHIER COPY)', 20, 10);
           pdf1.text('Transaction Number: ' + transactionnumber, 15, 30);
-          pdf1.text('Date: ' + currentDate, 15, 40);
+          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
           pdf1.text('Total: P' + total, 15, 50);
           // Extract data for the table body
           const body = arr.map(item => [
@@ -795,7 +795,7 @@ const Pos = (props) => {
           const headers2 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
           pdf2.text('Transaction Receipt (CLIENT COPY)', 20, 10);
           pdf2.text('Transaction Number: ' + transactionnumber, 15, 30);
-          pdf2.text('Date: ' + currentDate, 15, 40);
+          pdf2.text('Date of Purchase: ' + currentDate, 15, 40);
           pdf2.text('Total: P' + total, 15, 50);
           // Extract data for the table body
           const body2 = arr.map(item => [
@@ -838,7 +838,7 @@ const Pos = (props) => {
           const headers3 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
           pdf3.text('Transaction Receipt (ADMIN COPY)', 130, 10);
           pdf3.text('Transaction Number: ' + transactionnumber, 15, 30);
-          pdf3.text('Date: ' + currentDate, 15, 40);
+          pdf3.text('Date of Purchase: ' + currentDate, 15, 40);
           pdf3.text('Total: P' + total, 15, 50);
           // Extract data for the table body
           const body3 = arr.map(item => [
@@ -1085,7 +1085,7 @@ const Pos = (props) => {
                                                        >
 
                                                             <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                                                                 <label style={{ marginBottom: "20px" }}>Date: {currentDate}</label>
+                                                                 <label style={{ marginBottom: "20px" }}>Date of Purchase: {currentDate}</label>
                                                                  <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
                                                             </div>
 
