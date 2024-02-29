@@ -179,7 +179,7 @@ const Departments = (props) => {
                errorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/departments', {
                     method: 'POST',
                     body: JSON.stringify(departments),
                     headers: {
@@ -227,7 +227,7 @@ const Departments = (props) => {
                errorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/departments/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(departments),
                     headers: {
@@ -256,7 +256,7 @@ const Departments = (props) => {
      const [departments, setDepartment] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -290,7 +290,7 @@ const Departments = (props) => {
 
      }
      const handleDelete = async () => {
-          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/departments/' + id, {
+          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/departments/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`

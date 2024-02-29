@@ -162,8 +162,8 @@ const MemberIndividual = (props) => {
      useEffect(() => {
           if (currentUser) {
                const fetchSavings = async () => {
-                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
-                    //const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + member_id, {
+                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/', {
+                    //const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/' + member_id, {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }
@@ -186,7 +186,7 @@ const MemberIndividual = (props) => {
 
      useEffect(() => {
           const fetchMembers = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/member/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

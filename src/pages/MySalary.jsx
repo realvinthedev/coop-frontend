@@ -119,7 +119,7 @@ const MySalary = (props) => {
           if (currentUser) {
 
                const fetchEmployee = async () => {
-                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/employee', {
+                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/employee', {
                          //const response = await fetch('/api/employee/'+user.username, {
                          headers: {
 

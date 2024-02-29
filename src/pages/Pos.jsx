@@ -203,7 +203,7 @@ const Pos = (props) => {
      const [customers, setcustomers] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/customer', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/customer', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -240,7 +240,7 @@ const Pos = (props) => {
 
      useEffect(() => {
           const fetchDrawerStatus = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/drawer/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/drawer/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -271,7 +271,7 @@ const Pos = (props) => {
 
      useEffect(() => {
           const fetchProduct = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -532,7 +532,7 @@ const Pos = (props) => {
                const product = {
                     product_stock: arr[i].stock - arr[i].product_quantity
                }
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + arr[i].id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/product/' + arr[i].id, {
                     method: 'PATCH',
                     body: JSON.stringify(product),
                     headers: {
@@ -580,7 +580,7 @@ const Pos = (props) => {
                }
                else {
                     console.log('123123123123123123', pos)
-                    const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/pos/', {
+                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/pos/', {
                          method: 'POST',
                          body: JSON.stringify(pos),
                          headers: {
@@ -648,7 +648,7 @@ const Pos = (props) => {
                }, 4000);
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/product/', {
                     method: 'POST',
                     body: JSON.stringify(product),
                     headers: {
@@ -704,7 +704,7 @@ const Pos = (props) => {
                }, 4000);
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/product/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(product),
                     headers: {
@@ -866,7 +866,7 @@ const Pos = (props) => {
                console.log('You must be logged in first')
                return
           } else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/product/' + id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/product/' + id, {
                     method: 'DELETE',
                     body: JSON.stringify(product),
                     headers: {

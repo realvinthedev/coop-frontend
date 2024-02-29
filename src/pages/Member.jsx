@@ -446,7 +446,7 @@ const Member = (props) => {
      /**Masterlist */
      useEffect(() => {
           const fetchMembers = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/member/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -464,7 +464,7 @@ const Member = (props) => {
      /**individual */
      useEffect(() => {
           const fetchSavings = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + member_id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/' + member_id, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -531,7 +531,7 @@ const Member = (props) => {
      const [master_others, setmaster_others] = useState(0)
      useEffect(() => {
           const fetchSavings = async () => {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -1215,7 +1215,7 @@ const Member = (props) => {
           }
 
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/member/', {
                     method: 'POST',
                     body: JSON.stringify(member),
                     headers: {
@@ -1342,7 +1342,7 @@ const Member = (props) => {
                handleErrorToast('Fill up the required fields completely ')
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/' + id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/member/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(member),
                     headers: {
@@ -1414,7 +1414,7 @@ const Member = (props) => {
                console.log('You must be logged in first')
                return
           } else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/member/' + id, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/member/' + id, {
                     method: 'DELETE',
                     headers: {
                          'Authorization': `Bearer ${user.token}`
@@ -1499,7 +1499,7 @@ const Member = (props) => {
                handleErrorToast('Fill up the required fields completely ')
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/', {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/', {
                     method: 'POST',
                     body: JSON.stringify(savings),
                     headers: {
@@ -1530,7 +1530,7 @@ const Member = (props) => {
 
 
 
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/' + savingsid, {
                     method: 'DELETE',
                     headers: {
                          'Authorization': `Bearer ${user.token}`
@@ -1610,7 +1610,7 @@ const Member = (props) => {
                handleErrorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/savings/' + savingsid, {
+               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/savings/' + savingsid, {
                     method: 'PATCH',
                     body: JSON.stringify(savings),
                     headers: {

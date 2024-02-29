@@ -1,0 +1,14 @@
+https://dull-teal-foal-wrap.cyclic.app--> new from kevthedevv
+https://inquisitive-red-sun-hat.cyclic.app --> old from realvinthedev
+
+
+
+
+1. MAKE ANOTHER GITHUB
+2. UPLOAD THE coop-backend repo from the desktop to the new GITHUB
+3. login to cyclic with user from new GITHUB
+4. in cyclic, create new app. then point to the coop-backend repo.
+5. once done, update the variables
+
+mongodb+srv://vinthedevv:vinthedevv@cluster0.mdezthe.mongodb.net/?retryWrites=true&w=majority
+coopsecretstring

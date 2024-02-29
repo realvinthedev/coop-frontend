@@ -110,7 +110,7 @@ const Leaves = (props) => {
     const [leaves, setLeaves] = useState([])
     useEffect(() => {
         const fetchLeaves = async () => {
-            const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/leaves',{
+            const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/leaves',{
                 headers: {
                      'Authorization': `Bearer ${user.token}`
                 }

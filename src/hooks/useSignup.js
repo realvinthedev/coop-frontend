@@ -9,7 +9,7 @@ export const useSignup = () => {
           setIsLoading(true)
           setError(null)
 
-          const response = await fetch('https://inquisitive-red-sun-hat.cyclic.app/api/credentials/signup', {
+          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/credentials/signup', {
                method: 'POST',
                headers: {
                     'Content-Type': 'application/json'
