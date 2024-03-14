@@ -266,7 +266,7 @@ const Customer = (props) => {
                errorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/customer', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/customer', {
                     method: 'POST',
                     body: JSON.stringify(customer),
                     headers: {
@@ -315,7 +315,7 @@ const Customer = (props) => {
                errorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/credit', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/credit', {
                     method: 'POST',
                     body: JSON.stringify(payment),
                     headers: {
@@ -362,7 +362,7 @@ const Customer = (props) => {
                errorToast('Fill up the required fields completely')
           }
           else {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/customer/' + id, {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/customer/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(customer),
                     headers: {
@@ -393,7 +393,7 @@ const Customer = (props) => {
      const [customers, setcustomers] = useState([])
      useEffect(() => {
           const fetchCustomer = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/customer', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/customer', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -436,7 +436,7 @@ const Customer = (props) => {
 
      // }
      const handleDelete = async () => {
-          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/customer/' + id, {
+          const response = await fetch('https://coop-back-zqr6.onrender.com/api/customer/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -456,7 +456,7 @@ const Customer = (props) => {
 
      }
      const handlePaymentDelete = async () => {
-          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/credit/' + paymentid, {
+          const response = await fetch('https://coop-back-zqr6.onrender.com/api/credit/' + paymentid, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -506,7 +506,7 @@ const Customer = (props) => {
 
      // useEffect(() => {
      //      const fetchCustomer = async () => {
-     //           const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/pos', {
+     //           const response = await fetch('https://coop-back-zqr6.onrender.com/api/pos', {
      //                headers: {
      //                     'Authorization': `Bearer ${user.token}`
      //                }
@@ -536,7 +536,7 @@ const Customer = (props) => {
      useEffect(() => {
           const fetchCustomer = async () => {
                if (user) {
-                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/pos', {
+                    const response = await fetch('https://coop-back-zqr6.onrender.com/api/pos', {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }
@@ -569,7 +569,7 @@ const Customer = (props) => {
      useEffect(() => {
           const fetchCustomer = async () => {
                if (user) {
-                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/credit' + customer_id, {
+                    const response = await fetch('https://coop-back-zqr6.onrender.com/api/credit' + customer_id, {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }

@@ -110,7 +110,7 @@ const Leaves = (props) => {
     const [leaves, setLeaves] = useState([])
     useEffect(() => {
         const fetchLeaves = async () => {
-            const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/leaves',{
+            const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves',{
                 headers: {
                      'Authorization': `Bearer ${user.token}`
                 }

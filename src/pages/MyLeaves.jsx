@@ -179,7 +179,7 @@ const MyLeaves = (props) => {
                status: "Pending",
           }
 
-          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/leaves', {
+          const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves', {
                method: 'POST',
                body: JSON.stringify(leaves),
                headers: {
@@ -219,7 +219,7 @@ const MyLeaves = (props) => {
           }
 
 
-          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/employee/leave/' + currentUser, {
+          const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/leave/' + currentUser, {
                method: 'PATCH',
                body: JSON.stringify(heresthebody),
                headers: {
@@ -242,7 +242,7 @@ const MyLeaves = (props) => {
           if (currentUser) {
 
                const fetchEmployee = async () => {
-                    const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/employee', {
+                    const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
                          headers: {
 
                               'Authorization': `Bearer ${user.token}`
@@ -269,7 +269,7 @@ const MyLeaves = (props) => {
 
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/leaves', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

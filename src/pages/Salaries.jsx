@@ -176,7 +176,7 @@ const Salaries = (props) => {
                console.log('You must be logged in first')
               return
           }
-          const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/employee/' + id, {
+          const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
                method: 'PATCH',
                body: JSON.stringify(salary),
                headers: {
@@ -210,7 +210,7 @@ const Salaries = (props) => {
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/employee', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -229,7 +229,7 @@ const Salaries = (props) => {
      const [dept, setDept] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/departments', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

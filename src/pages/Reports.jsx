@@ -212,7 +212,7 @@ const Reports = (props) => {
      const [drawers, setdrawers] = useState([]);
      useEffect(() => {
           const fetchDrawerStatus = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/drawer/', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/drawer/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -243,7 +243,7 @@ const Reports = (props) => {
      // Fetching Sales
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/pos', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -316,7 +316,7 @@ const Reports = (props) => {
           }
 
           else {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/drawer', {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/drawer', {
                     method: 'POST',
                     body: JSON.stringify(drawer),
                     headers: {
@@ -359,7 +359,7 @@ const Reports = (props) => {
      //      }
 
      //      else {
-     //           const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/drawer', {
+     //           const response = await fetch('https://coop-back-zqr6.onrender.com/api/drawer', {
      //                method: 'POST',
      //                body: JSON.stringify(drawer),
      //                headers: {
@@ -397,7 +397,7 @@ const Reports = (props) => {
           }
 
           else {
-               const response = await fetch('https://dull-teal-foal-wrap.cyclic.app/api/drawer/' + drawer_current_id, {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/drawer/' + drawer_current_id, {
                     method: 'PATCH',
                     body: JSON.stringify(drawer),
                     headers: {
