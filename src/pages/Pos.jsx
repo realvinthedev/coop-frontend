@@ -106,10 +106,10 @@ const columns = [
 ];
 const columns_receipt = [
      { field: 'product_code', headerName: 'Item Code', width: 100 },
-     { field: 'product_name', headerName: 'Item', width: 300 },
-     { field: 'product_selling_price', headerName: 'Price', width: 100 },
+     { field: 'product_name', headerName: 'Particulars', width: 300 },
+     { field: 'product_selling_price', headerName: 'Unit Price', width: 100 },
      { field: 'product_quantity', headerName: 'Qty', width: 100, editable: true },
-     { field: 'product_total', headerName: 'total', width: 100 },
+     { field: 'product_total', headerName: 'Total', width: 100 },
 ];
 
 const Pos = (props) => {
@@ -219,8 +219,32 @@ const Pos = (props) => {
                fetchEmp();
           }
      }, [user])
+     const [allCredits, setAllCredits] = useState([]);
+
+     useEffect(() => {
+          const fetchCustomer = async () => {
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/credit', {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               })
+               const json = await response.json()
+              
+               if (response.ok) {
+                    // const filteredData = json.filter(item => {
+                    //      const transid = item.transaction_id
+                    //      return transid == transactionnumber
+     
+                    // });
+                    setAllCredits(json)
+               }
+          }
+          if (user) {
+               fetchCustomer();
+          }
 
 
+     }, [user, refresher])
 
      useEffect(() => {
           let product_cost_total = 0;
@@ -310,11 +334,18 @@ const Pos = (props) => {
           setArr(newData);
      }
 
+
+
+     const handlechecker = () => {
+          console.log(allCredits)
+     }
+
      const handleNewTransaction = () => {
           handleRefresher()
           setArr([])
           setButtonNewTransactionDisabled(true)
           setButtonAddtoCartDisabled(false)
+          setisButtonSaveTransaction(true)
           setButtonDisabled(true)
           handleTransactionId();
           settotal(0)
@@ -506,7 +537,7 @@ const Pos = (props) => {
      }, [amoundue, total]);
 
      useEffect(() => {
-          if(paymenttype == 'Credit'){
+          if (paymenttype == 'Credit') {
                setcredit_sales(amoundue)
           }
      }, [amoundue, paymenttype]);
@@ -548,8 +579,7 @@ const Pos = (props) => {
      }
 
      const handleSaveTransaction = async (e) => {
-          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", cash)
-          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", amoundue)
+
           e.preventDefault()
           handleUpdateStocks()
           if (cash >= amoundue) {
@@ -579,7 +609,7 @@ const Pos = (props) => {
                     errorToast("Please add an item before saving a transaction")
                }
                else {
-                    console.log('123123123123123123', pos)
+
                     const response = await fetch('https://coop-back-zqr6.onrender.com/api/pos/', {
                          method: 'POST',
                          body: JSON.stringify(pos),
@@ -593,7 +623,7 @@ const Pos = (props) => {
                          setError(json.error)
                     }
                     else {
-                         console.log('123123123123123123', pos)
+
                          successToast("Transaction completed. Download the receipt if needed.")
                          //setArr([])
                          //handleOnSuccess();
@@ -601,6 +631,7 @@ const Pos = (props) => {
                          setButtonAddtoCartDisabled(true)
                          handleCloseSave()
                          setButtonNewTransactionDisabled(false)
+                         setisButtonSaveTransaction(true)
                          handleRefresher()
                          setcash(0)
                          setchange(0)
@@ -747,11 +778,14 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-          const headers = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
-          pdf1.text('Transaction Receipt (CASHIER COPY)', 20, 10);
-          pdf1.text('Transaction Number: ' + transactionnumber, 15, 30);
+          const headers = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
+          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
           pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf1.text('Total: P' + total, 15, 50);
+          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
+          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
+          pdf1.text('Total: P' + total, 15, 70);
+
           // Extract data for the table body
           const body = arr.map(item => [
                item.product_code,
@@ -767,7 +801,7 @@ const Pos = (props) => {
           pdf1.autoTable({
                head: [headers],
                body: body,
-               startY: 60, // Adjust the starting position below the header text
+               startY: 80, // Adjust the starting position below the header text
                styles: styles
           });
           pdf1.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
@@ -792,11 +826,13 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-          const headers2 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
-          pdf2.text('Transaction Receipt (CLIENT COPY)', 20, 10);
-          pdf2.text('Transaction Number: ' + transactionnumber, 15, 30);
-          pdf2.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf2.text('Total: P' + total, 15, 50);
+          const headers2 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
+          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
+          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
+          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
+          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
+          pdf1.text('Total: P' + total, 15, 70);
           // Extract data for the table body
           const body2 = arr.map(item => [
                item.product_code,
@@ -835,11 +871,13 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-          const headers3 = ['PC', 'Item', 'Desc', 'QTY', 'Price', 'Total'];
-          pdf3.text('Transaction Receipt (ADMIN COPY)', 130, 10);
-          pdf3.text('Transaction Number: ' + transactionnumber, 15, 30);
-          pdf3.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf3.text('Total: P' + total, 15, 50);
+           const headers3 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
+          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
+          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
+          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
+          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
+          pdf1.text('Total: P' + total, 15, 70);
           // Extract data for the table body
           const body3 = arr.map(item => [
                item.product_code,
@@ -1086,7 +1124,7 @@ const Pos = (props) => {
 
                                                             <div style={{ display: 'flex', justifyContent: "space-between" }}>
                                                                  <label style={{ marginBottom: "20px" }}>Date of Purchase: {currentDate}</label>
-                                                                 <label style={{ marginBottom: "20px" }}>Transaction ID: {transactionnumber}</label>
+                                                                 <label style={{ marginBottom: "20px" }}>Sales Invoice #: {transactionnumber}</label>
                                                             </div>
 
                                                             <DataGrid
@@ -1200,6 +1238,16 @@ const Pos = (props) => {
                                                                       >
                                                                            Download Receipt
                                                                       </Button>
+
+                                                                      <Button
+                                                                           style={{ width: "100%", padding: "10px", marginBottom: "5px" }}
+                                                                           variant="contained"
+                                                                           color="green"
+                                                                           onClick={handlechecker}
+                                                                      >
+                                                                           checker
+                                                                      </Button>
+
                                                                       {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
                                                                 
                                                             </Button> */}

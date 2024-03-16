@@ -65,19 +65,27 @@ export const Login = () => {
 
      const [username, setUsername] = useState('')
      const [password, setPassword] = useState('')
-     const {login, error, isLoading} = useLogin();
+     const { login, error, isLoading } = useLogin();
+     const [loading, setLoading] = useState(false); // Add loading state
 
      const handleSubmit = async (e) => {
           e.preventDefault();
-          await login(username, password)
+          setLoading(true); // Set loading to true when submitting
+          try {
+               await login(username, password);
+          } catch (error) {
+               // Handle error
+          } finally {
+               setLoading(false); // Set loading to false regardless of success or failure
+          }
      }
-    
+
      const { user } = useAuthContext();
      return (
           <Container>
-               
+
                <FormContainer>
-               <SampleLogoContainer src={LoginLogo}></SampleLogoContainer>
+                    <SampleLogoContainer src={LoginLogo}></SampleLogoContainer>
                     <TextField
                          required
                          id="outlined-required"
@@ -101,10 +109,16 @@ export const Login = () => {
                          value={password}
                     />
                     <ThemeProvider theme={theme}>
-                         <Button style={{ marginTop: "50px",padding: "15px", width: "100%"}} variant="outlined" color="orange" onClick={handleSubmit}>
-                              Login
+                         <Button
+                              style={{ marginTop: "50px", padding: "15px", width: "100%" }}
+                              variant="outlined"
+                              color="orange"
+                              onClick={handleSubmit}
+                              disabled={loading} // Disable button when loading
+                         >
+                              {loading ? 'Logging in. Please wait...' : 'Login'}
                          </Button>
-                       
+
                          {error && <div>{error}</div>}
                     </ThemeProvider>
                </FormContainer>

@@ -552,10 +552,10 @@ const Product = (props) => {
                                                        display: "flex",
                                                        justifyContent: "space-between"
                                                   }}>
-                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handleNew}>
+                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="contained" color="blue" onClick={handleNew}>
                                                             Add
                                                        </Button>
-                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="blue" onClick={handlePatch}>
+                                                       <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="contained" color="blue" onClick={handlePatch}>
                                                             Update
                                                        </Button>
                                                   </div>

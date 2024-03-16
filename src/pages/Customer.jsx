@@ -637,7 +637,7 @@ const Customer = (props) => {
 
                                                                  <ThemeProvider theme={theme}>
                                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="contained" color="blue" onClick={handleGoToPerCredit}>
-                                                                           View Account
+                                                                           View Credit Page
                                                                       </Button>
                                                                       <Button style={{ marginTop: "20px", marginRight: "5px" }} variant="contained" color="blue" onClick={handleOpenEdit}>
                                                                            Edit

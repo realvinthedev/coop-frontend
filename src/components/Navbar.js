@@ -66,12 +66,12 @@ const Navbar = () => {
                     sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}
                     component="nav">
 
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                          <div style={{ paddingLeft: "30px" }}>
                               <p style={{ color: "orange" }}>HR SYSTEM</p>
                          </div>}
 
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                          <Link to="/">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -82,7 +82,7 @@ const Navbar = () => {
                                    <ListItemText primary="Dashboard" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                          <Link to="/employees">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -93,7 +93,7 @@ const Navbar = () => {
                                    <ListItemText primary="Employees" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                          <Link to="/departments">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -104,7 +104,7 @@ const Navbar = () => {
                                    <ListItemText primary="Departments" />
                               </ListItemButton>
                          </Link>}
-                    {/* {user && currentUser == "happy_admin" &&
+                    {/* {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/salaries">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -115,7 +115,7 @@ const Navbar = () => {
                               <ListItemText primary="Salaries" />
                          </ListItemButton>
                     </Link>}
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/leaves">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -128,7 +128,7 @@ const Navbar = () => {
                     </Link>} */}
 
 
-                    {/* {user && currentUser == "happy_admin" &&
+                    {/* {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/credentials">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -140,8 +140,8 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>}  */}
 
-
-                    {/* {user && currentUser == "happy_admin" &&
+{/* 
+                    {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -152,7 +152,7 @@ const Navbar = () => {
                               <ListItemText primary="Signup a user" />
                          </ListItemButton>
                     </Link>} */}
-                    {(user && currentUser == "happy_admin" || currentUser == "chet.japson" || currentUser == "chris.gaa") &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff"  || currentUser == "hhhc.adminpayroll") &&
                          <Link to="/dtr">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -163,7 +163,7 @@ const Navbar = () => {
                                    <ListItemText primary="DTR" />
                               </ListItemButton>
                          </Link>}
-                    {(user && currentUser == "happy_admin" || currentUser == "chet.japson" || currentUser == "chris.gaa") &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff" || currentUser == "hhhc.adminpayroll") &&
                          <Link to="/additionals">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -174,7 +174,7 @@ const Navbar = () => {
                                    <ListItemText primary="Additional Earnings & Deductions" />
                               </ListItemButton>
                          </Link>}
-                    {(user && currentUser == "happy_admin" || currentUser == "chet.japson" || currentUser == "chris.gaa") && 
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff" || currentUser == "hhhc.adminpayroll") && 
                          <Link to="/payroll">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -186,12 +186,12 @@ const Navbar = () => {
                               </ListItemButton>
                          </Link>}
 
-                    {user && currentUser == "happy_admin" &&
+                    {user && currentUser == "hhhc.bcadmin" &&
                          <div style={{ marginBottom: "70px" }}>
 
                          </div>}
 
-                    {/* {user && currentUser != "happy_admin" &&
+                    {/* {user && currentUser != "hhhc.bcadmin" &&
                     <Link to="/employee/salary">
                          <ListItemButton>
                               <div style={{ paddingLeft: "40px" }}>
@@ -208,7 +208,7 @@ const Navbar = () => {
                          <p style={{ color: "orange" }}>COOPERATIVE SYSTEM</p>
                     </div>
 
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/customer">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -220,7 +220,7 @@ const Navbar = () => {
                               </ListItemButton>
                          </Link>}
 
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") && 
                          <Link to="/product">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -233,7 +233,7 @@ const Navbar = () => {
                          </Link>}
 
 
-                    {user && currentUser == "happy_admin" &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/sales">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -244,7 +244,7 @@ const Navbar = () => {
                                    <ListItemText primary="Sales & Transaction" />
                               </ListItemButton>
                          </Link>}
-                    {(user && currentUser == "happy_admin" || currentUser == "cashier1") &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.cashier" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/pos">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -255,7 +255,7 @@ const Navbar = () => {
                                    <ListItemText primary="POS" />
                               </ListItemButton>
                          </Link>}
-                         {user && currentUser == "happy_admin"  &&
+                         {user && currentUser == "hhhc.bcadmin"  &&
                          <Link to="/member">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -266,7 +266,7 @@ const Navbar = () => {
                                    <ListItemText primary="Savings" />
                               </ListItemButton>
                          </Link>}
-                    {user && currentUser == "happy_admin" && //change
+                    {(user && currentUser == "hhhc.bcadmin" ||  currentUser == "hhhc.bcadmin") && //change
                          <Link to="/reports">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>

@@ -270,7 +270,7 @@ const Dashboard = (props) => {
                <Container>
                     <Wrapper>
                          <Header title={props.title} user={props.user} />
-                         {user && currentUser == "happy_admin" &&
+                         {user && currentUser == "hhhc.bcadmin" &&
                               <div style={{ width: "100%" }}>
                                    <CardContainer>
                                         <Cards title="Total Employees" data={employees.length} color={violet} />

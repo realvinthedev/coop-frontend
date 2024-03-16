@@ -614,6 +614,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
+                    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@',json)
                     const filteredData = json.filter(item => {
                          const month = item.month;
                          const year = item.year;
@@ -631,6 +632,7 @@ const Payroll = (props) => {
                               return year2 === '2023' && month === month2 && period === period2;
                          }
                     });
+                    //ytd - create another if else here and return only whole year. then once get, filter it again 
 
                     setSumm(filteredData);
                     console.log('@', filteredData);
@@ -643,6 +645,39 @@ const Payroll = (props) => {
 
 
      }, [start_date2, end_date2, period2, randomNum])
+
+
+     const [totalnet, settotalnet] = useState(0)
+     useEffect(() => {
+          const fetchEmp = async () => {
+              const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
+                  headers: {
+                      'Authorization': `Bearer ${user.token}`
+                  }
+              });
+              const json = await response.json();
+              if (response.ok) {
+                  // Get the current year
+                  const currentYear = new Date().getFullYear();
+                  // Get the current employee ID, replace 'current_emp_id' with the actual value
+                  const currentEmpId = employeeId; // Replace 'current_emp_id' with the actual employee ID
+                  // Filter payslip data for the current year and current employee ID
+                  const filteredData = json.filter(item => {
+                      const year = new Date(item.createdAt).getFullYear(); // Extract year from createdAt timestamp
+                      const employeeId = item.employee_id;
+                      return year === currentYear && employeeId === currentEmpId;
+                  });
+      
+                  // Calculate the total net
+                  const totalNet = filteredData.reduce((total, item) => total + item.net, 0);
+      
+                  // Set the filtered data and total net to state
+                  settotalnet(totalNet);
+                  console.log(')))))))))))))))))))))))))))))))))))))))))',totalNet)
+              }
+          };
+          fetchEmp();
+      }, [employeeId, start_date, end_date, period]);
 
 
      useEffect(() => {
@@ -2400,7 +2435,7 @@ const Payroll = (props) => {
                                                                                                                    <TableCell style={{ width: 40 }}>Departments</TableCell>
                                                                                                                    <TableCell align='left' style={{ width: 50 }}>Net Pay</TableCell>
                                                                                                                    <TableCell style={{ width: 60 }}>Status</TableCell>
-                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>Action</TableCell>}
+                                                                                                                   {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.adminpayroll") && <TableCell style={{ width: 80 }}>Action</TableCell>}
                                                                                                               </TableRow>
                                                                                                          </TableHead>
                                                                                                          <TableBody>
@@ -2413,7 +2448,7 @@ const Payroll = (props) => {
                                                                                                                         maximumFractionDigits: 2
                                                                                                                    })}</TableCell>
                                                                                                                    <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
-                                                                                                                   {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>
+                                                                                                                   {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.adminpayroll") && <TableCell style={{ width: 80 }}>
 
                                                                                                                         <ThemeProvider theme={theme}>
                                                                                                                              <div>
@@ -2446,7 +2481,7 @@ const Payroll = (props) => {
                                                                                                                    maximumFractionDigits: 2
                                                                                                               })}</TableCell>
                                                                                                               <TableCell style={{ width: 60 }}><p style={{ backgroundColor: textBackground, textAlign: 'center', borderRadius: "5px", color: "#fff" }}>{transaction.approval_status}</p></TableCell>
-                                                                                                              {(user && currentUser == "happy_admin" || currentUser == "chet.japson") && <TableCell style={{ width: 80 }}>
+                                                                                                              {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.adminpayroll") && <TableCell style={{ width: 80 }}>
 
                                                                                                                    <ThemeProvider theme={theme}>
                                                                                                                         <div>

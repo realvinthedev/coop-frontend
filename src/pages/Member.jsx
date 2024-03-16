@@ -172,7 +172,7 @@ const columns = [
      { field: 'housing_equity', headerName: 'Housing Equity Account No.', width: 250 },
      { field: 'special_savings_account', headerName: 'Special Savings Account No.', width: 250 },
      //special savings amount
-     { field: 'impukan_certificate_account', headerName: 'Impukan Certificate Account', width: 250 },
+     { field: 'impukan_certificate_account', headerName: 'Impukan Certificate Account No.', width: 250 },
      { field: 'kaya_atm_savings_account_number', headerName: 'Kaya Savings Account Number', width: 250 },
      //Kaya savings amount
      { field: 'address', headerName: 'Current Address', width: 250, filter: 'text' },
@@ -185,9 +185,9 @@ const columns = [
      { field: 'highest_educational_attainment', headerName: 'Highest Ed. Att.', width: 250, filter: 'text' },
      { field: 'occupation', headerName: 'Occupation / Income Source', width: 250, filter: 'text' },
      { field: 'number_of_dependent', headerName: 'Number of Dependent', width: 250 },
-     { field: 'religion', headerName: 'Religion', width: 250, filter: 'text' },
+     { field: 'religion', headerName: 'Religion/Social Affiliation', width: 250, filter: 'text' },
      { field: 'annual_income', headerName: 'Annual Income', width: 250, filter: 'text' },
-     { field: 'pwd_type', headerName: 'PWD Type', width: 250 },
+     { field: 'pwd_type', headerName: 'PWD Type(DISABILITY TYPE/ADVOCATE)', width: 250 },
      { field: 'termination_date', headerName: 'Termination of Membership Date', width: 300 },
      { field: 'termination_bod', headerName: 'Termination BOD Resolution No', width: 300 },
      { field: 'remarks', headerName: 'Remarks', width: 600 },
@@ -2140,7 +2140,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Impukan Certificate Account"
+                                                                      label="Impukan Certificate Account No."
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setimpukan_certificate_account(e.target.value)}
                                                                       value={impukan_certificate_account}
@@ -2243,7 +2243,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Religion"
+                                                                      label="Religion/Social Affiliation"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setreligion(e.target.value)}
                                                                       value={religion}
@@ -2259,7 +2259,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="PWD Type"
+                                                                      label="PWD Type(DISABILITY TYPE/ADVOCATE)"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpwd_type(e.target.value)}
                                                                       value={pwd_type}
@@ -2504,7 +2504,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Impukan Certificate Account"
+                                                                      label="Impukan Certificate Account No."
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setimpukan_certificate_account(e.target.value)}
                                                                       value={impukan_certificate_account}
@@ -2607,7 +2607,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="Religion"
+                                                                      label="Religion/Social Affiliation"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setreligion(e.target.value)}
                                                                       value={religion}
@@ -2623,7 +2623,7 @@ const Member = (props) => {
                                                                  <TextField
                                                                       fullWidth
                                                                       id="outlined-required"
-                                                                      label="PWD Type"
+                                                                      label="PWD Type(DISABILITY TYPE/ADVOCATE)"
                                                                       style={{ paddingBottom: "10px" }}
                                                                       onChange={(e) => setpwd_type(e.target.value)}
                                                                       value={pwd_type}
@@ -3522,7 +3522,7 @@ const Member = (props) => {
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>HIGHEST EDUCATIONAL ATTAINMENT</TableCell><TableCell>{highest_educational_attainment}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>OCCUPATION/INCOME SOURCE</TableCell><TableCell>{occupation}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>NO. OF DEPENDENT</TableCell><TableCell>{number_of_dependent}</TableCell></TableRow>
-                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>RELIGION / SOCIAL AFFILIATION</TableCell><TableCell>{religion}</TableCell></TableRow>
+                                                                 <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>RELIGION/SOCIAL AFFILIATION</TableCell><TableCell>{religion}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>ANNUAL INCOME</TableCell><TableCell>{annual_income}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>PWD TYPE(DISABILITY TYPE/ADVOCATE)</TableCell><TableCell>{pwd_type}</TableCell></TableRow>
                                                                  <TableRow><TableCell sx={{ width: 300 }} style={{ fontWeight: "600" }}>TERMINATION OF MEMBERSHIP DATE</TableCell><TableCell>{termination_date}</TableCell></TableRow>
