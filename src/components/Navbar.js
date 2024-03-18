@@ -23,6 +23,7 @@ import MoneyIcon from '@mui/icons-material/Money';
 import SavingsIcon from '@mui/icons-material/Savings';
 import GroupsIcon from '@mui/icons-material/Groups';
 
+
 const Container = styled.div`
      background-color: white;
      height: 100vh;
@@ -104,6 +105,7 @@ const Navbar = () => {
                                    <ListItemText primary="Departments" />
                               </ListItemButton>
                          </Link>}
+
                     {/* {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/salaries">
                          <ListItemButton>
@@ -140,7 +142,7 @@ const Navbar = () => {
                          </ListItemButton>
                     </Link>}  */}
 
-{/* 
+                    {/* 
                     {user && currentUser == "hhhc.bcadmin" &&
                     <Link to="/credentials/signup">
                          <ListItemButton>
@@ -152,7 +154,7 @@ const Navbar = () => {
                               <ListItemText primary="Signup a user" />
                          </ListItemButton>
                     </Link>} */}
-                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff"  || currentUser == "hhhc.adminpayroll") &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff" || currentUser == "hhhc.adminpayroll") &&
                          <Link to="/dtr">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -174,7 +176,7 @@ const Navbar = () => {
                                    <ListItemText primary="Additional Earnings & Deductions" />
                               </ListItemButton>
                          </Link>}
-                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff" || currentUser == "hhhc.adminpayroll") && 
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.payrollstaff" || currentUser == "hhhc.adminpayroll") &&
                          <Link to="/payroll">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -220,7 +222,7 @@ const Navbar = () => {
                               </ListItemButton>
                          </Link>}
 
-                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") && 
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/product">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -255,7 +257,7 @@ const Navbar = () => {
                                    <ListItemText primary="POS" />
                               </ListItemButton>
                          </Link>}
-                         {user && currentUser == "hhhc.bcadmin"  &&
+                    
                          <Link to="/member">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -265,8 +267,19 @@ const Navbar = () => {
                                    </div>
                                    <ListItemText primary="Savings" />
                               </ListItemButton>
-                         </Link>}
-                    {(user && currentUser == "hhhc.bcadmin" ||  currentUser == "hhhc.bcadmin") && //change
+                         </Link>
+                    {/* {user && currentUser == "hhhc.bcadmin" &&
+                         <Link to="/member">
+                              <ListItemButton>
+                                   <div style={{ paddingLeft: "40px" }}>
+                                        <ListItemIcon>
+                                             <SavingsIcon />
+                                        </ListItemIcon>
+                                   </div>
+                                   <ListItemText primary="Savings" />
+                              </ListItemButton>
+                         </Link>} */}
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") && //change
                          <Link to="/reports">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
