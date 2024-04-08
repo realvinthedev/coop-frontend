@@ -163,48 +163,48 @@ const columns = [
           headerName: 'Approved Tardiness?',
           width: 200,
           renderCell: (params) => {
-            const cellValue = params.value;
-            const cellStyle = {
-              backgroundColor: cellValue === 'approved' ? 'green' : '',
-              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
-              paddingTop: '10px' ,
-              paddingLeft: '5px',
-              paddingRight: '115px',
-              paddingBottom: '10px'
-              
-            };
-      
-            return (
-              <div style={cellStyle}>
-                {cellValue}
-              </div>
-            );
+               const cellValue = params.value;
+               const cellStyle = {
+                    backgroundColor: cellValue === 'approved' ? 'green' : '',
+                    color: cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+                    paddingTop: '10px',
+                    paddingLeft: '5px',
+                    paddingRight: '115px',
+                    paddingBottom: '10px'
+
+               };
+
+               return (
+                    <div style={cellStyle}>
+                         {cellValue}
+                    </div>
+               );
           },
-        },
+     },
      { field: 'total_tardiness_min', headerName: 'Tardiness in Minutes', width: 180 },
      {
           field: 'approve_undertime',
           headerName: 'Approved Undertime?',
           width: 200,
           renderCell: (params) => {
-            const cellValue = params.value;
-            const cellStyle = {
-              backgroundColor: cellValue === 'approved' ? 'green' : '',
-              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
-              paddingTop: '10px' ,
-              paddingLeft: '5px',
-              paddingRight: '115px',
-              paddingBottom: '10px'
-              
-            };
-      
-            return (
-              <div style={cellStyle}>
-                {cellValue}
-              </div>
-            );
+               const cellValue = params.value;
+               const cellStyle = {
+                    backgroundColor: cellValue === 'approved' ? 'green' : '',
+                    color: cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+                    paddingTop: '10px',
+                    paddingLeft: '5px',
+                    paddingRight: '115px',
+                    paddingBottom: '10px'
+
+               };
+
+               return (
+                    <div style={cellStyle}>
+                         {cellValue}
+                    </div>
+               );
           },
-        },
+     },
      { field: 'total_undertime_min', headerName: 'Undertime in Minutes', width: 180 },
 
 
@@ -226,24 +226,24 @@ const columns = [
           headerName: 'Approved Overtime?',
           width: 200,
           renderCell: (params) => {
-            const cellValue = params.value;
-            const cellStyle = {
-              backgroundColor: cellValue === 'approved' ? 'green' : '',
-              color:  cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
-              paddingTop: '10px' ,
-              paddingLeft: '5px',
-              paddingRight: '115px',
-              paddingBottom: '10px'
-              
-            };
-      
-            return (
-              <div style={cellStyle}>
-                {cellValue}
-              </div>
-            );
+               const cellValue = params.value;
+               const cellStyle = {
+                    backgroundColor: cellValue === 'approved' ? 'green' : '',
+                    color: cellValue === 'approved' ? 'white' : 'black', // Text color can be adjusted as needed
+                    paddingTop: '10px',
+                    paddingLeft: '5px',
+                    paddingRight: '115px',
+                    paddingBottom: '10px'
+
+               };
+
+               return (
+                    <div style={cellStyle}>
+                         {cellValue}
+                    </div>
+               );
           },
-        },
+     },
      { field: 'regular_ot_hours', headerName: 'Regular - OT', width: 180 },
      { field: 'special_ot_hours', headerName: 'Spec. Non Working - OT', width: 180 },
      { field: 'legal_ot_hours', headerName: 'Legal Holiday - OT', width: 180 },
@@ -597,33 +597,44 @@ const Dtr = (props) => {
 
      }, [user])
 
+     const [isLoading, setIsLoading] = useState(true);
      useEffect(() => {
           const fetchDtr = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/dtr/employee/${employeeId}`, {
-                    headers: {
-                         'Authorization': `Bearer ${user.token}`
+               setIsLoading(true)
+
+               try {
+
+
+                    const response = await fetch(`https://coop-back-zqr6.onrender.com/api/dtr/employee/${employeeId}`, {
+                         headers: {
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+
+                    if (response.ok) {
+                         const startDateObj = new Date(startDate);
+                         const endDateObj = new Date(endDate);
+
+                         const filteredData = json.filter(item => {
+                              const date = new Date(item.date);
+                              return date >= startDateObj && date <= endDateObj;
+                         });
+                         // const filteredData = json.filter(item => {
+
+                         //      const date = item.date
+                         //     // successToast(date + " | " + startDate + " | " + endDate)
+                         //      return date >= startDate && date <= endDate
+
+                         // });
+                         const sortedData = [...filteredData].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                         setDtr(sortedData)
                     }
-               })
-               const json = await response.json()
-
-               if (response.ok) {
-                    const startDateObj = new Date(startDate);
-                    const endDateObj = new Date(endDate);
-
-                    const filteredData = json.filter(item => {
-                         const date = new Date(item.date);
-                         return date >= startDateObj && date <= endDateObj;
-                    });
-                    // const filteredData = json.filter(item => {
-
-                    //      const date = item.date
-                    //     // successToast(date + " | " + startDate + " | " + endDate)
-                    //      return date >= startDate && date <= endDate
-
-                    // });
-                    const sortedData = [...filteredData].sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                    setDtr(sortedData)
+               } catch (error) {
+                    console.error('Error fetching data:', error);
+               } finally {
+                    setIsLoading(false); // Set loading state to false after data is fetched
 
                }
           }
@@ -2554,7 +2565,7 @@ const Dtr = (props) => {
           // setbuttonReceiptDisabled(true)
           settabvalue('2')
      }
-    
+
      return (
 
           <div style={{ display: "flex" }}>
@@ -2679,14 +2690,21 @@ const Dtr = (props) => {
 
                                                   </div>
                                                   <div style={{ height: 475, width: '100%' }}>
-                                                       <DataGrid
-                                                            getRowId={(row) => row._id}
-                                                            rows={dtr}
-                                                            columns={columns}
-                                                            rowsPerPageOptions={[10]}
-                                                            style={{ marginBottom: "20px" }}
-                                                            onRowClick={handleRowClick}
-                                                       />
+                                                       {isLoading ? (
+                                                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '150px' }}>Loading, please wait...</div>
+                                                       ) : (
+                                                            <DataGrid
+                                                                 getRowId={(row) => row._id}
+                                                                 rows={dtr}
+                                                                 columns={columns}
+                                                                 rowsPerPageOptions={[10]}
+                                                                 style={{ marginBottom: "20px" }}
+                                                                 onRowClick={handleRowClick}
+                                                                 loading={isLoading} // Pass loading state to DataGrid
+                                                                 noRowsOverlay={<div>No record found</div>} // Custom overlay when no records
+                                                            />
+
+                                                       )}
 
                                                        <div></div>
                                                        <ButtonContainer>

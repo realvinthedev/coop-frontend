@@ -495,56 +495,50 @@ const Additionals = (props) => {
                setDate(`12-16-${year}`)
           }
      }
+     const [isLoading, setIsLoading] = useState(true);
 
      const [additionals, setAdditionals] = useState([])
      useEffect(() => {
           const fetchAdditionals = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/additional', {
-                    headers: {
-                         'Authorization': `Bearer ${user.token}`
-                    }
-               })
-               const json = await response.json()
+               setIsLoading(true); // Set loading state to true before fetching data
 
-               if (response.ok) {
+               try {
+                    const response = await fetch('https://coop-back-zqr6.onrender.com/api/additional', {
+                         headers: {
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    });
+
+                    if (!response.ok) {
+                         throw new Error('Failed to fetch data');
+                    }
+
+                    const json = await response.json();
                     const startDateObj = new Date(start_date);
                     const endDateObj = new Date(end_date);
 
                     const filteredData = json.filter(item => {
+                         const date = new Date(item.date_covered);
+                         const employee_id = item.employee_id;
 
-                         const date = new Date(item.date_covered)
-                         const employee_id = item.employee_id
-                         if (name == "all") {
-
+                         if (name === "all") {
                               return date >= startDateObj && date <= endDateObj;
-                         }
-                         else {
-                              return date >= startDateObj && date <= endDateObj && employee_id == employeeId
+                         } else {
+                              return date >= startDateObj && date <= endDateObj && employee_id === employeeId;
                          }
                     });
-                    setAdditionals(filteredData)
-                    // setEmployee_dtr(json)
 
-                    // const filteredData = json.filter(item => {
-                    //      const date = item.date_covered
-                    //      const employee_id = item.employee_id
-                    //      if (name == "all") {
-                    //           return date >= date_from && date <= date_to
-                    //      }
-                    //      else {
-                    //           return date >= date_from && date <= date_to && employee_id == employeeId
-                    //      }
-
-
-                    // });
-
-
+                    setAdditionals(filteredData);
+               } catch (error) {
+                    console.error('Error fetching data:', error);
+               } finally {
+                    setIsLoading(false); // Set loading state to false after data is fetched
                }
-          }
+          };
+
           if (user) {
                fetchAdditionals();
           }
-
      }, [start_date, end_date, name, refresher])
 
 
@@ -1157,7 +1151,7 @@ const Additionals = (props) => {
                                                                  <MenuItem value={'2031'}>2031</MenuItem>
                                                                  <MenuItem value={'2032'}>2032</MenuItem>
                                                                  <MenuItem value={'2033'}>2033</MenuItem>
-                                                                 
+
                                                             </TextField>
                                                             <TextField
                                                                  required
@@ -1188,17 +1182,34 @@ const Additionals = (props) => {
                                                                  )}
                                                             />
                                                        </div>
-
-                                                       <DataGrid
+                                                       <div style={{ height: 400, width: '100%' }}>
+                                                            {isLoading ? (
+                                                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '150px'}}>Loading, please wait...</div>
+                                                            ) : (
+                                                                 <DataGrid
+                                                                      getRowId={(row) => row._id}
+                                                                      rows={additionals}
+                                                                      columns={columns_additionals}
+                                                                      pageSize={7}
+                                                                      rowsPerPageOptions={[10]}
+                                                                      style={{ marginBottom: "20px" }}
+                                                                      loading={isLoading} // Pass loading state to DataGrid
+                                                                      noRowsOverlay={<div>No record found</div>} // Custom overlay when no records
+                                                                      onRowClick={handleRowClick} // You can add row click handler if needed
+                                                                 />
+                                                            )}
+                                                       </div>
+                                                       {/* <DataGrid
                                                             getRowId={(row) => row._id}
-                                                            rows={additionals}
+                                                            rows={isLoading ? [] : additionals}
                                                             columns={columns_additionals}
                                                             pageSize={7}
                                                             rowsPerPageOptions={[10]}
                                                             style={{ marginBottom: "20px" }}
+                                                            noRowsOverlay={<div>No record found</div>} 
                                                             onRowClick={handleRowClick}
 
-                                                       />
+                                                       /> */}
 
 
 
@@ -1284,7 +1295,7 @@ const Additionals = (props) => {
                                                                            <MenuItem value={'2031'}>2031</MenuItem>
                                                                            <MenuItem value={'2032'}>2032</MenuItem>
                                                                            <MenuItem value={'2033'}>2033</MenuItem>
-                                                                           
+
 
                                                                       </TextField>
                                                                       <TextField
@@ -1657,7 +1668,7 @@ const Additionals = (props) => {
                                                                            <MenuItem value={'2031'}>2031</MenuItem>
                                                                            <MenuItem value={'2032'}>2032</MenuItem>
                                                                            <MenuItem value={'2033'}>2033</MenuItem>
-                                                                          
+
                                                                       </TextField>
                                                                       <TextField
                                                                            required
@@ -1925,7 +1936,7 @@ const Additionals = (props) => {
                                                                            InputProps={{
                                                                                 readOnly: true,
                                                                                 inputMode: 'decimal',
-                                                                         
+
                                                                            }}
                                                                       />
 
