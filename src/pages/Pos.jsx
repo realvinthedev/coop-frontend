@@ -350,6 +350,8 @@ const Pos = (props) => {
           handleTransactionId();
           settotal(0)
           setcash(0)
+          setdiscounted_amount(0)
+          setdiscount('No Discount')
           setchange(0)
           setcustomer_id("")
           setcustomer_name("")
@@ -542,6 +544,12 @@ const Pos = (props) => {
           }
      }, [amoundue, paymenttype]);
 
+     useEffect(() => {
+          if (paymenttype == 'Cash') {
+               setcash_sales(amoundue)
+          }
+     }, [amoundue, paymenttype]);
+
      /**Handle datagrid row click */
      const handleRowClick = (params) => {
           setId(params.row._id);
@@ -633,10 +641,8 @@ const Pos = (props) => {
                          setButtonNewTransactionDisabled(false)
                          setisButtonSaveTransaction(true)
                          handleRefresher()
-                         setcash(0)
-                         setchange(0)
                          setcustomer_name("")
-                         setdiscounted_amount(0)
+                     
 
                     }
 
@@ -779,12 +785,19 @@ const Pos = (props) => {
           };
           // Define table headers
           const headers = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
-          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
-          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
-          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
-          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
-          pdf1.text('Total: P' + total, 15, 70);
+          pdf1.text(`Sales Invoice (CASHIER'S COPY)`, 28, 10);
+          pdf1.text('OneHappyChild', 40, 20);
+          pdf1.text('8001 Bucal Rd. Brgy. Santol,', 30, 25);
+          pdf1.text('Tanza Cavity', 42, 30);
+          pdf1.text('09065737483', 41, 35);
+          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 50);
+          pdf1.text('Date and Time of Purchase: ' + currentDate, 15, 55);
+          pdf1.text('Total: P' + total, 15, 60);
+          pdf1.text('Cash Sales: P' + cash_sales, 15, 65);
+          pdf1.text('Credit Sales: P' + credit_sales, 15, 70);
+          pdf1.text('Change: P' + change, 15, 75);
+          pdf1.text('Cashier:' + user.username, 15, 80);
+
 
           // Extract data for the table body
           const body = arr.map(item => [
@@ -801,7 +814,7 @@ const Pos = (props) => {
           pdf1.autoTable({
                head: [headers],
                body: body,
-               startY: 80, // Adjust the starting position below the header text
+               startY: 85, // Adjust the starting position below the header text
                styles: styles
           });
           pdf1.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
@@ -827,12 +840,18 @@ const Pos = (props) => {
           };
           // Define table headers
           const headers2 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
-          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
-          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
-          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
-          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
-          pdf1.text('Total: P' + total, 15, 70);
+          pdf2.text(`Sales Invoice (CUSTOMER'S COPY)`, 26, 10);
+          pdf2.text('OneHappyChild', 40, 20);
+          pdf2.text('8001 Bucal Rd. Brgy. Santol,', 30, 25);
+          pdf2.text('Tanza Cavity', 42, 30);
+          pdf2.text('09065737483', 41, 35);
+          pdf2.text('Sales Invoice #: ' + transactionnumber, 15, 50);
+          pdf2.text('Date and Time of Purchase: ' + currentDate, 15, 55);
+          pdf2.text('Total: P' + total, 15, 60);
+          pdf2.text('Cash Sales: P' + cash_sales, 15, 65);
+          pdf2.text('Credit Sales: P' + credit_sales, 15, 70);
+          pdf2.text('Change: P' + change, 15, 75);
+          pdf2.text('Cashier:' + user.username, 15, 80);
           // Extract data for the table body
           const body2 = arr.map(item => [
                item.product_code,
@@ -848,7 +867,7 @@ const Pos = (props) => {
           pdf2.autoTable({
                head: [headers2],
                body: body2,
-               startY: 60, // Adjust the starting position below the header text
+               startY: 85, // Adjust the starting position below the header text
                styles: styles2
           });
           pdf2.save(`CLIENT_COPY_${transactionnumber}_receipt.pdf`);
@@ -872,12 +891,18 @@ const Pos = (props) => {
           };
           // Define table headers
            const headers3 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
-          pdf1.text('Sales Invoice (CASHIER COPY)', 20, 10);
-          pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 30);
-          pdf1.text('Date of Purchase: ' + currentDate, 15, 40);
-          pdf1.text('Cash Sales: P' + cash_sales, 15, 50);
-          pdf1.text('Credit Sales: P' + credit_sales, 15, 60);
-          pdf1.text('Total: P' + total, 15, 70);
+          pdf3.text(`Sales Invoice (ADMIN'S COPY)`, 15, 10);
+          pdf3.text('OneHappyChild', 15, 20);
+          pdf3.text('8001 Bucal Rd. Brgy. Santol,', 15, 25);
+          pdf3.text('Tanza Cavity', 15, 30);
+          pdf3.text('09065737483', 15, 35);
+          pdf3.text('Sales Invoice #: ' + transactionnumber, 15, 50);
+          pdf3.text('Date and Time of Purchase: ' + currentDate, 15, 55);
+          pdf3.text('Total: P' + total, 15, 60);
+          pdf3.text('Cash Sales: P' + cash_sales, 15, 65);
+          pdf3.text('Credit Sales: P' + credit_sales, 15, 70);
+          pdf3.text('Change: P' + change, 15, 75);
+          pdf3.text('Cashier:' + user.username, 15, 80);
           // Extract data for the table body
           const body3 = arr.map(item => [
                item.product_code,
@@ -893,7 +918,7 @@ const Pos = (props) => {
           pdf3.autoTable({
                head: [headers3],
                body: body3,
-               startY: 60, // Adjust the starting position below the header text
+               startY: 85, // Adjust the starting position below the header text
                styles: styles3
           });
           pdf3.save(`ADMIN_COPY_${transactionnumber}_receipt.pdf`);
