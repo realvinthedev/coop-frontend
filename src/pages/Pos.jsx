@@ -229,12 +229,12 @@ const Pos = (props) => {
                     }
                })
                const json = await response.json()
-              
+
                if (response.ok) {
                     // const filteredData = json.filter(item => {
                     //      const transid = item.transaction_id
                     //      return transid == transactionnumber
-     
+
                     // });
                     setAllCredits(json)
                }
@@ -351,7 +351,7 @@ const Pos = (props) => {
           settotal(0)
           setcash(0)
           setdiscounted_amount(0)
-          setdiscount('No Discount')
+          setdiscount(0)
           setchange(0)
           setcustomer_id("")
           setcustomer_name("")
@@ -642,7 +642,7 @@ const Pos = (props) => {
                          setisButtonSaveTransaction(true)
                          handleRefresher()
                          setcustomer_name("")
-                     
+
 
                     }
 
@@ -774,7 +774,7 @@ const Pos = (props) => {
 
           const pdf1 = new jsPDF({
                orientation: 'portrait',
-               format: [100, 300], // Adjust the dimensions as needed
+               format: [100, 460], // Adjust the dimensions as needed
           });
           pdf1.setFontSize(10); // Adjust font size as needed
           pdf1.setFont('helvetica', 'normal');
@@ -784,26 +784,30 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-          const headers = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          const headers = ['Name', 'QTY', 'Price', 'Total'];
           pdf1.text(`Sales Invoice (CASHIER'S COPY)`, 28, 10);
           pdf1.text('OneHappyChild', 40, 20);
           pdf1.text('8001 Bucal Rd. Brgy. Santol,', 30, 25);
-          pdf1.text('Tanza Cavity', 42, 30);
+          pdf1.text('Tanza Cavite', 42, 30);
           pdf1.text('09065737483', 41, 35);
           pdf1.text('Sales Invoice #: ' + transactionnumber, 15, 50);
           pdf1.text('Date and Time of Purchase: ' + currentDate, 15, 55);
           pdf1.text('Total: P' + total, 15, 60);
-          pdf1.text('Cash Sales: P' + cash_sales, 15, 65);
-          pdf1.text('Credit Sales: P' + credit_sales, 15, 70);
-          pdf1.text('Change: P' + change, 15, 75);
-          pdf1.text('Cashier:' + user.username, 15, 80);
+          pdf1.text('Discount: ' + (discount !== 0 ? discount + "%" : "No Discount"), 15, 65);
+          pdf1.text('Discounted Amount: P' + discounted_amount, 15, 70);
+          pdf1.text('Cash Sales: P' + cash_sales, 15, 80);
+          pdf1.text('Credit Sales: P' + credit_sales, 15, 85);
+          pdf1.text('Tax 0%: P' + 0, 15, 90);
+          pdf1.text('Cash/Credit: P' + cash, 15, 100);
+          pdf1.text('Change: P' + change, 15, 105);
+          pdf1.text('Cashier:' + user.username, 15, 110);
 
 
           // Extract data for the table body
           const body = arr.map(item => [
-               item.product_code,
+               // item.product_code,
                item.product_name,
-               item.product_description,
+               // item.product_description,
                item.product_quantity,
                item.product_selling_price,
                item.product_total
@@ -814,9 +818,15 @@ const Pos = (props) => {
           pdf1.autoTable({
                head: [headers],
                body: body,
-               startY: 85, // Adjust the starting position below the header text
+               startY: 115, // Adjust the starting position below the header text
                styles: styles
           });
+
+          pdf1.text('______________________________', 15, 420);
+          pdf1.text('Item sold will not be refunded.', 15, 430);
+          pdf1.text('Only Exchange will be executed within 5 days', 15, 435);
+          pdf1.text('Thanks for shopping', 15, 440);
+          pdf1.text('onehappylifefoundation@gmail.com', 15, 445);
           pdf1.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
 
 
@@ -829,7 +839,7 @@ const Pos = (props) => {
 
           const pdf2 = new jsPDF({
                orientation: 'portrait',
-               format: [100, 300], // Adjust the dimensions as needed
+               format: [100, 460], // Adjust the dimensions as needed
           });
           pdf2.setFontSize(10); // Adjust font size as needed
           pdf2.setFont('helvetica', 'normal');
@@ -839,24 +849,28 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-          const headers2 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          const headers2 = ['Name', 'QTY', 'Price', 'Total'];
           pdf2.text(`Sales Invoice (CUSTOMER'S COPY)`, 26, 10);
           pdf2.text('OneHappyChild', 40, 20);
           pdf2.text('8001 Bucal Rd. Brgy. Santol,', 30, 25);
-          pdf2.text('Tanza Cavity', 42, 30);
+          pdf2.text('Tanza Cavite', 42, 30);
           pdf2.text('09065737483', 41, 35);
           pdf2.text('Sales Invoice #: ' + transactionnumber, 15, 50);
           pdf2.text('Date and Time of Purchase: ' + currentDate, 15, 55);
           pdf2.text('Total: P' + total, 15, 60);
-          pdf2.text('Cash Sales: P' + cash_sales, 15, 65);
-          pdf2.text('Credit Sales: P' + credit_sales, 15, 70);
-          pdf2.text('Change: P' + change, 15, 75);
-          pdf2.text('Cashier:' + user.username, 15, 80);
+          pdf2.text('Discount: ' + (discount !== 0 ? discount + "%" : "No Discount"), 15, 65);
+          pdf2.text('Discounted Amount: P' + discounted_amount, 15, 70);
+          pdf2.text('Cash Sales: P' + cash_sales, 15, 80);
+          pdf2.text('Credit Sales: P' + credit_sales, 15, 85);
+          pdf2.text('Tax 0%: P' + 0, 15, 90);
+          pdf2.text('Cash/Credit: P' + cash, 15, 100);
+          pdf2.text('Change: P' + change, 15, 105);
+          pdf2.text('Cashier:' + user.username, 15, 110);
           // Extract data for the table body
           const body2 = arr.map(item => [
-               item.product_code,
+
                item.product_name,
-               item.product_description,
+
                item.product_quantity,
                item.product_selling_price,
                item.product_total
@@ -867,9 +881,16 @@ const Pos = (props) => {
           pdf2.autoTable({
                head: [headers2],
                body: body2,
-               startY: 85, // Adjust the starting position below the header text
+               startY: 115, // Adjust the starting position below the header text
                styles: styles2
           });
+
+          pdf2.text('______________________________', 15, 420);
+          pdf2.text('Item sold will not be refunded.', 15, 430);
+          pdf2.text('Only Exchange will be executed within 5 days', 15, 435);
+          pdf2.text('Thanks for shopping', 15, 440);
+          pdf2.text('onehappylifefoundation@gmail.com', 15, 445);
+          pdf2.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
           pdf2.save(`CLIENT_COPY_${transactionnumber}_receipt.pdf`);
 
 
@@ -890,19 +911,23 @@ const Pos = (props) => {
                fontStyle: 'normal' // Adjust font style as needed (normal, bold, italic)
           };
           // Define table headers
-           const headers3 = ['Code', 'Particulars', 'Desc', 'QTY', 'Unit Price', 'Total'];
+          const headers3 = ['Name', 'QTY', 'Price', 'Total'];
           pdf3.text(`Sales Invoice (ADMIN'S COPY)`, 15, 10);
           pdf3.text('OneHappyChild', 15, 20);
           pdf3.text('8001 Bucal Rd. Brgy. Santol,', 15, 25);
-          pdf3.text('Tanza Cavity', 15, 30);
+          pdf3.text('Tanza Cavite', 15, 30);
           pdf3.text('09065737483', 15, 35);
           pdf3.text('Sales Invoice #: ' + transactionnumber, 15, 50);
           pdf3.text('Date and Time of Purchase: ' + currentDate, 15, 55);
           pdf3.text('Total: P' + total, 15, 60);
-          pdf3.text('Cash Sales: P' + cash_sales, 15, 65);
-          pdf3.text('Credit Sales: P' + credit_sales, 15, 70);
-          pdf3.text('Change: P' + change, 15, 75);
-          pdf3.text('Cashier:' + user.username, 15, 80);
+          pdf3.text('Discount: ' + (discount !== 0 ? discount + "%" : "No Discount"), 15, 65);
+          pdf3.text('Discounted Amount: P' + discounted_amount, 15, 70);
+          pdf3.text('Cash Sales: P' + cash_sales, 15, 80);
+          pdf3.text('Credit Sales: P' + credit_sales, 15, 85);
+          pdf3.text('Tax 0%: P' + 0, 15, 90);
+          pdf3.text('Cash/Credit: P' + cash, 15, 100);
+          pdf3.text('Change: P' + change, 15, 105);
+          pdf3.text('Cashier:' + user.username, 15, 110);
           // Extract data for the table body
           const body3 = arr.map(item => [
                item.product_code,
@@ -918,7 +943,7 @@ const Pos = (props) => {
           pdf3.autoTable({
                head: [headers3],
                body: body3,
-               startY: 85, // Adjust the starting position below the header text
+               startY: 115, // Adjust the starting position below the header text
                styles: styles3
           });
           pdf3.save(`ADMIN_COPY_${transactionnumber}_receipt.pdf`);
