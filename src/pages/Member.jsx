@@ -5,6 +5,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -278,6 +279,7 @@ const Member = (props) => {
      const [selectedImage, setSelectedImage] = useState(null);
 
      const { signup, isLoading } = useSignup()
+
      const [password, setPassword] = useState('')
      const [member_id, setmember_id] = useState('')
      const [firstname, setfirstname] = useState('')
@@ -492,6 +494,7 @@ const Member = (props) => {
      //      }
      // }, [user, refresher])
 
+
      useEffect(() => {
           console.log(individual_firstname, "individual_firstname");
           console.log(individual_lastname, "individual_lastname");
@@ -534,10 +537,11 @@ const Member = (props) => {
 
      /**individual */
      useEffect(() => {
-
+         
           const fetchSavings = async () => {
                let url;
-               if (user.username.substring(0, 5) !== "hhhc." ? '2' : '1') {
+               // if (user.username.substring(0, 5) !== "hhhc." ? '2' : '1') {
+               if (user.username.substring(0, 5) !== "hhhc.") {
                     url = `https://coop-back-zqr6.onrender.com/api/savings/${user.username}`;
                } else {
                     url = `https://coop-back-zqr6.onrender.com/api/savings/${member_id}`;
@@ -599,6 +603,8 @@ const Member = (props) => {
                     const others_balance = json.reduce((acc, entry) => acc + entry.others_credit, 0);
                     const others_less = json.reduce((acc, entry) => acc + entry.others_debit, 0);
                     setothers_balance(parseFloat(others_balance) - parseFloat(others_less))
+
+                  
                }
           }
           if (user) {
@@ -3031,6 +3037,30 @@ const Member = (props) => {
                                                                            backgroundColor: '#ffd4d4',
                                                                       },
                                                                  }}>
+
+
+
+                                                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                  <DataGrid
                                                                       bord
                                                                       getRowId={(row) => row._id}
