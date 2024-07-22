@@ -1821,17 +1821,41 @@ const Member = (props) => {
      const downloadAsPDF = () => {
           const customWidth = 200; // Specify your custom width here
           const pdf = new jsPDF({
-               orientation: 'landscape',
-               format: [customWidth, 600], // Adjust the dimensions as needed
+              orientation: 'portrait',
+              format: [customWidth, 400], // Adjust the dimensions as needed
           });
+      
+          // Define the columns you want to include in the PDF
+          const columnsToShow = ['date', 'share_capital_debit ', 'share_capital_credit', 'share_capital_balance', 'coop_savings_debit', 'coop_savings_credit', 'coop_savings_balance', 'remarks'];
+      
+          // Filter the savings_columns and savings data
+          const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
+          const filteredHead = [filteredColumns.map(column => column.headerName)];
+          const filteredBody = savings.map(row => filteredColumns.map(column => row[column.field]));
+      
           pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
           pdf.autoTable({
-               head: [savings_columns.map((column) => column.headerName)],
-               body: savings.map((row) => savings_columns.map((column) => row[column.field])),
+              head: filteredHead,
+              body: filteredBody,
           });
-
+      
           pdf.save('savings_data.pdf');
-     };
+      };
+// Ledger printing backup
+     // const downloadAsPDF = () => {
+     //      const customWidth = 200; // Specify your custom width here
+     //      const pdf = new jsPDF({
+     //           orientation: 'landscape',
+     //           format: [customWidth, 600], // Adjust the dimensions as needed
+     //      });
+     //      pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
+     //      pdf.autoTable({
+     //           head: [savings_columns.map((column) => column.headerName)],
+     //           body: savings.map((row) => savings_columns.map((column) => row[column.field])),
+     //      });
+
+     //      pdf.save('savings_data.pdf');
+     // };
 
 
 

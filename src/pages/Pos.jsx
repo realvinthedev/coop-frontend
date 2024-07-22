@@ -772,7 +772,7 @@ const Pos = (props) => {
 
           const pdf1 = new jsPDF({
                orientation: 'portrait',
-               format: [100, 460], // Adjust the dimensions as needed
+               format: [100, 250], // Adjust the dimensions as needed
           });
           pdf1.setFontSize(10); // Adjust font size as needed
           pdf1.setFont('helvetica', 'normal');
@@ -837,7 +837,7 @@ const Pos = (props) => {
 
           const pdf2 = new jsPDF({
                orientation: 'portrait',
-               format: [100, 460], // Adjust the dimensions as needed
+               format: [100, 250], // Adjust the dimensions as needed
           });
           pdf2.setFontSize(10); // Adjust font size as needed
           pdf2.setFont('helvetica', 'normal');
@@ -889,7 +889,6 @@ const Pos = (props) => {
           pdf2.text('Only Exchange will be executed within 5 days', 15, 435);
           pdf2.text('Thanks for shopping', 15, 440);
           pdf2.text('onehappylifefoundation@gmail.com', 15, 445);
-          pdf2.save(`CASHIER_COPY_${transactionnumber}_receipt.pdf`);
           pdf2.save(`CLIENT_COPY_${transactionnumber}_receipt.pdf`);
 
 
