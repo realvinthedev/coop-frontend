@@ -236,7 +236,7 @@ const savings_columns = [
      { field: 'others_credit', headerName: 'O-Credit', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header7', cellClassName: 'super-app-theme--header7cell' },
      { field: 'others_balance', headerName: 'O-Balance', width: 120, valueFormatter: zeroValueFormatter, align: "right", headerClassName: 'super-app-theme--header7', cellClassName: 'super-app-theme--header7cell' },
 
-     { field: 'reference_document', headerName: 'Reference Document', width: 200 },
+     { field: 'reference_document', headerName: 'Trans Code', width: 200 },
      { field: 'remarks', headerName: 'Remarks', width: 800 },
 ];
 
@@ -1817,7 +1817,6 @@ const Member = (props) => {
 
      const [membershiptotal, setmembershiptotal] = useState(0);
 
-     //WORKING TABLE
      const downloadAsPDF = () => {
           const customWidth = 200; // Specify your custom width here
           const pdf = new jsPDF({
@@ -1826,12 +1825,29 @@ const Member = (props) => {
           });
       
           // Define the columns you want to include in the PDF
-          const columnsToShow = ['date', 'share_capital_debit ', 'share_capital_credit', 'share_capital_balance', 'coop_savings_debit', 'coop_savings_credit', 'coop_savings_balance', 'remarks'];
+          const columnsToShow = [
+              'date', 
+              'share_capital_debit', 
+              'share_capital_credit', 
+              'share_capital_balance', 
+              'coop_savings_debit', 
+              'coop_savings_credit', 
+              'coop_savings_balance', 
+              'reference_document'
+          ];
       
           // Filter the savings_columns and savings data
           const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
+          
+          // Log the filtered columns to debug
+          console.log("Filtered Columns: ", filteredColumns);
+      
           const filteredHead = [filteredColumns.map(column => column.headerName)];
           const filteredBody = savings.map(row => filteredColumns.map(column => row[column.field]));
+      
+          // Log the filtered head and body to debug
+          console.log("Filtered Head: ", filteredHead);
+          console.log("Filtered Body: ", filteredBody);
       
           pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
           pdf.autoTable({
@@ -1841,6 +1857,30 @@ const Member = (props) => {
       
           pdf.save('savings_data.pdf');
       };
+     //WORKING TABLE
+     // const downloadAsPDF = () => {
+     //      const customWidth = 200; // Specify your custom width here
+     //      const pdf = new jsPDF({
+     //          orientation: 'portrait',
+     //          format: [customWidth, 400], // Adjust the dimensions as needed
+     //      });
+      
+     //      // Define the columns you want to include in the PDF
+     //      const columnsToShow = ['date', 'share_capital_debit ', 'share_capital_credit', 'share_capital_balance', 'coop_savings_debit', 'coop_savings_credit', 'coop_savings_balance', 'reference_document'];
+      
+     //      // Filter the savings_columns and savings data
+     //      const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
+     //      const filteredHead = [filteredColumns.map(column => column.headerName)];
+     //      const filteredBody = savings.map(row => filteredColumns.map(column => row[column.field]));
+      
+     //      pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
+     //      pdf.autoTable({
+     //          head: filteredHead,
+     //          body: filteredBody,
+     //      });
+      
+     //      pdf.save('savings_data.pdf');
+     //  };
 // Ledger printing backup
      // const downloadAsPDF = () => {
      //      const customWidth = 200; // Specify your custom width here
