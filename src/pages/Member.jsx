@@ -79,6 +79,14 @@ const theme = createTheme({
                main: '#2b55af',
                contrastText: '#fff',
           },
+          share: {
+               main: '#49BCFF',
+               contrastText: '#fff',
+          },
+          coop: {
+               main: '#45E7B6',
+               contrastText: '#fff',
+          },
 
      },
 });
@@ -537,7 +545,7 @@ const Member = (props) => {
 
      /**individual */
      useEffect(() => {
-         
+
           const fetchSavings = async () => {
                let url;
                // if (user.username.substring(0, 5) !== "hhhc." ? '2' : '1') {
@@ -604,7 +612,7 @@ const Member = (props) => {
                     const others_less = json.reduce((acc, entry) => acc + entry.others_debit, 0);
                     setothers_balance(parseFloat(others_balance) - parseFloat(others_less))
 
-                  
+
                }
           }
           if (user) {
@@ -1818,45 +1826,115 @@ const Member = (props) => {
      const [membershiptotal, setmembershiptotal] = useState(0);
 
      const downloadAsPDF = () => {
-          const customWidth = 200; // Specify your custom width here
           const pdf = new jsPDF({
-              orientation: 'portrait',
-              format: [customWidth, 400], // Adjust the dimensions as needed
+               orientation: 'portrait',
+               format: [357.12, 792], // Adjust the dimensions as needed
           });
-      
-          // Define the columns you want to include in the PDF
+
+          // Define the columns you want to include in the PDF for the first button
           const columnsToShow = [
-              'date', 
-              'share_capital_debit', 
-              'share_capital_credit', 
-              'share_capital_balance', 
-              'coop_savings_debit', 
-              'coop_savings_credit', 
-              'coop_savings_balance', 
-              'reference_document'
+               'date',
+               'share_capital_debit',
+               'share_capital_credit',
+               'coop_savings_debit',
+               'coop_savings_credit',
+               'share_capital_balance',
+               'reference_document'
           ];
-      
+
           // Filter the savings_columns and savings data
-          const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
-          
+          const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
+
           // Log the filtered columns to debug
           console.log("Filtered Columns: ", filteredColumns);
-      
-          const filteredHead = [filteredColumns.map(column => column.headerName)];
-          const filteredBody = savings.map(row => filteredColumns.map(column => row[column.field]));
-      
+
+          //const filteredHead = [filteredColumns.map(column => column.headerName)];
+          const filteredBody = savings
+               .filter(row =>
+                    row['share_capital_debit'] !== 0 ||
+                    row['share_capital_credit'] !== 0 ||
+                    row['share_capital_balance'] !== 0
+               )
+               .map(row =>
+                    filteredColumns.map(column => {
+                         if (
+                              column.field === 'coop_savings_debit' ||
+                              column.field === 'coop_savings_credit'
+                         ) {
+                              return '';
+                         } else {
+                              return row[column.field];
+                         }
+                    })
+               );
+
           // Log the filtered head and body to debug
-          console.log("Filtered Head: ", filteredHead);
-          console.log("Filtered Body: ", filteredBody);
-      
-          pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
+          pdf.text(' ', 10, 20); 
+          //pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
           pdf.autoTable({
-              head: filteredHead,
-              body: filteredBody,
+               //head: filteredHead,
+               body: filteredBody,
+               startY: 30 // Adjust this value to add more padding
           });
-      
+
           pdf.save('savings_data.pdf');
-      };
+     };
+
+
+     const downloadAsPDF2 = () => {
+          const pdf = new jsPDF({
+               orientation: 'portrait',
+               format: [357.12, 792], // Adjust the dimensions as needed
+          });
+
+          // Define the columns you want to include in the PDF for the second button
+          const columnsToShow = [
+               'date',
+               'share_capital_debit',
+               'share_capital_credit',
+               'coop_savings_debit',
+               'coop_savings_credit',
+               'coop_savings_balance',
+               'reference_document'
+          ];
+
+          // Filter the savings_columns and savings data
+          const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
+
+          // Log the filtered columns to debug
+          console.log("Filtered Columns: ", filteredColumns);
+
+         // const filteredHead = [filteredColumns.map(column => column.headerName)];
+          const filteredBody = savings
+               .filter(row =>
+                    row['coop_savings_debit'] !== 0 ||
+                    row['coop_savings_credit'] !== 0 ||
+                    row['coop_savings_balance'] !== 0
+               )
+               .map(row =>
+                    filteredColumns.map(column => {
+                         if (
+                              column.field === 'share_capital_debit' ||
+                              column.field === 'share_capital_credit'
+                         ) {
+                              return '';
+                         } else {
+                              return row[column.field];
+                         }
+                    })
+               );
+
+          // Log the filtered head and body to debug
+          
+          pdf.text(' ', 10, 20); 
+          pdf.autoTable({
+             
+               body: filteredBody,
+               startY: 30 // 
+          });
+
+          pdf.save('savings_data.pdf');
+     };
      //WORKING TABLE
      // const downloadAsPDF = () => {
      //      const customWidth = 200; // Specify your custom width here
@@ -1864,24 +1942,24 @@ const Member = (props) => {
      //          orientation: 'portrait',
      //          format: [customWidth, 400], // Adjust the dimensions as needed
      //      });
-      
+
      //      // Define the columns you want to include in the PDF
      //      const columnsToShow = ['date', 'share_capital_debit ', 'share_capital_credit', 'share_capital_balance', 'coop_savings_debit', 'coop_savings_credit', 'coop_savings_balance', 'reference_document'];
-      
+
      //      // Filter the savings_columns and savings data
      //      const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
      //      const filteredHead = [filteredColumns.map(column => column.headerName)];
      //      const filteredBody = savings.map(row => filteredColumns.map(column => row[column.field]));
-      
+
      //      pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
      //      pdf.autoTable({
      //          head: filteredHead,
      //          body: filteredBody,
      //      });
-      
+
      //      pdf.save('savings_data.pdf');
      //  };
-// Ledger printing backup
+     // Ledger printing backup
      // const downloadAsPDF = () => {
      //      const customWidth = 200; // Specify your custom width here
      //      const pdf = new jsPDF({
@@ -3104,7 +3182,7 @@ const Member = (props) => {
 
 
 
-                                                                
+
 
 
 
@@ -3160,12 +3238,25 @@ const Member = (props) => {
                                                                                 style={{
                                                                                      width: '100%',
                                                                                      padding: '10px',
+                                                                                     marginRight: '10px'
                                                                                 }}
                                                                                 variant="contained"
-                                                                                color="blue"
+                                                                                color="share"
                                                                                 onClick={downloadAsPDF}
                                                                            >
-                                                                                Download Ledger
+                                                                                Download Share Capital
+                                                                           </Button>
+                                                                           <Button
+                                                                                style={{
+                                                                                     width: '100%',
+                                                                                     padding: '10px',
+
+                                                                                }}
+                                                                                variant="contained"
+                                                                                color="coop"
+                                                                                onClick={downloadAsPDF2}
+                                                                           >
+                                                                                Download Coop Savings
                                                                            </Button>
                                                                            {/* <Button disabled={buttonReceiptDisabled} style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
                                                                       <PDFDownloadLink fileName="savings_summary" document={
