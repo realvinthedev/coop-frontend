@@ -1825,10 +1825,85 @@ const Member = (props) => {
 
      const [membershiptotal, setmembershiptotal] = useState(0);
 
+     // const downloadAsPDF = () => {
+     //      const pdf = new jsPDF({
+     //           orientation: 'portrait',
+     //           format: [432, 576], // Adjust the dimensions as needed
+     //      });
+
+     //      // Define the columns you want to include in the PDF for the first button
+     //      const columnsToShow = [
+     //           'date',
+     //           'share_capital_debit',
+     //           'share_capital_credit',
+     //           'coop_savings_debit',
+     //           'coop_savings_credit',
+     //           'share_capital_balance',
+     //           'reference_document'
+     //      ];
+     //      const columnWidths = {
+     //           date: 40,
+     //           share_capital_debit: 30,
+     //           share_capital_credit: 30,
+     //           coop_savings_debit: 30,
+     //           coop_savings_credit: 30,
+     //           share_capital_balance: 30,
+     //           reference_document: 40,
+     //      };
+
+     //      // const filteredHead = [filteredColumns.map(column => '')];
+     //      // Filter the savings_columns and savings data
+     //      const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
+
+     //      //const filteredHead = [filteredColumns.map(column => column.headerName)];
+
+     //      const filteredBody = savings
+     //           .filter(row =>
+     //                row['share_capital_debit'] !== 0 ||
+     //                row['share_capital_credit'] !== 0 ||
+     //                row['share_capital_balance'] !== 0
+     //           )
+     //           .map(row =>
+     //                filteredColumns.map(column => {
+     //                     if (
+     //                          column.field === 'coop_savings_debit' ||
+     //                          column.field === 'coop_savings_credit'
+     //                     ) {
+     //                          return '';
+     //                     } else {
+     //                          return row[column.field];
+     //                     }
+     //                })
+     //           );
+     //      const columnStyles = {};
+     //      filteredColumns.forEach(column => {
+     //           columnStyles[column.field] = { cellWidth: columnWidths[column.field] };
+     //      });
+     //      // Log the filtered head and body to debug
+     //      pdf.text(' ', 10, 20);
+     //      //pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
+     //      pdf.autoTable({
+     //           //head: filteredHead,
+     //           body: filteredBody,
+     //           startY: 30,
+     //           columnStyles: columnStyles,
+     //           // headStyles: {
+     //           //      fillColor: [255, 255, 255], // White background for header
+     //           //      textColor: [255, 255, 255], // White text (essentially invisible)
+     //           //  },
+     //           //  bodyStyles: {
+     //           //      fillColor: [255, 255, 255], // White background for body
+     //           //      textColor: [0, 0, 0], // Black text for body
+     //           //  } // Adjust this value to add more padding
+
+     //      });
+
+     //      pdf.save('sharecapital_data.pdf');
+     // };
      const downloadAsPDF = () => {
           const pdf = new jsPDF({
                orientation: 'portrait',
-               format: [357.12, 792], // Adjust the dimensions as needed
+               format: [432, 576], // Passbook size dimensions in points
           });
 
           // Define the columns you want to include in the PDF for the first button
@@ -1842,13 +1917,20 @@ const Member = (props) => {
                'reference_document'
           ];
 
+          // Define column widths
+          const columnWidths = {
+               date: 80,
+               share_capital_debit: 30,
+               share_capital_credit: 30,
+               coop_savings_debit: 30,
+               coop_savings_credit: 30,
+               share_capital_balance: 30,
+               reference_document: 40,
+          };
+
           // Filter the savings_columns and savings data
           const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
 
-          // Log the filtered columns to debug
-          console.log("Filtered Columns: ", filteredColumns);
-
-          //const filteredHead = [filteredColumns.map(column => column.headerName)];
           const filteredBody = savings
                .filter(row =>
                     row['share_capital_debit'] !== 0 ||
@@ -1868,23 +1950,41 @@ const Member = (props) => {
                     })
                );
 
-          // Log the filtered head and body to debug
-          pdf.text(' ', 10, 20); 
-          //pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
-          pdf.autoTable({
-               //head: filteredHead,
-               body: filteredBody,
-               startY: 30 // Adjust this value to add more padding
+          // Create column styles based on column widths
+          const columnStyles = {};
+          filteredColumns.forEach(column => {
+               columnStyles[column.field] = { cellWidth: columnWidths[column.field], halign: 'right' }; // Right align text
           });
 
-          pdf.save('savings_data.pdf');
+          // Log the filtered head and body to debug
+          pdf.text(' ', 10, 20);
+          // pdf.text(`Name: ${firstname + " " + lastname}`, 10, 10);
+          pdf.autoTable({
+               head: [columnsToShow], // Pass column headers if needed, or an empty array
+               body: filteredBody,
+               startY: 30, // Adjust this value to add more padding
+               columnStyles: columnStyles, 
+               styles: {
+                    cellPadding: 2, // Optional: Adjust padding if needed
+                    valign: 'middle', // Optional: Vertical alignment
+                    halign: 'right', // Optional: Align all text to the right by default
+                },// Apply column styles here
+               headStyles: {
+                    fillColor: [255, 255, 255], // White background for header (optional)
+                    textColor: [255, 255, 255], // White text (optional)
+               }
+          });
+
+          pdf.save('sharecapital_data.pdf');
      };
+
+
 
 
      const downloadAsPDF2 = () => {
           const pdf = new jsPDF({
                orientation: 'portrait',
-               format: [357.12, 792], // Adjust the dimensions as needed
+               format: [432, 576], // Passbook size dimensions in points
           });
 
           // Define the columns you want to include in the PDF for the second button
@@ -1898,13 +1998,21 @@ const Member = (props) => {
                'reference_document'
           ];
 
+          // Define column widths
+          const columnWidths = {
+               date: 80,
+               share_capital_debit: 30,
+               share_capital_credit: 30,
+               coop_savings_debit: 30,
+               coop_savings_credit: 30,
+               share_capital_balance: 30,
+               reference_document: 40,
+          };
+
           // Filter the savings_columns and savings data
-          const filteredColumns = savings_columns.filter(column => columnsToShow.includes(column.field));
+          const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
 
-          // Log the filtered columns to debug
-          console.log("Filtered Columns: ", filteredColumns);
-
-         // const filteredHead = [filteredColumns.map(column => column.headerName)];
+          // Generate filtered body data
           const filteredBody = savings
                .filter(row =>
                     row['coop_savings_debit'] !== 0 ||
@@ -1924,17 +2032,36 @@ const Member = (props) => {
                     })
                );
 
+          // Create column styles based on column widths
+          const columnStyles = {};
+          filteredColumns.forEach(column => {
+               columnStyles[column.field] = { cellWidth: columnWidths[column.field], halign: 'right' }; // Right align text
+          });
+
           // Log the filtered head and body to debug
-          
-          pdf.text(' ', 10, 20); 
+          pdf.text(' ', 10, 20);
           pdf.autoTable({
-             
+               // Define column headers if needed
+               head: [columnsToShow], // Empty headers if you don't want to display them
                body: filteredBody,
-               startY: 30 // 
+               startY: 30,
+               columnStyles: columnStyles, 
+               styles: {
+                    cellPadding: 2, // Optional: Adjust padding if needed
+                    valign: 'middle', // Optional: Vertical alignment
+                    halign: 'right', // Optional: Align all text to the right by default
+                },// Apply column styles here
+               // Customize styles if needed
+               headStyles: {
+                    fillColor: [255, 255, 255], // White background for header
+                    textColor: [255, 255, 255], // White text (essentially invisible)
+               }
+              
           });
 
           pdf.save('savings_data.pdf');
      };
+
      //WORKING TABLE
      // const downloadAsPDF = () => {
      //      const customWidth = 200; // Specify your custom width here
@@ -2132,7 +2259,7 @@ const Member = (props) => {
                                                                       getRowId={(row) => row._id}
                                                                       rows={members}
                                                                       columns={columns}
-                                                                      pageSize={7}
+                                                                     
                                                                       rowsPerPageOptions={[5]}
                                                                       onRowClick={handleRowClick}
                                                                       filterModel={{
