@@ -15,6 +15,7 @@ import Navbar from '../components/Navbar'
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAuthContext } from '../hooks/useAuthContext'
@@ -283,7 +284,28 @@ const Member = (props) => {
      const [members, setMembers] = useState([])
      const [individual, setindividual] = useState([])
      const [gridTrigger, setGridTrigger] = useState(false);
+     const [file, setFile] = useState(null);
+     const handleFileChange = (event) => {
+          setFile(event.target.files[0]);
+     };
 
+     const handleUpload = async () => {
+          const formData = new FormData();
+          formData.append('template', file); // 'template' is the field name in the multer setup
+
+          try {
+               const response = await axios.post('https://coop-back-zqr6.onrender.com/api/upload/upload', formData, {
+                    headers: {
+                         'Content-Type': 'multipart/form-data',
+                         'Authorization': `Bearer ${user.token}` // Include token if needed
+                    },
+               });
+               alert(response.data.message);
+          } catch (error) {
+               console.error('Error uploading file:', error);
+               alert('File upload failed.');
+          }
+     };
 
      const [selectedImage, setSelectedImage] = useState(null);
 
@@ -1825,8 +1847,7 @@ const Member = (props) => {
      }
 
      const [membershiptotal, setmembershiptotal] = useState(0);
-     const downloadAsExcel = () => {
-          // Define the columns you want to include in the Excel file
+     const downloadAsExcel = async () => {
           const columnsToShow = [
                'date',
                'share_capital_debit',
@@ -1837,83 +1858,205 @@ const Member = (props) => {
                'reference_document'
           ];
 
-          // Define column widths (in characters) based on specified values
+          // Define custom column widths
           const columnWidths = [
-               { wch: 10 }, // date
-               { wch: 11.88 }, // share_capital_debit
-               { wch: 10.63 }, // share_capital_credit
-               { wch: 12.75 }, // coop_savings_debit
-               { wch: 11.13 }, // coop_savings_credit
-               { wch: 11.5 }, // share_capital_balance
-               { wch: 17.38 }  // reference_document
+               { width: 12.8 }, // Width for 'date'
+               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 13 }, // Width for 'share_capital_credit'
+               { width: 16 }, // Width for 'coop_savings_debit'
+               { width: 13 }, // Width for 'coop_savings_credit'
+               { width: 14 }, // Width for 'coop_savings_balance'
+               { width: 21.33 }  // Width for 'reference_document'
           ];
 
-      
+          try {
+               // Fetch the template
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/upload/template');
+               if (!response.ok) {
+                    console.error('Error fetching template:', response.statusText);
+                    return;
+               }
 
-          // Filter the savings_columns and savings data
-          const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
-         
-         
-         
-          const formatDate = (date) => {
-               const d = new Date(date);
-               const month = d.getMonth() + 1; // Months are 0-based
-               const day = d.getDate();
-               const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
-               return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
-          };
-          // Generate filtered body data
-          const filteredBody = savings
-               .filter(row =>
-                    row['share_capital_debit'] !== 0 ||
-                    row['share_capital_credit'] !== 0 ||
-                    row['share_capital_balance'] !== 0
-               )
-               .map(row =>
-                    filteredColumns.map(column => {
-                         if (
-                              column.field === 'coop_savings_debit' ||
-                              column.field === 'coop_savings_credit'
-                         ) {
-                              return '';
-                         } else if (column.field === 'date') {
-                              return formatDate(row[column.field]); // Format the date
-                         } else if (column.field === 'reference_document') {
-                              return '                                          ' + row[column.field]; // Add 6 spaces before the reference document data
-                         } else {
-                              return row[column.field];
-                         }
-                    })
-               );
+               const blob = await response.blob(); // Get the file as a Blob
 
-          // Create the worksheet without headers
-          const ws = XLSX.utils.aoa_to_sheet(filteredBody);
+               // Read the Blob as an ArrayBuffer
+               const arrayBuffer = await blob.arrayBuffer();
 
-          // Set column widths
-          ws['!cols'] = columnWidths;
+               const workbook = new ExcelJS.Workbook();
+               await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
+               // Check the names of the worksheets in the workbook
+               console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
-          // Set the alignment for the reference_document column
-          //ws['!cols'][6] = { ...columnWidths[6], alignment: { horizontal: 'right' } };
+               // Attempt to get the worksheet; make sure the name is correct
+               const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
 
-          ws['!margins'] = {
-               left: 0.0393700787401575,
-               right: 0.236220472440945,
-               top: 0.433070866141732,
-               bottom: 0.0393700787401575,
-               header: 0.31496062992126,
-               footer: 0.31496062992126
-          };
-          // Apply right alignment to the last column
-          // Create the workbook and add the worksheet
-          const wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, 'Share Capital Data');
+               if (!worksheet) {
+                    console.error('Worksheet "Share Capital Data" not found!');
+                    return;
+               }
 
-          // Save the Excel file
-          XLSX.writeFile(wb, 'share_capital_data.xlsx');
+               // Clear existing data but retain the formatting
+               worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+                    worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
+               });
+
+               // Set custom column widths
+               columnWidths.forEach((width, index) => {
+                    worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
+               });
+
+               // Format the date function
+               const formatDate = (date) => {
+                    const d = new Date(date);
+                    const month = d.getMonth() + 1; // Months are 0-based
+                    const day = d.getDate();
+                    const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+                    return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+               };
+
+               // Filtered columns from savings_columns
+               const filteredColumns = columnsToShow
+                    .map(field => savings_columns.find(column => column.field === field))
+                    .filter(Boolean);
+
+               // Make sure the filtered body contains data
+               const filteredBody = savings
+                    .filter(row =>
+                         row['share_capital_debit'] !== 0 ||
+                         row['share_capital_credit'] !== 0 ||
+                         row['share_capital_balance'] !== 0
+                    )
+                    .map(row =>
+                         filteredColumns.map(column => {
+                              if (column.field === 'coop_savings_debit' || column.field === 'coop_savings_credit') {
+                                   return ''; // Return empty string for these fields
+                              } else if (column.field === 'date') {
+                                   return formatDate(row[column.field]); // Format the date
+                              } else if (column.field === 'reference_document') {
+                                   return row[column.field]; // Return the reference document
+                              } else {
+                                   // Append .00 to numeric values with a comma
+                                   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(row[column.field] || 0);
+                              }
+                         })
+                    );
+
+               // Log filtered body data to confirm it's correct
+               console.log('Filtered body data:', filteredBody);
+
+               // Add new data to the worksheet
+               filteredBody.forEach((data, index) => {
+                    console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+                    const newRow = worksheet.addRow(data);
+
+                    // Set the font style for the new row
+                    newRow.font = {
+                         name: 'Calibri',
+                         size: 8
+                    };
+               });
+
+               // Save the modified workbook as a Blob
+               const buffer = await workbook.xlsx.writeBuffer();
+               console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+
+               const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+               console.log('Saving file:', newBlob); // Log the Blob before download
+               saveAs(newBlob, 'share_capital.xlsx'); // Trigger file download
+          } catch (error) {
+               console.error('Error in processing the Excel download:', error);
+          }
      };
-     const downloadAsExcel2 = () => {
-          // Define the columns you want to include in the Excel file
+     // const downloadAsExcel = () => {
+     //      // Define the columns you want to include in the Excel file
+     //      const columnsToShow = [
+     //           'date',
+     //           'share_capital_debit',
+     //           'share_capital_credit',
+     //           'coop_savings_debit',
+     //           'coop_savings_credit',
+     //           'share_capital_balance',
+     //           'reference_document'
+     //      ];
+
+     //      // Define column widths (in characters) based on specified values
+     //      const columnWidths = [
+     //           { wch: 10 }, // date
+     //           { wch: 11.88 }, // share_capital_debit
+     //           { wch: 10.63 }, // share_capital_credit
+     //           { wch: 12.75 }, // coop_savings_debit
+     //           { wch: 11.13 }, // coop_savings_credit
+     //           { wch: 11.5 }, // share_capital_balance
+     //           { wch: 17.38 }  // reference_document
+     //      ];
+
+
+
+     //      // Filter the savings_columns and savings data
+     //      const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
+
+
+
+     //      const formatDate = (date) => {
+     //           const d = new Date(date);
+     //           const month = d.getMonth() + 1; // Months are 0-based
+     //           const day = d.getDate();
+     //           const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+     //           return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+     //      };
+     //      // Generate filtered body data
+     //      const filteredBody = savings
+     //           .filter(row =>
+     //                row['share_capital_debit'] !== 0 ||
+     //                row['share_capital_credit'] !== 0 ||
+     //                row['share_capital_balance'] !== 0
+     //           )
+     //           .map(row =>
+     //                filteredColumns.map(column => {
+     //                     if (
+     //                          column.field === 'coop_savings_debit' ||
+     //                          column.field === 'coop_savings_credit'
+     //                     ) {
+     //                          return '';
+     //                     } else if (column.field === 'date') {
+     //                          return formatDate(row[column.field]); // Format the date
+     //                     } else if (column.field === 'reference_document') {
+     //                          return '                                          ' + row[column.field]; // Add 6 spaces before the reference document data
+     //                     } else {
+     //                          return row[column.field];
+     //                     }
+     //                })
+     //           );
+
+     //      // Create the worksheet without headers
+     //      const ws = XLSX.utils.aoa_to_sheet(filteredBody);
+
+     //      // Set column widths
+     //      ws['!cols'] = columnWidths;
+
+
+     //      // Set the alignment for the reference_document column
+     //      //ws['!cols'][6] = { ...columnWidths[6], alignment: { horizontal: 'right' } };
+
+     //      ws['!margins'] = {
+     //           left: 0.0393700787401575,
+     //           right: 0.236220472440945,
+     //           top: 0.433070866141732,
+     //           bottom: 0.0393700787401575,
+     //           header: 0.31496062992126,
+     //           footer: 0.31496062992126
+     //      };
+     //      // Apply right alignment to the last column
+     //      // Create the workbook and add the worksheet
+     //      const wb = XLSX.utils.book_new();
+     //      XLSX.utils.book_append_sheet(wb, ws, 'Share Capital Data');
+
+     //      // Save the Excel file
+     //      XLSX.writeFile(wb, 'share_capital_data.xlsx');
+     // };
+
+     const downloadAsExcel2 = async () => {
           const columnsToShow = [
                'date',
                'share_capital_debit',
@@ -1924,253 +2067,352 @@ const Member = (props) => {
                'reference_document'
           ];
 
-          // Define column widths (in characters)
+          // Define custom column widths
           const columnWidths = [
-               { wch: 10 }, // date
-               { wch: 11.88 }, // share_capital_debit
-               { wch: 10.63 }, // share_capital_credit
-               { wch: 12.75 }, // coop_savings_debit
-               { wch: 11.13 }, // coop_savings_credit
-               { wch: 11.5 }, // share_capital_balance
-               { wch: 17.38 }  // referenc
+               { width: 12.8 }, // Width for 'date'
+               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 13 }, // Width for 'share_capital_credit'
+               { width: 16 }, // Width for 'coop_savings_debit'
+               { width: 13 }, // Width for 'coop_savings_credit'
+               { width: 14 }, // Width for 'coop_savings_balance'
+               { width: 21.33 }  // Width for 'reference_document'
           ];
 
-          // Filter the savings_columns and savings data
-          const filteredColumns = columnsToShow.map(field => savings_columns.find(column => column.field === field)).filter(Boolean);
+          try {
+               // Fetch the template
+               const response = await fetch('https://coop-back-zqr6.onrender.com/api/upload/template');
+               if (!response.ok) {
+                    console.error('Error fetching template:', response.statusText);
+                    return;
+               }
 
+               const blob = await response.blob(); // Get the file as a Blob
 
+               // Read the Blob as an ArrayBuffer
+               const arrayBuffer = await blob.arrayBuffer();
 
-          const formatDate = (date) => {
-               const d = new Date(date);
-               const month = d.getMonth() + 1; // Months are 0-based
-               const day = d.getDate();
-               const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
-               return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
-          };
+               const workbook = new ExcelJS.Workbook();
+               await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
+               // Check the names of the worksheets in the workbook
+               console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
-          // Generate filtered body data
-          const filteredBody = savings
-               .filter(row =>
-                    row['coop_savings_debit'] !== 0 ||
-                    row['coop_savings_credit'] !== 0 ||
-                    row['coop_savings_balance'] !== 0
-               )
-               .map(row =>
-                    filteredColumns.map(column => {
-                         if (
-                              column.field === 'share_capital_debit' ||
-                              column.field === 'share_capital_credit'
-                         ) {
-                              return '';
-                         } else if (column.field === 'date') {
-                              return formatDate(row[column.field]); // Format the date
-                         } else if (column.field === 'reference_document') {
-                              return '                                          ' + row[column.field]; // Add 6 spaces before the reference document data
-                         } else {
-                              return row[column.field];
-                         }
-                    })
-               );
+               // Attempt to get the worksheet; make sure the name is correct
+               const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
 
-          // Create the worksheet and add the headers
-          const ws = XLSX.utils.aoa_to_sheet(filteredBody);
-       
+               if (!worksheet) {
+                    console.error('Worksheet "Share Capital Data" not found!');
+                    return;
+               }
 
-          // Set column widths
-          ws['!cols'] = columnWidths;
+               // Clear existing data but retain the formatting
+               worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+                    worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
+               });
 
+               // Set custom column widths
+               columnWidths.forEach((width, index) => {
+                    worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
+               });
 
-          // Set worksheet margins
-          ws['!margins'] = {
-               left: 0.0393700787401575,
-               right: 0.236220472440945,
-               top: 0.433070866141732,
-               bottom: 0.0393700787401575,
-               header: 0.31496062992126,
-               footer: 0.31496062992126
-          };
+               // Format the date function
+               const formatDate = (date) => {
+                    const d = new Date(date);
+                    const month = d.getMonth() + 1; // Months are 0-based
+                    const day = d.getDate();
+                    const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+                    return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+               };
 
-          // Set the font style and size for all cells
-         
-          // Create the workbook and add the worksheet
-          const wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, 'Savings Data');
+               // Filtered columns from savings_columns
+               const filteredColumns = columnsToShow
+                    .map(field => savings_columns.find(column => column.field === field))
+                    .filter(Boolean);
 
-          // Save the Excel file
-          XLSX.writeFile(wb, 'savings_data.xlsx');
+               // Make sure the filtered body contains data
+               const filteredBody = savings
+                    .filter(row =>
+                         row['coop_savings_debit'] !== 0 ||
+                         row['coop_savings_credit'] !== 0 ||
+                         row['coop_savings_balance'] !== 0
+                    )
+                    .map(row =>
+                         filteredColumns.map(column => {
+                              if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
+                                   return ''; // Return empty string for these fields
+                              } else if (column.field === 'date') {
+                                   return formatDate(row[column.field]); // Format the date
+                              } else if (column.field === 'reference_document') {
+                                   return row[column.field]; // Return the reference document
+                              } else {
+                                   // Append .00 to numeric values with a comma
+                                   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(row[column.field] || 0);
+                              }
+                         })
+                    );
+
+               // Log filtered body data to confirm it's correct
+               console.log('Filtered body data:', filteredBody);
+
+               // Add new data to the worksheet
+               filteredBody.forEach((data, index) => {
+                    console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+                    const newRow = worksheet.addRow(data);
+
+                    // Set the font style for the new row
+                    newRow.font = {
+                         name: 'Calibri',
+                         size: 8
+                    };
+               });
+
+               // Save the modified workbook as a Blob
+               const buffer = await workbook.xlsx.writeBuffer();
+               console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+
+               const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+               console.log('Saving file:', newBlob); // Log the Blob before download
+               saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
+          } catch (error) {
+               console.error('Error in processing the Excel download:', error);
+          }
      };
-     // const downloadAsExcel = async () => {
-     //      // Define the column widths and formatting without headers
-     //      const columnWidths = [
-     //           { width: 12.23 }, // Date
-     //           { width: 13.83}, // Share Capital Debit
-     //           { width: 12.62 }, // Share Capital Credit
-     //           { width: 14.71 },    // Coop Savings Debit
-     //           { width: 13.05 }, // Coop Savings Credit
-     //           { width: 13.5 }, // Share Capital Balance
-     //           { width: 19.4 }  // Reference Document
-     //      ];
-     //      // const columnWidths = [
-     //      //      { width: 10.25*2(9.27) }, // Date
-     //      //      { width: 12.13*2}, // Share Capital Debit
-     //      //      { width: 10.88 }, // Share Capital Credit
-     //      //      { width: 13 },    // Coop Savings Debit
-     //      //      { width: 11.38 }, // Coop Savings Credit
-     //      //      { width: 11.75 }, // Share Capital Balance
-     //      //      { width: 17.63 }  // Reference Document
-     //      // ];
-
-     //      const workbook = new ExcelJS.Workbook();
-     //      const worksheet = workbook.addWorksheet('Share Capital Data');
-
-     //      // Set column widths without headers
 
 
-     //      // Filter and map the data to be inserted into the worksheet
-     //      const filteredBody = savings
-     //           .filter(row =>
-     //                row['share_capital_debit'] !== 0 ||
-     //                row['share_capital_credit'] !== 0 ||
-     //                row['share_capital_balance'] !== 0
-     //           )
-     //           .map(row => [
-     //                row.date,
-     //                row.share_capital_debit,
-     //                row.share_capital_credit,
-     //                '', // Coop Savings Debit
-     //                '', // Coop Savings Credit
-     //                row.share_capital_balance,
-     //                '        ' + row.reference_document // Indent the reference document
-     //           ]);
 
-     //      // Add each row to the worksheet without headers
-     //      filteredBody.forEach(data => {
-     //           const row = worksheet.addRow(data);
-     //           row.font = {
-     //                name: 'Calibri',
-     //                size: 8
-     //           };
-     //      });
 
-     //      // Apply comma style to the columns containing numerical data
-     //      worksheet.getColumn(2).numFmt = '#,##0.00'; // Share Capital Debit
-     //      worksheet.getColumn(3).numFmt = '#,##0.00'; // Share Capital Credit
-     //      worksheet.getColumn(6).numFmt = '#,##0.00'; // Share Capital Balance
-
-     //      // Align the reference document column to the right
-     //      worksheet.getColumn(7).alignment = { horizontal: 'right' };
-
-     //      // Set custom margins
-     //      worksheet.pageMargins = {
-     //           left: 0.0393700787401575,  // 1 cm
-     //           right: 0.236220472440945,  // 6 cm
-     //           top: 0.433070866141732,   // 11 cm
-     //           bottom: 0.0393700787401575 // 1 cm
-     //      };
-     //      worksheet.pageSetup = {
-     //           // paperSize: 9,  // A4
-     //           // orientation: 'portrait',
-     //           fitToPage: true
-     //           // fitToWidth: 1,
-     //           // fitToHeight: 0
-     //      };
-
-     //      try {
-     //           // Generate the Excel file as a buffer
-     //           const buffer = await workbook.xlsx.writeBuffer();
-
-     //           // Create a Blob from the buffer
-     //           const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-     //           // Save the Blob as an Excel file
-     //           saveAs(blob, 'share_capital_data.xlsx');
-     //      } catch (error) {
-     //           console.error('Error generating Excel file:', error);
-     //      }
-     // };
+     // //working with column width
      // const downloadAsExcel2 = async () => {
-     //      // Define the column widths without headers
-     //      const columnWidths = [
-     //           { width: 10.25 }, // Date
-     //           { width: 12.13 }, // Share Capital Debit
-     //           { width: 10.88 }, // Share Capital Credit
-     //           { width: 13 },    // Coop Savings Debit
-     //           { width: 11.38 }, // Coop Savings Credit
-     //           { width: 11.75 }, // Share Capital Balance
-     //           { width: 17.63 }  // Reference Document
+     //      const columnsToShow = [
+     //           'date',
+     //           'share_capital_debit',
+     //           'share_capital_credit',
+     //           'coop_savings_debit',
+     //           'coop_savings_credit',
+     //           'coop_savings_balance',
+     //           'reference_document'
      //      ];
 
-     //      const workbook = new ExcelJS.Workbook();
-     //      const worksheet = workbook.addWorksheet('Savings Data');
+     //      // Define custom column widths
+     //      const columnWidths = [
+     //           { width: 12.8 }, // Width for 'date'
+     //           { width: 15 }, // Width for 'share_capital_debit'
+     //           { width: 13 }, // Width for 'share_capital_credit'
+     //           { width: 16 }, // Width for 'coop_savings_debit'
+     //           { width: 13 }, // Width for 'coop_savings_credit'
+     //           { width: 14 }, // Width for 'coop_savings_balance'
+     //           { width: 21.33 }  // Width for 'reference_document'
+     //      ];
 
-     //      // Set column widths
-     //      worksheet.columns = columnWidths.map(width => ({ width: width.width }));
-
-     //      // Filter and map the data to be inserted into the worksheet
-     //      const filteredBody = savings
-     //           .filter(row =>
-     //                row['coop_savings_debit'] !== 0 ||
-     //                row['coop_savings_credit'] !== 0 ||
-     //                row['coop_savings_balance'] !== 0
-     //           )
-     //           .map(row => ({
-     //                date: row.date, // Keep date in original format
-     //                share_capital_debit: '',
-     //                share_capital_credit: '',
-     //                coop_savings_debit: row.coop_savings_debit,
-     //                coop_savings_credit: row.coop_savings_credit,
-     //                coop_savings_balance: row.coop_savings_balance,
-     //                reference_document: '        ' + row.reference_document // Indent the reference document
-     //           }));
-
-     //      // Add each row to the worksheet without headers
-     //      filteredBody.forEach(data => {
-     //           const row = worksheet.addRow(Object.values(data));
-     //           row.font = {
-     //                name: 'Calibri',
-     //                size: 8
-     //           };
-     //      });
-
-     //      // Apply comma style to numerical columns
-     //      worksheet.getColumn(4).numFmt = '#,##0.00'; // Coop Savings Debit
-     //      worksheet.getColumn(5).numFmt = '#,##0.00'; // Coop Savings Credit
-     //      worksheet.getColumn(6).numFmt = '#,##0.00'; // Coop Savings Balance
-
-     //      // Apply date format to the date column (if you decide to apply it later)
-     //      worksheet.getColumn(1).numFmt = 'mm/dd/yyyy';
-
-     //      // Align the reference document column to the right
-     //      worksheet.getColumn(7).alignment = { horizontal: 'right' };
-
-     //      // Set custom margins
-     //      worksheet.pageMargins = {
-     //           left: 0.1,  // 1 cm
-     //           right: 0.2,  // 6 cm
-     //           top: 0.5,   // 11 cm
-     //           bottom: 0.5 // 1 cm
-     //      };
-     //      worksheet.pageSetup = {
-     //           paperSize: 9,  // A4
-     //           orientation: 'portrait',
-     //           fitToPage: true,
-     //           fitToWidth: 1,
-     //           fitToHeight: 0
-     //      };
      //      try {
-     //           // Generate the Excel file as a buffer
+     //           // Fetch the template
+     //           const response = await fetch('https://coop-back-zqr6.onrender.com/api/upload/template');
+     //           if (!response.ok) {
+     //                console.error('Error fetching template:', response.statusText);
+     //                return;
+     //           }
+
+     //           const blob = await response.blob(); // Get the file as a Blob
+
+     //           // Read the Blob as an ArrayBuffer
+     //           const arrayBuffer = await blob.arrayBuffer();
+
+     //           const workbook = new ExcelJS.Workbook();
+     //           await workbook.xlsx.load(arrayBuffer); // Load the existing template
+
+     //           // Check the names of the worksheets in the workbook
+     //           console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+
+     //           // Attempt to get the worksheet; make sure the name is correct
+     //           const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
+
+     //           if (!worksheet) {
+     //                console.error('Worksheet "Share Capital Data" not found!');
+     //                return;
+     //           }
+
+     //           // Clear existing data but retain the formatting
+     //           worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+     //                worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
+     //           });
+
+     //           // Set custom column widths
+     //           columnWidths.forEach((width, index) => {
+     //                worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
+     //           });
+
+     //           // Format the date function
+     //           const formatDate = (date) => {
+     //                const d = new Date(date);
+     //                const month = d.getMonth() + 1; // Months are 0-based
+     //                const day = d.getDate();
+     //                const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+     //                return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+     //           };
+
+     //           // Filtered columns from savings_columns
+     //           const filteredColumns = columnsToShow
+     //                .map(field => savings_columns.find(column => column.field === field))
+     //                .filter(Boolean);
+
+     //           // Make sure the filtered body contains data
+     //           const filteredBody = savings
+     //                .filter(row =>
+     //                     row['coop_savings_debit'] !== 0 ||
+     //                     row['coop_savings_credit'] !== 0 ||
+     //                     row['coop_savings_balance'] !== 0
+     //                )
+     //                .map(row =>
+     //                     filteredColumns.map(column => {
+     //                          if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
+     //                               return ''; // Return empty string for these fields
+     //                          } else if (column.field === 'date') {
+     //                               return formatDate(row[column.field]); // Format the date
+     //                          } else if (column.field === 'reference_document') {
+     //                               return row[column.field]; // Return the reference document
+     //                          } else {
+     //                               return row[column.field]; // Make sure coop_savings_balance is being returned correctly here
+     //                          }
+     //                     })
+     //                );
+
+     //           // Log filtered body data to confirm it's correct
+     //           console.log('Filtered body data:', filteredBody);
+
+     //           // Add new data to the worksheet
+     //           filteredBody.forEach((data, index) => {
+     //                console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+     //                const newRow = worksheet.addRow(data);
+
+     //                // Set the font style for the new row
+     //                newRow.font = {
+     //                     name: 'Calibri',
+     //                     size: 8
+     //                };
+     //           });
+
+     //           // Save the modified workbook as a Blob
      //           const buffer = await workbook.xlsx.writeBuffer();
+     //           console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
 
-     //           // Create a Blob from the buffer
-     //           const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-     //           // Save the Blob as an Excel file
-     //           saveAs(blob, 'savings_data.xlsx');
+     //           const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+     //           console.log('Saving file:', newBlob); // Log the Blob before download
+     //           saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
      //      } catch (error) {
-     //           console.error('Error generating Excel file:', error);
+     //           console.error('Error in processing the Excel download:', error);
      //      }
      // };
+
+
+
+     //working but column is off.
+     // const downloadAsExcel2 = async () => {
+     //      const columnsToShow = [
+     //           'date',
+     //           'share_capital_debit',
+     //           'share_capital_credit',
+     //           'coop_savings_debit',
+     //           'coop_savings_credit',
+     //           'coop_savings_balance',
+     //           'reference_document'
+     //      ];
+
+     //      try {
+     //           // Fetch the template
+     //           const response = await fetch('https://coop-back-zqr6.onrender.com/api/upload/template');
+     //           if (!response.ok) {
+     //                console.error('Error fetching template:', response.statusText);
+     //                return;
+     //           }
+
+     //           const blob = await response.blob(); // Get the file as a Blob
+
+     //           // Read the Blob as an ArrayBuffer
+     //           const arrayBuffer = await blob.arrayBuffer();
+
+     //           const workbook = new ExcelJS.Workbook();
+     //           await workbook.xlsx.load(arrayBuffer); // Load the existing template
+
+     //           // Check the names of the worksheets in the workbook
+     //           console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+
+     //           // Attempt to get the worksheet; make sure the name is correct
+     //           const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
+
+     //           if (!worksheet) {
+     //                console.error('Worksheet "Share Capital Data" not found!');
+     //                return;
+     //           }
+
+     //           // Clear existing data but retain the formatting
+     //           worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+     //                worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
+     //           });
+
+     //           // Format the date function
+     //           const formatDate = (date) => {
+     //                const d = new Date(date);
+     //                const month = d.getMonth() + 1; // Months are 0-based
+     //                const day = d.getDate();
+     //                const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+     //                return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+     //           };
+
+     //           // Filtered columns from savings_columns
+     //           const filteredColumns = columnsToShow
+     //                .map(field => savings_columns.find(column => column.field === field))
+     //                .filter(Boolean);
+
+     //           // Make sure the filtered body contains data
+     //           const filteredBody = savings
+     //                .filter(row =>
+     //                     row['coop_savings_debit'] !== 0 ||
+     //                     row['coop_savings_credit'] !== 0 ||
+     //                     row['coop_savings_balance'] !== 0 // Ensure this condition is correct
+     //                )
+     //                .map(row =>
+     //                     filteredColumns.map(column => {
+     //                          if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
+     //                               return ''; // Return empty string for these fields
+     //                          } else if (column.field === 'date') {
+     //                               return formatDate(row[column.field]); // Format the date
+     //                          } else if (column.field === 'reference_document') {
+     //                               return row[column.field]; // Return the reference document
+     //                          } else {
+     //                               return row[column.field]; // Make sure coop_savings_balance is being returned correctly here
+     //                          }
+     //                     })
+     //                );
+
+     //           // Log filtered body data to confirm it's correct
+     //           console.log('Filtered body data:', filteredBody);
+
+     //           // Add new data to the worksheet
+     //           filteredBody.forEach((data, index) => {
+     //                console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+     //                const newRow = worksheet.addRow(data);
+
+     //                // Set the font style for the new row
+     //                newRow.font = {
+     //                     name: 'Calibri',
+     //                     size: 8
+     //                };
+     //           });
+
+     //           // Save the modified workbook as a Blob
+     //           const buffer = await workbook.xlsx.writeBuffer();
+     //           console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+
+     //           const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+     //           console.log('Saving file:', newBlob); // Log the Blob before download
+     //           saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
+     //      } catch (error) {
+     //           console.error('Error in processing the Excel download:', error);
+     //      }
+     // };
+
+
+
 
 
 
@@ -3199,6 +3441,10 @@ const Member = (props) => {
                                                             <Button style={{ width: "200px", padding: "10px", borderRadius: "20px", marginBottom: "10px" }} variant="contained" color="blue" onClick={captureScreenshot}>
                                                                  Download Summary
                                                             </Button>
+                                                            {/* <div>
+                                                                 <input type="file" onChange={handleFileChange} />
+                                                                 <button onClick={handleUpload}>Upload Template</button>
+                                                            </div>  */}
                                                        </ThemeProvider>
                                                   </div>
                                                   <CardContainer ref={appRef}>
