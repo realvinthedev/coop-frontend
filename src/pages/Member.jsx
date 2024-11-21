@@ -286,10 +286,16 @@ const Member = (props) => {
      const [gridTrigger, setGridTrigger] = useState(false);
      const [file, setFile] = useState(null);
      const handleFileChange = (event) => {
-          setFile(event.target.files[0]);
+          const selectedFile = event.target.files[0]; // Get the selected file
+          setFile(selectedFile); // Set the file state
      };
 
      const handleUpload = async () => {
+          if (!file) {
+               alert('Please select a file to upload.');
+               return;
+          }
+
           const formData = new FormData();
           formData.append('template', file); // 'template' is the field name in the multer setup
 
@@ -303,9 +309,27 @@ const Member = (props) => {
                alert(response.data.message);
           } catch (error) {
                console.error('Error uploading file:', error);
-               alert('File upload failed.');
+               alert('File upload failed.'); // You can customize this message based on error response
           }
      };
+
+     // const handleUpload = async () => {
+     //      const formData = new FormData();
+     //      formData.append('template', file); // 'template' is the field name in the multer setup
+
+     //      try {
+     //           const response = await axios.post('https://coop-back-zqr6.onrender.com/api/upload/upload', formData, {
+     //                headers: {
+     //                     'Content-Type': 'multipart/form-data',
+     //                     'Authorization': `Bearer ${user.token}` // Include token if needed
+     //                },
+     //           });
+     //           alert(response.data.message);
+     //      } catch (error) {
+     //           console.error('Error uploading file:', error);
+     //           alert('File upload failed.');
+     //      }
+     // };
 
      const [selectedImage, setSelectedImage] = useState(null);
 
@@ -3444,7 +3468,7 @@ const Member = (props) => {
                                                             {/* <div>
                                                                  <input type="file" onChange={handleFileChange} />
                                                                  <button onClick={handleUpload}>Upload Template</button>
-                                                            </div>  */}
+                                                            </div> */}
                                                        </ThemeProvider>
                                                   </div>
                                                   <CardContainer ref={appRef}>

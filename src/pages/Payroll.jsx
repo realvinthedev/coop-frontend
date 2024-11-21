@@ -529,16 +529,31 @@ const Payroll = (props) => {
      };
 
 
+     // const handleName = (event) => {
+     //      const name = event.target.value;
+     //      const new_name = name.split("- ")[1].trim();
+     //      setName(name)
+     //      setNew_name(new_name)
+     //      const firstWord = name.split(" ")[0];
+     //      setEmployeeId(firstWord)
+     //      setEmployeeId2(firstWord)
+
+     // }
      const handleName = (event) => {
           const name = event.target.value;
-          const new_name = name.split("- ")[1].trim();
-          setName(name)
-          setNew_name(new_name)
-          const firstWord = name.split(" ")[0];
-          setEmployeeId(firstWord)
-          setEmployeeId2(firstWord)
 
-     }
+          // Safely split the name and check if "- " exists
+          const nameParts = name.split("- ");
+          const new_name = nameParts[1] ? nameParts[1].trim() : ""; // Default to an empty string if undefined
+
+          setName(name);
+          setNew_name(new_name);
+
+          // Get the first word of the name safely
+          const firstWord = name.split(" ")[0] || ""; // Default to an empty string if name is empty
+          setEmployeeId(firstWord);
+          setEmployeeId2(firstWord);
+     };
      const handleName2 = (event) => {
           const name = event.target.value;
           setName2(name)
@@ -561,6 +576,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
+                    console.log('88888888888888888888888888888888888888888888888')
                     const filteredData = json.filter(item => {
                          const date = item.date
                          return date >= start_date && date <= end_date
@@ -587,6 +603,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
+                    console.log('77777777777777777777777777777777777777777777777777')
                     const filteredData = json.filter(item => {
                          const month = item.month
                          const year = item.year
@@ -614,7 +631,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
-                    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@',json)
+                    console.log('6666666666666666666666666666666666')
                     const filteredData = json.filter(item => {
                          const month = item.month;
                          const year = item.year;
@@ -647,37 +664,38 @@ const Payroll = (props) => {
      }, [start_date2, end_date2, period2, randomNum])
 
 
-     const [totalnet, settotalnet] = useState(0)
+     const [meow, settotalnet] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
-              const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
-                  headers: {
-                      'Authorization': `Bearer ${user.token}`
-                  }
-              });
-              const json = await response.json();
-              if (response.ok) {
-                  // Get the current year
-                  const currentYear = new Date().getFullYear();
-                  // Get the current employee ID, replace 'current_emp_id' with the actual value
-                  const currentEmpId = employeeId; // Replace 'current_emp_id' with the actual employee ID
-                  // Filter payslip data for the current year and current employee ID
-                  const filteredData = json.filter(item => {
-                      const year = new Date(item.createdAt).getFullYear(); // Extract year from createdAt timestamp
-                      const employeeId = item.employee_id;
-                      return year === currentYear && employeeId === currentEmpId;
-                  });
-      
-                  // Calculate the total net
-                  const totalNet = filteredData.reduce((total, item) => total + item.net, 0);
-      
-                  // Set the filtered data and total net to state
-                  settotalnet(totalNet);
-                  console.log(')))))))))))))))))))))))))))))))))))))))))',totalNet)
-              }
+               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
+                    headers: {
+                         'Authorization': `Bearer ${user.token}`
+                    }
+               });
+               const json = await response.json();
+               if (response.ok) {
+                    console.log('555555555555555555555555555555555555555555555')
+                    // Get the current year
+                    const currentYear = new Date().getFullYear();
+                    // Get the current employee ID, replace 'current_emp_id' with the actual value
+                    const currentEmpId = employeeId; // Replace 'current_emp_id' with the actual employee ID
+                    // Filter payslip data for the current year and current employee ID
+                    const filteredData = json.filter(item => {
+                         const year = new Date(item.createdAt).getFullYear(); // Extract year from createdAt timestamp
+                         const employeeId = item.employee_id;
+                         return year === currentYear && employeeId === currentEmpId;
+                    });
+
+                    // Calculate the total net
+                    const totalNet = filteredData.reduce((total, item) => total + item.net, 0);
+
+                    // Set the filtered data and total net to state
+                    settotalnet(json);
+
+               }
           };
           fetchEmp();
-      }, [employeeId, start_date, end_date, period]);
+     }, [employeeId, start_date, end_date, period]);
 
 
      useEffect(() => {
@@ -689,6 +707,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
+                    console.log('4444444444444444444444444444444444')
                     const filteredData = json.filter(item => {
                          const date = item.date
                          return date >= start_date2 && date <= end_date2
@@ -722,6 +741,7 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
+                    console.log('33333333333333333333333333333333333333')
                     const filteredData = json.filter(item => {
                          const date = item.date_covered
                          if (employeeId !== "") {
@@ -756,6 +776,7 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
+                    console.log('222222222222222222222222222222222222')
                     setEmp(json)
 
                }
@@ -856,6 +877,7 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
+                    console.log('11111111111111111111111111111111')
                     setdefault_base(json.base_salary ? json.base_salary : 0)
                     setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary : 0)
                     setdefault_daily(json.daily_salary ? json.daily_salary : 0)
@@ -1564,7 +1586,15 @@ const Payroll = (props) => {
           }
      }, [employeeId, start_date, end_date, period]);
 
+     const allDataLoaded = db_department && meow && emp && filtered_employee_dtr && (filtered_additional?.length > 0) && arr;
 
+
+     let buttonText = "Loading data...";
+     if (db_department && meow && emp && filtered_employee_dtr) {
+          buttonText = filtered_additional?.length > 0
+               ? "Generate"
+               : "Additionals is missing";
+     }
      return (
 
           <div style={{ display: "flex" }}>
@@ -1653,8 +1683,8 @@ const Payroll = (props) => {
                                                                            </DateContainer>
                                                                       </LocalizationProvider>
                                                                       <ThemeProvider theme={theme}>
-                                                                           <Button style={{ marginRight: "10px" }} variant="outlined" color="green" onClick={calculateGrossPay}>
-                                                                                Generate
+                                                                           <Button style={{ marginRight: "10px" }} variant="outlined" disabled={!allDataLoaded} color="green" onClick={calculateGrossPay}>
+                                                                                {buttonText}
                                                                            </Button>
                                                                       </ThemeProvider>
                                                                  </div>
