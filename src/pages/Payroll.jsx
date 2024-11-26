@@ -568,7 +568,7 @@ const Payroll = (props) => {
      const [filtered_employee_dtr, setFiltered_employee_dtr] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/dtr/employee/${employeeId}`, {
+               const response = await fetch(`https://c-back.onrender.com/api/dtr/employee/${employeeId}`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -602,7 +602,7 @@ const Payroll = (props) => {
      const [arr, setArr] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
+               const response = await fetch(`https://c-back.onrender.com/api/payslip/`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -630,7 +630,7 @@ const Payroll = (props) => {
      const [summ, setSumm] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
+               const response = await fetch(`https://c-back.onrender.com/api/payslip/`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -673,7 +673,7 @@ const Payroll = (props) => {
      const [meow, settotalnet] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/`, {
+               const response = await fetch(`https://c-back.onrender.com/api/payslip/`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -705,7 +705,7 @@ const Payroll = (props) => {
 
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/dtr/`, {
+               const response = await fetch(`https://c-back.onrender.com/api/dtr/`, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -738,7 +738,7 @@ const Payroll = (props) => {
      const [filtered_additional, setFiltered_Additional] = useState([]);
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/additional/' + employeeId, {
+               const response = await fetch('https://c-back.onrender.com/api/additional/' + employeeId, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -777,7 +777,7 @@ const Payroll = (props) => {
      const [emp, setEmp] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
+               const response = await fetch('https://c-back.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -875,7 +875,7 @@ const Payroll = (props) => {
      const [db_department, setdb_department] = useState(0)
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + employeeId, {
+               const response = await fetch('https://c-back.onrender.com/api/employee/' + employeeId, {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -1450,7 +1450,7 @@ const Payroll = (props) => {
                               name: new_name,
                               year: db_year
                          }
-                         const response = await fetch('https://coop-back-zqr6.onrender.com/api/payslip', {
+                         const response = await fetch('https://c-back.onrender.com/api/payslip', {
                               method: 'POST',
                               body: JSON.stringify(payslip),
                               headers: {
@@ -1491,7 +1491,7 @@ const Payroll = (props) => {
                               errorToast('Finalize this payroll first before saving')
                          }
                          else {
-                              const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/${employeeId}`, {
+                              const response = await fetch(`https://c-back.onrender.com/api/payslip/${employeeId}`, {
                                    method: 'PATCH',
                                    body: JSON.stringify(payslip),
                                    headers: {
@@ -1542,7 +1542,7 @@ const Payroll = (props) => {
                const approved = {
                     approval_status: 'APPROVED', // Update to 'PENDING'
                };
-               const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/${transaction.employee_id}`, {
+               const response = await fetch(`https://c-back.onrender.com/api/payslip/${transaction.employee_id}`, {
                     method: 'PATCH',
                     body: JSON.stringify(approved),
                     headers: {
@@ -1564,7 +1564,7 @@ const Payroll = (props) => {
                approval_status: 'REJECTED', // Update to 'PENDING'
           };
 
-          const response = await fetch(`https://coop-back-zqr6.onrender.com/api/payslip/${transaction.employee_id}`, {
+          const response = await fetch(`https://c-back.onrender.com/api/payslip/${transaction.employee_id}`, {
                method: 'PATCH',
                body: JSON.stringify(rejected),
                headers: {

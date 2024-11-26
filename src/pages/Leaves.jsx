@@ -173,7 +173,7 @@ const Leaves = (props) => {
                //console.log('You must be logged in first')
               return
           }
-          const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves/' + id, {
+          const response = await fetch('https://c-back.onrender.com/api/leaves/' + id, {
                method: 'PATCH',
                body: JSON.stringify(leaves),
                headers: {
@@ -200,7 +200,7 @@ const Leaves = (props) => {
      const [leaves, setLeaves] = useState([])
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves', {
+               const response = await fetch('https://c-back.onrender.com/api/leaves', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

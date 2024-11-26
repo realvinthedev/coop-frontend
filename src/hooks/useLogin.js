@@ -12,7 +12,7 @@ export const useLogin = () => {
           setIsLoading(true)
           setError(null)
 
-          const response = await fetch('https://coop-back-zqr6.onrender.com/api/credentials/login', {
+          const response = await fetch('https://c-back.onrender.com/api/credentials/login', {
                method: 'POST',
                headers: {
                     'Content-Type': 'application/json'

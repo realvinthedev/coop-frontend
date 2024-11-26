@@ -302,7 +302,7 @@ const Employees = (props) => {
      const [dept, setDept] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/departments', {
+               const response = await fetch('https://c-back.onrender.com/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -421,7 +421,7 @@ const Employees = (props) => {
                     //console.log('You must be logged in first')
                     return
                }
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
+               const response = await fetch('https://c-back.onrender.com/api/employee', {
                     method: 'POST',
                     body: JSON.stringify(employees),
                     headers: {
@@ -437,7 +437,7 @@ const Employees = (props) => {
                     middlename: middlename,
                     lastname: lastname,
                }
-               const res = await fetch('https://coop-back-zqr6.onrender.com/api/member/', {
+               const res = await fetch('https://c-back.onrender.com/api/member/', {
                     method: 'POST',
                     body: JSON.stringify(member),
                     headers: {
@@ -511,7 +511,7 @@ const Employees = (props) => {
                middlename: middlename,
                lastname: lastname,
           }
-          const response = await fetch('https://coop-back-zqr6.onrender.com/api/member/', {
+          const response = await fetch('https://c-back.onrender.com/api/member/', {
                method: 'POST',
                body: JSON.stringify(member),
                headers: {
@@ -595,7 +595,7 @@ const Employees = (props) => {
                     //console.log('You must be logged in first')
                     return
                }
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
+               const response = await fetch('https://c-back.onrender.com/api/employee/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(employees),
                     headers: {
@@ -658,7 +658,7 @@ const Employees = (props) => {
                //console.log('You must be logged in first')
                return
           }
-          const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
+          const response = await fetch('https://c-back.onrender.com/api/employee/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -675,7 +675,7 @@ const Employees = (props) => {
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
+               const response = await fetch('https://c-back.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

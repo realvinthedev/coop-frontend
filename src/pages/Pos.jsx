@@ -203,7 +203,7 @@ const Pos = (props) => {
      const [customers, setcustomers] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/customer', {
+               const response = await fetch('https://c-back.onrender.com/api/customer', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -223,7 +223,7 @@ const Pos = (props) => {
 
      useEffect(() => {
           const fetchCustomer = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/credit', {
+               const response = await fetch('https://c-back.onrender.com/api/credit', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -264,7 +264,7 @@ const Pos = (props) => {
 
      useEffect(() => {
           const fetchDrawerStatus = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/drawer/', {
+               const response = await fetch('https://c-back.onrender.com/api/drawer/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -295,7 +295,7 @@ const Pos = (props) => {
 
      useEffect(() => {
           const fetchProduct = async () => {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/product', {
+               const response = await fetch('https://c-back.onrender.com/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -571,7 +571,7 @@ const Pos = (props) => {
                const product = {
                     product_stock: arr[i].stock - arr[i].product_quantity
                }
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/' + arr[i].id, {
+               const response = await fetch('https://c-back.onrender.com/api/product/' + arr[i].id, {
                     method: 'PATCH',
                     body: JSON.stringify(product),
                     headers: {
@@ -618,7 +618,7 @@ const Pos = (props) => {
                }
                else {
 
-                    const response = await fetch('https://coop-back-zqr6.onrender.com/api/pos/', {
+                    const response = await fetch('https://c-back.onrender.com/api/pos/', {
                          method: 'POST',
                          body: JSON.stringify(pos),
                          headers: {
@@ -683,7 +683,7 @@ const Pos = (props) => {
                }, 4000);
           }
           else {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/', {
+               const response = await fetch('https://c-back.onrender.com/api/product/', {
                     method: 'POST',
                     body: JSON.stringify(product),
                     headers: {
@@ -739,7 +739,7 @@ const Pos = (props) => {
                }, 4000);
           }
           else {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/' + id, {
+               const response = await fetch('https://c-back.onrender.com/api/product/' + id, {
                     method: 'PATCH',
                     body: JSON.stringify(product),
                     headers: {
@@ -953,7 +953,7 @@ const Pos = (props) => {
                //console.log('You must be logged in first')
                return
           } else {
-               const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/' + id, {
+               const response = await fetch('https://c-back.onrender.com/api/product/' + id, {
                     method: 'DELETE',
                     body: JSON.stringify(product),
                     headers: {
