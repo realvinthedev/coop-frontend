@@ -173,7 +173,7 @@ const Salaries = (props) => {
           }
 
           if(!user){
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
               return
           }
           const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
@@ -190,7 +190,7 @@ const Salaries = (props) => {
           }
           else {
                //SHOW ALERT HERE (OPEN ALERT)
-               console.log('Edited Department', json)
+               //console.log('Edited Department', json)
                window.location.reload();
           }
 

@@ -197,7 +197,7 @@ const Pos = (props) => {
           });
           settotal(product_total);
           setamoundue(product_total)
-          console.log(total)
+          //console.log(total)
      }, [gridTrigger]);
 
      const [customers, setcustomers] = useState([])
@@ -253,7 +253,7 @@ const Pos = (props) => {
                product_cost_total += item.product_cost_price
           });
           setcosttotal(product_cost_total);
-          console.log(costtotal)
+          //console.log(costtotal)
      }, [gridTrigger]);
 
      // Fetch drawer status
@@ -325,7 +325,7 @@ const Pos = (props) => {
      const handleRowClickReceipt = (params) => {
           setprms(params)
           // setId(params.row.id)
-          // console.log(id)
+          // //console.log(id)
      };
 
      const handleRemoveItem = () => {
@@ -337,7 +337,7 @@ const Pos = (props) => {
 
 
      const handlechecker = () => {
-          console.log(allCredits)
+          //console.log(allCredits)
      }
 
      const handleNewTransaction = () => {
@@ -481,7 +481,7 @@ const Pos = (props) => {
                setArr([...arr, newObject]);
                setGridTrigger(!gridTrigger)
           }
-          console.log('**********************', arr)
+          //console.log('**********************', arr)
      };
 
 
@@ -562,7 +562,7 @@ const Pos = (props) => {
      };
      const handleRowClick2 = (params) => {
           setId(params.row._id);
-          console.log(id)
+          //console.log(id)
 
      };
      const handleUpdateStocks = async (e) => {
@@ -608,7 +608,7 @@ const Pos = (props) => {
 
                }
                if (!user) {
-                    console.log('You must be logged in first')
+                    //console.log('You must be logged in first')
                     return
                }
                if (
@@ -666,7 +666,7 @@ const Pos = (props) => {
 
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -722,7 +722,7 @@ const Pos = (props) => {
                product_stock: product_stock
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -950,7 +950,7 @@ const Pos = (props) => {
      const handleDelete = async (e) => {
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           } else {
                const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/' + id, {

@@ -430,7 +430,7 @@ const Customer = (props) => {
    
      //!important
      // if (!user) {
-     //      console.log('You must be logged in first')
+     //      //console.log('You must be logged in first')
      //      window.location.replace('http://localhost:3000/login');
      //      return
 
@@ -512,7 +512,7 @@ const Customer = (props) => {
      //                }
      //           })
      //           const json = await response.json()
-     //           console.log(json, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+     //           //console.log(json, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
      //           if (response.ok) {
      //                setcustomer(json)
      //           }

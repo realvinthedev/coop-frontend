@@ -159,7 +159,7 @@ const Credentials = (props) => {
           }
 
           if(!user){
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
               return
           }
           const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {

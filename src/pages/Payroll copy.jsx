@@ -199,7 +199,7 @@ const Payroll = (props) => {
      const [month2, setmonth2] = useState('January');
      const handleMonthChange2 = (e) => {
           setmonth2(e.target.value)
-          console.log(filtered_employee_dtr)
+          //console.log(filtered_employee_dtr)
 
      }
      const handleMonthChange = (e) => {
@@ -581,7 +581,7 @@ const Payroll = (props) => {
                          return month == month && period == period && empid == employeeId
                     });
                     setArr(filteredData)
-                    console.log(filteredData)
+                    //console.log(filteredData)
                }
           }
           if (user) {
@@ -670,7 +670,7 @@ const Payroll = (props) => {
           }
           if (user) {
                fetchEmp();
-               console.log(filtered_additional)
+               //console.log(filtered_additional)
           }
 
           // }, [employeeId, start_date, end_date, period, name])
@@ -1217,7 +1217,7 @@ const Payroll = (props) => {
 
 
 
-          console.log(total_pay_absence, "total_pay_absence")
+          //console.log(total_pay_absence, "total_pay_absence")
           //NEW Earnings
           let new_allowance = filtered_additional && filtered_additional[0]?.allowance
           let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
@@ -1273,13 +1273,13 @@ const Payroll = (props) => {
 
 
 
-          //      console.log(additional_earnings, "additional_earnings")
-          //      console.log(additional_deductions, "additional_deductions")
-          //      console.log(deductions, "deductions")
-          //      console.log(total_pay_first_eight_legal_percentage, "earnings")
-          //      console.log(gross, "gross")
-          //      console.log(final_gross, "final_gross")
-          //      console.log(net, "net")
+          //      //console.log(additional_earnings, "additional_earnings")
+          //      //console.log(additional_deductions, "additional_deductions")
+          //      //console.log(deductions, "deductions")
+          //      //console.log(total_pay_first_eight_legal_percentage, "earnings")
+          //      //console.log(gross, "gross")
+          //      //console.log(final_gross, "final_gross")
+          //      //console.log(net, "net")
           // 
 
 
@@ -1335,7 +1335,7 @@ const Payroll = (props) => {
                const isDuplicate = arr.find(item => item.employee_id === employeeId);
                if (!isDuplicate) {
                     if (!user) {
-                         console.log('You must be logged in first')
+                         //console.log('You must be logged in first')
                          return
                     }
                     else {
@@ -1374,7 +1374,7 @@ const Payroll = (props) => {
 
                     }
                     if (!user) {
-                         console.log('You must be logged in first')
+                         //console.log('You must be logged in first')
                          return
                     }
                     if (

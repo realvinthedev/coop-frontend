@@ -201,7 +201,6 @@ const Payroll = (props) => {
      const [month2, setmonth2] = useState('January');
      const handleMonthChange2 = (e) => {
           setmonth2(e.target.value)
-          console.log(filtered_employee_dtr)
 
      }
      const handleMonthChange = (e) => {
@@ -576,13 +575,20 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
-                    console.log('88888888888888888888888888888888888888888888888')
+
                     const filteredData = json.filter(item => {
-                         const date = item.date
-                         return date >= start_date && date <= end_date
+                         const date = new Date(item.date); // Convert item.date to Date object
+                         const start = new Date(start_date); // Convert start_date to Date object
+                         const end = new Date(end_date); // Convert end_date to Date object
+
+                         return date >= start && date <= end;
+                         // const date = item.date
+                         // return date >= start_date && date <= end_date
 
                     });
                     setFiltered_employee_dtr(filteredData)
+                    console.log("A", filteredData)
+
                     // setEmployee_dtr(json)
 
                }
@@ -603,7 +609,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
-                    console.log('77777777777777777777777777777777777777777777777777')
+                    ////console.log('77777777777777777777777777777777777777777777777777')
                     const filteredData = json.filter(item => {
                          const month = item.month
                          const year = item.year
@@ -612,13 +618,13 @@ const Payroll = (props) => {
                          return month == month && period == period && empid == employeeId && year == year
                     });
                     setArr(filteredData)
-                    console.log(filteredData)
+                    //////console.log(filteredData)
                }
           }
           if (user) {
                fetchEmp();
           }
-          console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', arr)
+          ////console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', arr)
      }, [randomNum])
 
      const [summ, setSumm] = useState([])
@@ -631,13 +637,13 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
-                    console.log('6666666666666666666666666666666666')
+                    ////console.log('6666666666666666666666666666666666')
                     const filteredData = json.filter(item => {
                          const month = item.month;
                          const year = item.year;
                          const period = item.period;
 
-                         console.log('Debugging:', { month, period, year, month2, period2, year2 });
+                         ////console.log('Debugging:', { month, period, year, month2, period2, year2 });
 
                          // Check if "year" is defined before comparing
                          if (year !== undefined && year !== null) {
@@ -652,7 +658,7 @@ const Payroll = (props) => {
                     //ytd - create another if else here and return only whole year. then once get, filter it again 
 
                     setSumm(filteredData);
-                    console.log('@', filteredData);
+                    ////console.log('@', filteredData);
                }
           }
           if (user) {
@@ -674,7 +680,6 @@ const Payroll = (props) => {
                });
                const json = await response.json();
                if (response.ok) {
-                    console.log('555555555555555555555555555555555555555555555')
                     // Get the current year
                     const currentYear = new Date().getFullYear();
                     // Get the current employee ID, replace 'current_emp_id' with the actual value
@@ -707,7 +712,7 @@ const Payroll = (props) => {
                })
                const json = await response.json()
                if (response.ok) {
-                    console.log('4444444444444444444444444444444444')
+
                     const filteredData = json.filter(item => {
                          const date = item.date
                          return date >= start_date2 && date <= end_date2
@@ -741,11 +746,15 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    console.log('33333333333333333333333333333333333333')
+
                     const filteredData = json.filter(item => {
-                         const date = item.date_covered
+                         // const date = item.date_covered
                          if (employeeId !== "") {
-                              return date >= start_date && date <= end_date
+                              const date = new Date(item.date_covered); // Convert item.date to Date object
+                              const start = new Date(start_date); // Convert start_date to Date object
+                              const end = new Date(end_date); // Convert end_date to Date object
+
+                              return date >= start && date <= end;
                          }
 
                     });
@@ -754,11 +763,11 @@ const Payroll = (props) => {
           }
           if (user) {
                fetchEmp();
-               console.log(filtered_additional)
+               ////console.log(filtered_additional)
           }
 
           // }, [employeeId, start_date, end_date, period, name])
-     }, [employeeId, start_date, end_date])
+     }, [employeeId, start_date, end_date, period])
 
 
 
@@ -774,11 +783,8 @@ const Payroll = (props) => {
                     }
                })
                const json = await response.json()
-
                if (response.ok) {
-                    console.log('222222222222222222222222222222222222')
                     setEmp(json)
-
                }
           }
           if (user) {
@@ -877,7 +883,6 @@ const Payroll = (props) => {
                const json = await response.json()
 
                if (response.ok) {
-                    console.log('11111111111111111111111111111111')
                     setdefault_base(json.base_salary ? json.base_salary : 0)
                     setdefault_bimonthly(json.bimonthly_salary ? json.bimonthly_salary : 0)
                     setdefault_daily(json.daily_salary ? json.daily_salary : 0)
@@ -1312,7 +1317,7 @@ const Payroll = (props) => {
 
 
 
-          console.log(total_pay_absence, "total_pay_absence")
+          ////console.log(total_pay_absence, "total_pay_absence")
           //NEW Earnings
           let new_allowance = filtered_additional && filtered_additional[0]?.allowance
           let new_pay_adj = filtered_additional && filtered_additional[0]?.pay_adjustment_earnings
@@ -1368,13 +1373,13 @@ const Payroll = (props) => {
 
 
 
-          //      console.log(additional_earnings, "additional_earnings")
-          //      console.log(additional_deductions, "additional_deductions")
-          //      console.log(deductions, "deductions")
-          //      console.log(total_pay_first_eight_legal_percentage, "earnings")
-          //      console.log(gross, "gross")
-          //      console.log(final_gross, "final_gross")
-          //      console.log(net, "net")
+          //      ////console.log(additional_earnings, "additional_earnings")
+          //      ////console.log(additional_deductions, "additional_deductions")
+          //      ////console.log(deductions, "deductions")
+          //      ////console.log(total_pay_first_eight_legal_percentage, "earnings")
+          //      ////console.log(gross, "gross")
+          //      ////console.log(final_gross, "final_gross")
+          //      ////console.log(net, "net")
           // 
 
 
@@ -1431,7 +1436,7 @@ const Payroll = (props) => {
                const isDuplicate = arr.find(item => item.employee_id === employeeId);
                if (!isDuplicate) {
                     if (!user) {
-                         console.log('You must be logged in first')
+                         ////console.log('You must be logged in first')
                          return
                     }
                     else {
@@ -1477,7 +1482,7 @@ const Payroll = (props) => {
 
                          }
                          if (!user) {
-                              console.log('You must be logged in first')
+                              ////console.log('You must be logged in first')
                               return
                          }
                          if (

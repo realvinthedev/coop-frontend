@@ -170,7 +170,7 @@ const Leaves = (props) => {
                //search for this employee and minus its leaves.
           }
           if(!user){
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
               return
           }
           const response = await fetch('https://coop-back-zqr6.onrender.com/api/leaves/' + id, {

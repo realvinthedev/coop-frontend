@@ -181,7 +181,7 @@ const MemberIndividual = (props) => {
                     fetchSavings();
                }
           }
-          console.log(savings)
+          //console.log(savings)
      }, [user, refresher])
 
      useEffect(() => {

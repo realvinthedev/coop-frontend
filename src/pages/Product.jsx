@@ -206,7 +206,7 @@ const Product = (props) => {
 
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -257,7 +257,7 @@ const Product = (props) => {
                product_stock: product_stock
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -299,7 +299,7 @@ const Product = (props) => {
      const handleDelete = async (e) => {
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           } else {
                const response = await fetch('https://coop-back-zqr6.onrender.com/api/product/' + id, {

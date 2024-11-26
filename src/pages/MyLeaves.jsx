@@ -165,9 +165,9 @@ const MyLeaves = (props) => {
           e.preventDefault()
 
 
-          console.log(reqBody)
+          //console.log(reqBody)
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           const leaves = {
@@ -203,7 +203,7 @@ const MyLeaves = (props) => {
           let heresthebody = {}
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
 
@@ -234,7 +234,7 @@ const MyLeaves = (props) => {
           else {
 
           }
-          console.log(sick, vacation, emergency)
+          //console.log(sick, vacation, emergency)
 
      }
      const [leaveHistory, setLeaveHistory] = useState([])
@@ -264,7 +264,7 @@ const MyLeaves = (props) => {
           else {
                return
           }
-          console.log(random)
+          //console.log(random)
      }, [random])
 
      useEffect(() => {

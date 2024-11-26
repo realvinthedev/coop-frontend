@@ -2023,7 +2023,7 @@ const Dtr = (props) => {
           })
           const json = await response.json()
           if (response.ok) {
-               console.log('deleted', json)
+               //console.log('deleted', json)
           }
           handleCloseDelete();
           successToast('Deleted Successfully')
@@ -2075,7 +2075,7 @@ const Dtr = (props) => {
           }
           else {
                if (!user) {
-                    console.log('You must be logged in first')
+                    //console.log('You must be logged in first')
                     return
                }
                else {
@@ -2127,10 +2127,10 @@ const Dtr = (props) => {
                     const json = await response.json()
                     if (!response.ok) {
                          setError(json.error)
-                         console.log(json)
+                         //console.log(json)
                     }
                     else {
-                         console.log(error)
+                         //console.log(error)
                     }
                     successToast('Added Successfully')
                     setdisabled_day_type(false)
@@ -2372,7 +2372,7 @@ const Dtr = (props) => {
 
           e.preventDefault()
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           const additional = {
@@ -2409,11 +2409,11 @@ const Dtr = (props) => {
           const json = await response.json()
           if (!response.ok) {
                setError(json.error)
-               console.log(json.error)
-               console.log(error)
+               //console.log(json.error)
+               //console.log(error)
           }
           else {
-               console.log(error)
+               //console.log(error)
           }
           //window.location.reload();
      }

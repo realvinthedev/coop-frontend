@@ -537,7 +537,7 @@ const Member = (props) => {
      //                     setindividual_currentadd(filteredData.address)
 
 
-     //                     console.log(individual_firstname, "individual")
+     //                     //console.log(individual_firstname, "individual")
      //                } else {
      //                     // If user.username starts with "hhhc.", set the entire JSON response as members
      //                     setMembers(json);
@@ -551,11 +551,11 @@ const Member = (props) => {
 
 
      useEffect(() => {
-          console.log(individual_firstname, "individual_firstname");
-          console.log(individual_lastname, "individual_lastname");
-          console.log(individual_tin, "individual_tin");
-          console.log(individual_contact, "individual_contact");
-          console.log(individual_currentadd, "individual_currentadd");
+          //console.log(individual_firstname, "individual_firstname");
+          //console.log(individual_lastname, "individual_lastname");
+          //console.log(individual_tin, "individual_tin");
+          //console.log(individual_contact, "individual_contact");
+          //console.log(individual_currentadd, "individual_currentadd");
      }, [individual_firstname, individual_lastname, individual_tin, individual_contact, individual_currentadd]);
 
      useEffect(() => {
@@ -617,7 +617,7 @@ const Member = (props) => {
                const json = await response.json()
                if (response.ok) {
                     setsavings(json)
-                    console.log("!!!!!!!!!!!!!!!!!!!!!", json)
+                    //console.log("!!!!!!!!!!!!!!!!!!!!!", json)
                     const share_balance = json.reduce((acc, entry) => acc + entry.share_capital_credit, 0);
                     const share_less = json.reduce((acc, entry) => acc + entry.share_capital_debit, 0);
                     setshare_capital_balance(parseFloat(share_balance) - parseFloat(share_less))
@@ -1351,7 +1351,7 @@ const Member = (props) => {
           }
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -1479,7 +1479,7 @@ const Member = (props) => {
                passbook_printed: passbook_printed,
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -1559,7 +1559,7 @@ const Member = (props) => {
      const handleDelete = async (e) => {
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           } else {
                const response = await fetch('https://coop-back-zqr6.onrender.com/api/member/' + id, {
@@ -1636,7 +1636,7 @@ const Member = (props) => {
 
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -1672,7 +1672,7 @@ const Member = (props) => {
      const handleDeleteSavings = async (e) => {
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           } else {
 
@@ -1747,7 +1747,7 @@ const Member = (props) => {
 
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -1910,7 +1910,7 @@ const Member = (props) => {
                await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
                // Check the names of the worksheets in the workbook
-               console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+               //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
                // Attempt to get the worksheet; make sure the name is correct
                const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
@@ -1967,11 +1967,11 @@ const Member = (props) => {
                     );
 
                // Log filtered body data to confirm it's correct
-               console.log('Filtered body data:', filteredBody);
+               //console.log('Filtered body data:', filteredBody);
 
                // Add new data to the worksheet
                filteredBody.forEach((data, index) => {
-                    console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+                    //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
                     const newRow = worksheet.addRow(data);
 
                     // Set the font style for the new row
@@ -1983,10 +1983,10 @@ const Member = (props) => {
 
                // Save the modified workbook as a Blob
                const buffer = await workbook.xlsx.writeBuffer();
-               console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+               //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
 
                const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-               console.log('Saving file:', newBlob); // Log the Blob before download
+               //console.log('Saving file:', newBlob); // Log the Blob before download
                saveAs(newBlob, 'share_capital.xlsx'); // Trigger file download
           } catch (error) {
                console.error('Error in processing the Excel download:', error);
@@ -2119,7 +2119,7 @@ const Member = (props) => {
                await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
                // Check the names of the worksheets in the workbook
-               console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+               //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
                // Attempt to get the worksheet; make sure the name is correct
                const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
@@ -2176,11 +2176,11 @@ const Member = (props) => {
                     );
 
                // Log filtered body data to confirm it's correct
-               console.log('Filtered body data:', filteredBody);
+               //console.log('Filtered body data:', filteredBody);
 
                // Add new data to the worksheet
                filteredBody.forEach((data, index) => {
-                    console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+                    //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
                     const newRow = worksheet.addRow(data);
 
                     // Set the font style for the new row
@@ -2192,10 +2192,10 @@ const Member = (props) => {
 
                // Save the modified workbook as a Blob
                const buffer = await workbook.xlsx.writeBuffer();
-               console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+               //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
 
                const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-               console.log('Saving file:', newBlob); // Log the Blob before download
+               //console.log('Saving file:', newBlob); // Log the Blob before download
                saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
           } catch (error) {
                console.error('Error in processing the Excel download:', error);
@@ -2245,7 +2245,7 @@ const Member = (props) => {
      //           await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
      //           // Check the names of the worksheets in the workbook
-     //           console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+     //           //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
      //           // Attempt to get the worksheet; make sure the name is correct
      //           const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
@@ -2301,11 +2301,11 @@ const Member = (props) => {
      //                );
 
      //           // Log filtered body data to confirm it's correct
-     //           console.log('Filtered body data:', filteredBody);
+     //           //console.log('Filtered body data:', filteredBody);
 
      //           // Add new data to the worksheet
      //           filteredBody.forEach((data, index) => {
-     //                console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+     //                //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
      //                const newRow = worksheet.addRow(data);
 
      //                // Set the font style for the new row
@@ -2317,10 +2317,10 @@ const Member = (props) => {
 
      //           // Save the modified workbook as a Blob
      //           const buffer = await workbook.xlsx.writeBuffer();
-     //           console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+     //           //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
 
      //           const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-     //           console.log('Saving file:', newBlob); // Log the Blob before download
+     //           //console.log('Saving file:', newBlob); // Log the Blob before download
      //           saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
      //      } catch (error) {
      //           console.error('Error in processing the Excel download:', error);
@@ -2358,7 +2358,7 @@ const Member = (props) => {
      //           await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
      //           // Check the names of the worksheets in the workbook
-     //           console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+     //           //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
      //           // Attempt to get the worksheet; make sure the name is correct
      //           const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
@@ -2409,11 +2409,11 @@ const Member = (props) => {
      //                );
 
      //           // Log filtered body data to confirm it's correct
-     //           console.log('Filtered body data:', filteredBody);
+     //           //console.log('Filtered body data:', filteredBody);
 
      //           // Add new data to the worksheet
      //           filteredBody.forEach((data, index) => {
-     //                console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+     //                //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
      //                const newRow = worksheet.addRow(data);
 
      //                // Set the font style for the new row
@@ -2425,10 +2425,10 @@ const Member = (props) => {
 
      //           // Save the modified workbook as a Blob
      //           const buffer = await workbook.xlsx.writeBuffer();
-     //           console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+     //           //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
 
      //           const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-     //           console.log('Saving file:', newBlob); // Log the Blob before download
+     //           //console.log('Saving file:', newBlob); // Log the Blob before download
      //           saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
      //      } catch (error) {
      //           console.error('Error in processing the Excel download:', error);
@@ -2568,7 +2568,7 @@ const Member = (props) => {
                                                                       style={{ marginRight: "10px" }}
                                                                       onChange={(e) => {
                                                                            setQuery(e.target.value);
-                                                                           console.log('query:', e.target.value); // add this line
+                                                                           //console.log('query:', e.target.value); // add this line
                                                                       }}
 
                                                                       value={query}

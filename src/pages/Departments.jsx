@@ -168,7 +168,7 @@ const Departments = (props) => {
           }
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -216,7 +216,7 @@ const Departments = (props) => {
                other_info: otherinfo
           }
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           if (
@@ -281,10 +281,10 @@ const Departments = (props) => {
           setDepartment_name(params.row.department_name)
           setDescription(params.row.description)
 
-          console.log(otherinfo)
+          //console.log(otherinfo)
      };
      if (!user) {
-          console.log('You must be logged in first')
+          //console.log('You must be logged in first')
           window.location.replace('http://localhost:3000/login');
           return
 
@@ -298,7 +298,7 @@ const Departments = (props) => {
           })
           const json = await response.json()
           if (response.ok) {
-               console.log('deleted', json)
+               //console.log('deleted', json)
                successToast('Deleted Successfully')
                setOpenDelete(false)
                handleRefresher();
@@ -353,7 +353,7 @@ const Departments = (props) => {
                                                             Delete
                                                        </Button>
                                                   </ThemeProvider>
-                                                  {console.log(department_name + " " + description)}
+                                                 
                                              </EditDeleteContainer>
                                         </ButtonContainer>
                                         <Dialog

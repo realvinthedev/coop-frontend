@@ -418,7 +418,7 @@ const Employees = (props) => {
           else {
                handleOffError()
                if (!user) {
-                    console.log('You must be logged in first')
+                    //console.log('You must be logged in first')
                     return
                }
                const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee', {
@@ -592,7 +592,7 @@ const Employees = (props) => {
           else {
 
                if (!user) {
-                    console.log('You must be logged in first')
+                    //console.log('You must be logged in first')
                     return
                }
                const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
@@ -655,7 +655,7 @@ const Employees = (props) => {
      /**DELETE */
      const handleDelete = async () => {
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
           const response = await fetch('https://coop-back-zqr6.onrender.com/api/employee/' + id, {
@@ -666,7 +666,7 @@ const Employees = (props) => {
           })
           const json = await response.json()
           if (response.ok) {
-               console.log('deleted', json)
+               //console.log('deleted', json)
           }
           successToast('Deleted Successfully')
           handleRefresher();
@@ -742,7 +742,7 @@ const Employees = (props) => {
           setlegal_first_eight_ot(params.row.legal_first_eight_ot)
 
 
-          console.log(is_active)
+          //console.log(is_active)
 
      };
      const handleGoToSavings = () => {

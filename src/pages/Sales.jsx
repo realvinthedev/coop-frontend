@@ -274,7 +274,7 @@ const Sales = (props) => {
      }, [user])
 
      const logger = () => {
-          console.log("****************", sales)
+          //console.log("****************", sales)
      }
 
      const [monthlysales, setmonthlysales] = useState([])

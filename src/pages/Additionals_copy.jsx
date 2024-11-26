@@ -278,10 +278,10 @@ const Additionals = (props) => {
           setName(name)
           const firstWord = name.split(" ")[0];
           setEmployeeId(firstWord)
-          console.log(name)
-          console.log(sss)
-          console.log(total_deduction)
-          console.log(total_earnings)
+          //console.log(name)
+          //console.log(sss)
+          //console.log(total_deduction)
+          //console.log(total_earnings)
 
      }
 
@@ -722,11 +722,11 @@ const Additionals = (props) => {
                     const json = await response.json()
                     if (!response.ok) {
                          setError(json.error)
-                         console.log(json.error)
-                         console.log(error)
+                         //console.log(json.error)
+                         //console.log(error)
                     }
                     else {
-                         console.log(error)
+                         //console.log(error)
                     }
                     successToast('Added Successfully')
                     handleCloseAddAdditionals();
@@ -750,7 +750,7 @@ const Additionals = (props) => {
           })
           const json = await response.json()
           if (response.ok) {
-               console.log('deleted', json)
+               //console.log('deleted', json)
           }
           successToast('Deleted Successfully')
           handleCloseDelete()

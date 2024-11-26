@@ -311,7 +311,7 @@ const Reports = (props) => {
           }
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
 
@@ -354,7 +354,7 @@ const Reports = (props) => {
      //      }
 
      //      if (!user) {
-     //           console.log('You must be logged in first')
+     //           //console.log('You must be logged in first')
      //           return
      //      }
 
@@ -392,7 +392,7 @@ const Reports = (props) => {
           }
 
           if (!user) {
-               console.log('You must be logged in first')
+               //console.log('You must be logged in first')
                return
           }
 
