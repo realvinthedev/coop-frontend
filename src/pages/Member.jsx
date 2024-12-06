@@ -1884,8 +1884,8 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.8 }, // Width for 'date'
-               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 12.4 }, // Width for 'date'
+               { width: 14.7 }, // Width for 'share_capital_debit'
                { width: 13 }, // Width for 'share_capital_credit'
                { width: 16 }, // Width for 'coop_savings_debit'
                { width: 13 }, // Width for 'coop_savings_credit'
@@ -1977,7 +1977,7 @@ const Member = (props) => {
                     // Set the font style for the new row
                     newRow.font = {
                          name: 'Calibri',
-                         size: 8
+                         size: 7
                     };
                });
 
@@ -2093,8 +2093,8 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.8 }, // Width for 'date'
-               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 12.4 }, // Width for 'date'
+               { width: 14.7 }, // Width for 'share_capital_debit'
                { width: 13 }, // Width for 'share_capital_credit'
                { width: 16 }, // Width for 'coop_savings_debit'
                { width: 13 }, // Width for 'coop_savings_credit'
@@ -2186,7 +2186,7 @@ const Member = (props) => {
                     // Set the font style for the new row
                     newRow.font = {
                          name: 'Calibri',
-                         size: 8
+                         size: 7
                     };
                });
 
