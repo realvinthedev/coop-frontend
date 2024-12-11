@@ -134,7 +134,7 @@ const ButtonContainer = styled.div`
 `
 const SearchContainer = styled.div`
      display: flex;
-     padding-bottom: 30px; 
+     padding-bottom: 30px;
 `
 
 const Cards = styled.div`
@@ -143,8 +143,8 @@ const Cards = styled.div`
     display: flex;
     padding: 30px;
     justify-content: left;
-    
-   
+
+
 `
 const Cardslist = styled.div`
     height: 80px;
@@ -160,7 +160,7 @@ const CardContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
 `
 
 /**GET REQUESTS */
@@ -1585,7 +1585,7 @@ const Member = (props) => {
 
      const handleAddSavings = async (e) => {
           e.preventDefault()
-          //total balance(already calculated) 
+          //total balance(already calculated)
           const totalshare_capital_balance = share_capital_balance + parseFloat(share_capital_credit) - parseFloat(share_capital_debit)
           const totalcoop_savings_balance = coop_savings_balance + parseFloat(coop_savings_credit) - parseFloat(coop_savings_debit)
           const totalspecial_savings_balance = special_savings_balance + parseFloat(special_savings_credit) - parseFloat(special_savings_debit)
@@ -1884,12 +1884,12 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.4 }, // Width for 'date'
-               { width: 14.7 }, // Width for 'share_capital_debit'
-               { width: 13 }, // Width for 'share_capital_credit'
-               { width: 16 }, // Width for 'coop_savings_debit'
-               { width: 13 }, // Width for 'coop_savings_credit'
-               { width: 14 }, // Width for 'coop_savings_balance'
+               { width: 12.9 }, // Width for 'date'
+               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 13.6 }, // Width for 'share_capital_credit'
+               { width: 16.3 }, // Width for 'coop_savings_debit'
+               { width: 13.4 }, // Width for 'coop_savings_credit'
+               { width: 14.8 }, // Width for 'coop_savings_balance'
                { width: 21.33 }  // Width for 'reference_document'
           ];
 
@@ -2093,13 +2093,22 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.4 }, // Width for 'date'
-               { width: 14.7 }, // Width for 'share_capital_debit'
-               { width: 13 }, // Width for 'share_capital_credit'
-               { width: 16 }, // Width for 'coop_savings_debit'
-               { width: 13 }, // Width for 'coop_savings_credit'
-               { width: 14 }, // Width for 'coop_savings_balance'
+               { width: 12.9 }, // Width for 'date'
+               { width: 15 }, // Width for 'share_capital_debit'
+               { width: 13.6 }, // Width for 'share_capital_credit'
+               { width: 16.3 }, // Width for 'coop_savings_debit'
+               { width: 13.4 }, // Width for 'coop_savings_credit'
+               { width: 14.8 }, // Width for 'coop_savings_balance'
                { width: 21.33 }  // Width for 'reference_document'
+
+               //BRING THIS BACK ONCE LAGPAS
+               // { width: 12.4 }, // Width for 'date'
+               // { width: 14.7 }, // Width for 'share_capital_debit'
+               // { width: 13 }, // Width for 'share_capital_credit'
+               // { width: 16 }, // Width for 'coop_savings_debit'
+               // { width: 13 }, // Width for 'coop_savings_credit'
+               // { width: 14 }, // Width for 'coop_savings_balance'
+               // { width: 21.33 }  // Width for 'reference_document'
           ];
 
           try {
@@ -2465,7 +2474,7 @@ const Member = (props) => {
                                                        {user.username.substring(0, 5) === "hhhc." && (
                                                             <Tab label="Details" value="3" onClick={handleGoToDetails} disabled />
                                                        )}
-                                                       {/*                                                        
+                                                       {/*
                                                        <Tab label="Masterlist" value="1"  />
                                                        <Tab label="Savings" value="2" onClick={handleGoToSavings} disabled />
                                                        <Tab label="Details" value="3" onClick={handleGoToDetails} disabled /> */}
