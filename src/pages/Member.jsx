@@ -1884,13 +1884,13 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.9 }, // Width for 'date'
+               { width: 15.5 }, // Width for 'date'
                { width: 15 }, // Width for 'share_capital_debit'
-               { width: 13.6 }, // Width for 'share_capital_credit'
+               { width: 15.6 }, // Width for 'share_capital_credit'
                { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 13.4 }, // Width for 'coop_savings_credit'
-               { width: 14.8 }, // Width for 'coop_savings_balance'
-               { width: 21.33 }  // Width for 'reference_document'
+               { width: 14.5 }, // Width for 'coop_savings_credit'
+               { width: 15 }, // Width for 'coop_savings_balance'
+               { width: 18.5 }  // Width for 'reference_document'
           ];
 
           try {
@@ -2093,13 +2093,13 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-               { width: 12.9 }, // Width for 'date'
+               { width: 15.5 }, // Width for 'date'
                { width: 15 }, // Width for 'share_capital_debit'
-               { width: 13.6 }, // Width for 'share_capital_credit'
+               { width: 15.6 }, // Width for 'share_capital_credit'
                { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 13.4 }, // Width for 'coop_savings_credit'
-               { width: 14.8 }, // Width for 'coop_savings_balance'
-               { width: 21.33 }  // Width for 'reference_document'
+               { width: 14.5 }, // Width for 'coop_savings_credit'
+               { width: 15 }, // Width for 'coop_savings_balance'
+               { width: 18.5 }  // Width for 'reference_document'
 
                //BRING THIS BACK ONCE LAGPAS
                // { width: 12.4 }, // Width for 'date'
