@@ -1888,7 +1888,7 @@ const Member = (props) => {
                { width: 15 }, // Width for 'share_capital_debit'
                { width: 15.6 }, // Width for 'share_capital_credit'
                { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 14.5 }, // Width for 'coop_savings_credit'
+               { width: 16 }, // Width for 'coop_savings_credit'
                { width: 16.3 }, // Width for 'coop_savings_balance'
                { width: 18.5 }  // Width for 'reference_document'
           ];
@@ -2097,7 +2097,7 @@ const Member = (props) => {
                { width: 15 }, // Width for 'share_capital_debit'
                { width: 15.6 }, // Width for 'share_capital_credit'
                { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 14.5 }, // Width for 'coop_savings_credit'
+               { width: 16 }, // Width for 'coop_savings_credit'
                { width: 16.3 }, // Width for 'coop_savings_balance'
                { width: 18.5 }  // Width for 'reference_document'
 
