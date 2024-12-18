@@ -1887,10 +1887,10 @@ const Member = (props) => {
                { width: 15.5 }, // Width for 'date'
                { width: 15 }, // Width for 'share_capital_debit'
                { width: 15.6 }, // Width for 'share_capital_credit'
-               { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 16 }, // Width for 'coop_savings_credit'
-               { width: 16.3 }, // Width for 'coop_savings_balance'
-               { width: 18.5 }  // Width for 'reference_document'
+               { width: 17 }, // Width for 'coop_savings_debit'
+               { width: 16.5 }, // Width for 'coop_savings_credit'
+               { width: 17.5 }, // Width for 'coop_savings_balance'
+               { width: 18.5 } // Width for 'reference_document'
           ];
 
           try {
@@ -2096,10 +2096,10 @@ const Member = (props) => {
                { width: 15.5 }, // Width for 'date'
                { width: 15 }, // Width for 'share_capital_debit'
                { width: 15.6 }, // Width for 'share_capital_credit'
-               { width: 16.3 }, // Width for 'coop_savings_debit'
-               { width: 16 }, // Width for 'coop_savings_credit'
-               { width: 16.3 }, // Width for 'coop_savings_balance'
-               { width: 18.5 }  // Width for 'reference_document'
+               { width: 17 }, // Width for 'coop_savings_debit'
+               { width: 16.5 }, // Width for 'coop_savings_credit'
+               { width: 17.5 }, // Width for 'coop_savings_balance'
+               { width: 18.5 } // Width for 'reference_document'dth for 'reference_document'
 
                //BRING THIS BACK ONCE LAGPAS
                // { width: 12.4 }, // Width for 'date'
