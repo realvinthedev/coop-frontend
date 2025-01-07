@@ -246,7 +246,7 @@ const Navbar = () => {
                                    <ListItemText primary="Sales & Transaction" />
                               </ListItemButton>
                          </Link>}
-                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.cashier" || currentUser == "hhhc.bcadmin") &&
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/pos">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -257,7 +257,7 @@ const Navbar = () => {
                                    <ListItemText primary="POS" />
                               </ListItemButton>
                          </Link>}
-                    
+                    {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") &&
                          <Link to="/member">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
@@ -267,18 +267,18 @@ const Navbar = () => {
                                    </div>
                                    <ListItemText primary="Savings" />
                               </ListItemButton>
-                         </Link>
-                    {/* {user && currentUser == "hhhc.bcadmin" &&
-                         <Link to="/member">
+                         </Link>}
+                    {user && currentUser == "hhhc.cashier" &&
+                         <Link to="/pos">
                               <ListItemButton>
                                    <div style={{ paddingLeft: "40px" }}>
                                         <ListItemIcon>
-                                             <SavingsIcon />
+                                             <PointOfSaleIcon />
                                         </ListItemIcon>
                                    </div>
-                                   <ListItemText primary="Savings" />
+                                   <ListItemText primary="POS" />
                               </ListItemButton>
-                         </Link>} */}
+                         </Link>}
                     {(user && currentUser == "hhhc.bcadmin" || currentUser == "hhhc.bcadmin") && //change
                          <Link to="/reports">
                               <ListItemButton>

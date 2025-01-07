@@ -116,6 +116,7 @@ const Customer = (props) => {
      const [openDelete, setOpenDelete] = useState(false);
      const [openEdit, setOpenEdit] = useState(false);
      const [openAdd, setOpenAdd] = useState(false);
+     const [reloadTrigger, setReloadTrigger] = useState(false);
 
      const [openWarning, setOpenWarning] = useState(false);
      const [refresher, setRefresher] = useState(0)
@@ -383,6 +384,7 @@ const Customer = (props) => {
                     setOpenEdit(false)
                     successToast('Updated Successfully')
                     handleRefresher();
+                    setReloadTrigger(prev => !prev);
                }
           }
 
@@ -413,21 +415,22 @@ const Customer = (props) => {
      //
      const handleRowClick = (params) => {
           setId(params.row._id);
+
           setcustomer_id(params.row.customer_id)
           setcustomer_name(params.row.customer_name);
           setcustomer_address(params.row.customer_address);
           setcustomer_contact(params.row.customer_contact);
           setcustomer_email(params.row.customer_email);
-
+          console.log("^^^^^^^^^^^^^", customer_id)
      };
 
      const [paymentid, setpaymentid] = useState("")
      const handleRowClickPayment = (params) => {
           setpaymentid(params.row._id);
-     
+
      };
 
-   
+
      //!important
      // if (!user) {
      //      //console.log('You must be logged in first')
@@ -452,6 +455,7 @@ const Customer = (props) => {
                setcustomer_email('')
                setOpenDelete(false)
                handleRefresher();
+               setReloadTrigger(prev => !prev);
           }
 
      }
@@ -478,10 +482,18 @@ const Customer = (props) => {
           settabvalue('1')
      }
      const handleGoToPerCredit = () => {
-          if(totalposcreditsales == 0){
-               errorToast("This user don't have any credit")
+          console.log("###############################", customer_id)
+          if (customer_id === "") {
+               errorToast("Select a customer first")
           }
-          settabvalue('2')
+          else {
+               if (totalposcreditsales == 0) {
+                    errorToast("This user don't have any credit")
+               }
+               settabvalue('2')
+          }
+
+
      }
      const handleGoToAllCredits = () => {
           // setbuttonReceiptDisabled(true)
@@ -567,27 +579,31 @@ const Customer = (props) => {
 
      const [credit, setcredit] = useState([])
      useEffect(() => {
-          const fetchCustomer = async () => {
-               if (user) {
-                    const response = await fetch('https://c-back.onrender.com/api/credit' + customer_id, {
+          const fetchCredit= async () => {
+               if (!user) return;
+
+               try {
+                    const response = await fetch('https://c-back.onrender.com/api/credit/' + customer_id, {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }
                     });
-                    const json = await response.json()
+                    const json = await response.json();
 
                     if (response.ok) {
-                         setcredit(json)
+                         setcredit(json);
                          const totalPayment = json.reduce((acc, item) => acc + item.amount, 0);
-                         settotalpayment(totalPayment)
+                         settotalpayment(totalPayment);
+                    } else {
+                         console.error('Failed to fetch customer data:', json.error || response.statusText);
                     }
-               }
-               if (user) {
-                    fetchCustomer();
+               } catch (error) {
+                    console.error('Error fetching customer data:', error);
                }
           };
-          fetchCustomer();
-     }, [user]);
+
+          fetchCredit();
+     }, [user, customer_id,reloadTrigger]);
 
 
      return (
@@ -603,7 +619,7 @@ const Customer = (props) => {
                                              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                        <Tab label="Customers" value="1" />
-                                                       <Tab label="Customer Credit" value="2" onClick={handleGoToPerCredit} />
+                                                       <Tab label="Customer Credit" value="2" disabled />
                                                   </TabList>
                                              </Box>
                                              <TabPanel value="1">
@@ -850,6 +866,7 @@ const Customer = (props) => {
                                                                       pageSize={7}
                                                                       columns={columns2}
                                                                       rowsPerPageOptions={[5]}
+
 
                                                                  />
                                                             </div>

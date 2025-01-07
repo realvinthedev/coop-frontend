@@ -336,9 +336,6 @@ const Pos = (props) => {
 
 
 
-     const handlechecker = () => {
-          //console.log(allCredits)
-     }
 
      const handleNewTransaction = () => {
           handleRefresher()
@@ -501,7 +498,7 @@ const Pos = (props) => {
 
 
      const handleOpenSave = () => {
-          if (customer_name === "") {
+          if (customer_name === "" || !customer_id.startsWith("C-")){
                errorToast("Select a customer first")
           }
           else {
@@ -603,6 +600,7 @@ const Pos = (props) => {
                     pos_cash: cash,
                     pos_change: change,
                     pos_discount: discount,
+                    pos_discounted_amount: discounted_amount,
                     pos_credit_sales: credit_sales,
                     pos_cash_sales: cash_sales
 
@@ -1288,14 +1286,7 @@ const Pos = (props) => {
                                                                            Download Receipt
                                                                       </Button>
 
-                                                                      <Button
-                                                                           style={{ width: "100%", padding: "10px", marginBottom: "5px" }}
-                                                                           variant="contained"
-                                                                           color="green"
-                                                                           onClick={handlechecker}
-                                                                      >
-                                                                           checker
-                                                                      </Button>
+                                                                     
 
                                                                       {/* <Button style={{ marginRight: "5px", width: "100%", padding: "10px" }} variant="outlined" color="red">
                                                                 

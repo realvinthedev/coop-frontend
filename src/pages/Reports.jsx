@@ -272,6 +272,7 @@ const Reports = (props) => {
 
 
                     setsales(filteredData)
+                    console.log("^^^^^^^^^^^^^^^^^^^^" + filteredData)
                     setdrawersales(filteredData2)
 
                }
@@ -496,6 +497,8 @@ const Reports = (props) => {
                                                                                      <TableCell >Item</TableCell>
                                                                                      <TableCell >Quantity</TableCell>
                                                                                      <TableCell >Amount</TableCell>
+                                                                                     <TableCell >Discount %</TableCell>
+                                                                                     <TableCell >Discount</TableCell>
                                                                                 </TableHead>
                                                                                 <TableBody>
 
@@ -506,6 +509,8 @@ const Reports = (props) => {
                                                                                                     <TableCell>{item.product_name}</TableCell>
                                                                                                     <TableCell>{item.product_quantity}</TableCell>
                                                                                                     <TableCell>{item.product_total}</TableCell>
+                                                                                                    <TableCell>{sales.pos_discount || 0}%</TableCell>
+                                                                                                    <TableCell>{sales.pos_discounted_amount || 0}</TableCell>
                                                                                                     {idx !== sales.pos_items.length - 1 ? '' : ''}
                                                                                                </>
                                                                                           </TableRow>

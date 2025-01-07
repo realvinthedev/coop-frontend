@@ -763,7 +763,11 @@ const Sales = (props) => {
                                                                                                <TableCell >Trans ID</TableCell>
                                                                                                <TableCell >Customer</TableCell>
                                                                                                <TableCell >Cashier</TableCell>
+                                                                                               <TableCell >Sub-Total</TableCell>
+                                                                                               <TableCell >Discount %</TableCell>
+                                                                                               <TableCell >Discounted Amount</TableCell>
                                                                                                <TableCell >Total</TableCell>
+                                                                                               <TableCell>Payment Type</TableCell>
                                                                                                <TableCell >Items</TableCell>
                                                                                           </TableHead>
                                                                                           <TableBody>
@@ -773,6 +777,10 @@ const Sales = (props) => {
                                                                                                     <TableCell >{sales.pos_customer_name}</TableCell>
                                                                                                     <TableCell >{sales.pos_user}</TableCell>
                                                                                                     <TableCell >{sales.pos_total}</TableCell>
+                                                                                                    <TableCell >{sales.pos_discount}%</TableCell>
+                                                                                                    <TableCell >{sales.pos_discounted_amount || 0}</TableCell>
+                                                                                                    <TableCell >{sales.pos_total - sales.pos_discounted_amount || 0}</TableCell>
+                                                                                                    <TableCell>{sales.pos_credit_sales === 0 ? "Cash" : "Credit"}</TableCell> {/* New logic */}
                                                                                                     <TableCell>
 
                                                                                                          <table>
