@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
      }
 });
 
-const SavingsPrinter = ({ total_membershipfee, total_share, total_coop, total_special, total_kaya, total_karamay, total_others}) => {
+const SavingsPrinter = ({ total_membershipfee, total_share, total_coop, total_special, total_kaya, total_karamay, total_others }) => {
 
      const [currentDate, setCurrentDate] = useState(() => {
           const date = new Date();
@@ -73,17 +73,17 @@ const SavingsPrinter = ({ total_membershipfee, total_share, total_coop, total_sp
                               <Text style={styles.data}>Kaya Savings</Text>
                               <Text style={styles.data}>Karamay Savings</Text>
                               <Text style={styles.data}>Others</Text>
-                              
+
                          </View>
                          <View style={styles.row}>
-                              <Text style={styles.item}>{ total_membershipfee}</Text>
-                              <Text style={styles.data}>{ total_share}</Text>
-                              <Text style={styles.data}>{ total_coop}</Text>
-                              <Text style={styles.data}>{ total_special}</Text>
-                              <Text style={styles.data}>{ total_kaya}</Text>
-                              <Text style={styles.data}>{ total_karamay}</Text>
-                              <Text style={styles.data}>{ total_others}</Text>
-                             
+                              <Text style={styles.item}>{parseFloat(total_membershipfee).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_share).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_coop).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_special).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_kaya).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_karamay).toFixed(2)}</Text>
+                              <Text style={styles.data}>{parseFloat(total_others).toFixed(2)}</Text>
+
                          </View>
 
                     </View>

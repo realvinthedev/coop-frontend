@@ -1885,13 +1885,13 @@ const Member = (props) => {
           // Define custom column widths
           const columnWidths = [
 
-           //    { width: 17 }, // Width for 'date'
-           //    { width: 17 }, // Width for 'share_capital_debit'
-          //     { width: 18 }, // Width for 'share_capital_credit'
-         //      { width: 18 }, // Width for 'coop_savings_debit'
-        //       { width: 20 }, // Width for 'coop_savings_credit'
-        //       { width: 20 }, // Width for 'coop_savings_balance'
-       //        { width: 22} // Width for 'reference_document'
+               //    { width: 17 }, // Width for 'date'
+               //    { width: 17 }, // Width for 'share_capital_debit'
+               //     { width: 18 }, // Width for 'share_capital_credit'
+               //      { width: 18 }, // Width for 'coop_savings_debit'
+               //       { width: 20 }, // Width for 'coop_savings_credit'
+               //       { width: 20 }, // Width for 'coop_savings_balance'
+               //        { width: 22} // Width for 'reference_document'
                // { width: 5 },
                // { width: 15.5 }, // Width for 'date'
                // { width: 15 }, // Width for 'share_capital_debit'
@@ -1907,8 +1907,8 @@ const Member = (props) => {
                { width: 18 }, // Width for 'coop_savings_debit'
                { width: 19 }, // Width for 'coop_savings_credit'
                { width: 19 }, // Width for 'coop_savings_balance'
-               { width: 20} // Width for 'reference_document'
-               
+               { width: 20 } // Width for 'reference_document'
+
           ];
 
           try {
@@ -2112,24 +2112,24 @@ const Member = (props) => {
 
           // Define custom column widths
           const columnWidths = [
-            
+
                { width: 16 }, // Width for 'date'
                { width: 16 }, // Width for 'share_capital_debit'
                { width: 18 }, // Width for 'share_capital_credit'
                { width: 18 }, // Width for 'coop_savings_debit'
                { width: 19 }, // Width for 'coop_savings_credit'
                { width: 19 }, // Width for 'coop_savings_balance'
-               { width: 20} // Width for 'reference_document'
+               { width: 20 } // Width for 'reference_document'
           ];
-               //BRING THIS BACK ONCE LAGPAS
-               // { width: 12.4 }, // Width for 'date'
-               // { width: 14.7 }, // Width for 'share_capital_debit'
-               // { width: 13 }, // Width for 'share_capital_credit'
-               // { width: 16 }, // Width for 'coop_savings_debit'
-               // { width: 13 }, // Width for 'coop_savings_credit'
-               // { width: 14 }, // Width for 'coop_savings_balance'
-               // { width: 21.33 }  // Width for 'reference_document'
-      
+          //BRING THIS BACK ONCE LAGPAS
+          // { width: 12.4 }, // Width for 'date'
+          // { width: 14.7 }, // Width for 'share_capital_debit'
+          // { width: 13 }, // Width for 'share_capital_credit'
+          // { width: 16 }, // Width for 'coop_savings_debit'
+          // { width: 13 }, // Width for 'coop_savings_credit'
+          // { width: 14 }, // Width for 'coop_savings_balance'
+          // { width: 21.33 }  // Width for 'reference_document'
+
 
           try {
                // Fetch the template
@@ -2163,11 +2163,11 @@ const Member = (props) => {
                     worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
                });
 
-              
+
                columnWidths.forEach((width, index) => {
                     worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
                });
-              
+
 
                // Format the date function
                const formatDate = (date) => {
@@ -2191,7 +2191,7 @@ const Member = (props) => {
                          row['coop_savings_balance'] !== 0
                     )
                     .map(row =>
-                      
+
                          filteredColumns.map(column => {
                               if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
                                    return ''; // Return empty string for these fields
@@ -2233,144 +2233,383 @@ const Member = (props) => {
           }
      };
 
+     // const exportMasterlist = (data) => {
+     //      // Format data for Excel
+     //      const formattedData = data.map((item) => ({
+     //           "MEMBER ID": item.member_id,
+     //           "FIRSTNAME": item.firstname,
+     //           "LASTNAME": item.lastname,
+     //           "MIDDLENAME": item.middlename,
+     //           "TIN NO.": item.middlename,
+     //           "MEMBERSHIP DATE ACCEPTED": item.membership_date,
+     //           "TYPE / KIND OF MEMBERSHIP": item.membership_type,
+     //           "HHHC MEMBERSHIP NO.": item.hhhc_membership_number,
+     //           "BOD RESOLUTION NO.": item.bod_res,
+     //           "MEMBERSHIP FEE": item.membership_fee,
+     //           "INITIAL SHARE CAPITAL": item.initial_share_capital,
+     //           "INITIAL NO. OF SHARES": item.initial_no_share,
+     //           "PASSBOOK ACCOUNT SERIES NO.": item.passbook_series_number,
+     //           "SAVINGS ACCOUNT NO.": item.coop_savings_account_number,
+     //           "SHARE CAPITAL AMOUNT": item.share_capital,
+     //           "COOP SAVINGS AMOUNT": item.coop_savings_amount,
+     //           "HOUSING EQUITY ACCOUNT NO.": item.housing_equity_account_no,
+     //           "HOUSING EQUITY AMOUNT": item.housing_equity,
+     //           "SPECIAL SAVINGS ACCOUNT NO.": item.special_savings_account,
+     //           "SPECIAL SAVINGS AMOUNT": item.special_savings_amount,
+     //           "IMPUKAN CERTIFICATE ACCOUNT NO.": item.impukan_certificate_account,
+     //           "KAYA SAVINGS ACCOUNT NO.": item.kaya_atm_savings_account_number,
+     //           "KAYA SAVINGS AMOUNT": item.kaya_savings_amount,
+     //           "CURRENT ADDRESS": item.address,
+     //           "EMAIL ADDRESS": item.email,
+     //           "CONTACT NO.": item.contact_number,
+     //           "DATE OF BIRTH": item.dob,
+     //           "AGE": item.age,
+     //           "SEX": item.gender,
+     //           "CIVIL STATUS": item.civil_status,
+     //           "HIGHEST EDUCATIONAL ATTAINMENT": item.highest_educational_attainment,
+     //           "OCCUPATION/INCOME SOURCE": item.occupation,
+     //           "NO. OF DEPENDENT": item.number_of_dependent,
+     //           "RELIGION": item.religion,
+     //           "ANNUAL INCOME": item.annual_income,
+     //           "PWD TYPE": item.pwd_type,
+     //           "TERMINATION OF MEMBERSHIP DATE": item.termination_date,
+     //           "TERMINATION BOD RESOLUTION NO.": item.termination_bod,
+     //           "REMARKS": item.remarks,
+     //      }));
+
+     //      // Create a worksheet
+     //      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+     //      // Create a workbook and append the worksheet
+     //      const workbook = XLSX.utils.book_new();
+     //      XLSX.utils.book_append_sheet(workbook, worksheet, 'Member Data');
+
+     //      // Generate Excel file and trigger download
+     //      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+     //      const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+     //      saveAs(dataBlob, 'member_data.xlsx');
+     // };
 
 
+     // const exportMasterlist = (data) => {
+     //      if (data.length === 0) {
+     //          alert("No data to export");
+     //          return;
+     //      }
+      
+     //      const headers = [
+     //          { label: "MEMBER ID", key: "member_id" },
+     //          { label: "FIRSTNAME", key: "firstname" },
+     //          { label: "LASTNAME", key: "lastname" },
+     //          { label: "MIDDLENAME", key: "middlename" },
+     //          { label: "TIN NO.", key: "tin_no" },
+     //          { label: "MEMBERSHIP DATE ACCEPTED", key: "membership_date" },
+     //          { label: "TYPE / KIND OF MEMBERSHIP", key: "membership_type" },
+     //          { label: "HHHC MEMBERSHIP NO.", key: "hhhc_membership_number" },
+     //          { label: "BOD RESOLUTION NO.", key: "bod_res" },
+     //          { label: "MEMBERSHIP FEE", key: "membership_fee" },
+     //          { label: "INITIAL SHARE CAPITAL", key: "initial_share_capital" },
+     //          { label: "INITIAL NO. OF SHARES", key: "initial_no_share" },
+     //          { label: "PASSBOOK ACCOUNT SERIES NO.", key: "passbook_series_number" },
+     //          { label: "SAVINGS ACCOUNT NO.", key: "coop_savings_account_number" },
+     //          { label: "SHARE CAPITAL AMOUNT", key: "share_capital" },
+     //          { label: "COOP SAVINGS AMOUNT", key: "coop_savings_amount" },
+     //          { label: "HOUSING EQUITY ACCOUNT NO.", key: "housing_equity_account_no" },
+     //          { label: "HOUSING EQUITY AMOUNT", key: "housing_equity" },
+     //          { label: "SPECIAL SAVINGS ACCOUNT NO.", key: "special_savings_account" },
+     //          { label: "SPECIAL SAVINGS AMOUNT", key: "special_savings_amount" },
+     //          { label: "IMPUKAN CERTIFICATE ACCOUNT NO.", key: "impukan_certificate_account" },
+     //          { label: "KAYA SAVINGS ACCOUNT NO.", key: "kaya_atm_savings_account_number" },
+     //          { label: "KAYA SAVINGS AMOUNT", key: "kaya_savings_amount" },
+     //          { label: "CURRENT ADDRESS", key: "address" },
+     //          { label: "EMAIL ADDRESS", key: "email" },
+     //          { label: "CONTACT NO.", key: "contact_number" },
+     //          { label: "DATE OF BIRTH", key: "dob" },
+     //          { label: "AGE", key: "age" },
+     //          { label: "SEX", key: "gender" },
+     //          { label: "CIVIL STATUS", key: "civil_status" },
+     //          { label: "HIGHEST EDUCATIONAL ATTAINMENT", key: "highest_educational_attainment" },
+     //          { label: "OCCUPATION/INCOME SOURCE", key: "occupation" },
+     //          { label: "NO. OF DEPENDENT", key: "number_of_dependent" },
+     //          { label: "RELIGION", key: "religion" },
+     //          { label: "ANNUAL INCOME", key: "annual_income" },
+     //          { label: "PWD TYPE", key: "pwd_type" },
+     //          { label: "TERMINATION OF MEMBERSHIP DATE", key: "termination_date" },
+     //          { label: "TERMINATION BOD RESOLUTION NO.", key: "termination_bod" },
+     //          { label: "REMARKS", key: "remarks" },
+     //      ];
+      
+     //      const formattedData = data.map((item) => {
+     //          const row = {};
+     //          headers.forEach(({ label, key }) => {
+     //              row[label] = item[key] ?? "";
+     //          });
+     //          return row;
+     //      });
+      
+     //      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      
+     //      // Adjust column widths
+     //      const columnWidths = headers.map(({ label }) => ({
+     //          wch: Math.max(label.length, ...data.map((item) => (item[label] ? item[label].toString().length : 10))),
+     //      }));
+     //      worksheet['!cols'] = columnWidths;
+      
+     //      const workbook = XLSX.utils.book_new();
+     //      XLSX.utils.book_append_sheet(workbook, worksheet, 'Member Data');
+      
+     //      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+     //      const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+     //      saveAs(dataBlob, 'member_data.xlsx');
+     //  };
+
+     const exportMasterlist = (data) => {
+          if (data.length === 0) {
+              alert("No data to export");
+              return;
+          }
+      
+          const headers = [
+              { label: "MEMBER ID", key: "member_id" },
+              { label: "FIRSTNAME", key: "firstname" },
+              { label: "LASTNAME", key: "lastname" },
+              { label: "MIDDLENAME", key: "middlename" },
+              { label: "TIN NO.", key: "tin_no" },
+              { label: "MEMBERSHIP DATE ACCEPTED", key: "membership_date" },
+              { label: "TYPE / KIND OF MEMBERSHIP", key: "membership_type" },
+              { label: "HHHC MEMBERSHIP NO.", key: "hhhc_membership_number" },
+              { label: "BOD RESOLUTION NO.", key: "bod_res" },
+              { label: "MEMBERSHIP FEE", key: "membership_fee" },
+              { label: "INITIAL SHARE CAPITAL", key: "initial_share_capital" },
+              { label: "INITIAL NO. OF SHARES", key: "initial_no_share" },
+              { label: "PASSBOOK ACCOUNT SERIES NO.", key: "passbook_series_number" },
+              { label: "SAVINGS ACCOUNT NO.", key: "coop_savings_account_number" },
+              { label: "SHARE CAPITAL AMOUNT", key: "share_capital" },
+              { label: "COOP SAVINGS AMOUNT", key: "coop_savings_amount" },
+              { label: "HOUSING EQUITY ACCOUNT NO.", key: "housing_equity_account_no" },
+              { label: "HOUSING EQUITY AMOUNT", key: "housing_equity" },
+              { label: "SPECIAL SAVINGS ACCOUNT NO.", key: "special_savings_account" },
+              { label: "SPECIAL SAVINGS AMOUNT", key: "special_savings_amount" },
+              { label: "IMPUKAN CERTIFICATE ACCOUNT NO.", key: "impukan_certificate_account" },
+              { label: "KAYA SAVINGS ACCOUNT NO.", key: "kaya_atm_savings_account_number" },
+              { label: "KAYA SAVINGS AMOUNT", key: "kaya_savings_amount" },
+              { label: "CURRENT ADDRESS", key: "address" },
+              { label: "EMAIL ADDRESS", key: "email" },
+              { label: "CONTACT NO.", key: "contact_number" },
+              { label: "DATE OF BIRTH", key: "dob" },
+              { label: "AGE", key: "age" },
+              { label: "SEX", key: "gender" },
+              { label: "CIVIL STATUS", key: "civil_status" },
+              { label: "HIGHEST EDUCATIONAL ATTAINMENT", key: "highest_educational_attainment" },
+              { label: "OCCUPATION/INCOME SOURCE", key: "occupation" },
+              { label: "NO. OF DEPENDENT", key: "number_of_dependent" },
+              { label: "RELIGION", key: "religion" },
+              { label: "ANNUAL INCOME", key: "annual_income" },
+              { label: "PWD TYPE", key: "pwd_type" },
+              { label: "TERMINATION OF MEMBERSHIP DATE", key: "termination_date" },
+              { label: "TERMINATION BOD RESOLUTION NO.", key: "termination_bod" },
+              { label: "REMARKS", key: "remarks" },
+          ];
+      
+          const formattedData = data.map((item) => {
+              const row = {};
+              headers.forEach(({ label, key }) => {
+                  row[label] = item[key] ?? "";
+              });
+              return row;
+          });
+      
+          const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      
+          // Define custom column widths
+          const columnWidths = [
+              { wch: 12 }, // MEMBER ID
+              { wch: 15 }, // FIRSTNAME
+              { wch: 15 }, // LASTNAME
+              { wch: 15 }, // MIDDLENAME
+              { wch: 10 }, // TIN NO.
+              { wch: 20 }, // MEMBERSHIP DATE ACCEPTED
+              { wch: 25 }, // TYPE / KIND OF MEMBERSHIP
+              { wch: 18 }, // HHHC MEMBERSHIP NO.
+              { wch: 20 }, // BOD RESOLUTION NO.
+              { wch: 12 }, // MEMBERSHIP FEE
+              { wch: 20 }, // INITIAL SHARE CAPITAL
+              { wch: 15 }, // INITIAL NO. OF SHARES
+              { wch: 25 }, // PASSBOOK ACCOUNT SERIES NO.
+              { wch: 20 }, // SAVINGS ACCOUNT NO.
+              { wch: 20 }, // SHARE CAPITAL AMOUNT
+              { wch: 20 }, // COOP SAVINGS AMOUNT
+              { wch: 25 }, // HOUSING EQUITY ACCOUNT NO.
+              { wch: 20 }, // HOUSING EQUITY AMOUNT
+              { wch: 25 }, // SPECIAL SAVINGS ACCOUNT NO.
+              { wch: 20 }, // SPECIAL SAVINGS AMOUNT
+              { wch: 30 }, // IMPUKAN CERTIFICATE ACCOUNT NO.
+              { wch: 25 }, // KAYA SAVINGS ACCOUNT NO.
+              { wch: 20 }, // KAYA SAVINGS AMOUNT
+              { wch: 25 }, // CURRENT ADDRESS
+              { wch: 25 }, // EMAIL ADDRESS
+              { wch: 20 }, // CONTACT NO.
+              { wch: 15 }, // DATE OF BIRTH
+              { wch: 10 }, // AGE
+              { wch: 10 }, // SEX
+              { wch: 15 }, // CIVIL STATUS
+              { wch: 25 }, // HIGHEST EDUCATIONAL ATTAINMENT
+              { wch: 25 }, // OCCUPATION/INCOME SOURCE
+              { wch: 15 }, // NO. OF DEPENDENT
+              { wch: 15 }, // RELIGION
+              { wch: 20 }, // ANNUAL INCOME
+              { wch: 15 }, // PWD TYPE
+              { wch: 25 }, // TERMINATION OF MEMBERSHIP DATE
+              { wch: 25 }, // TERMINATION BOD RESOLUTION NO.
+              { wch: 25 }, // REMARKS
+          ];
+          worksheet['!cols'] = columnWidths;
+      
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, 'Member Data');
+      
+          const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+          const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+          saveAs(dataBlob, 'member_data.xlsx');
+      };
+      
+      
 
 
      //WORKING EXCEL2
-//      const downloadAsExcel2 = async () => {
-//           const columnsToShow = [
-//                'date',
-//                'share_capital_debit',
-//                'share_capital_credit',
-//                'coop_savings_debit',
-//                'coop_savings_credit',
-//                'coop_savings_balance',
-//                'reference_document'
-//           ];
+     //      const downloadAsExcel2 = async () => {
+     //           const columnsToShow = [
+     //                'date',
+     //                'share_capital_debit',
+     //                'share_capital_credit',
+     //                'coop_savings_debit',
+     //                'coop_savings_credit',
+     //                'coop_savings_balance',
+     //                'reference_document'
+     //           ];
 
-//           // Define custom column widths
-//           const columnWidths = [
-            
-//                { width: 16 }, // Width for 'date'
-//                { width: 16 }, // Width for 'share_capital_debit'
-//                { width: 18 }, // Width for 'share_capital_credit'
-//                { width: 18 }, // Width for 'coop_savings_debit'
-//                { width: 19 }, // Width for 'coop_savings_credit'
-//                { width: 19 }, // Width for 'coop_savings_balance'
-//                { width: 20} // Width for 'reference_document'
-//           ];
-//                //BRING THIS BACK ONCE LAGPAS
-//                // { width: 12.4 }, // Width for 'date'
-//                // { width: 14.7 }, // Width for 'share_capital_debit'
-//                // { width: 13 }, // Width for 'share_capital_credit'
-//                // { width: 16 }, // Width for 'coop_savings_debit'
-//                // { width: 13 }, // Width for 'coop_savings_credit'
-//                // { width: 14 }, // Width for 'coop_savings_balance'
-//                // { width: 21.33 }  // Width for 'reference_document'
-      
+     //           // Define custom column widths
+     //           const columnWidths = [
 
-//           try {
-//                // Fetch the template
-//                const response = await fetch('https://c-back.onrender.com/api/upload/template');
-//                if (!response.ok) {
-//                     console.error('Error fetching template:', response.statusText);
-//                     return;
-//                }
+     //                { width: 16 }, // Width for 'date'
+     //                { width: 16 }, // Width for 'share_capital_debit'
+     //                { width: 18 }, // Width for 'share_capital_credit'
+     //                { width: 18 }, // Width for 'coop_savings_debit'
+     //                { width: 19 }, // Width for 'coop_savings_credit'
+     //                { width: 19 }, // Width for 'coop_savings_balance'
+     //                { width: 20} // Width for 'reference_document'
+     //           ];
+     //                //BRING THIS BACK ONCE LAGPAS
+     //                // { width: 12.4 }, // Width for 'date'
+     //                // { width: 14.7 }, // Width for 'share_capital_debit'
+     //                // { width: 13 }, // Width for 'share_capital_credit'
+     //                // { width: 16 }, // Width for 'coop_savings_debit'
+     //                // { width: 13 }, // Width for 'coop_savings_credit'
+     //                // { width: 14 }, // Width for 'coop_savings_balance'
+     //                // { width: 21.33 }  // Width for 'reference_document'
 
-//                const blob = await response.blob(); // Get the file as a Blob
 
-//                // Read the Blob as an ArrayBuffer
-//                const arrayBuffer = await blob.arrayBuffer();
+     //           try {
+     //                // Fetch the template
+     //                const response = await fetch('https://c-back.onrender.com/api/upload/template');
+     //                if (!response.ok) {
+     //                     console.error('Error fetching template:', response.statusText);
+     //                     return;
+     //                }
 
-//                const workbook = new ExcelJS.Workbook();
-//                await workbook.xlsx.load(arrayBuffer); // Load the existing template
+     //                const blob = await response.blob(); // Get the file as a Blob
 
-//                // Check the names of the worksheets in the workbook
-//                //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
+     //                // Read the Blob as an ArrayBuffer
+     //                const arrayBuffer = await blob.arrayBuffer();
 
-//                // Attempt to get the worksheet; make sure the name is correct
-//                const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
+     //                const workbook = new ExcelJS.Workbook();
+     //                await workbook.xlsx.load(arrayBuffer); // Load the existing template
 
-//                if (!worksheet) {
-//                     console.error('Worksheet "Share Capital Data" not found!');
-//                     return;
-//                }
+     //                // Check the names of the worksheets in the workbook
+     //                //console.log('Available worksheets:', workbook.worksheets.map(sheet => sheet.name));
 
-//                // Clear existing data but retain the formatting
-//                worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-//                     worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
-//                });
+     //                // Attempt to get the worksheet; make sure the name is correct
+     //                const worksheet = workbook.getWorksheet('Share Capital Data'); // Adjust as needed
 
-           
-//                columnWidths.forEach((width, index) => {
-//                     worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
-//                });
-              
+     //                if (!worksheet) {
+     //                     console.error('Worksheet "Share Capital Data" not found!');
+     //                     return;
+     //                }
 
-//                // Format the date function
-//                const formatDate = (date) => {
-//                     const d = new Date(date);
-//                     const month = d.getMonth() + 1; // Months are 0-based
-//                     const day = d.getDate();
-//                     const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
-//                     return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
-//                };
+     //                // Clear existing data but retain the formatting
+     //                worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+     //                     worksheet.getRow(rowNumber).values = []; // Clear row content but keep formatting
+     //                });
 
-//                // Filtered columns from savings_columns
-//                const filteredColumns = columnsToShow
-//                     .map(field => savings_columns.find(column => column.field === field))
-//                     .filter(Boolean);
 
-//                // Make sure the filtered body contains data
-//                const filteredBody = savings
-//                     .filter(row =>
-//                          row['coop_savings_debit'] !== 0 ||
-//                          row['coop_savings_credit'] !== 0 ||
-//                          row['coop_savings_balance'] !== 0
-//                     )
-//                     .map(row =>
-                      
-//                          filteredColumns.map(column => {
-//                               if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
-//                                    return ''; // Return empty string for these fields
-//                               } else if (column.field === 'date') {
-//                                    return formatDate(row[column.field]); // Format the date
-//                               } else if (column.field === 'reference_document') {
-//                                    return row[column.field]; // Return the reference document
-//                               } else {
-//                                    // Append .00 to numeric values with a comma
-//                                    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(row[column.field] || 0);
-//                               }
-//                          })
-//                     );
+     //                columnWidths.forEach((width, index) => {
+     //                     worksheet.getColumn(index + 1).width = width.width; // Set the width for each column
+     //                });
 
-//                // Log filtered body data to confirm it's correct
-//                //console.log('Filtered body data:', filteredBody);
 
-//                // Add new data to the worksheet
-//                filteredBody.forEach((data, index) => {
-//                     //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
-//                     const newRow = worksheet.addRow(data);
+     //                // Format the date function
+     //                const formatDate = (date) => {
+     //                     const d = new Date(date);
+     //                     const month = d.getMonth() + 1; // Months are 0-based
+     //                     const day = d.getDate();
+     //                     const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
+     //                     return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+     //                };
 
-//                     // Set the font style for the new row
-//                     newRow.font = {
-//                          name: 'Calibri',
-//                          size: 6
-//                     };
-//                });
+     //                // Filtered columns from savings_columns
+     //                const filteredColumns = columnsToShow
+     //                     .map(field => savings_columns.find(column => column.field === field))
+     //                     .filter(Boolean);
 
-//                // Save the modified workbook as a Blob
-//                const buffer = await workbook.xlsx.writeBuffer();
-//                //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+     //                // Make sure the filtered body contains data
+     //                const filteredBody = savings
+     //                     .filter(row =>
+     //                          row['coop_savings_debit'] !== 0 ||
+     //                          row['coop_savings_credit'] !== 0 ||
+     //                          row['coop_savings_balance'] !== 0
+     //                     )
+     //                     .map(row =>
 
-//                const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-//                //console.log('Saving file:', newBlob); // Log the Blob before download
-//                saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
-//           } catch (error) {
-//                console.error('Error in processing the Excel download:', error);
-//           }
-//      };
+     //                          filteredColumns.map(column => {
+     //                               if (column.field === 'share_capital_debit' || column.field === 'share_capital_credit') {
+     //                                    return ''; // Return empty string for these fields
+     //                               } else if (column.field === 'date') {
+     //                                    return formatDate(row[column.field]); // Format the date
+     //                               } else if (column.field === 'reference_document') {
+     //                                    return row[column.field]; // Return the reference document
+     //                               } else {
+     //                                    // Append .00 to numeric values with a comma
+     //                                    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(row[column.field] || 0);
+     //                               }
+     //                          })
+     //                     );
+
+     //                // Log filtered body data to confirm it's correct
+     //                //console.log('Filtered body data:', filteredBody);
+
+     //                // Add new data to the worksheet
+     //                filteredBody.forEach((data, index) => {
+     //                     //console.log(`Adding row ${index + 1}:`, data); // Log each row being added
+     //                     const newRow = worksheet.addRow(data);
+
+     //                     // Set the font style for the new row
+     //                     newRow.font = {
+     //                          name: 'Calibri',
+     //                          size: 6
+     //                     };
+     //                });
+
+     //                // Save the modified workbook as a Blob
+     //                const buffer = await workbook.xlsx.writeBuffer();
+     //                //console.log('Workbook buffer size:', buffer.byteLength); // Log buffer size
+
+     //                const newBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+     //                //console.log('Saving file:', newBlob); // Log the Blob before download
+     //                saveAs(newBlob, 'coop_savings.xlsx'); // Trigger file download
+     //           } catch (error) {
+     //                console.error('Error in processing the Excel download:', error);
+     //           }
+     //      };
 
 
 
@@ -2792,10 +3031,11 @@ const Member = (props) => {
                                                                            <Button style={{ width: "100%", padding: "10px", marginRight: "5px" }} variant="contained" color="green" onClick={handleGoToDetails}>
                                                                                 View Personal Details
                                                                            </Button>
-                                                                           <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange">
-                                                                                <PDFDownloadLink fileName="all_products" document={< SavingsMasterlistPrinter data={members} />} >
+                                                                           <Button style={{ width: "100%", padding: "10px" }} variant="contained" color="orange" onClick={() => exportMasterlist(members)}>
+                                                                                Download Masterlist Summary
+                                                                                {/*<PDFDownloadLink fileName="all_products" document={< SavingsMasterlistPrinter data={members} />} >
                                                                                      {({ loading }) => (loading ? 'Loading document...' : 'Download Masterlist Summary (legal size)')}
-                                                                                </PDFDownloadLink>
+                                                                                </PDFDownloadLink> */}
                                                                                 {/* <PDFDownloadLink fileName="employee_profile" document={
                                                                            < SavingsMasterlistPrinter
                                                                                 member_id={member_id}
@@ -2818,8 +3058,11 @@ const Member = (props) => {
                                                                            {({ loading }) => (loading ? 'Loading document...' : 'Download Masterlist Summary')}
                                                                       </PDFDownloadLink> */}
                                                                            </Button>
-
+                                                                           {/* <Button onClick={() => exportToExcel(members)}>
+                                                                                Download Member Data (Excel)
+                                                                           </Button> */}
                                                                       </ThemeProvider>
+
                                                                  </div>
                                                                  <div style={{ display: "flex", marginTop: "20px" }}>
                                                                       <ThemeProvider theme={theme}>
