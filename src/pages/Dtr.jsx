@@ -579,7 +579,7 @@ const Dtr = (props) => {
      const [dept, setDept] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/departments', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -605,7 +605,7 @@ const Dtr = (props) => {
                try {
 
 
-                    const response = await fetch(`https://c-back.onrender.com/api/dtr/employee/${employeeId}`, {
+                    const response = await fetch(`https://c-back-1-21-25.onrender.com/api/dtr/employee/${employeeId}`, {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }
@@ -2004,7 +2004,7 @@ const Dtr = (props) => {
 
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/employee', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -2080,7 +2080,7 @@ const Dtr = (props) => {
      const handleDelete = async () => {
 
 
-          const response = await fetch('https://c-back.onrender.com/api/dtr/' + id, {
+          const response = await fetch('https://c-back-1-21-25.onrender.com/api/dtr/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -2183,7 +2183,7 @@ const Dtr = (props) => {
                          working_day_counter: working_day_counter,
                          restday_overtime_counter: restday_overtime_counter
                     }
-                    const response = await fetch('https://c-back.onrender.com/api/dtr', {
+                    const response = await fetch('https://c-back-1-21-25.onrender.com/api/dtr', {
                          method: 'POST',
                          body: JSON.stringify(dtr),
                          headers: {
@@ -2465,7 +2465,7 @@ const Dtr = (props) => {
                other_earnings: other_earnings,
                total_earnings: total_earnings
           }
-          const response = await fetch('https://c-back.onrender.com/api/additional', {
+          const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional', {
                method: 'POST',
                body: JSON.stringify(additional),
                headers: {

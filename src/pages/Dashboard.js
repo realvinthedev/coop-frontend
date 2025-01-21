@@ -106,7 +106,7 @@ const Dashboard = (props) => {
      const [profit, setProft] = useState([])
      useEffect(() => {
           const fetchDepartment = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/departments', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/departments', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -126,7 +126,7 @@ const Dashboard = (props) => {
      const [employees, setEmployee] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/employee', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -148,7 +148,7 @@ const Dashboard = (props) => {
      const [product, setProduct] = useState([])
      useEffect(() => {
           const fetchEmployees = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/product', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -172,7 +172,7 @@ const Dashboard = (props) => {
      const [pendingLeaves, setPendingLeaves] = useState([]);
      useEffect(() => {
           const fetchLeaves = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/leaves', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/leaves', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -195,7 +195,7 @@ const Dashboard = (props) => {
      const [gross, setGross] = useState([]);
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/pos', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -223,7 +223,7 @@ const Dashboard = (props) => {
      const [members, setMembers] = useState([]);
      useEffect(() => {
           const fetchMembers = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/member/', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/member/', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
