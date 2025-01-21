@@ -9,7 +9,7 @@ export const useSignup = () => {
           setIsLoading(true)
           setError(null)
 
-          const response = await fetch('https://c-back.onrender.com/api/credentials/signup', {
+          const response = await fetch('https://c-back-1-21-25.onrender.com/api/credentials/signup', {
                method: 'POST',
                headers: {
                     'Content-Type': 'application/json'

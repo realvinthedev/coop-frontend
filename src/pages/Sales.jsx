@@ -218,7 +218,7 @@ const Sales = (props) => {
      const [sales, setsales] = useState([])
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/pos', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -256,7 +256,7 @@ const Sales = (props) => {
      const [allsales, setallsales] = useState([])
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/pos', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -281,7 +281,7 @@ const Sales = (props) => {
 
      useEffect(() => {
           const fetchSales = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/pos', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/pos', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -518,7 +518,7 @@ const Sales = (props) => {
      const [customers, setcustomers] = useState([])
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/customer', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/customer', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -565,7 +565,7 @@ const Sales = (props) => {
      const [products, setproducts] = useState([]);
      useEffect(() => {
           const fetchProduct = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/product', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/product', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }

@@ -304,7 +304,7 @@ const Additionals = (props) => {
 
      useEffect(() => {
           const fetchEmp = async () => {
-               const response = await fetch('https://c-back.onrender.com/api/employee', {
+               const response = await fetch('https://c-back-1-21-25.onrender.com/api/employee', {
                     headers: {
                          'Authorization': `Bearer ${user.token}`
                     }
@@ -503,7 +503,7 @@ const Additionals = (props) => {
                setIsLoading(true); // Set loading state to true before fetching data
 
                try {
-                    const response = await fetch('https://c-back.onrender.com/api/additional', {
+                    const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional', {
                          headers: {
                               'Authorization': `Bearer ${user.token}`
                          }
@@ -763,7 +763,7 @@ const Additionals = (props) => {
                               other_earnings: other_earnings,
                               total_earnings: total_earnings
                          }
-                         const response = await fetch('https://c-back.onrender.com/api/additional', {
+                         const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional', {
                               method: 'POST',
                               body: JSON.stringify(additional),
                               headers: {
@@ -823,7 +823,7 @@ const Additionals = (props) => {
                                    total_earnings: total_earnings
                               }
 
-                              const response = await fetch('https://c-back.onrender.com/api/additional', {
+                              const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional', {
                                    method: 'POST',
                                    body: JSON.stringify(additional),
                                    headers: {
@@ -892,7 +892,7 @@ const Additionals = (props) => {
                          other_earnings: other_earnings,
                          total_earnings: total_earnings
                     }
-                    const response = await fetch('https://c-back.onrender.com/api/additional/' + id, {
+                    const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional/' + id, {
                          method: 'PATCH',
                          body: JSON.stringify(additional),
                          headers: {
@@ -924,7 +924,7 @@ const Additionals = (props) => {
 
 
      const handleDelete = async () => {
-          const response = await fetch('https://c-back.onrender.com/api/additional/' + id, {
+          const response = await fetch('https://c-back-1-21-25.onrender.com/api/additional/' + id, {
                method: 'DELETE',
                headers: {
                     'Authorization': `Bearer ${user.token}`
