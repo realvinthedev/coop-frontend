@@ -1647,24 +1647,58 @@ const Member = (props) => {
                handleErrorToast('Fill up the required fields completely ')
           }
           else {
-               const response = await fetch('https://c-back-1-21-25.onrender.com/api/savings/', {
-                    method: 'POST',
-                    body: JSON.stringify(savings),
-                    headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${user.token}`
+
+               //start
+               const member = {
+                    share_capital_amount: totalshare_capital_balance,
+                    coop_savings_amount: totalcoop_savings_balance,
+                    special_savings_amount: totalspecial_savings_balance,
+                    kaya_savings_amount: totalkaya_savings_balance
+
+               }
+               try {
+                    const patchresponse = await fetch('https://c-back-1-21-25.onrender.com/api/member/' + id, {
+                         method: 'PATCH',
+                         body: JSON.stringify(member),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await patchresponse.json()
+                    if (!patchresponse.ok) {
+                         setError(json.error)
                     }
-               })
-               const json = await response.json()
-               if (!response.ok) {
-                    setError(json.error)
                }
-               else {
-                    handleClearSavings()
-                    handleSuccessToast('Added Successfully')
-                    setopenAddSavings(false)
-                    handleRefresher()
+               catch (error) {
+                    console.log(error)
+                    return; // Stop execution if the `PATCH` request fails
                }
+
+               try {
+                    const response = await fetch('https://c-back-1-21-25.onrender.com/api/savings/', {
+                         method: 'POST',
+                         body: JSON.stringify(savings),
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${user.token}`
+                         }
+                    })
+                    const json = await response.json()
+                    if (!response.ok) {
+                         setError(json.error)
+                    }
+                    else {
+                         handleClearSavings()
+                         handleSuccessToast('Added Successfully')
+                         setopenAddSavings(false)
+                         handleRefresher()
+                    }
+               } catch (error) {
+                    console.log(error)
+                    return; // Stop execution if the `PATCH` request fails
+               }
+
           }
      }
 
@@ -2296,7 +2330,7 @@ const Member = (props) => {
      //          alert("No data to export");
      //          return;
      //      }
-      
+
      //      const headers = [
      //          { label: "MEMBER ID", key: "member_id" },
      //          { label: "FIRSTNAME", key: "firstname" },
@@ -2338,7 +2372,7 @@ const Member = (props) => {
      //          { label: "TERMINATION BOD RESOLUTION NO.", key: "termination_bod" },
      //          { label: "REMARKS", key: "remarks" },
      //      ];
-      
+
      //      const formattedData = data.map((item) => {
      //          const row = {};
      //          headers.forEach(({ label, key }) => {
@@ -2346,18 +2380,18 @@ const Member = (props) => {
      //          });
      //          return row;
      //      });
-      
+
      //      const worksheet = XLSX.utils.json_to_sheet(formattedData);
-      
+
      //      // Adjust column widths
      //      const columnWidths = headers.map(({ label }) => ({
      //          wch: Math.max(label.length, ...data.map((item) => (item[label] ? item[label].toString().length : 10))),
      //      }));
      //      worksheet['!cols'] = columnWidths;
-      
+
      //      const workbook = XLSX.utils.book_new();
      //      XLSX.utils.book_append_sheet(workbook, worksheet, 'Member Data');
-      
+
      //      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
      //      const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
      //      saveAs(dataBlob, 'member_data.xlsx');
@@ -2365,115 +2399,115 @@ const Member = (props) => {
 
      const exportMasterlist = (data) => {
           if (data.length === 0) {
-              alert("No data to export");
-              return;
+               alert("No data to export");
+               return;
           }
-      
+
           const headers = [
-              { label: "MEMBER ID", key: "member_id" },
-              { label: "FIRSTNAME", key: "firstname" },
-              { label: "LASTNAME", key: "lastname" },
-              { label: "MIDDLENAME", key: "middlename" },
-              { label: "TIN NO.", key: "tin_no" },
-              { label: "MEMBERSHIP DATE ACCEPTED", key: "membership_date" },
-              { label: "TYPE / KIND OF MEMBERSHIP", key: "membership_type" },
-              { label: "HHHC MEMBERSHIP NO.", key: "hhhc_membership_number" },
-              { label: "BOD RESOLUTION NO.", key: "bod_res" },
-              { label: "MEMBERSHIP FEE", key: "membership_fee" },
-              { label: "INITIAL SHARE CAPITAL", key: "initial_share_capital" },
-              { label: "INITIAL NO. OF SHARES", key: "initial_no_share" },
-              { label: "PASSBOOK ACCOUNT SERIES NO.", key: "passbook_series_number" },
-              { label: "SAVINGS ACCOUNT NO.", key: "coop_savings_account_number" },
-              { label: "SHARE CAPITAL AMOUNT", key: "share_capital" },
-              { label: "COOP SAVINGS AMOUNT", key: "coop_savings_amount" },
-              { label: "HOUSING EQUITY ACCOUNT NO.", key: "housing_equity_account_no" },
-              { label: "HOUSING EQUITY AMOUNT", key: "housing_equity" },
-              { label: "SPECIAL SAVINGS ACCOUNT NO.", key: "special_savings_account" },
-              { label: "SPECIAL SAVINGS AMOUNT", key: "special_savings_amount" },
-              { label: "IMPUKAN CERTIFICATE ACCOUNT NO.", key: "impukan_certificate_account" },
-              { label: "KAYA SAVINGS ACCOUNT NO.", key: "kaya_atm_savings_account_number" },
-              { label: "KAYA SAVINGS AMOUNT", key: "kaya_savings_amount" },
-              { label: "CURRENT ADDRESS", key: "address" },
-              { label: "EMAIL ADDRESS", key: "email" },
-              { label: "CONTACT NO.", key: "contact_number" },
-              { label: "DATE OF BIRTH", key: "dob" },
-              { label: "AGE", key: "age" },
-              { label: "SEX", key: "gender" },
-              { label: "CIVIL STATUS", key: "civil_status" },
-              { label: "HIGHEST EDUCATIONAL ATTAINMENT", key: "highest_educational_attainment" },
-              { label: "OCCUPATION/INCOME SOURCE", key: "occupation" },
-              { label: "NO. OF DEPENDENT", key: "number_of_dependent" },
-              { label: "RELIGION", key: "religion" },
-              { label: "ANNUAL INCOME", key: "annual_income" },
-              { label: "PWD TYPE", key: "pwd_type" },
-              { label: "TERMINATION OF MEMBERSHIP DATE", key: "termination_date" },
-              { label: "TERMINATION BOD RESOLUTION NO.", key: "termination_bod" },
-              { label: "REMARKS", key: "remarks" },
+               { label: "MEMBER ID", key: "member_id" },
+               { label: "FIRSTNAME", key: "firstname" },
+               { label: "LASTNAME", key: "lastname" },
+               { label: "MIDDLENAME", key: "middlename" },
+               { label: "TIN NO.", key: "tin_no" },
+               { label: "MEMBERSHIP DATE ACCEPTED", key: "membership_date" },
+               { label: "TYPE / KIND OF MEMBERSHIP", key: "membership_type" },
+               { label: "HHHC MEMBERSHIP NO.", key: "hhhc_membership_number" },
+               { label: "BOD RESOLUTION NO.", key: "bod_res" },
+               { label: "MEMBERSHIP FEE", key: "membership_fee" },
+               { label: "INITIAL SHARE CAPITAL", key: "initial_share_capital" },
+               { label: "INITIAL NO. OF SHARES", key: "initial_no_share" },
+               { label: "PASSBOOK ACCOUNT SERIES NO.", key: "passbook_series_number" },
+               { label: "SAVINGS ACCOUNT NO.", key: "coop_savings_account_number" },
+               { label: "SHARE CAPITAL AMOUNT", key: "share_capital_amount" },
+               { label: "COOP SAVINGS AMOUNT", key: "coop_savings_amount" },
+               { label: "HOUSING EQUITY ACCOUNT NO.", key: "housing_equity_account_no" },
+               { label: "HOUSING EQUITY AMOUNT", key: "housing_equity" },
+               { label: "SPECIAL SAVINGS ACCOUNT NO.", key: "special_savings_account" },
+               { label: "SPECIAL SAVINGS AMOUNT", key: "special_savings_amount" },
+               { label: "IMPUKAN CERTIFICATE ACCOUNT NO.", key: "impukan_certificate_account" },
+               { label: "KAYA SAVINGS ACCOUNT NO.", key: "kaya_atm_savings_account_number" },
+               { label: "KAYA SAVINGS AMOUNT", key: "kaya_savings_amount" },
+               { label: "CURRENT ADDRESS", key: "address" },
+               { label: "EMAIL ADDRESS", key: "email" },
+               { label: "CONTACT NO.", key: "contact_number" },
+               { label: "DATE OF BIRTH", key: "dob" },
+               { label: "AGE", key: "age" },
+               { label: "SEX", key: "gender" },
+               { label: "CIVIL STATUS", key: "civil_status" },
+               { label: "HIGHEST EDUCATIONAL ATTAINMENT", key: "highest_educational_attainment" },
+               { label: "OCCUPATION/INCOME SOURCE", key: "occupation" },
+               { label: "NO. OF DEPENDENT", key: "number_of_dependent" },
+               { label: "RELIGION", key: "religion" },
+               { label: "ANNUAL INCOME", key: "annual_income" },
+               { label: "PWD TYPE", key: "pwd_type" },
+               { label: "TERMINATION OF MEMBERSHIP DATE", key: "termination_date" },
+               { label: "TERMINATION BOD RESOLUTION NO.", key: "termination_bod" },
+               { label: "REMARKS", key: "remarks" },
           ];
-      
+
           const formattedData = data.map((item) => {
-              const row = {};
-              headers.forEach(({ label, key }) => {
-                  row[label] = item[key] ?? "";
-              });
-              return row;
+               const row = {};
+               headers.forEach(({ label, key }) => {
+                    row[label] = item[key] ?? "";
+               });
+               return row;
           });
-      
+
           const worksheet = XLSX.utils.json_to_sheet(formattedData);
-      
+
           // Define custom column widths
           const columnWidths = [
-              { wch: 12 }, // MEMBER ID
-              { wch: 15 }, // FIRSTNAME
-              { wch: 15 }, // LASTNAME
-              { wch: 15 }, // MIDDLENAME
-              { wch: 10 }, // TIN NO.
-              { wch: 20 }, // MEMBERSHIP DATE ACCEPTED
-              { wch: 25 }, // TYPE / KIND OF MEMBERSHIP
-              { wch: 18 }, // HHHC MEMBERSHIP NO.
-              { wch: 20 }, // BOD RESOLUTION NO.
-              { wch: 12 }, // MEMBERSHIP FEE
-              { wch: 20 }, // INITIAL SHARE CAPITAL
-              { wch: 15 }, // INITIAL NO. OF SHARES
-              { wch: 25 }, // PASSBOOK ACCOUNT SERIES NO.
-              { wch: 20 }, // SAVINGS ACCOUNT NO.
-              { wch: 20 }, // SHARE CAPITAL AMOUNT
-              { wch: 20 }, // COOP SAVINGS AMOUNT
-              { wch: 25 }, // HOUSING EQUITY ACCOUNT NO.
-              { wch: 20 }, // HOUSING EQUITY AMOUNT
-              { wch: 25 }, // SPECIAL SAVINGS ACCOUNT NO.
-              { wch: 20 }, // SPECIAL SAVINGS AMOUNT
-              { wch: 30 }, // IMPUKAN CERTIFICATE ACCOUNT NO.
-              { wch: 25 }, // KAYA SAVINGS ACCOUNT NO.
-              { wch: 20 }, // KAYA SAVINGS AMOUNT
-              { wch: 25 }, // CURRENT ADDRESS
-              { wch: 25 }, // EMAIL ADDRESS
-              { wch: 20 }, // CONTACT NO.
-              { wch: 15 }, // DATE OF BIRTH
-              { wch: 10 }, // AGE
-              { wch: 10 }, // SEX
-              { wch: 15 }, // CIVIL STATUS
-              { wch: 25 }, // HIGHEST EDUCATIONAL ATTAINMENT
-              { wch: 25 }, // OCCUPATION/INCOME SOURCE
-              { wch: 15 }, // NO. OF DEPENDENT
-              { wch: 15 }, // RELIGION
-              { wch: 20 }, // ANNUAL INCOME
-              { wch: 15 }, // PWD TYPE
-              { wch: 25 }, // TERMINATION OF MEMBERSHIP DATE
-              { wch: 25 }, // TERMINATION BOD RESOLUTION NO.
-              { wch: 25 }, // REMARKS
+               { wch: 12 }, // MEMBER ID
+               { wch: 15 }, // FIRSTNAME
+               { wch: 15 }, // LASTNAME
+               { wch: 15 }, // MIDDLENAME
+               { wch: 10 }, // TIN NO.
+               { wch: 20 }, // MEMBERSHIP DATE ACCEPTED
+               { wch: 25 }, // TYPE / KIND OF MEMBERSHIP
+               { wch: 18 }, // HHHC MEMBERSHIP NO.
+               { wch: 20 }, // BOD RESOLUTION NO.
+               { wch: 12 }, // MEMBERSHIP FEE
+               { wch: 20 }, // INITIAL SHARE CAPITAL
+               { wch: 15 }, // INITIAL NO. OF SHARES
+               { wch: 25 }, // PASSBOOK ACCOUNT SERIES NO.
+               { wch: 20 }, // SAVINGS ACCOUNT NO.
+               { wch: 20 }, // SHARE CAPITAL AMOUNT
+               { wch: 20 }, // COOP SAVINGS AMOUNT
+               { wch: 25 }, // HOUSING EQUITY ACCOUNT NO.
+               { wch: 20 }, // HOUSING EQUITY AMOUNT
+               { wch: 25 }, // SPECIAL SAVINGS ACCOUNT NO.
+               { wch: 20 }, // SPECIAL SAVINGS AMOUNT
+               { wch: 30 }, // IMPUKAN CERTIFICATE ACCOUNT NO.
+               { wch: 25 }, // KAYA SAVINGS ACCOUNT NO.
+               { wch: 20 }, // KAYA SAVINGS AMOUNT
+               { wch: 25 }, // CURRENT ADDRESS
+               { wch: 25 }, // EMAIL ADDRESS
+               { wch: 20 }, // CONTACT NO.
+               { wch: 15 }, // DATE OF BIRTH
+               { wch: 10 }, // AGE
+               { wch: 10 }, // SEX
+               { wch: 15 }, // CIVIL STATUS
+               { wch: 25 }, // HIGHEST EDUCATIONAL ATTAINMENT
+               { wch: 25 }, // OCCUPATION/INCOME SOURCE
+               { wch: 15 }, // NO. OF DEPENDENT
+               { wch: 15 }, // RELIGION
+               { wch: 20 }, // ANNUAL INCOME
+               { wch: 15 }, // PWD TYPE
+               { wch: 25 }, // TERMINATION OF MEMBERSHIP DATE
+               { wch: 25 }, // TERMINATION BOD RESOLUTION NO.
+               { wch: 25 }, // REMARKS
           ];
           worksheet['!cols'] = columnWidths;
-      
+
           const workbook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(workbook, worksheet, 'Member Data');
-      
+
           const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
           const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
           saveAs(dataBlob, 'member_data.xlsx');
-      };
-      
-      
+     };
+
+
 
 
      //WORKING EXCEL2
