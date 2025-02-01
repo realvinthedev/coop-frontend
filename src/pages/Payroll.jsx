@@ -1465,7 +1465,7 @@ const Payroll = (props) => {
                     }
                }
                else {
-                    const isAlreadyApproved = arr.find(item => item.employee_id === employeeId && item.approval_status === 'APPROVED' && item.year === year && item.month == month);
+                    const isAlreadyApproved = arr.find(item => item.employee_id === employeeId && item.approval_status === 'APPROVED' && item.year === year && item.month == month && item.period == period);
                     if (isAlreadyApproved) {
                          errorToast('This payslip is already approved. Editing is not allowed anymore.')
                     }

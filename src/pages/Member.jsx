@@ -1649,30 +1649,69 @@ const Member = (props) => {
           else {
 
                //start
-               const member = {
-                    share_capital_amount: totalshare_capital_balance,
-                    coop_savings_amount: totalcoop_savings_balance,
-                    special_savings_amount: totalspecial_savings_balance,
-                    kaya_savings_amount: totalkaya_savings_balance
+               // const member = {
+               //      share_capital_amount: totalshare_capital_balance, 
+               //      coop_savings_amount: totalcoop_savings_balance,
+               //      special_savings_amount: totalspecial_savings_balance,
+               //      kaya_savings_amount: totalkaya_savings_balance
 
+               // }
+               // try {
+               //      const patchresponse = await fetch('https://c-back-1-21-25.onrender.com/api/member/' + id, {
+               //           method: 'PATCH',
+               //           body: JSON.stringify(member),
+               //           headers: {
+               //                'Content-Type': 'application/json',
+               //                'Authorization': `Bearer ${user.token}`
+               //           }
+               //      })
+               //      const json = await patchresponse.json()
+               //      if (!patchresponse.ok) {
+               //           setError(json.error)
+               //      }
+               // }
+               // catch (error) {
+               //      console.log(error)
+               //      return; // Stop execution if the `PATCH` request fails
+               // }
+               const member = {};
+
+               // Add only non-zero balances
+               if (totalshare_capital_balance !== 0) {
+                    member.share_capital_amount = totalshare_capital_balance;
                }
-               try {
-                    const patchresponse = await fetch('https://c-back-1-21-25.onrender.com/api/member/' + id, {
-                         method: 'PATCH',
-                         body: JSON.stringify(member),
-                         headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization': `Bearer ${user.token}`
+               if (totalcoop_savings_balance !== 0) {
+                    member.coop_savings_amount = totalcoop_savings_balance;
+               }
+               if (totalspecial_savings_balance !== 0) {
+                    member.special_savings_amount = totalspecial_savings_balance;
+               }
+               if (totalkaya_savings_balance !== 0) {
+                    member.kaya_savings_amount = totalkaya_savings_balance;
+               }
+
+               // If no fields are present, skip the API call
+               if (Object.keys(member).length > 0) {
+                    try {
+                         const patchresponse = await fetch('https://c-back-1-21-25.onrender.com/api/member/' + id, {
+                              method: 'PATCH',
+                              body: JSON.stringify(member),
+                              headers: {
+                                   'Content-Type': 'application/json',
+                                   'Authorization': `Bearer ${user.token}`
+                              }
+                         });
+
+                         const json = await patchresponse.json();
+                         if (!patchresponse.ok) {
+                              setError(json.error);
                          }
-                    })
-                    const json = await patchresponse.json()
-                    if (!patchresponse.ok) {
-                         setError(json.error)
+                    } catch (error) {
+                         console.error(error);
+                         return; // Stop execution if the `PATCH` request fails
                     }
-               }
-               catch (error) {
-                    console.log(error)
-                    return; // Stop execution if the `PATCH` request fails
+               } else {
+                    console.log("No fields to update.");
                }
 
                try {
